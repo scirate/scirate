@@ -1,5 +1,6 @@
 $full-width: 710px;
 $background-color: #22c;
+$accent-color: #aaf;
 $link-color: #22c;
 $visited-link-color: #66c;
 
@@ -88,8 +89,8 @@ a.signup_button {
   display: block;
   text-align: center;
   width: 190px;
-  color: white;
-  background: #006400;
+  color: black;
+  background: $accent-color;
   font-size: 150%;
   font-weight: bold;
   padding: 20px;
