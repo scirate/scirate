@@ -1,0 +1,157 @@
+$full-width: 710px;
+$background-color: #22c;
+$link-color: #22c;
+$visited-link-color: #66c;
+
+.container {
+  width: $full-width;
+}
+
+body {
+  background: $background-color;
+}
+
+header {
+  padding-top: 20px;
+
+  img {
+    padding: 1em;
+    background: white;
+  }
+}
+
+section {
+  margin-top: 1em;
+  font-size: 120%;
+  padding: 20px;
+  background: white;
+
+  h1 {
+    font-size: 200%;
+  }
+}
+
+/* Links */
+
+a {
+  color: $link-color;
+  text-decoration: none;
+
+  &:hover {
+    color: $visited-link-color;
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: $visited-link-color;
+  }
+}
+
+/* Navigation */
+
+nav {
+  float: right;
+  background-color: white;
+  padding: 0 0.7em;
+  white-space: nowrap;
+
+  ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style-type: none;
+      display: inline-block;
+      padding: 0.2em 0;
+
+      a {
+        padding: 0 5px;
+        font-weight: bold;
+
+        &:visited {
+          color: $link-color;
+        }
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+/* Sign up button */
+
+a.signup_button {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+  width: 190px;
+  color: white;
+  background: #006400;
+  font-size: 150%;
+  font-weight: bold;
+  padding: 20px;
+}
+
+/* Round corners */
+
+.round {
+  -moz-border-radius:    10px;
+  -webkit-border-radius: 10px;
+  border-radius:         10px;
+}
+
+footer {
+  text-align: center;
+  margin-top: 10px;
+  width: $full-width;
+  margin-left: auto;
+  margin-right: auto;
+
+  nav {
+    float: none;
+  }
+}
+
+.field_with_errors {
+  margin-top: 10px;
+  padding: 2px;
+  background-color: red;
+  display: table;
+
+  label {
+    color: #fff;
+  }
+}
+
+#error_explanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    background-color: #c00;
+    color: #fff;
+  }
+
+  p {
+    color: #333;
+    margin-bottom: 0;
+    padding: 5px;
+  }
+
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
+}
