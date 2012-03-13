@@ -1,8 +1,11 @@
 Scirate3::Application.routes.draw do
   
-  get "users/new" #replace me with user resource
+  resources :sessions, only: [:new, :create, :destroy]
+  resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
 
   match '/signup',  to: 'users#new'
+  match '/signin',  to: 'sessions#new'
+  match '/signout', to: 'sessions#destroy'
   match '/about',   to: 'static_pages#about'
 
   root to: 'static_pages#home'

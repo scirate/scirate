@@ -4,14 +4,17 @@ describe "User pages" do
 
   subject { page }
 
-  # describe "profile page" do
-  #   let(:user) { FactoryGirl.create(:user) }
+  describe "profile page" do
+    let(:user) { FactoryGirl.create(:user) }
 
-  #   before { visit user_path(user) }
+    before do
+      sign_in(user)
+      visit user_path(user)
+    end
 
-  #   it { should have_heading user.name }
-  #   it { should have_title user.name }
-  # end
+    it { should have_heading user.name }
+    it { should have_title user.name }
+  end
 
   describe "signup page" do
     before { visit signup_path }
@@ -20,40 +23,40 @@ describe "User pages" do
     it { should have_title 'Sign up' }
   end
 
-  # describe "signup" do
+  describe "signup" do
 
-  #   before { visit signup_path }
+    before { visit signup_path }
 
-  #   describe "with invalid information" do
-  #     it "should not create a user" do
-  #       expect { signup }.not_to change(User, :count)
-  #     end
-  #   end
+    describe "with invalid information" do
+      it "should not create a user" do
+        expect { signup }.not_to change(User, :count)
+      end
+    end
 
-  #   describe "error messages" do
-  #     before { signup }
+    describe "error messages" do
+      before { signup }
       
-  #     let(:error) { 'errors prohibited this user from being saved' }
+      let(:error) { 'errors prohibited this user from being saved' }
       
-  #     it { should have_title 'Sign up' }
-  #     it { should have_content(error) }
-  #   end
+      it { should have_title 'Sign up' }
+      it { should have_content(error) }
+    end
 
-  #   describe "with valid information" do
-  #     it "should create a user" do
-  #       expect { valid_signup }.to change(User, :count).by(1)
-  #     end
+    describe "with valid information" do
+      it "should create a user" do
+        expect { valid_signup }.to change(User, :count).by(1)
+      end
 
-  #     describe "after saving the user" do
-  #       before { valid_signup(email: 'test@example.com') }
-  #       let(:user) { User.find_by_email('test@example.com') }
+      describe "after saving the user" do
+        before { valid_signup(email: 'test@example.com') }
+        let(:user) { User.find_by_email('test@example.com') }
         
-  #       it { should have_title user.name }
-  #       it { should have_success_message 'Welcome' }
-  #       it { should have_link('Sign out') }
-  #     end
-  #   end
-  # end
+        it { should have_title user.name }
+        it { should have_success_message 'Welcome' }
+        it { should have_link('Sign out') }
+      end
+    end
+  end
   
   # describe "edit" do
   #   let(:user) { FactoryGirl.create(:user) }
