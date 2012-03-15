@@ -21,7 +21,10 @@ class UsersController < ApplicationController
     if !signed_in?
       @user = User.new(params[:user])
       if @user.save
-        sign_in @user
+        if !signed_in?
+          sign_in @user
+        end
+        
         flash[:success] = "Welcome to Scirate!"
         redirect_to @user
       else
@@ -38,8 +41,9 @@ class UsersController < ApplicationController
 
   def update
     if @user.update_attributes(params[:user])
+      sign_in @user
       flash[:success] = "Profile updated"
-      redirect_to @user
+      redirect_to root_path
     else
       render 'edit'
     end   
