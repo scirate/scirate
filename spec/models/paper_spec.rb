@@ -10,6 +10,7 @@
 #  url        :string(255)
 #  created_at :datetime        not null
 #  updated_at :datetime        not null
+#  pubdate    :date
 #
 
 require 'spec_helper'
@@ -20,7 +21,8 @@ describe Paper do
     @paper = Paper.new(title: "On NPT Bound Entanglement and the ERH", \
                        authors: ["Some Guy, Ph.D.", "Some Other Guy"], \
                        abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
-                       identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052")
+                       identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
+                       pubdate: Time.now)
   end
 
   subject { @paper }
@@ -30,6 +32,7 @@ describe Paper do
   it { should respond_to(:abstract) }
   it { should respond_to(:identifier) }
   it { should respond_to(:url) }
+  it { should respond_to(:pubdate) }
 
   it { should be_valid }
 
@@ -55,6 +58,11 @@ describe Paper do
 
   describe "when url is not present" do
     before { @paper.url = " " }
+    it { should_not be_valid }
+  end
+
+  describe "when pubdate is not present" do
+    before { @paper.pubdate = " " }
     it { should_not be_valid }
   end
 

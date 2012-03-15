@@ -1,5 +1,5 @@
 <% provide :title, 'All papers' %>
-<h1>All papers</h1>
+<h1>All papers from <%= @date.to_formatted_s(:rfc822) %></h1>
 
 <ul class="papers">
   <%= render @papers %>

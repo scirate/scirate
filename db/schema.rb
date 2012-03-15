@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120315034427) do
+ActiveRecord::Schema.define(:version => 20120315111149) do
 
   create_table "papers", :force => true do |t|
     t.string   "title"
@@ -21,7 +21,11 @@ ActiveRecord::Schema.define(:version => 20120315034427) do
     t.string   "url"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.date     "pubdate"
   end
+
+  add_index "papers", ["identifier"], :name => "index_papers_on_identifier", :unique => true
+  add_index "papers", ["pubdate"], :name => "index_papers_on_date"
 
   create_table "users", :force => true do |t|
     t.string   "name"

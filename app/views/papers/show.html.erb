@@ -8,6 +8,7 @@
       </h1>     
       <%= @paper.authors.join(', ') %><br />
       <%= @paper.abstract %><br />
+      Published on <%= @paper.pubdate.to_formatted_s(:rfc822) %><br />
       <%= link_to @paper.url, @paper.url %>
     </td>
   </tr>

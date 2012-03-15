@@ -11,5 +11,6 @@ FactoryGirl.define do
     sequence(:abstract)   { |n| "We solve Hilbert's #{n}th problem." }
     sequence(:identifier) { |n| "#{n}.#{n}" }
     sequence(:url)        { |n| "http://arxiv.org/abs/#{n}.#{n}" }
+    sequence(:pubdate)    { |n| Date.today }
   end
 end

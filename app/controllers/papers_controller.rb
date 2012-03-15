@@ -5,7 +5,13 @@ class PapersController < ApplicationController
   end
 
   def index
-    #Update me to show only papers from a given date
-    @papers = Paper.all
+    @date = Chronic.parse(params[:date])
+    if @date.nil?
+      @date = Date.today
+    else
+      @date = @date.to_date
+    end
+
+    @papers = Paper.find_all_by_pubdate(@date)
   end
 end

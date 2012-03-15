@@ -18,6 +18,7 @@ describe "Paper pages" do
     it { should have_content paper.authors[1] }
     it { should have_content paper.abstract }
     it { should have_link paper.url }
+    it { should have_content paper.pubdate.to_formatted_s(:rfc822) }
   end
 
   describe "index" do
@@ -30,13 +31,23 @@ describe "Paper pages" do
     it { should have_title 'All papers' }
 
     describe "pagination" do
-      before(:all) { 30.times { FactoryGirl.create(:paper) } }
+      before(:all) do
+        30.times { FactoryGirl.create(:paper, pubdate: Date.today) }
+        30.times { FactoryGirl.create(:paper, pubdate: Date.yesterday) }
+      end
       after(:all)  { Paper.delete_all }
 
-      it "should list all papers" do
-        Paper.all.each do |paper|
+      it "should list all papers from today" do
+        Paper.find_all_by_pubdate(Date.today).each do |paper|
           page.should have_link paper.identifier
           page.should have_content paper.title
+        end
+      end
+
+      it "should not list all papers from yesterday" do
+        Paper.find_all_by_pubdate(Date.yesterday).each do |paper|
+          page.should_not have_link paper.identifier
+          page.should_not have_content paper.title
         end
       end
     end
