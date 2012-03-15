@@ -1,0 +1,14 @@
+<% provide :title, @paper.identifier %>
+<table class="profile">
+  <tr>
+    <td class="main">
+      <h1>
+        <%= @paper.identifier %><br />
+        <%= @paper.title %>        
+      </h1>     
+      <%= @paper.authors.join(', ') %><br />
+      <%= @paper.abstract %><br />
+      <%= link_to @paper.url, @paper.url %>
+    </td>
+  </tr>
+</table>
