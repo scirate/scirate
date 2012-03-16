@@ -1,17 +1,29 @@
 namespace :db do
   desc "Update database with yesterday's papers"
   task arxiv_update: :environment do
-    papers = fetch_today
-    add_papers papers
+    feed_day = fetch_arxiv_rss
+    papers = parse_arxiv feed_day
+    retrieve_and_add papers
   end
 end
 
-def fetch_today
+def fetch_arxiv_rss
+  url = URI.parse('http://export.arxiv.org/rss/quant-ph')
+  rss = Net::HTTP.get_response(url).body
+
+  xml = REXML::Document.new(rss)
+  date = xml.elements["rdf:RDF/channel/dc:date"].text.to_date
+
+  feed_day = FeedDay.new(pubdate: date, content: rss)
+  feed_day.save
+
+  return feed_day
+end
+
+def parse_arxiv feed_day
   papers = []
 
-  url = URI.parse('http://export.arxiv.org/rss/quant-ph')
-  rss = Net::HTTP.get_response(url)
-  xml = REXML::Document.new(rss.body)
+  xml = REXML::Document.new(feed_day.content)
 
   date = xml.elements["rdf:RDF/channel/dc:date"].text.to_date
 
@@ -26,7 +38,7 @@ def fetch_today
   return papers
 end
 
-def add_papers papers
+def retrieve_and_add papers
   oai_client = OAI::Client.new 'http://export.arxiv.org/oai2'
 
   papers.each do |paper|

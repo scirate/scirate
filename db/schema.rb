@@ -11,7 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120315111149) do
+ActiveRecord::Schema.define(:version => 20120316095114) do
+
+  create_table "feed_days", :force => true do |t|
+    t.date     "pubdate"
+    t.text     "content"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "feed_days", ["pubdate"], :name => "index_feed_days_on_pubdate", :unique => true
 
   create_table "papers", :force => true do |t|
     t.string   "title"
