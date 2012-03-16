@@ -4,6 +4,7 @@ gem 'rails', '3.2.1'
 gem 'bcrypt-ruby', '3.0.1'
 gem 'faker', '1.0.1'
 gem 'chronic'
+gem 'oai'
 
 group :development do
   gem 'sqlite3', '>= 1.3.5'
