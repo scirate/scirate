@@ -37,7 +37,7 @@ def add_papers papers
 
     paper.title = item.elements["title"].text
     paper.abstract = item.elements["abstract"].text
-    paper.url = "http://arxiv.org/#{paper.identifier}"
+    paper.url = "http://arxiv.org/abs/#{paper.identifier}"
 
     paper.authors = []
     item.elements.each('authors/author') do |author|
