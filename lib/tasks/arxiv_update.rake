@@ -35,7 +35,8 @@ namespace :db do
     puts "Deleting papers from DB"
     Paper.delete_all
 
-    FeedDay.all.each do |feed|
+    #get FeedDay objects in ascending order of pubday
+    FeedDay.find(:all, order: 'pubdate').each do |feed|
       #create stubs
       papers = parse_arxiv feed
 
