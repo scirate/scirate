@@ -35,6 +35,8 @@ describe Paper do
   it { should respond_to(:url) }
   it { should respond_to(:pubdate) }
   it { should respond_to(:updated_date) }
+  it { should respond_to(:scites) }
+  it { should respond_to(:sciters) }
 
   it { should be_valid }
 
@@ -85,5 +87,15 @@ describe Paper do
     end
 
     it { should_not be_valid }
+  end
+
+  describe "sciting" do
+    let (:user) { FactoryGirl.create(:user) }
+    before do
+      @paper.save
+      user.scite!(@paper)
+    end
+
+    its(:sciters) { should include(user) }
   end
 end

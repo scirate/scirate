@@ -18,6 +18,9 @@ class Paper < ActiveRecord::Base
   attr_accessible :title, :authors, :abstract, :identifier, :url, :pubdate, :updated_date
   serialize :authors, Array
 
+  has_many  :scites, dependent: :destroy
+  has_many  :sciters, through: :scites
+
   validates :title, presence: true
   validates :authors, presence: true
   validates :abstract, presence: true

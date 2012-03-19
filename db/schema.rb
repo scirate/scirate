@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120319050947) do
+ActiveRecord::Schema.define(:version => 20120319090743) do
 
   create_table "feed_days", :force => true do |t|
     t.date     "pubdate"
@@ -36,6 +36,17 @@ ActiveRecord::Schema.define(:version => 20120319050947) do
 
   add_index "papers", ["identifier"], :name => "index_papers_on_identifier", :unique => true
   add_index "papers", ["pubdate"], :name => "index_papers_on_date"
+
+  create_table "scites", :force => true do |t|
+    t.integer  "sciter_id"
+    t.integer  "paper_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "scites", ["paper_id"], :name => "index_scites_on_paper_id"
+  add_index "scites", ["sciter_id", "paper_id"], :name => "index_scites_on_sciter_id_and_paper_id", :unique => true
+  add_index "scites", ["sciter_id"], :name => "index_scites_on_sciter_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

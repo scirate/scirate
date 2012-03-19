@@ -29,7 +29,10 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
-  it { should respond_to(:authenticate) }
+  it { should respond_to(:scites) }
+  it { should respond_to(:scited_papers) }
+  it { should respond_to(:scited?) }
+  it { should respond_to(:scite!) }
 
   it { should be_valid }
 
@@ -117,5 +120,21 @@ describe User do
   describe "remember token" do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
+  end
+
+  describe "sciting" do
+    let (:paper) { FactoryGirl.create(:paper) }
+    before do
+      @user.save
+      @user.scite!(paper)
+    end
+
+    it { should be_scited(paper) }
+    its(:scited_papers) { should include(paper) }
+
+    describe "and unsciting" do
+      before { @user.unscite!(paper) }
+      its(:scited_papers) { should_not include(paper) }
+    end
   end
 end
