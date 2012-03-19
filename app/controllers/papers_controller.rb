@@ -1,7 +1,6 @@
 class PapersController < ApplicationController
   def show
-    identifier = "#{params[:id]}.#{params[:format]}"    
-    @paper = Paper.find_by_identifier!(identifier)
+    @paper = Paper.find_by_identifier!(params[:id])
   end
 
   def index
