@@ -19,6 +19,28 @@ describe "Paper pages" do
     it { should have_content paper.abstract }
     it { should have_link paper.url }
     it { should have_content paper.pubdate.to_formatted_s(:rfc822) }
+
+    describe "when a paper has not been updated" do
+      before do
+        paper.updated_date = paper.pubdate
+        paper.save
+
+        visit paper_path(paper)
+      end
+      
+      it { should_not have_content "Updated on" }
+    end
+
+    describe "when a paper has been updated" do
+      before do
+        paper.updated_date = paper.pubdate + 1
+        paper.save
+
+        visit paper_path(paper)
+      end
+      
+      it { should have_content paper.updated_date.to_formatted_s(:rfc822) }
+    end
   end
 
   describe "index" do

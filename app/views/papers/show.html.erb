@@ -9,6 +9,9 @@
       <%= @paper.authors.join(', ') %><br />
       <%= @paper.abstract %><br />
       Published on <%= @paper.pubdate.to_formatted_s(:rfc822) %><br />
+      <% if @paper.updated? %>
+        Updated on <%= @paper.updated_date.to_formatted_s(:rfc822) %><br />
+      <% end %>
       <%= link_to @paper.url, @paper.url %>
     </td>
   </tr>

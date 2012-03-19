@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120316095114) do
+ActiveRecord::Schema.define(:version => 20120319050947) do
 
   create_table "feed_days", :force => true do |t|
     t.date     "pubdate"
@@ -28,9 +28,10 @@ ActiveRecord::Schema.define(:version => 20120316095114) do
     t.text     "abstract"
     t.string   "identifier"
     t.string   "url"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.date     "pubdate"
+    t.date     "updated_date"
   end
 
   add_index "papers", ["identifier"], :name => "index_papers_on_identifier", :unique => true

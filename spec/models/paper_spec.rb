@@ -2,15 +2,16 @@
 #
 # Table name: papers
 #
-#  id         :integer         not null, primary key
-#  title      :string(255)
-#  authors    :text
-#  abstract   :text
-#  identifier :string(255)
-#  url        :string(255)
-#  created_at :datetime        not null
-#  updated_at :datetime        not null
-#  pubdate    :date
+#  id           :integer         not null, primary key
+#  title        :string(255)
+#  authors      :text
+#  abstract     :text
+#  identifier   :string(255)
+#  url          :string(255)
+#  created_at   :datetime        not null
+#  updated_at   :datetime        not null
+#  pubdate      :date
+#  updated_date :date
 #
 
 require 'spec_helper'
@@ -22,7 +23,7 @@ describe Paper do
                        authors: ["Some Guy, Ph.D.", "Some Other Guy"], \
                        abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
                        identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
-                       pubdate: Time.now)
+                       pubdate: Time.now, updated_date: Time.now)
   end
 
   subject { @paper }
@@ -33,6 +34,7 @@ describe Paper do
   it { should respond_to(:identifier) }
   it { should respond_to(:url) }
   it { should respond_to(:pubdate) }
+  it { should respond_to(:updated_date) }
 
   it { should be_valid }
 
@@ -63,6 +65,16 @@ describe Paper do
 
   describe "when pubdate is not present" do
     before { @paper.pubdate = " " }
+    it { should_not be_valid }
+  end
+
+  describe "when updated_date is not present" do
+    before { @paper.updated_date = " " }
+    it { should_not be_valid }
+  end
+
+  describe "when updated_date is older than pubdate" do
+    before { @paper.updated_date = @paper.pubdate - 1.day }
     it { should_not be_valid }
   end
 
