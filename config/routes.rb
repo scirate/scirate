@@ -1,12 +1,18 @@
 Scirate3::Application.routes.draw do
   
   resources :sessions, only: [:new, :create, :destroy]
+
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
+  get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
 
   resources :papers, only: [:index]
 
-  #custom route to use arXiv identifiers as id's for papers
+  #custom routes to use arXiv identifiers as id's for papers
   get '/papers/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
+  get '/papers/:id/sciters', 
+          to: 'papers#sciters', id: /\d{4}\.\d{4}/, as: "sciters_paper"
+
+  resources :scites, only: [:create, :destroy]
 
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'

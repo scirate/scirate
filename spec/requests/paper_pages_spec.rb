@@ -41,6 +41,56 @@ describe "Paper pages" do
       
       it { should have_content paper.updated_date.to_formatted_s(:rfc822) }
     end
+
+    describe "scite/unscite buttons" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user }
+      
+      describe "sciting a paper" do
+        before { visit paper_path(paper) }
+
+        it "should increment the scited papers count" do
+          expect do
+            click_button "Scite!"
+          end.to change(user.scited_papers, :count).by(1)
+        end
+
+        it "should increment the paper's scites count" do
+          expect do
+            click_button "Scite!"
+          end.to change(paper.sciters, :count).by(1)
+        end
+
+        describe "toggling the button" do
+          before { click_button "Scite!" }
+          it { should have_selector('input', value: "Unscite") }
+        end    
+      end
+
+      describe "unsciting a paper" do
+        before do
+          user.scite!(paper)
+          visit paper_path(paper)
+        end
+
+        it "should decement the scited papers count" do
+          expect do
+            click_button "Unscite"
+          end.to change(user.scited_papers, :count).by(-1)
+        end
+
+        it "should decrement the paper's scites count" do
+          expect do
+            click_button "Unscite"
+          end.to change(paper.sciters, :count).by(-1)
+        end
+
+        describe "toggling the button" do
+          before { click_button "Unscite" }
+          it { should have_selector('input', value: "Scite!") }
+        end    
+      end
+    end
   end
 
   describe "index" do

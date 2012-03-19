@@ -1,0 +1,4 @@
+<%= form_for(current_user.scites.build(paper_id: @paper.id)) do |f| %>
+  <div><%= f.hidden_field :paper_id %></div>
+  <%= f.submit "Scite!", :class => "btn btn-large btn-primary" %>
+<% end %>

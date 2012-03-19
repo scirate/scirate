@@ -10,6 +10,7 @@
     <td class="sidebar round">
       <strong>Name</strong> <%= @user.name %><br />
       <strong>URL</strong> <%= link_to user_path(@user), @user %><br />
+      <strong>Scites</strong> <%= link_to @user.scites.count, scites_user_path(@user) %>
     </td>
   </tr>
 </table>

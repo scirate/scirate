@@ -13,6 +13,8 @@
         Updated on <%= @paper.updated_date.to_formatted_s(:rfc822) %><br />
       <% end %>
       <%= link_to @paper.url, @paper.url %>
+      <%= render 'scite_form' if signed_in? %>
+      <%= link_to "#{@paper.sciters.count} scites", sciters_paper_path(@paper) %>.
     </td>
   </tr>
 </table>
