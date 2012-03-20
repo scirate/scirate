@@ -97,15 +97,16 @@ describe "Paper pages" do
     let(:paper) { FactoryGirl.create(:paper) }
 
     before do
-      visit papers_path
+      visit papers_path(date: Date.today)
     end
 
-    it { should have_title 'All papers' }
+    it { should have_title "Papers from #{Date.today.to_formatted_s(:short)}" }
 
     describe "pagination" do
       before(:all) do
         30.times { FactoryGirl.create(:paper, pubdate: Date.today) }
         30.times { FactoryGirl.create(:paper, pubdate: Date.yesterday) }
+        30.times { FactoryGirl.create(:paper, pubdate: Date.yesterday - 1) }
       end
       after(:all)  { Paper.delete_all }
 
@@ -120,6 +121,29 @@ describe "Paper pages" do
         Paper.find_all_by_pubdate(Date.yesterday).each do |paper|
           page.should_not have_link paper.identifier
           page.should_not have_content paper.title
+        end
+      end
+
+      it "should have the right links to the next/prev days" do
+        page.should have_link Date.yesterday.to_formatted_s(:short)
+        page.should_not have_link Date.tomorrow.to_formatted_s(:short)
+      end
+
+      describe "on previous day's page" do
+        before { visit papers_path(date: Date.yesterday) }
+
+        it "should have the right links to the next/prev days" do
+          page.should have_link Date.yesterday.prev_day.to_formatted_s(:short)
+          page.should have_link Date.today.to_formatted_s(:short)
+        end
+      end
+
+      describe "on page from two days ago" do
+        before { visit papers_path(date: Date.yesterday.prev_day) }
+
+        it "should have the right links to the next/prev days" do
+          page.should_not have_link Date.yesterday.prev_day.prev_day.to_formatted_s(:short)
+          page.should have_link Date.yesterday.to_formatted_s(:short)
         end
       end
     end

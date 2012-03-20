@@ -5,12 +5,13 @@ Scirate3::Application.routes.draw do
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
   get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
 
-  resources :papers, only: [:index]
-
   #custom routes to use arXiv identifiers as id's for papers
-  get '/papers/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
-  get '/papers/:id/sciters', 
+  get '/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
+  get '/:id/sciters', 
           to: 'papers#sciters', id: /\d{4}\.\d{4}/, as: "sciters_paper"
+
+  root to: 'papers#index', as: 'papers'
+  root to: 'papers#index'
 
   resources :scites, only: [:create, :destroy]
 
@@ -19,7 +20,6 @@ Scirate3::Application.routes.draw do
   match '/signout', to: 'sessions#destroy'
   match '/about',   to: 'static_pages#about'
 
-  root to: 'static_pages#home'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

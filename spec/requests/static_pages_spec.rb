@@ -9,15 +9,6 @@ describe "Static pages" do
     it { should have_title page_title }
   end
 
-  describe "Home page" do
-    before { visit root_path }
-    let(:heading)    { 'Scirate' }
-    let(:page_title) { '' }
-
-    it_should_behave_like "all static pages"
-
-  end    
-
   describe "About page" do
     before { visit about_path }
     let(:heading)    { 'About' }
@@ -32,7 +23,7 @@ describe "Static pages" do
     click_link "About"
     page.should have_title 'About'
 
-    click_link "Home"
-    page.should have_title ''
+    click_link "Sign in"
+    page.should have_title 'Sign in'
   end
 end
