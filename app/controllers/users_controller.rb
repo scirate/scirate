@@ -43,7 +43,7 @@ class UsersController < ApplicationController
     if @user.update_attributes(params[:user])
       sign_in @user
       flash[:success] = "Profile updated"
-      redirect_to root_path
+      render 'show'
     else
       render 'edit'
     end   
@@ -61,6 +61,9 @@ class UsersController < ApplicationController
     end  
   end
 
+  def scited_papers
+    @user = User.find(params[:id])
+  end
 
   private
 

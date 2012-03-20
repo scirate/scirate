@@ -1,0 +1,17 @@
+<% provide :title, "Scites for #{@user.name}" %>
+<table class="profile">
+  <tr>
+    <td class="main">
+      <h1>
+        <%= gravatar_for @user %>
+        <%= @user.name %>
+      </h1>
+      <%= render 'scited_papers' %>
+    </td>
+    <td class="sidebar round">
+      <strong>Name</strong> <%= @user.name %><br />
+      <strong>URL</strong> <%= link_to user_path(@user), @user %><br />
+      <strong>Scites</strong> <%= link_to @user.scites.count, scites_user_path(@user) %>
+    </td>
+  </tr>
+</table>

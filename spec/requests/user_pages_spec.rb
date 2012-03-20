@@ -58,42 +58,57 @@ describe "User pages" do
     end
   end
   
-  # describe "edit" do
-  #   let(:user) { FactoryGirl.create(:user) }
-  #   before do
-  #     sign_in user
-  #     visit edit_user_path(user)
-  #   end
+  describe "scited_papers" do
+    let(:user)   { FactoryGirl.create(:user) }
+    let(:paper1) { FactoryGirl.create(:paper) }
+    let(:paper2) { FactoryGirl.create(:paper) }
 
-  #   describe "page" do
-  #     it { should have_heading "Edit user" }
-  #     it { should have_title "Edit user" }
-  #     it { should have_link('change', href: 'http://gravatar.com/emails') }
-  #   end
+    before do
+      user.scite!(paper1)
+      visit scites_user_path(user)
+    end
 
-  #   describe "with invalid information" do
-  #     let(:error) { '1 error prohibited this user from being saved' }
-  #     before { update }
+    it { should have_title "Scites for #{user.name}" }
+    it { should have_link paper1.identifier }
+    it { should_not have_link paper2.identifier }
+  end
 
-  #     it { should have_content(error) }
-  #  end
+  describe "edit" do
+    let(:user) { FactoryGirl.create(:user) }
+    before do
+      sign_in user
+      visit edit_user_path(user)
+    end
+
+    describe "page" do
+      it { should have_heading "Edit user" }
+      it { should have_title "Edit user" }
+      it { should have_link('change', href: 'http://gravatar.com/emails') }
+    end
+
+    describe "with invalid information" do
+      let(:error) { '1 error prohibited this user from being saved' }
+      before { update }
+
+      it { should have_content(error) }
+   end
   
-  #   describe "with valid information" do
-  #     let(:user)      { FactoryGirl.create(:user) }
-  #     let(:new_name)  { "New Name" }
-  #     let(:new_email) { "new@example.com" }
-  #     before do
-  #       fill_in "Name",         with: new_name
-  #       fill_in "Email",        with: new_email
-  #       fill_in "Password",     with: user.password
-  #       fill_in "Confirmation", with: user.password
-  #       click_button "Update"
-  #     end
+    describe "with valid information" do
+      let(:user)      { FactoryGirl.create(:user) }
+      let(:new_name)  { "New Name" }
+      let(:new_email) { "new@example.com" }
+      before do
+        fill_in "Name",         with: new_name
+        fill_in "Email",        with: new_email
+        fill_in "Password",     with: user.password
+        fill_in "Confirmation", with: user.password
+        click_button "Update"
+      end
 
-  #     it { should have_selector('title', text: new_name) }
-  #     it { should have_selector('div.flash.success') }
-  #     specify { user.reload.name.should  == new_name }
-  #     specify { user.reload.email.should == new_email }
-  #   end
-  # end
+      it { should have_selector('title', text: new_name) }
+      it { should have_selector('div.flash.success') }
+      specify { user.reload.name.should  == new_name }
+      specify { user.reload.email.should == new_email }
+    end
+  end
 end
