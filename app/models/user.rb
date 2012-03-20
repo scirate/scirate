@@ -9,6 +9,7 @@
 #  created_at      :datetime        not null
 #  updated_at      :datetime        not null
 #  password_digest :string(255)
+#  scites_count    :integer         default(0)
 #
 
 class User < ActiveRecord::Base

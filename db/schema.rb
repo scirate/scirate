@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120319090743) do
+ActiveRecord::Schema.define(:version => 20120320094847) do
 
   create_table "feed_days", :force => true do |t|
     t.date     "pubdate"
@@ -28,10 +28,11 @@ ActiveRecord::Schema.define(:version => 20120319090743) do
     t.text     "abstract"
     t.string   "identifier"
     t.string   "url"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.date     "pubdate"
     t.date     "updated_date"
+    t.integer  "scites_count", :default => 0
   end
 
   add_index "papers", ["identifier"], :name => "index_papers_on_identifier", :unique => true
@@ -52,9 +53,10 @@ ActiveRecord::Schema.define(:version => 20120319090743) do
     t.string   "name"
     t.string   "email"
     t.string   "remember_token"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.string   "password_digest"
+    t.integer  "scites_count",    :default => 0
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -33,6 +33,8 @@ GEM
     arel (3.0.0)
     bcrypt-ruby (3.0.1)
     builder (3.0.0)
+    bullet (2.2.1)
+      uniform_notifier (~> 1.0.0)
     capybara (1.1.2)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -158,6 +160,7 @@ GEM
     uglifier (1.0.3)
       execjs (>= 0.3.0)
       multi_json (>= 1.0.2)
+    uniform_notifier (1.0.2)
     xpath (0.1.4)
       nokogiri (~> 1.3)
 
@@ -167,6 +170,7 @@ PLATFORMS
 DEPENDENCIES
   annotate (~> 2.4.1.beta)
   bcrypt-ruby (= 3.0.1)
+  bullet
   capybara (>= 1.1.2)
   chronic
   coffee-rails (= 3.2.2)

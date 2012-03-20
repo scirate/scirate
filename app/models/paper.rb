@@ -12,6 +12,7 @@
 #  updated_at   :datetime        not null
 #  pubdate      :date
 #  updated_date :date
+#  scites_count :integer         default(0)
 #
 
 class Paper < ActiveRecord::Base
