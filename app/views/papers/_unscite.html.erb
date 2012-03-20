@@ -1,4 +1,4 @@
-<%= form_for(current_user.scites.find_by_paper_id(@paper),
+<%= form_for(current_user.scites.find_by_paper_id(paper),
                        html: { method: :delete }) do |f| %>
   <div><%= f.hidden_field :paper_id %></div>
   <%= f.submit "Unscite", :class => "btn btn-large btn-primary" %>

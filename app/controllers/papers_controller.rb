@@ -27,5 +27,7 @@ class PapersController < ApplicationController
     @prev = @prev.pubdate unless @prev.nil?
 
     @papers = Paper.find_all_by_pubdate(@date)
+
+    @papers = @papers.sort_by{ |p| [-p.scites.count, p.identifier] }
   end
 end

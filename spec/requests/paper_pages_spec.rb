@@ -94,13 +94,47 @@ describe "Paper pages" do
   end
 
   describe "index" do
-    let(:paper) { FactoryGirl.create(:paper) }
+    let(:paper) { FactoryGirl.create(:paper, pubdate: Date.today) }
+    let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
 
     before do
       visit papers_path(date: Date.today)
     end
 
     it { should have_title "Papers from #{Date.today.to_formatted_s(:short)}" }
+
+    describe "scites display" do
+      describe "when the paper has no scites" do
+        before do
+          paper.save
+          visit papers_path(date: Date.today)
+        end
+
+        it { should have_content "0 Scites" }
+      end      
+
+      describe "when the paper has one scite" do
+        before do
+          user.scite!(paper)
+          visit papers_path(date: Date.today)
+        end
+
+        it { should have_content "1 Scite" }
+        it { should_not have_content "1 Scites" }
+      end
+
+      describe "when the paper has two scites" do
+        before do
+          user.scite!(paper)
+          other_user.scite!(paper)
+
+          visit papers_path(date: Date.today)
+        end
+
+        it { should have_content "2 Scites" }
+      end
+    end
 
     describe "pagination" do
       before(:all) do
