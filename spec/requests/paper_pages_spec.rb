@@ -91,6 +91,19 @@ describe "Paper pages" do
         end    
       end
     end
+
+    describe "should list sciters" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:other_user) { FactoryGirl.create(:user) }
+
+      before do
+        user.scite!(paper)
+        visit paper_path(paper)
+      end
+
+      it { should have_content user.name }
+      it { should_not have_content other_user.name }
+    end
   end
 
   describe "index" do

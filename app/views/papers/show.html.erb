@@ -1,20 +1,2 @@
 <% provide :title, @paper.identifier %>
-<table class="profile">
-  <tr>
-    <td class="main">
-      <h1>
-        <%= @paper.identifier %><br />
-        <%= @paper.title %>        
-      </h1>     
-      <%= @paper.authors.join(', ') %><br />
-      <%= @paper.abstract %><br />
-      Published on <%= @paper.pubdate.to_formatted_s(:rfc822) %><br />
-      <% if @paper.updated? %>
-        Updated on <%= @paper.updated_date.to_formatted_s(:rfc822) %><br />
-      <% end %>
-      <%= link_to @paper.url, @paper.url %>
-      <%= render( partial: 'scite_form', object: @paper, as: :paper ) if signed_in? %>
-      <%= link_to "#{@paper.sciters.count} scites", sciters_paper_path(@paper) %>.
-    </td>
-  </tr>
-</table>
+<%= render 'full_paper' %>

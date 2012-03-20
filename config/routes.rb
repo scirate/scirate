@@ -7,8 +7,6 @@ Scirate3::Application.routes.draw do
 
   #custom routes to use arXiv identifiers as id's for papers
   get '/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
-  get '/:id/sciters', 
-          to: 'papers#sciters', id: /\d{4}\.\d{4}/, as: "sciters_paper"
 
   root to: 'papers#index', as: 'papers'
   root to: 'papers#index'
