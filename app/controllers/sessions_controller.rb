@@ -6,8 +6,13 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by_email(params[:email])
     if user && user.authenticate(params[:password])
-      sign_in user, remember_me: (params[:remember_me] == "1")
-      redirect_back_or user
+      if user.active?
+        sign_in user, remember_me: (params[:remember_me] == "1")
+        redirect_back_or user
+      else
+        flash[:error] = 'Account is inactive!  Check your inbox for a confirmation mail.'
+        redirect_to root_path        
+      end
     else
       flash.now[:error] = 'Invalid email/password combination'
       render 'new'    

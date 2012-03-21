@@ -41,11 +41,21 @@ class User < ActiveRecord::Base
     scites.find_by_paper_id(paper.id).destroy
   end
 
+  def send_signup_confirmation
+    generate_token(:confirmation_token)
+    save!(validate: false)
+    UserMailer.signup_confirmation(self).deliver
+  end
+
   def send_password_reset
     generate_token(:password_reset_token)
     self.password_reset_sent_at = Time.zone.now
     save!(validate: false)
     UserMailer.password_reset(self).deliver
+  end
+
+  def active?
+    self.active
   end
 
   private

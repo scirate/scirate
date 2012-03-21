@@ -1,11 +1,12 @@
 Scirate3::Application.routes.draw do
   
-  get "password_resets/new"
-
   resources :sessions, only: [:new, :create, :destroy]
 
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
   get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
+
+  get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
+
 
   #custom routes to use arXiv identifiers as id's for papers
   get '/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
@@ -21,7 +22,7 @@ Scirate3::Application.routes.draw do
   match '/signout', to: 'sessions#destroy'
   match '/about',   to: 'static_pages#about'
 
-  resources :password_resets
+  resources :password_resets, only: [:new, :create, :edit, :update]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,8 @@
+Hello <%= @user.name %>,
+
+Welcome to Scirate!  To activate your account, click the URL below.
+
+<%= activate_user_url(id: @user.id, confirmation_token: @user.confirmation_token) %>
+
+Thank You,
+Scirate

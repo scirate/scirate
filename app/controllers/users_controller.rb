@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, 
            only: [:show, :edit, :update, :destroy]
 
-  before_filter :correct_user,   only: [:edit, :update, :destroy]
+  before_filter :correct_user, only: [:edit, :update, :destroy]
 
   def show
     @user = User.find(params[:id])
@@ -21,12 +21,9 @@ class UsersController < ApplicationController
     if !signed_in?
       @user = User.new(params[:user])
       if @user.save
-        if !signed_in?
-          sign_in @user
-        end
-        
-        flash[:success] = "Welcome to Scirate!"
-        redirect_to @user
+        @user.send_signup_confirmation
+        flash[:success] = "Welcome to Scirate!  Confirmation mail sent to: #{@user.email}"
+        redirect_to root_path
       else
         render 'new'
       end
@@ -50,7 +47,7 @@ class UsersController < ApplicationController
   end 
 
   def destroy
-    user = User.find(params[:id])
+    user = User.find_by_id(params[:id])
 
     if user == current_user
       user.destroy
@@ -59,6 +56,22 @@ class UsersController < ApplicationController
     else
       redirect_to root_path
     end  
+  end
+
+  def activate
+    user = User.find_by_id(params[:id])
+    
+    if user && !user.active? && user.confirmation_token == params[:confirmation_token]
+      user.active = true
+      user.confirmation_token = nil
+      user.save!(validate: false)
+
+      flash[:success] = "Your account has been activated."
+
+      redirect_to signin_path
+    else
+      redirect_to root_url, :notice => "Account is already active or link is invalid!"
+    end
   end
 
   def scited_papers

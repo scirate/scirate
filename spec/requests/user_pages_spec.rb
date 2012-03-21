@@ -48,12 +48,100 @@ describe "User pages" do
       end
 
       describe "after saving the user" do
-        before { valid_signup(email: 'test@example.com') }
-        let(:user) { User.find_by_email('test@example.com') }
+        before { valid_signup(email: 'test-new@example.com') }
+        let(:user) { User.find_by_email('test-new@example.com') }
         
-        it { should have_title user.name }
-        it { should have_success_message 'Welcome' }
-        it { should have_link('Sign out') }
+        it { should have_title "" }
+        it { should have_success_message 'Welcome to Scirate!' }
+        it { should have_success_message user.email }
+      end
+    end
+
+    describe "account confirmation" do
+
+      describe "new signup is inactive" do
+        let(:user) { User.find_by_email('test-new@example.com') }
+
+        before do
+          visit signup_path
+          valid_signup(email: 'new@example.com', password: 'foobar')
+
+          visit signin_path
+          fill_in "Email",    with: 'new@example.com'
+          fill_in "Password", with: 'foobar'
+          click_button "Sign in"
+        end
+
+        it { should have_title "" }
+        it { should have_content "Account is inactive!" }
+      end        
+
+      describe "emails user on signup" do
+        before do
+          visit signup_path
+          valid_signup(email: 'test-new@example.com')
+        end
+
+        let(:user) { User.find_by_email('test-new@example.com') }
+
+        it { should have_title "" }
+        it { should have_content("Confirmation mail sent to: #{user.email}") }
+
+        it "should send the email" do
+          last_email.to.should include(user.email)
+        end
+      end
+
+      describe "does not email on invalid signup" do
+        before do
+          visit signup_path
+          signup
+        end
+
+        it "should not send email" do
+          last_email.should be_nil
+        end
+      end
+
+      describe "activation" do
+        let(:user) { FactoryGirl.create(:user, 
+                                        active: false,
+                                        confirmation_token: "i-am-a-token") }
+    
+        describe "with valid information" do
+          before { visit activate_user_path(user.id, user.confirmation_token) }
+          
+          it { should have_title "Sign in" }
+          it { should have_content("Your account has been activated") }
+        end
+
+        describe "with invalid confirmation" do
+          before { visit activate_user_path(user.id, "bogus") }
+      
+          it { should have_title "" }
+          it { should have_content("link is invalid") }
+        end
+
+        describe "with already used confirmation" do
+          before do 
+            visit activate_user_path(user.id, user.confirmation_token)
+            visit activate_user_path(user.id, user.confirmation_token)
+          end
+          
+          it { should have_title "" }
+          it { should have_content("link is invalid") }
+        end
+
+        describe "for an active user" do
+          before do 
+            user.active = true
+            user.save!
+            visit activate_user_path(user.id, user.confirmation_token)
+          end
+          
+          it { should have_title "" }
+          it { should have_content("link is invalid") }
+        end
       end
     end
   end

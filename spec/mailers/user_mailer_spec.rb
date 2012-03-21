@@ -5,8 +5,8 @@ describe UserMailer do
   subject { mail }
 
   describe 'signup confirmation email' do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:mail) { UserMailer.signup_notification(user) }
+    let(:user) { FactoryGirl.create(:user, confirmation_token: "some_token") }
+    let(:mail) { UserMailer.signup_confirmation(user) }
  
     it 'renders the subject' do
       mail.subject.should == 'Welcome to Scirate!'
@@ -17,7 +17,7 @@ describe UserMailer do
     end
 
     it 'has the right body content' do
-      mail.body.encoded.should match("To activate your account, visit")
+      mail.body.encoded.should match("Welcome to Scirate!  To activate your account, click the URL below.")
     end
  
     it 'renders the receiver email' do
@@ -28,10 +28,9 @@ describe UserMailer do
       mail.body.encoded.should match(user.name)
     end
  
-    # #ensure that the @confirmation_url variable appears in the email body
-    # it 'assigns @confirmation_url' do
-    #   mail.body.encoded.should match("http://aplication_url/#{user.id}/confirmation")
-    # end
+    it 'includes the right url' do
+      mail.body.encoded.should match( activate_user_url(id: user.id, confirmation_token: user.confirmation_token) )
+    end
   end
 
   describe "password reset email" do

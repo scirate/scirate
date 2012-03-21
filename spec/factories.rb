@@ -3,6 +3,7 @@ FactoryGirl.define do
     sequence(:name)  { |n| "Person #{n}" }
     sequence(:email) { |n| "person_#{n}@example.com"}   
     password "foobar"
+    sequence(:active){ |n| true }
   end
 
   factory :paper do
