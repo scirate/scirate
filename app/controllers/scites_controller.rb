@@ -7,8 +7,9 @@ class ScitesController < ApplicationController
     redirect_to(:back)    
   end
 
-  def destroy
-    @paper = Scite.find(params[:id]).paper
+  def destroy    
+    @paper = Paper.find(params[:paper_id])
+
     current_user.unscite!(@paper)
     redirect_to(:back)    
   end

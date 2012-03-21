@@ -1,5 +1,5 @@
 <div id="scite_form">
-  <% if current_user.scited_papers.include?(paper) %>
+  <% if (defined?(@scited_papers) && @scited_papers.include?(paper)) || current_user.scited_papers.include?(paper) %>
     <%= render partial: 'unscite', object: paper, as: :paper %>
   <% else %>
     <%= render partial: 'scite', object: paper, as: :paper %>

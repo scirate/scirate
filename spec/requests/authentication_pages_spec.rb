@@ -137,12 +137,12 @@ describe "Authentication" do
 
       describe "in the Scites controller" do
         describe "submitting to the create action" do
-          before { post scite_path }
+          before { post scites_path }
           specify { response.should redirect_to(signin_path) }
         end
 
         describe "submitting to the destroy action" do
-          before { delete scite_path(1) }
+          before { delete scites_path(1) }
           specify { response.should redirect_to(signin_path) }          
         end      
       end

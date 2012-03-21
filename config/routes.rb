@@ -11,7 +11,8 @@ Scirate3::Application.routes.draw do
   root to: 'papers#index', as: 'papers'
   root to: 'papers#index'
 
-  resources :scites, only: [:create, :destroy]
+  resources :scites, only: [:create]
+  delete '/scites', to: 'scites#destroy', as: 'scites'
 
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'

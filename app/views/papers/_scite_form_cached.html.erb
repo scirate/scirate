@@ -1,7 +1,0 @@
-<div id="scite_form">
-  <% if @scited_papers.include?(paper) %>
-    <%= render partial: 'unscite', object: paper, as: :paper %>
-  <% else %>
-    <%= render partial: 'scite', object: paper, as: :paper %>
-  <% end %>
-</div>
