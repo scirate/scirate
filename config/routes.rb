@@ -1,5 +1,7 @@
 Scirate3::Application.routes.draw do
   
+  get "password_resets/new"
+
   resources :sessions, only: [:new, :create, :destroy]
 
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
@@ -19,6 +21,7 @@ Scirate3::Application.routes.draw do
   match '/signout', to: 'sessions#destroy'
   match '/about',   to: 'static_pages#about'
 
+  resources :password_resets
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
