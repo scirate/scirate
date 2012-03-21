@@ -10,7 +10,12 @@
     <%= label_tag :password %> <br />
     <%= password_field_tag :password %>
   </div>
+  <div class="field">
+    <%= check_box_tag :remember_me, 1, params[:remember_me] %>
+    <%= label_tag :remember_me %>
+  </div>
   <div class="actions"><%= submit_tag "Sign in" %></div>
 <% end %>
 
 <p>New user? <%= link_to "Sign up now!", signup_path %></p>
+<p><%= link_to "Forgotten password?", '#' %></p>
