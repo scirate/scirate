@@ -38,6 +38,7 @@ describe Paper do
   it { should respond_to(:updated_date) }
   it { should respond_to(:scites) }
   it { should respond_to(:sciters) }
+  it { should respond_to(:comments) }
 
   it { should be_valid }
 
@@ -98,5 +99,28 @@ describe Paper do
     end
 
     its(:sciters) { should include(user) }
+  end
+
+  describe "comments" do
+    let (:user) { FactoryGirl.create(:user) }
+    
+    before { user.save }
+
+    let!(:old_comment) do
+      FactoryGirl.create(:comment, 
+                         user: user, paper: @paper, created_at: 1.day.ago)
+    end
+    let!(:new_comment) do
+      FactoryGirl.create(:comment, 
+                         user: user, paper: @paper, created_at: 1.minute.ago)
+    end
+    let!(:med_comment) do
+      FactoryGirl.create(:comment, 
+                         user: user, paper: @paper, created_at: 1.hour.ago)
+    end
+
+    it "should have the right comments in the right order" do
+      @paper.comments.should == [old_comment, med_comment, new_comment]
+    end
   end
 end

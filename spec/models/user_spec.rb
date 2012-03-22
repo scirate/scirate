@@ -34,6 +34,7 @@ describe User do
   it { should respond_to(:scited_papers) }
   it { should respond_to(:scited?) }
   it { should respond_to(:scite!) }
+  it { should respond_to(:comments) }
 
   it { should be_valid }
 
@@ -136,6 +137,28 @@ describe User do
     describe "and unsciting" do
       before { @user.unscite!(paper) }
       its(:scited_papers) { should_not include(paper) }
+    end
+  end
+
+  describe "comments" do
+    let (:paper) { FactoryGirl.create(:paper) }
+    
+    before { @user.save }
+    let!(:old_comment) do
+      FactoryGirl.create(:comment, 
+                         user: @user, paper: paper, created_at: 1.day.ago)
+    end
+    let!(:new_comment) do
+      FactoryGirl.create(:comment, 
+                         user: @user, paper: paper, created_at: 1.minute.ago)
+    end
+    let!(:med_comment) do
+      FactoryGirl.create(:comment, 
+                         user: @user, paper: paper, created_at: 1.hour.ago)
+    end
+
+    it "should have the right comments in the right order" do
+      @user.comments.should == [new_comment, med_comment, old_comment]
     end
   end
 end

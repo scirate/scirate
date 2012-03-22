@@ -15,4 +15,10 @@ FactoryGirl.define do
     sequence(:pubdate)     { |n| Date.today }
     sequence(:updated_date){ |n| Date.today }
   end
+
+  factory :comment do
+    sequence(:content)     { |n| "This is test comment #{n}!" }
+    user
+    paper
+  end
 end
