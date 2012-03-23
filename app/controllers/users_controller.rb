@@ -78,6 +78,10 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  def comments
+    @user = User.find(params[:id])
+  end
+
   private
 
     def correct_user

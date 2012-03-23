@@ -107,30 +107,8 @@ describe "Paper pages" do
 
     describe "comments" do
       let(:user) { FactoryGirl.create(:user) }
-      before { sign_in user }
-      
-      describe "should list all comments" do
-        before do
-          5.times { user.comments.create(paper_id: paper, content: "Hello") }
-          visit paper_path(paper)
-        end
-
-        it "should increment the scited papers count" do
-          expect do
-            click_button "Scite!"
-          end.to change(user.scited_papers, :count).by(1)
-        end
-      end
-    end
-
-    describe "comments" do
-      let(:user) { FactoryGirl.create(:user) }
       let(:other_user) { FactoryGirl.create(:user) }
       let(:other_paper) { FactoryGirl.create(:paper) }
-
-      before do
-        sign_in user
-      end
 
       describe "should list all comments for paper" do
         before do
@@ -155,9 +133,9 @@ describe "Paper pages" do
           end
         end
 
-        it "should list name of commenters" do
+        it "should link to name of commenters" do
           paper.comments.each do |comment|
-            page.should have_content comment.user.name
+            page.should have_link comment.user.name
           end
         end          
 
@@ -166,6 +144,82 @@ describe "Paper pages" do
             page.should have_content comment.created_at.to_formatted_s(:short)
           end
         end          
+
+        it "should list the nubmer of comments" do
+          page.should have_content "10 comments"
+        end          
+      end
+    
+      describe "leaving a comment" do
+
+        describe "when not signed in" do
+          before { visit paper_path(paper) }
+
+          it { should_not have_button "Leave Comment" }
+          it { should_not have_field "comment[content]" }
+        end
+
+        describe "when signed in" do
+          before do
+            sign_in user
+            visit paper_path(paper)
+          end
+
+          it { should have_button "Leave Comment" }
+          it { should have_field "comment[content]" }
+        
+          describe "with no content" do
+            it "should not increment user's comments count" do
+              expect do
+                click_button "Leave Comment"
+              end.not_to change(user.comments, :count)
+            end
+            
+            it "should not increment paper's comments count" do
+              expect do
+                click_button "Leave Comment"
+              end.not_to change(paper.comments, :count)
+            end
+            
+            it "should not create a comment" do
+              expect do
+                click_button "Leave Comment"
+              end.not_to change(Comment, :count)
+            end
+            
+            it "should generate an error message" do
+              click_button "Leave Comment"            
+              page.should have_content "Error posting comment"
+            end
+          end
+          
+          describe "with valid content" do
+            before { fill_in "comment[content]", with: "Test comment." }
+            
+            it "should increment user's comments count" do
+              expect do
+                click_button "Leave Comment"
+              end.to change(user.comments, :count).by(1)
+            end
+            
+            it "should increment paper's comments count" do
+              expect do
+                click_button "Leave Comment"
+              end.to change(paper.comments, :count).by(1)
+            end
+            
+            it "should create a comment" do
+              expect do
+                click_button "Leave Comment"
+              end.to change(Comment, :count).by(1)
+            end
+            
+            it "should generate an success message" do
+              click_button "Leave Comment"            
+              page.should have_content "Comment posted"
+            end
+          end
+        end
       end
     end
   end

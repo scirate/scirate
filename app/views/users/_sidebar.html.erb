@@ -1,0 +1,5 @@
+<td class="sidebar round">
+  <strong>Name</strong> <%= @user.name %><br />
+  <strong>Scites</strong> <%= link_to @user.scites.size, scites_user_path(@user) %><br />
+  <strong>Comments</strong> <%= link_to @user.comments.size, comments_user_path(@user) %>
+</td>

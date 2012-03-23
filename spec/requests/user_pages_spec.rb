@@ -14,6 +14,8 @@ describe "User pages" do
 
     it { should have_heading user.name }
     it { should have_title user.name }
+    it { should have_content "Scites #{user.scites.count}" }
+    it { should have_content "Comments #{user.comments.count}" }
   end
 
   describe "signup page" do
@@ -159,6 +161,49 @@ describe "User pages" do
     it { should have_title "Scites for #{user.name}" }
     it { should have_link paper1.identifier }
     it { should_not have_link paper2.identifier }
+  end
+
+  describe "comments" do
+    let(:user)       { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    let(:paper1)     { FactoryGirl.create(:paper) }
+    let(:paper2)     { FactoryGirl.create(:paper) }
+    let(:paper3)     { FactoryGirl.create(:paper) }
+
+    before do
+      5.times { |n| user.comments.create(paper_id: paper1.id, content: "Comment #{n+1} on #{paper1.title}") }
+      5.times { |n| user.comments.create(paper_id: paper2.id, content: "Comment #{n+1} on #{paper2.title}") }
+      5.times { |n| other_user.comments.create(paper_id: paper2.id, content: "Other User's Comment #{n+1} on #{paper2.title}") }
+                                             5.times { |n| other_user.comments.create(paper_id: paper3.id, content: "Other User's Comment #{n+1} on #{paper3.title}") }
+      visit comments_user_path(user)
+    end
+
+    it { should have_title "Comments for #{user.name}" }
+    it { should have_content "10 comments" }
+    
+    it "should have all the user's comments" do
+      user.comments.each do |comment|
+        page.should have_content comment.content
+      end
+    end
+          
+    it "should not have comments from other papers" do
+      other_user.comments.each do |comment|
+        page.should_not have_content comment.content
+      end
+    end
+    
+    it "should link to the papers" do
+      user.comments.each do |comment|
+        page.should have_link comment.paper.identifier
+      end
+    end          
+
+    it "should list comment time/date" do
+      user.comments.each do |comment|
+        page.should have_content comment.created_at.to_formatted_s(:short)
+      end
+    end          
   end
 
   describe "edit" do

@@ -1,4 +1,9 @@
 <p>
-  <%= comment.user.name %> commented on <%= comment.created_at.to_formatted_s(:short) %><br />
+  <strong>
+    <%= link_to comment.user.name, comment.user %> 
+    commented on paper <%= link_to comment.paper.identifier, comment.paper %>
+    at  <%= comment.created_at.to_formatted_s(:short) %>
+  </strong>
+<br />
   <%= comment.content %>
 </p>

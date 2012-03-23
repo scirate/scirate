@@ -8,10 +8,6 @@
       </h1>
       <%= render 'scited_papers' %>
     </td>
-    <td class="sidebar round">
-      <strong>Name</strong> <%= @user.name %><br />
-      <strong>URL</strong> <%= link_to user_path(@user), @user %><br />
-      <strong>Scites</strong> <%= link_to @user.scites.size, scites_user_path(@user) %>
-    </td>
+    <%= render 'sidebar' %>
   </tr>
 </table>

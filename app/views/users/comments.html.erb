@@ -1,11 +1,12 @@
-<% provide :title, @user.name %>
+<% provide :title, "Comments for #{@user.name}" %>
 <table class="profile">
   <tr>
     <td class="main">
       <h1>
         <%= gravatar_for @user %>
         <%= @user.name %>
-      </h1>
+      </h1><br />
+      <%= render 'comments' %>
     </td>
     <%= render 'sidebar' %>
   </tr>

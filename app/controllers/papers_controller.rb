@@ -1,6 +1,6 @@
 class PapersController < ApplicationController
   def show
-    @paper = Paper.find_by_identifier!(params[:id])    
+    @paper = Paper.includes(comments: :user).find_by_identifier!(params[:id])    
   end
 
   def index
