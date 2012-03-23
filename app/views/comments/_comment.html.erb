@@ -1,7 +1,10 @@
 <p>
   <strong>
-    <%= link_to comment.user.name, comment.user %> 
-    commented on paper <%= link_to comment.paper.identifier, comment.paper %>
+    <% if defined? @user %>
+      Comment on paper <%= link_to comment.paper.identifier, comment.paper %>
+    <% elsif defined? @paper %>
+      <%= link_to comment.user.name, comment.user %> commented
+    <% end %>
     at  <%= comment.created_at.to_formatted_s(:short) %>
   </strong>
 <br />

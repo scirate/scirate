@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120322045954) do
+ActiveRecord::Schema.define(:version => 20120323070352) do
 
   create_table "comments", :force => true do |t|
     t.text     "content"
@@ -39,11 +39,12 @@ ActiveRecord::Schema.define(:version => 20120322045954) do
     t.text     "abstract"
     t.string   "identifier"
     t.string   "url"
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.date     "pubdate"
     t.date     "updated_date"
-    t.integer  "scites_count", :default => 0
+    t.integer  "scites_count",   :default => 0
+    t.integer  "comments_count", :default => 0
   end
 
   add_index "papers", ["identifier"], :name => "index_papers_on_identifier", :unique => true
@@ -72,6 +73,7 @@ ActiveRecord::Schema.define(:version => 20120322045954) do
     t.datetime "password_reset_sent_at"
     t.string   "confirmation_token"
     t.boolean  "active",                 :default => false
+    t.integer  "comments_count",         :default => 0
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

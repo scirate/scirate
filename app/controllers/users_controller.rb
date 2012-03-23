@@ -79,7 +79,7 @@ class UsersController < ApplicationController
   end
 
   def comments
-    @user = User.find(params[:id])
+    @user = User.includes(comments: :paper).find(params[:id])
   end
 
   private
