@@ -42,7 +42,7 @@ describe "Paper pages" do
       it { should have_content paper.updated_date.to_formatted_s(:rfc822) }
     end
 
-    describe "scite/unscite buttons" do
+    describe "sciting/unsciting" do
       let(:user) { FactoryGirl.create(:user) }
       before { sign_in user }
       
@@ -90,19 +90,83 @@ describe "Paper pages" do
           it { should have_selector('input', value: "Scite!") }
         end    
       end
+
+      describe "should list sciters" do
+        let(:user) { FactoryGirl.create(:user) }
+        let(:other_user) { FactoryGirl.create(:user) }
+        
+        before do
+          user.scite!(paper)
+          visit paper_path(paper)
+        end
+        
+        it { should have_content user.name }
+        it { should_not have_content other_user.name }
+      end
     end
 
-    describe "should list sciters" do
+    describe "comments" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user }
+      
+      describe "should list all comments" do
+        before do
+          5.times { user.comments.create(paper_id: paper, content: "Hello") }
+          visit paper_path(paper)
+        end
+
+        it "should increment the scited papers count" do
+          expect do
+            click_button "Scite!"
+          end.to change(user.scited_papers, :count).by(1)
+        end
+      end
+    end
+
+    describe "comments" do
       let(:user) { FactoryGirl.create(:user) }
       let(:other_user) { FactoryGirl.create(:user) }
+      let(:other_paper) { FactoryGirl.create(:paper) }
 
       before do
-        user.scite!(paper)
-        visit paper_path(paper)
+        sign_in user
       end
 
-      it { should have_content user.name }
-      it { should_not have_content other_user.name }
+      describe "should list all comments for paper" do
+        before do
+          5.times { |n| user.comments.create(paper_id: paper.id,  content: "This is comment number #{n+1}.") }
+          5.times { |n| other_user.comments.create(paper_id: paper.id,  content: "This is comment number #{n+6}.") }
+
+          5.times { |n| user.comments.create(paper_id: other_paper.id,  content: "This is other comment number #{n+1}.") }
+          5.times { |n| other_user.comments.create(paper_id: other_paper.id,  content: "This is other comment number #{n+6}.") }
+
+          visit paper_path(paper)
+        end
+    
+        it "should have all comments" do
+          paper.comments.each do |comment|
+            page.should have_content comment.content
+          end
+        end
+          
+        it "should not have comments from other papers" do
+          other_paper.comments.each do |comment|
+            page.should_not have_content comment.content
+          end
+        end
+
+        it "should list name of commenters" do
+          paper.comments.each do |comment|
+            page.should have_content comment.user.name
+          end
+        end          
+
+        it "should list comment time/date" do
+          paper.comments.each do |comment|
+            page.should have_content comment.created_at.to_formatted_s(:short)
+          end
+        end          
+      end
     end
   end
 

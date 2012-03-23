@@ -1,6 +1,6 @@
 class PapersController < ApplicationController
   def show
-    @paper = Paper.find_by_identifier!(params[:id])
+    @paper = Paper.find_by_identifier!(params[:id])    
   end
 
   def index
@@ -14,10 +14,10 @@ class PapersController < ApplicationController
     @next = nil
 
     #this test saves a query on the most recent date
-    if @date != last
+    if @date != last     
       @next = Paper.find(:last, 
-                           order: "pubdate DESC", 
-                           conditions: ["pubdate > ?", @date])
+                         order: "pubdate DESC", 
+                         conditions: ["pubdate > ?", @date])
       @next = @next.pubdate unless @next.nil?
     end
 

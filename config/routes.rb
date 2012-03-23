@@ -17,6 +17,8 @@ Scirate3::Application.routes.draw do
   resources :scites, only: [:create]
   delete '/scites', to: 'scites#destroy', as: 'scites'
 
+  resources :comments, only: [:create]
+
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
   match '/signout', to: 'sessions#destroy'

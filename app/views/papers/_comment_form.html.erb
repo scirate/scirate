@@ -1,0 +1,11 @@
+<div id="comment_form">
+<%= form_for(current_user.comments.build(paper_id: @paper.id)) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div><%= f.hidden_field :paper_id %></div>
+  <div class="field">
+    <%= f.label :content %><br />
+    <%= f.text_area :content %>
+  </div>
+  <%= f.submit "Leave Comment", :class => "btn btn-large btn-primary" %>
+  <% end %>
+</div>

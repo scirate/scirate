@@ -1,10 +1,12 @@
 <% provide :title, @paper.identifier %>
 <table class="paper">
-  <%= render 'full_paper' %>
+  <%= render 'papers/full_paper' %>
   <tr>
     <td>
-      <%= render( partial: 'scite_form', object: @paper, as: :paper ) if signed_in? %>
-      <%= render 'sciters' %>
+      <%= render( partial: 'papers/scite_form', object: @paper, as: :paper ) if signed_in? %>
+      <%= render 'papers/sciters' %>
+      <%= render 'papers/comments' %>
+      <%= render 'papers/comment_form' if signed_in? %>
     </td>
   </tr>
 </table>

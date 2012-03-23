@@ -1,3 +1,2 @@
-<%= pluralize(@paper.sciters.count, "sciter") %>:
+<%= pluralize(@paper.sciters.size, "sciter") %>:
 <%= @paper.sciters.map {|s| link_to(s.name, user_path(s))}.join(', ').html_safe %>
-
