@@ -19,8 +19,6 @@ class Paper < ActiveRecord::Base
   attr_accessible :title, :authors, :abstract, :identifier, :url, :pubdate, :updated_date
   serialize :authors, Array
 
-  default_scope order("identifier DESC")
-
   has_many  :scites, dependent: :destroy
   has_many  :sciters, through: :scites, order: "name ASC"
   has_many  :comments, dependent: :destroy, order: "created_at ASC"
