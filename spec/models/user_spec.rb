@@ -35,6 +35,10 @@ describe User do
   it { should respond_to(:scited?) }
   it { should respond_to(:scite!) }
   it { should respond_to(:comments) }
+  it { should respond_to(:password_reset_token) }
+  it { should respond_to(:password_reset_sent_at) }
+  it { should respond_to(:confirmation_token) }
+  it { should respond_to(:confirmation_sent_at) }
 
   it { should be_valid }
 

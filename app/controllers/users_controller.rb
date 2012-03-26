@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :signed_in_user, 
+  before_filter :signed_in_user,
            only: [:show, :edit, :update, :destroy]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
@@ -43,8 +43,8 @@ class UsersController < ApplicationController
       render 'show'
     else
       render 'edit'
-    end   
-  end 
+    end
+  end
 
   def destroy
     user = User.find_by_id(params[:id])
@@ -55,20 +55,24 @@ class UsersController < ApplicationController
       redirect_to root_path
     else
       redirect_to root_path
-    end  
+    end
   end
 
   def activate
     user = User.find_by_id(params[:id])
-    
+
     if user && !user.active? && user.confirmation_token == params[:confirmation_token]
-      user.active = true
-      user.confirmation_token = nil
-      user.save!(validate: false)
 
-      flash[:success] = "Your account has been activated."
-
-      redirect_to signin_path
+      if user.confirmation_sent_at > 2.days.ago
+        user.activate
+        flash[:success] = "Your account has been activated."
+        sign_in(user)
+        redirect_to root_url
+      else
+        user.send_signup_confirmation
+        flash[:error] = "Confirmation link has expired: a new confirmation email has been sent to #{user.email}"
+        redirect_to root_url
+      end
     else
       redirect_to root_url, :notice => "Account is already active or link is invalid!"
     end
@@ -85,7 +89,7 @@ class UsersController < ApplicationController
   private
 
     def correct_user
-      @user = User.find(params[:id])      
+      @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
     end
 

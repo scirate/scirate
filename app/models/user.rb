@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   valid_email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: valid_email_regex },
                     uniqueness: { case_sensitive: false }
-  
+
   validates :password, length: { minimum: 6 }
 
   def scited?(paper)
@@ -50,20 +50,55 @@ class User < ActiveRecord::Base
 
   def send_password_reset
     generate_token(:password_reset_token)
-    self.password_reset_sent_at = Time.zone.now
     save!(validate: false)
     UserMailer.password_reset(self).deliver
   end
 
+  def clear_password_reset
+    clear_token(:password_reset_token)
+    save!(validation: false)
+  end
+
   def active?
-    self.active
+    active
+  end
+
+  def activate
+    active = true
+    clear_token(:confirmation_token)
+    save!(validate: false)
   end
 
   private
 
+    # Generate a random confirmation token in column
+    # Also puts the time in self[ column - '_token' + '_sent_at' ] if it exists
     def generate_token(column)
-      begin
-        self[column] = SecureRandom.urlsafe_base64
-      end while User.exists?(column => self[column])
+      self[column] = SecureRandom.urlsafe_base64
+
+      column_split = column.to_s.split('_')
+
+      if column_split[-1] == "token"
+        sent_at = column_split[0..-2].append("sent_at").join('_').to_sym
+
+        if User.column_names.include? sent_at.to_s
+          self[sent_at] = Time.zone.now
+        end
+      end
+    end
+
+    # Clears a generated token
+    # Also clears self[ column - '_token' + '_sent_at' ] if it exists
+    def clear_token(column)
+      self[column] = nil
+
+      column_split = column.to_s.split
+      if column_split[-1] == "token"
+        sent_at = column_split[0..-2].append("sent_at").join('_').to_sym
+
+        if User.column_names.include? sent_at.to_s
+          self[sent_at] = nil
+        end
+      end
     end
 end
