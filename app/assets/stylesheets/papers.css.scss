@@ -43,9 +43,48 @@ ul.papers {
             text-align: justify;
             clear: both;
             padding: 0.5em;
+        }
+    }
+}
+
+/* Paper show page */
+
+span.label {
+    font-weight: bold;
+}
+
+div.paper {
+    div.title {
+        font-size: 175%;
+    }
+
+    div.authors {
+        font-size: 125%;
+    }
+
+    div.abstract {
+        text-align: justify;
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+
+    div.dates {
+        padding-bottom: 1em;
+    }
+
+    div.scites {
+        padding-bottom: 1em;
+    }
+
+    div.comments {
+        div.comment {
+            padding: 0.5em;
+            background-color: $scite-color;
             -moz-border-radius:    10px;
             -webkit-border-radius: 10px;
             border-radius:         10px;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
         }
     }
 }

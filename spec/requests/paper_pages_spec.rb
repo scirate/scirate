@@ -11,8 +11,8 @@ describe "Paper pages" do
       visit paper_path(paper)
     end
 
-    it { should have_heading paper.title }
-    it { should have_heading paper.identifier }
+    it { should have_content paper.title }
+    it { should have_content paper.identifier }
     it { should have_title paper.identifier }
     it { should have_content paper.authors[0] }
     it { should have_content paper.authors[1] }

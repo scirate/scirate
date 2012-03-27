@@ -1,12 +1,13 @@
-<p>
-  <strong>
+<div class="comment">
+  <span class="label">
     <% if defined? @user %>
       Comment on paper <%= link_to comment.paper.identifier, comment.paper %>
     <% elsif defined? @paper %>
       <%= link_to comment.user.name, comment.user %> commented
     <% end %>
     at  <%= comment.created_at.to_formatted_s(:short) %>
-  </strong>
-<br />
-  <%= comment.content %>
-</p>
+  </span>
+  <div class="body">
+    <%= comment.content %>
+  </div>
+</div>

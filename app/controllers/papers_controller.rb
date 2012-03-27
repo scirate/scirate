@@ -27,7 +27,7 @@ class PapersController < ApplicationController
     @prev = @prev.pubdate unless @prev.nil?
 
     @papers = Paper.find_all_by_pubdate(@date)
-    @papers = @papers.sort_by{ |p| [-p.scites.size, p.identifier] }
+    @papers = @papers.sort_by{ |p| [-p.scites.size, -p.comments.size, p.identifier] }
 
     #this is premature optimization, but it saves one query per unscited paper
     if signed_in?
