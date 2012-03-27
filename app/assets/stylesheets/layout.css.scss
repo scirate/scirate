@@ -1,8 +1,8 @@
-$full-width: 1000px;
+$full-width: 95%;
 $background-color: #22c;
 $accent-color: #aaf;
 $link-color: #22c;
-$visited-link-color: #66c;
+$visited-link-color: #55c;
 
 .container {
   width: $full-width;
@@ -179,36 +179,4 @@ td.sidebar {
     padding: 1em;
     vertical-align: top;
     background: #ffc;
-}
-
-/* Paper index page */
-
-ul.papers {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-li.paper {
-    padding-bottom: 1em;
-}
-
-table.paper {
-    width: 100%;
-}
-
-td.scite {
-    width: 15%;
-    padding: 1em;
-}
-
-td.title {
-    width: 85%;
-    padding: 1em;
-    font-weight: bold;
-}
-
-td.abstract {
-    width: 100%;
-    padding: 1em;
 }

@@ -1,24 +1,24 @@
-<li class="paper">
-  <table class="paper">
-    <tr>
-      <td class="scite">
-        <%= render( partial: 'scite_form', object: paper, as: :paper) if signed_in? %>
-        <%= pluralize(paper.scites.size, 'Scite') %><br />
-        <%= link_to(pluralize(paper.comments.size, 'Comment'),
-                            paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
-      </td>
-      <td class="title">
-        <%= link_to paper.identifier, paper %><br />
-        <%= paper.title %><br />
-        <%= paper.authors.join(', ') %>
-      </td>
-    </tr>
+<li class="papers">
+   <div class="scite">
+     <%= render( partial: 'scite_form', object: paper, as: :paper) if signed_in? %>
+     <%= pluralize(paper.scites.size, 'Scite') %><br />
+     <%= link_to(pluralize(paper.comments.size, 'Comment'),
+                         paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
+   </div>
+   <div class="title">
+     <span class="identifier">
+       <%= link_to paper.identifier, paper %>
+     </span>
+     <span class="title">
+       <%= paper.title %>
+     </span>
+     <div class="authors">
+       <%= paper.authors.join(', ') %>
+     </div>
+   </div>
     <% if paper.scites.size > 0 %>
-      <tr>
-        <td class="abstract" colspan="2">
-          <%= paper.abstract %>
-        </td>
-      </tr>
+      <div class = "abstract">
+        <%= paper.abstract %>
+      </div>
     <% end %>
-  </table>
 </li>

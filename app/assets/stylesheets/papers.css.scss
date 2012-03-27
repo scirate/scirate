@@ -1,18 +1,51 @@
-/* Paper list */
+$scite-color: #ddf;
 
-papers {
-  background-color: black;
-  padding: 0 0.7em;
-  white-space: nowrap;
+/* Paper index page */
 
-  ul {
+ul.papers {
     margin: 0;
+    margin-bottom: 2em;
     padding: 0;
+    list-style-type: none;
 
     li {
-      list-style-type: none;
-      display: inline-block;
-      padding: 0.2em 0;
+        list-style-type: none;
+        padding-bottom: 1em;
+        padding-top: 1em;
+        clear: both;
+
+        div.scite {
+            width: 20%px;
+            min-width: 80px;
+            float: left;
+            padding: 0.5em;
+            background-color: $scite-color;
+            -moz-border-radius:    10px;
+            -webkit-border-radius: 10px;
+            border-radius:         10px;
+        }
+
+        div.title {
+            width: 80%;
+            float: left;
+            margin-left: 1em;
+
+            span.identifier {
+                font-weight: bold;
+            }
+
+            span.title {
+                font-weight: bold;
+            }
+        }
+
+        div.abstract {
+            text-align: justify;
+            clear: both;
+            padding: 0.5em;
+            -moz-border-radius:    10px;
+            -webkit-border-radius: 10px;
+            border-radius:         10px;
+        }
     }
-  }
 }

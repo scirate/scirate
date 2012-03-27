@@ -4,6 +4,7 @@
   <tr>
     <td>
       <%= render( partial: 'scite_form', object: @paper, as: :paper ) if signed_in? %>
+      <a name="sciters"></a>
       <%= render 'sciters' %><br />      
       <a name="comments"></a>
       <%= render 'comments' %>
