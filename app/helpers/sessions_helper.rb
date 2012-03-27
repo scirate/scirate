@@ -1,13 +1,15 @@
 module SessionsHelper
 
   def sign_in(user, options = {})
-    if options[:remember_me] == true
-      cookies.permanent[:remember_token] = user.remember_token
-    else
-      cookies[:remember_token] = user.remember_token
-    end
+    if user.active?
+      if options[:remember_me] == true
+        cookies.permanent[:remember_token] = user.remember_token
+      else
+        cookies[:remember_token] = user.remember_token
+      end
 
-    current_user = user
+      current_user = user
+    end
   end
 
   def signed_in?
