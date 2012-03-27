@@ -2,8 +2,10 @@
   <table class="paper">
     <tr>
       <td class="scite">
-        <%= pluralize(paper.scites.size, 'Scite') %>
         <%= render( partial: 'scite_form', object: paper, as: :paper) if signed_in? %>
+        <%= pluralize(paper.scites.size, 'Scite') %><br />
+        <%= link_to(pluralize(paper.comments.size, 'Comment'),
+                            paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
       </td>
       <td class="title">
         <%= link_to paper.identifier, paper %><br />
@@ -16,7 +18,7 @@
         <td class="abstract" colspan="2">
           <%= paper.abstract %>
         </td>
-      </tr>  
+      </tr>
     <% end %>
   </table>
 </li>

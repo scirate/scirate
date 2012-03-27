@@ -27,7 +27,7 @@ describe "Paper pages" do
 
         visit paper_path(paper)
       end
-      
+
       it { should_not have_content "Updated on" }
     end
 
@@ -38,14 +38,14 @@ describe "Paper pages" do
 
         visit paper_path(paper)
       end
-      
+
       it { should have_content paper.updated_date.to_formatted_s(:rfc822) }
     end
 
     describe "sciting/unsciting" do
       let(:user) { FactoryGirl.create(:user) }
       before { sign_in user }
-      
+
       describe "sciting a paper" do
         before { visit paper_path(paper) }
 
@@ -64,7 +64,7 @@ describe "Paper pages" do
         describe "toggling the button" do
           before { click_button "Scite!" }
           it { should have_selector('input', value: "Unscite") }
-        end    
+        end
       end
 
       describe "unsciting a paper" do
@@ -88,18 +88,18 @@ describe "Paper pages" do
         describe "toggling the button" do
           before { click_button "Unscite" }
           it { should have_selector('input', value: "Scite!") }
-        end    
+        end
       end
 
       describe "should list sciters" do
         let(:user) { FactoryGirl.create(:user) }
         let(:other_user) { FactoryGirl.create(:user) }
-        
+
         before do
           user.scite!(paper)
           visit paper_path(paper)
         end
-        
+
         it { should have_content user.name }
         it { should_not have_content other_user.name }
       end
@@ -120,13 +120,13 @@ describe "Paper pages" do
 
           visit paper_path(paper)
         end
-    
+
         it "should have all comments" do
           paper.comments.each do |comment|
             page.should have_content comment.content
           end
         end
-          
+
         it "should not have comments from other papers" do
           other_paper.comments.each do |comment|
             page.should_not have_content comment.content
@@ -137,19 +137,19 @@ describe "Paper pages" do
           paper.comments.each do |comment|
             page.should have_link comment.user.name
           end
-        end          
+        end
 
         it "should list comment time/date" do
           paper.comments.each do |comment|
             page.should have_content comment.created_at.to_formatted_s(:short)
           end
-        end          
+        end
 
         it "should list the nubmer of comments" do
           page.should have_content "10 comments"
-        end          
+        end
       end
-    
+
       describe "leaving a comment" do
 
         describe "when not signed in" do
@@ -167,55 +167,55 @@ describe "Paper pages" do
 
           it { should have_button "Leave Comment" }
           it { should have_field "comment[content]" }
-        
+
           describe "with no content" do
             it "should not increment user's comments count" do
               expect do
                 click_button "Leave Comment"
               end.not_to change(user.comments, :count)
             end
-            
+
             it "should not increment paper's comments count" do
               expect do
                 click_button "Leave Comment"
               end.not_to change(paper.comments, :count)
             end
-            
+
             it "should not create a comment" do
               expect do
                 click_button "Leave Comment"
               end.not_to change(Comment, :count)
             end
-            
+
             it "should generate an error message" do
-              click_button "Leave Comment"            
+              click_button "Leave Comment"
               page.should have_content "Error posting comment"
             end
           end
-          
+
           describe "with valid content" do
             before { fill_in "comment[content]", with: "Test comment." }
-            
+
             it "should increment user's comments count" do
               expect do
                 click_button "Leave Comment"
               end.to change(user.comments, :count).by(1)
             end
-            
+
             it "should increment paper's comments count" do
               expect do
                 click_button "Leave Comment"
               end.to change(paper.comments, :count).by(1)
             end
-            
+
             it "should create a comment" do
               expect do
                 click_button "Leave Comment"
               end.to change(Comment, :count).by(1)
             end
-            
+
             it "should generate an success message" do
-              click_button "Leave Comment"            
+              click_button "Leave Comment"
               page.should have_content "Comment posted"
             end
           end
@@ -243,7 +243,7 @@ describe "Paper pages" do
         end
 
         it { should have_content "0 Scites" }
-      end      
+      end
 
       describe "when the paper has one scite" do
         before do
@@ -264,6 +264,37 @@ describe "Paper pages" do
         end
 
         it { should have_content "2 Scites" }
+      end
+    end
+
+    describe "comments display" do
+      describe "when the paper has no comments" do
+        before do
+          paper.save
+          visit papers_path(date: Date.today)
+        end
+
+        it { should_not have_link "Comment" }
+      end
+
+      describe "when the paper has one comment" do
+        before do
+          user.comments.create(paper_id: paper.id, content: "Hi.")
+          visit papers_path(date: Date.today)
+        end
+
+        it { should have_link "1 Comment" }
+        it { should_not have_link "1 Comments" }
+      end
+
+      describe "when the paper has two comments" do
+        before do
+          user.comments.create(paper_id: paper.id, content: "Hi.")
+          other_user.comments.create(paper_id: paper.id, content: "Ho.")
+          visit papers_path(date: Date.today)
+        end
+
+        it { should have_link "2 Comments" }
       end
     end
 
