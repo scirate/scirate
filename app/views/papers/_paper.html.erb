@@ -1,7 +1,9 @@
 <li class="papers">
    <div class="scite">
      <%= render( partial: 'scite_form', object: paper, as: :paper) if signed_in? %>
-     <%= pluralize(paper.scites.size, 'Scite') %><br />
+     <span class="<%= "scite_count_#{paper.id}" %>">
+       <%= pluralize(paper.scites.size, 'Scite') %>
+     </span><br />
      <%= link_to(pluralize(paper.comments.size, 'Comment'),
                          paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
    </div>
@@ -16,9 +18,7 @@
        <%= paper.authors.join(', ') %>
      </div>
    </div>
-    <% if paper.scites.size > 0 %>
-      <div class = "abstract">
-        <%= paper.abstract %>
-      </div>
-    <% end %>
+   <div class ="<%= "abstract_#{paper.id}" %>">     
+     <%= render partial: 'abstract', object: paper, as: :paper %>
+   </div
 </li>

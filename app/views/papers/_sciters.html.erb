@@ -1,2 +1,2 @@
-<span class="label"><%= pluralize(@paper.sciters.size, "sciter") %>:</span>
-<%= @paper.sciters.map {|s| link_to(s.name, user_path(s))}.join(', ').html_safe %>
+<div class="sciters"><span class="label"><%= pluralize(@paper.sciters.size, "sciter") %></span>:
+<%= @paper.sciters.map {|s| link_to(s.name, user_path(s))}.join(', ').html_safe %></div>
