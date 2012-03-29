@@ -261,12 +261,12 @@ describe "User pages" do
 
         it { should have_content("Old password is incorrect!") }
       end
-   end
+    end
 
     describe "with valid information" do
       let(:user)      { FactoryGirl.create(:user) }
       let(:new_name)  { "New Name" }
-      let(:new_email) { "new@example.com" }      
+      let(:new_email) { "new@example.com" }
 
       before do
         fill_in "Name",         with: new_name
@@ -296,6 +296,38 @@ describe "User pages" do
         it { should have_selector('div.flash.success') }
         specify { user.reload.name.should  == new_name }
         specify { user.reload.email.should == new_email }
+      end
+    end
+
+    describe "email confirmation of address changes" do
+      let(:new_name) { "New User" }
+      let(:new_email) { "new@example.com" }
+
+      before do
+        fill_in "Old Password", with: user.password
+      end
+
+      describe "with new email address" do
+        before do
+          fill_in "Email", with: new_email
+          click_button "Update"
+        end
+
+        it "should send email to old address" do
+          last_email.should_not be_nil
+          last_email.to.should include(user.email)
+        end
+      end
+
+      describe "without new email address" do
+        before do
+          fill_in "Name", with: new_name
+          click_button "Update"
+        end
+
+        it "should not send email" do
+          last_email.should be_nil
+        end
       end
     end
   end

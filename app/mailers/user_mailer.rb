@@ -10,4 +10,11 @@ class UserMailer < ActionMailer::Base
     @user = user
     mail :to => user.email, :subject => "Password Reset"
   end
+
+  def email_change(user, old_email)
+    @user = user
+    @old_email = old_email
+
+    mail to: old_email, subject: "Your email address has been changed"
+  end
 end

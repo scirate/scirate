@@ -43,7 +43,13 @@ class UsersController < ApplicationController
       return
     end
 
+    old_email = @user.email
+
     if @user.update_attributes(params[:user].slice(:name,:email,:password,:password_confirmation))
+      if old_email != @user.email
+        @user.send_email_change_confirmation(old_email)
+      end
+
       sign_in @user
       flash[:success] = "Profile updated"
       render 'show'

@@ -44,19 +44,23 @@ class User < ActiveRecord::Base
 
   def send_signup_confirmation
     generate_token(:confirmation_token)
-    save!(validate: false)
+    save!
     UserMailer.signup_confirmation(self).deliver
   end
 
   def send_password_reset
     generate_token(:password_reset_token)
-    save!(validate: false)
+    save!
     UserMailer.password_reset(self).deliver
   end
 
   def clear_password_reset
     clear_token(:password_reset_token)
-    save!(validation: false)
+    save!
+  end
+
+  def send_email_change_confirmation(address)
+    UserMailer.email_change(self, address).deliver
   end
 
   def active?
