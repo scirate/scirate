@@ -91,4 +91,26 @@ describe "password resets" do
     it { should have_title "" }
     it { should have_content("Password reset has already been used or is invalid!") }
   end
+
+  describe "does not allow mass assignment to name or email" do
+    let(:user) { FactoryGirl.create(:user,
+                                    :password_reset_token => "asdf1234zxcv",
+                                    :password_reset_sent_at => 1.hour.ago) }
+
+    before do
+      put (password_reset_path(user.password_reset_token) \
+                               + '?user[name]=hacked' \
+                               + '&user[email]=hacked@hacker.org' \
+                               + '&user[password]=foobar'\
+                               + '&user[password_confirmation]=foobar')
+    end
+
+    it "should not change name" do
+      User.find_by_id(user.id).name.should_not eq('hacked')
+    end
+
+    it "should not change email" do
+      User.find_by_id(user.id).email.should_not eq('hacked@hacker.org')
+    end
+  end
 end

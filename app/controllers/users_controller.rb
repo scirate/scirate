@@ -43,16 +43,7 @@ class UsersController < ApplicationController
       return
     end
 
-    @user.name = params[:user][:name]
-    @user.email = params[:user][:email]
-    
-    if params[:user][:password]
-      @user.password = params[:user][:password]
-      @user.password_confirmation = params[:user][:password_confirmation]
-    end
-    
-      
-    if @user.save
+    if @user.update_attributes(params[:user].slice(:name,:email,:password,:password_confirmation))
       sign_in @user
       flash[:success] = "Profile updated"
       render 'show'
