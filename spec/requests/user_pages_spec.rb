@@ -239,27 +239,64 @@ describe "User pages" do
 
     describe "with invalid information" do
       let(:error) { '1 error prohibited this user from being saved' }
-      before { update }
 
-      it { should have_content(error) }
+      describe "with non-matching password confirmation" do
+        before do
+          fill_in "Password",     with: user.password+'right'
+          fill_in "Confirmation", with: user.password+'wrong'
+          fill_in "Old Password", with: user.password
+          update
+        end
+
+        it { should have_content(error) }
+      end
+
+      describe "with incorrect old password" do
+        before do
+          fill_in "Password",     with: user.password+'new'
+          fill_in "Confirmation", with: user.password+'new'
+          fill_in "Old Password", with: user.password+'wrong'
+          update
+        end
+
+        it { should have_content("Old password is incorrect!") }
+      end
    end
 
     describe "with valid information" do
       let(:user)      { FactoryGirl.create(:user) }
       let(:new_name)  { "New Name" }
-      let(:new_email) { "new@example.com" }
+      let(:new_email) { "new@example.com" }      
+
       before do
         fill_in "Name",         with: new_name
         fill_in "Email",        with: new_email
-        fill_in "Password",     with: user.password
-        fill_in "Confirmation", with: user.password
-        click_button "Update"
+        fill_in "Old Password", with: user.password
       end
 
-      it { should have_selector('title', text: new_name) }
-      it { should have_selector('div.flash.success') }
-      specify { user.reload.name.should  == new_name }
-      specify { user.reload.email.should == new_email }
+      describe "with new password" do
+        before do
+          fill_in "Password",     with: user.password+'new'
+          fill_in "Confirmation", with: user.password+'new'
+          click_button "Update"
+        end
+
+        it { should have_selector('title', text: new_name) }
+        it { should have_selector('div.flash.success') }
+        specify { user.reload.name.should  == new_name }
+        specify { user.reload.email.should == new_email }
+      end
+
+      describe "without changing password" do
+        before do
+          click_button "Update"
+        end
+
+        it { should have_selector('title', text: new_name) }
+        it { should have_selector('div.flash.success') }
+        specify { user.reload.name.should  == new_name }
+        specify { user.reload.email.should == new_email }
+      end
     end
   end
 end

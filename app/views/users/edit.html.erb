@@ -1,12 +1,20 @@
 <% provide :title, "Edit user" %> 
 <h1>Edit user</h1>
 
+Leave password and confirmation blank to not change password.
+
 <%= form_for(@user) do |f| %>
   <%= render 'fields', f: f %>
+  <div class="field">
+    <%= f.label :old_password, "Old Password" %><br />
+    <%= f.password_field :old_password %>
+  </div>
   <div class="actions">
     <%= f.submit "Update" %>
   </div>
 <% end %>
+
+<p><%= link_to "Forgotten password?", new_password_reset_path %></p>
 
 <div>
   <%= gravatar_for(@user) %>

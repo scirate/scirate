@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   validates :email, presence: true, format: { with: valid_email_regex },
                     uniqueness: { case_sensitive: false }
 
-  validates :password, length: { minimum: 6 }
+  validates :password, length: { minimum: 6 }, on: :create
 
   def scited?(paper)
     scites.find_by_paper_id(paper.id)
@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
   def activate
     active = true
     clear_token(:confirmation_token)
-    save!(validate: false)
+    save!
   end
 
   private

@@ -37,7 +37,22 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update_attributes(params[:user])
+    if !@user.authenticate(params[:user][:old_password])
+      flash[:error] = "Old password is incorrect!"
+      render 'edit'
+      return
+    end
+
+    @user.name = params[:user][:name]
+    @user.email = params[:user][:email]
+    
+    if params[:user][:password]
+      @user.password = params[:user][:password]
+      @user.password_confirmation = params[:user][:password_confirmation]
+    end
+    
+      
+    if @user.save
       sign_in @user
       flash[:success] = "Profile updated"
       render 'show'
