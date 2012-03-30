@@ -300,9 +300,9 @@ describe "Paper pages" do
 
     describe "pagination" do
       before(:all) do
-        30.times { FactoryGirl.create(:paper, pubdate: Date.today) }
-        30.times { FactoryGirl.create(:paper, pubdate: Date.yesterday) }
-        30.times { FactoryGirl.create(:paper, pubdate: Date.yesterday - 1) }
+        3.times { FactoryGirl.create(:paper, pubdate: Date.today) }
+        3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday) }
+        3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday - 1) }
       end
       after(:all)  { Paper.delete_all }
 
@@ -320,26 +320,40 @@ describe "Paper pages" do
         end
       end
 
-      it "should have the right links to the next/prev days" do
-        page.should have_link Date.yesterday.to_formatted_s(:short)
-        page.should_not have_link Date.tomorrow.to_formatted_s(:short)
+      it "should have links to the next and previous days" do
+        page.should have_link "Next"
+        page.should have_link "Prev"
       end
 
-      describe "on previous day's page" do
-        before { visit papers_path(date: Date.yesterday) }
+      describe "next day" do
+        describe "on last day" do
+          before { visit papers_next_path(date: Date.today) }
 
-        it "should have the right links to the next/prev days" do
-          page.should have_link Date.yesterday.prev_day.to_formatted_s(:short)
-          page.should have_link Date.today.to_formatted_s(:short)
+          it { should have_content "No future papers found!" }
+          it { should have_title "Papers from #{Date.today.to_formatted_s(:short)}" }
+        end
+
+        describe "on arbitrary day" do
+          before { visit papers_next_path(date: Date.today - 1.day) }
+
+          it { should_not have_content "No future papers found!" }
+          it { should have_title "Papers from #{Date.today.to_formatted_s(:short)}" }
         end
       end
 
-      describe "on page from two days ago" do
-        before { visit papers_path(date: Date.yesterday.prev_day) }
+      describe "prev day" do
+        describe "on first day" do
+          before { visit papers_prev_path(date: Date.today - 2.days) }
 
-        it "should have the right links to the next/prev days" do
-          page.should_not have_link Date.yesterday.prev_day.prev_day.to_formatted_s(:short)
-          page.should have_link Date.yesterday.to_formatted_s(:short)
+          it { should have_content "No past papers found!" }
+          it { should have_title "Papers from #{(Date.today - 2.days).to_formatted_s(:short)}" }
+        end
+
+        describe "on arbitrary day" do
+          before { visit papers_prev_path(date: Date.today) }
+
+          it { should_not have_content "No past papers found!" }
+          it { should have_title "Papers from #{(Date.today-1.day).to_formatted_s(:short)}" }
         end
       end
     end

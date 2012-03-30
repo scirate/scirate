@@ -4,27 +4,8 @@ class PapersController < ApplicationController
   end
 
   def index
-    #This is done on multiple lines to avoid an error if find returns nil
-    last = Paper.find(:first, order: "pubdate DESC")
-    last = last.nil? ? Date.today : last.pubdate
-
-    @date = Chronic.parse(params[:date]) || last
+    @date = Chronic.parse(params[:date]) || Paper.last_date
     @date = @date.to_date
-
-    @next = nil
-
-    #this test saves a query on the most recent date
-    if @date != last     
-      @next = Paper.find(:last, 
-                         order: "pubdate DESC", 
-                         conditions: ["pubdate > ?", @date])
-      @next = @next.pubdate unless @next.nil?
-    end
-
-    @prev = Paper.find(:first, 
-                          order: "pubdate DESC", 
-                          conditions: ["pubdate < ?", @date])
-    @prev = @prev.pubdate unless @prev.nil?
 
     @papers = Paper.find_all_by_pubdate(@date)
     @papers = @papers.sort_by{ |p| [-p.scites.size, -p.comments.size, p.identifier] }
@@ -33,5 +14,33 @@ class PapersController < ApplicationController
     if signed_in?
       @scited_papers = Set.new( current_user.scited_papers )      
     end
+  end
+
+  def next
+    date = Chronic.parse(params[:date]) || Paper.last_date
+    date = date.to_date
+
+    next_date = Paper.next_date(date)
+
+    if next_date.nil?
+      flash[:error] = "No future papers found!"
+      next_date = date
+    end
+
+    redirect_to papers_path(date: next_date)
+  end
+
+  def prev
+    date = Chronic.parse(params[:date]) || Paper.last_date
+    date = date.to_date
+
+    prev_date = Paper.prev_date(date)
+
+    if prev_date.nil?
+      flash[:error] = "No past papers found!"
+      prev_date = date
+    end
+
+    redirect_to papers_path(date: prev_date)
   end
 end

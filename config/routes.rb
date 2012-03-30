@@ -15,6 +15,8 @@ Scirate3::Application.routes.draw do
 
   root to: 'papers#index', as: 'papers'
   root to: 'papers#index'
+  get '/next/:date', to: 'papers#next', as: 'papers_next'
+  get '/prev/:date', to: 'papers#prev', as: 'papers_prev'
 
   resources :scites, only: [:create]
   delete '/scites', to: 'scites#destroy', as: 'scites'

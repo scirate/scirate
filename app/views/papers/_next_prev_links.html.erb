@@ -1,0 +1,6 @@
+<nav class="round">
+  <ul>
+    <li><%= link_to("<<< Previous day", papers_prev_path(date: @date)) %></li>
+    <li><%= link_to("Next day >>>", papers_next_path(date: @date)) %></li>
+  </ul>
+</nav>

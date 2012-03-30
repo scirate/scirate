@@ -1,9 +1,12 @@
 <% provide :title, "Papers from #{@date.to_formatted_s(:short)}" %>
+
+<%= render 'next_prev_links' %>
+
 <h1>All papers from <%= @date.to_formatted_s(:rfc822) %></h1>
 
 <ul class="papers">
   <%= render @papers %>
 </ul>
 
-<%= link_to(@prev.to_formatted_s(:short), papers_path(date: @prev)) unless @prev.nil? %> 
-<%= link_to(@next.to_formatted_s(:short), papers_path(date: @next)) unless @next.nil? %>
+<%= render 'next_prev_links' %>
+&nbsp;
