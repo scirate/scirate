@@ -1,5 +1,5 @@
 namespace :db do
-  desc "Add default feed (quant-ph) to all papers with no feed"
+  desc "Add default feed (quant-ph) to all papers and feed_days with no feed"
   task add_default_feed: :environment do
 
     #find the default feed if it already exists
@@ -17,6 +17,13 @@ namespace :db do
       if p.feed.nil?
         p.feed = feed
         p.save!
+      end
+    end
+
+    FeedDay.all.each do |f|
+      if f.feed_name.nil?
+        f.feed_name = feed.name
+        f.save!
       end
     end
   end
