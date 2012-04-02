@@ -20,11 +20,12 @@ require 'spec_helper'
 describe Paper do
 
   before do
-    @paper = Paper.new(title: "On NPT Bound Entanglement and the ERH", \
-                       authors: ["Some Guy, Ph.D.", "Some Other Guy"], \
-                       abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
-                       identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
-                       pubdate: Time.now, updated_date: Time.now)
+    @feed = FactoryGirl.create(:feed)
+    @paper = @feed.papers.build(title: "On NPT Bound Entanglement and the ERH", \
+                               authors: ["Some Guy, Ph.D.", "Some Other Guy"], \
+                               abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
+                               identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
+                               pubdate: Time.now, updated_date: Time.now)
   end
 
   subject { @paper }
@@ -39,6 +40,7 @@ describe Paper do
   it { should respond_to(:scites) }
   it { should respond_to(:sciters) }
   it { should respond_to(:comments) }
+  it { should respond_to(:feed) }
 
   it { should be_valid }
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120326031046) do
+ActiveRecord::Schema.define(:version => 20120402095150) do
 
   create_table "comments", :force => true do |t|
     t.text     "content"
@@ -29,9 +29,20 @@ ActiveRecord::Schema.define(:version => 20120326031046) do
     t.text     "content"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "feed_name"
   end
 
   add_index "feed_days", ["pubdate"], :name => "index_feed_days_on_pubdate", :unique => true
+
+  create_table "feeds", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.string   "feed_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "feeds", ["name"], :name => "index_feeds_on_name", :unique => true
 
   create_table "papers", :force => true do |t|
     t.string   "title"
@@ -45,8 +56,10 @@ ActiveRecord::Schema.define(:version => 20120326031046) do
     t.date     "updated_date"
     t.integer  "scites_count",   :default => 0
     t.integer  "comments_count", :default => 0
+    t.integer  "feed_id"
   end
 
+  add_index "papers", ["feed_id"], :name => "index_papers_on_feed_id"
   add_index "papers", ["identifier"], :name => "index_papers_on_identifier", :unique => true
   add_index "papers", ["pubdate"], :name => "index_papers_on_date"
 

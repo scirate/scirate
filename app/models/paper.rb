@@ -19,6 +19,8 @@ class Paper < ActiveRecord::Base
   attr_accessible :title, :authors, :abstract, :identifier, :url, :pubdate, :updated_date
   serialize :authors, Array
 
+  belongs_to :feed
+
   has_many  :scites, dependent: :destroy
   has_many  :sciters, through: :scites, order: "name ASC"
   has_many  :comments, dependent: :destroy, order: "created_at ASC"
@@ -30,6 +32,7 @@ class Paper < ActiveRecord::Base
   validates :url, presence: true
   validates :pubdate, presence: true
   validates :updated_date, presence: true
+  validates :feed, presence: true
 
   validate  :updated_date_is_after_pubdate
 

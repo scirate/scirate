@@ -10,8 +10,11 @@
 #
 
 class FeedDay < ActiveRecord::Base
-  attr_accessible :pubdate, :content
+  attr_accessible :pubdate, :content, :feed_name
 
-  validates :pubdate, presence: true, uniqueness: true
+  validates :pubdate, presence: true
   validates :content, presence: true
+  validates :feed_name, presence: true
+
+  validates_uniqueness_of :feed_name, :scope => [:pubdate]
 end

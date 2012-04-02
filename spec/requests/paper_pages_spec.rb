@@ -304,7 +304,10 @@ describe "Paper pages" do
         3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday) }
         3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday - 1) }
       end
-      after(:all)  { Paper.delete_all }
+      after(:all) do
+        Paper.delete_all
+        Feed.delete_all
+      end
 
       it "should list all papers from today" do
         Paper.find_all_by_pubdate(Date.today).each do |paper|
