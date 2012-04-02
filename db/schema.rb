@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120402095150) do
+ActiveRecord::Schema.define(:version => 20120402120617) do
 
   create_table "comments", :force => true do |t|
     t.text     "content"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20120402095150) do
     t.string   "feed_name"
   end
 
-  add_index "feed_days", ["pubdate"], :name => "index_feed_days_on_pubdate", :unique => true
+  add_index "feed_days", ["pubdate", "feed_name"], :name => "index_feed_days_on_pubdate_and_feed_name", :unique => true
 
   create_table "feeds", :force => true do |t|
     t.string   "name"

@@ -97,20 +97,17 @@ end
 def update_metadata papers
   oai_client = OAI::Client.new 'http://export.arxiv.org/oai2'
 
-  papers[:all].each do |paper|
+  #iterate over all the paper stubs
+  papers[:all].each do |stub|
 
-    #get the updated date from the stub (in case we fetch an existing record)
-    updated_date = paper.pubdate
+    # fetch the paper if it exists
+    paper = Paper.find_by_identifier(stub.identifier)
 
-    #is this an update?
-    if papers[:updates].include? paper
+    # don't add new papers on updates
+    next if paper.nil? && papers[:updates].include? paper
 
-      #fetch paper to update
-      paper = Paper.find_by_identifier(paper.identifier)
-
-      #if we don't have this paper, skip updating so we don't add it
-      next if paper.nil?
-    end
+    # use the stub if we didn't find an existing paper
+    paper ||= stub
 
     #fetch the record from the arXiv
     response = oai_client.get_record(
@@ -121,7 +118,7 @@ def update_metadata papers
     paper.title = item.elements["title"].text
     paper.abstract = item.elements["abstract"].text
     paper.url = "http://arxiv.org/abs/#{paper.identifier}"
-    paper.updated_date = updated_date
+    paper.updated_date = stub.pubdate
 
     paper.authors = []
     item.elements.each('authors/author') do |author|
