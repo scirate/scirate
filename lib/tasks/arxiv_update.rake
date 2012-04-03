@@ -104,7 +104,7 @@ def update_metadata papers
     paper = Paper.find_by_identifier(stub.identifier)
 
     # don't add new papers on updates
-    next if paper.nil? && papers[:updates].include?(paper)
+    next if paper.nil? && papers[:updates].include?(stub)
 
     # use the stub if we didn't find an existing paper
     paper ||= stub
