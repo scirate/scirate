@@ -39,7 +39,7 @@ namespace :db do
     end
 
     puts "Deleting papers from DB"
-    Paper.delete_all
+    Paper.destroy_all
 
     #get FeedDay objects in ascending order of pubday
     FeedDay.find(:all, order: 'pubdate').each do |feed_day|
