@@ -48,7 +48,7 @@ namespace :db do
       #create stubs
       papers = parse_arxiv feed, feed_day
 
-      print "Reloading papers for #{feed.name} #{feed.pubdate} ... "
+      print "Reloading papers for #{feed.name} #{feed_day.pubdate} ... "
       update_metadata papers
       puts "Done!"
     end
