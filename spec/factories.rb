@@ -14,7 +14,7 @@ FactoryGirl.define do
     sequence(:url)         { |n| "http://arxiv.org/abs/#{1000+n}.#{1000+n}" }
     sequence(:pubdate)     { |n| Date.today }
     sequence(:updated_date){ |n| Date.today }
-    feed
+    feed Feed.default
   end
 
   factory :comment do

@@ -225,7 +225,8 @@ describe "Paper pages" do
   end
 
   describe "index" do
-    let(:paper) { FactoryGirl.create(:paper, pubdate: Date.today) }
+    let(:feed) { Feed.default }
+    let(:paper) { FactoryGirl.create(:paper, pubdate: Date.today, feed: feed) }
     let(:user) { FactoryGirl.create(:user) }
     let(:other_user) { FactoryGirl.create(:user) }
 
@@ -233,7 +234,7 @@ describe "Paper pages" do
       visit papers_path(date: Date.today)
     end
 
-    it { should have_title "Papers from #{Date.today.to_formatted_s(:short)}" }
+    it { should have_title "Papers for #{Feed.default.name} from #{Date.today.to_formatted_s(:short)}" }
 
     describe "scites display" do
       describe "when the paper has no scites" do
@@ -300,24 +301,23 @@ describe "Paper pages" do
 
     describe "pagination" do
       before(:all) do
-        3.times { FactoryGirl.create(:paper, pubdate: Date.today) }
-        3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday) }
-        3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday - 1) }
+        3.times { FactoryGirl.create(:paper, pubdate: Date.today, feed: Feed.default) }
+        3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday, feed: Feed.default) }
+        3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday - 1, feed: Feed.default) }
       end
       after(:all) do
         Paper.delete_all
-        Feed.delete_all
       end
 
       it "should list all papers from today" do
-        Paper.find_all_by_pubdate(Date.today).each do |paper|
+        Feed.default.papers.find_all_by_pubdate(Date.today).each do |paper|
           page.should have_link paper.identifier
           page.should have_content paper.title
         end
       end
 
       it "should not list all papers from yesterday" do
-        Paper.find_all_by_pubdate(Date.yesterday).each do |paper|
+        Feed.default.papers.find_all_by_pubdate(Date.yesterday).each do |paper|
           page.should_not have_link paper.identifier
           page.should_not have_content paper.title
         end
@@ -333,14 +333,14 @@ describe "Paper pages" do
           before { visit papers_next_path(date: Date.today) }
 
           it { should have_content "No future papers found!" }
-          it { should have_title "Papers from #{Date.today.to_formatted_s(:short)}" }
+          it { should have_title "Papers for #{Feed.default.name} from #{Date.today.to_formatted_s(:short)}" }
         end
 
         describe "on arbitrary day" do
           before { visit papers_next_path(date: Date.today - 1.day) }
 
           it { should_not have_content "No future papers found!" }
-          it { should have_title "Papers from #{Date.today.to_formatted_s(:short)}" }
+          it { should have_title "Papers for #{Feed.default.name} from #{Date.today.to_formatted_s(:short)}" }
         end
       end
 
@@ -349,14 +349,71 @@ describe "Paper pages" do
           before { visit papers_prev_path(date: Date.today - 2.days) }
 
           it { should have_content "No past papers found!" }
-          it { should have_title "Papers from #{(Date.today - 2.days).to_formatted_s(:short)}" }
+          it { should have_title "Papers for #{Feed.default.name} from #{(Date.today - 2.days).to_formatted_s(:short)}" }
         end
 
         describe "on arbitrary day" do
           before { visit papers_prev_path(date: Date.today) }
 
           it { should_not have_content "No past papers found!" }
-          it { should have_title "Papers from #{(Date.today-1.day).to_formatted_s(:short)}" }
+          it { should have_title "Papers for #{Feed.default.name} from #{(Date.today-1.day).to_formatted_s(:short)}" }
+        end
+      end
+    end
+
+    describe "feeds" do
+      let(:feed) { FactoryGirl.create(:feed) }
+
+      before(:all) do
+        3.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.today) }
+        3.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.yesterday) }
+        3.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.yesterday - 1.day) }
+        3.times { FactoryGirl.create(:paper, feed: Feed.default, pubdate: Date.yesterday) }
+      end
+      after(:all) do
+        Paper.delete_all
+        Feed.delete_all
+      end
+
+      before do
+        visit papers_path(feed: feed.name, date: Date.yesterday)
+      end
+
+      it "should list all of right day's papers from first feed" do
+        feed.papers.find_all_by_pubdate(Date.yesterday).each do |paper|
+          page.should have_link paper.identifier
+          page.should have_content paper.title
+        end
+      end
+
+      it "should not list any papers from default feed" do
+        Feed.default.papers.each do |paper|
+          page.should_not have_link paper.identifier
+          page.should_not have_content paper.title
+        end
+      end
+
+      describe "next button and feeds" do
+        before { click_link "Next day >>>" }
+
+        it "should remain on the same feed" do
+          page.should have_content "papers for #{feed.name}"
+        end
+
+        it "should go to the right date" do
+          page.should have_content "#{Date.today.to_formatted_s(:rfc822)}"
+        end
+      end
+
+      describe "prev button and feeds" do
+        before { click_link "<<< Previous day" }
+
+        it "should remain on the same feed" do
+          page.should have_content "papers for #{feed.name}"
+        end
+
+        it "should go to the right date" do
+          page.should have_content "#{(Date.yesterday - 1.day).to_formatted_s(:rfc822)}"
         end
       end
     end

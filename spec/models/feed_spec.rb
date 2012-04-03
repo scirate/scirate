@@ -13,8 +13,13 @@ describe Feed do
   it { should respond_to(:name) }
   it { should respond_to(:url) }
   it { should respond_to(:feed_type) }
+  it { should respond_to(:is_default?) }
 
   it { should be_valid }
+
+  it "should not be the default feed" do
+    @feed.is_default?.should be_false
+  end
 
   describe "when name is not present" do
     before { @feed.name = " " }
@@ -51,6 +56,18 @@ describe Feed do
     it { should_not be_valid }
   end
 
+  describe "default feed" do
+    before { @feed = Feed.default }
+
+    it "should be quant-ph" do
+      @feed.name.should == "quant-ph"
+    end
+
+    it "should be the default" do
+      @feed.is_default?.should be_true
+    end
+  end
+
   describe "paper association" do
     before do
       @feed.save
@@ -63,6 +80,14 @@ describe Feed do
 
     it "should have the paper in the paper list" do
       @feed.papers.should include @paper
+    end
+
+    describe "default feed" do
+      before { @feed = Feed.default }
+
+      it "should not be quant-ph" do
+        @feed.name.should == "quant-ph"
+      end
     end
   end
 end

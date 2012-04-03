@@ -1,8 +1,8 @@
-<% provide :title, "Papers from #{@date.to_formatted_s(:short)}" %>
+<% provide :title, "Papers for #{@feed.name} from #{@date.to_formatted_s(:short)}" %>
 
 <%= render 'next_prev_links' %>
 
-<h1>All papers from <%= @date.to_formatted_s(:rfc822) %></h1>
+<h1>All papers for <%= @feed.name %> from <%= @date.to_formatted_s(:rfc822) %></h1>
 
 <ul class="papers">
   <%= render @papers %>

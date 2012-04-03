@@ -44,25 +44,6 @@ class Paper < ActiveRecord::Base
     updated_date > pubdate
   end
 
-  def self.last_date
-    last = Paper.find(:first, order: "pubdate DESC")
-    last.nil? ? Date.today : last.pubdate
-  end
-
-  def self.next_date(date)
-    next_paper = Paper.find(:last,
-                            order: "pubdate DESC",
-                            conditions: ["pubdate > ?", date])
-    next_paper.nil? ? nil : next_paper.pubdate
-  end
-
-  def self.prev_date(date)
-    prev_paper = Paper.find(:first,
-                            order: "pubdate DESC",
-                            conditions: ["pubdate < ?", date])
-    prev_paper.nil? ? nil : prev_paper.pubdate
-  end
-
 
   private
 
