@@ -19,6 +19,8 @@ class User < ActiveRecord::Base
   has_many :scites, foreign_key: 'sciter_id', dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper, order: "identifier DESC"
   has_many :comments, dependent: :destroy, order: "created_at DESC"
+  has_many :subscriptions, dependent: :destroy
+  has_many :feeds, through: :subscriptions
 
   before_save { generate_token(:remember_token) }
 
@@ -40,6 +42,18 @@ class User < ActiveRecord::Base
 
   def unscite!(paper)
     scites.find_by_paper_id(paper.id).destroy
+  end
+
+  def subscribed?(feed)
+    subscriptions.find_by_feed_id(feed.id)
+  end
+
+  def subscribe!(feed)
+    subscriptions.create!(feed_id: feed.id)
+  end
+
+  def unsubscribe!(feed)
+    subscriptions.find_by_feed_id(feed.id).destroy
   end
 
   def send_signup_confirmation

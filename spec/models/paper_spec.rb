@@ -105,19 +105,19 @@ describe Paper do
 
   describe "comments" do
     let (:user) { FactoryGirl.create(:user) }
-    
+
     before { user.save }
 
     let!(:old_comment) do
-      FactoryGirl.create(:comment, 
+      FactoryGirl.create(:comment,
                          user: user, paper: @paper, created_at: 1.day.ago)
     end
     let!(:new_comment) do
-      FactoryGirl.create(:comment, 
+      FactoryGirl.create(:comment,
                          user: user, paper: @paper, created_at: 1.minute.ago)
     end
     let!(:med_comment) do
-      FactoryGirl.create(:comment, 
+      FactoryGirl.create(:comment,
                          user: user, paper: @paper, created_at: 1.hour.ago)
     end
 

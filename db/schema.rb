@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120402120617) do
+ActiveRecord::Schema.define(:version => 20120418052054) do
 
   create_table "comments", :force => true do |t|
     t.text     "content"
@@ -73,6 +73,17 @@ ActiveRecord::Schema.define(:version => 20120402120617) do
   add_index "scites", ["paper_id"], :name => "index_scites_on_paper_id"
   add_index "scites", ["sciter_id", "paper_id"], :name => "index_scites_on_sciter_id_and_paper_id", :unique => true
   add_index "scites", ["sciter_id"], :name => "index_scites_on_sciter_id"
+
+  create_table "subscriptions", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "feed_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "subscriptions", ["feed_id"], :name => "index_subscriptions_on_feed_id"
+  add_index "subscriptions", ["user_id", "feed_id"], :name => "index_subscriptions_on_user_id_and_feed_id", :unique => true
+  add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

@@ -34,6 +34,12 @@ describe User do
   it { should respond_to(:scited_papers) }
   it { should respond_to(:scited?) }
   it { should respond_to(:scite!) }
+  it { should respond_to(:unscite!) }
+  it { should respond_to(:subscriptions) }
+  it { should respond_to(:subscribed?) }
+  it { should respond_to(:subscribe!) }
+  it { should respond_to(:unsubscribe!) }
+  it { should respond_to(:feeds) }
   it { should respond_to(:comments) }
   it { should respond_to(:password_reset_token) }
   it { should respond_to(:password_reset_sent_at) }
@@ -163,6 +169,22 @@ describe User do
 
     it "should have the right comments in the right order" do
       @user.comments.should == [new_comment, med_comment, old_comment]
+    end
+  end
+
+  describe "subscribing to a feed" do
+    let (:feed) { FactoryGirl.create(:feed) }
+    before do
+      @user.save
+      @user.subscribe!(feed)
+    end
+
+    it { should be_subscribed(feed) }
+    its(:feeds) { should include(feed) }
+
+    describe "and unsubscribing" do
+      before { @user.unsubscribe!(feed) }
+      its(:feeds) { should_not include(feed) }
     end
   end
 end

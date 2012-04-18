@@ -14,6 +14,8 @@ describe Feed do
   it { should respond_to(:url) }
   it { should respond_to(:feed_type) }
   it { should respond_to(:is_default?) }
+  it { should respond_to(:subscriptions) }
+  it { should respond_to(:users) }
 
   it { should be_valid }
 
@@ -32,7 +34,7 @@ describe Feed do
       feed_same_name.url += 'delta'
       feed_same_name.save!
     end
-    
+
     it { should_not be_valid }
   end
 
@@ -47,7 +49,7 @@ describe Feed do
       feed_same_url.name += 'delta'
       feed_same_url.save!
     end
-    
+
     it { should_not be_valid }
   end
 
@@ -90,4 +92,21 @@ describe Feed do
       end
     end
   end
+
+  describe "user subscribing to a feed" do
+    let (:user) { FactoryGirl.create(:user) }
+    before do
+      @feed.save
+      user.save
+      user.subscribe!(@feed)
+    end
+
+    its(:users) { should include(user) }
+
+    describe "and unsubscribing" do
+      before { user.unsubscribe!(@feed) }
+      its(:users) { should_not include(user) }
+    end
+  end
+
 end
