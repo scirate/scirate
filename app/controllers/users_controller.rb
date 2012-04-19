@@ -98,6 +98,11 @@ class UsersController < ApplicationController
     @user = User.includes(comments: :paper).find(params[:id])
   end
 
+  def subscriptions
+    @user = User.find(params[:id])
+    @feeds = Feed.all
+  end
+
   private
 
     def correct_user

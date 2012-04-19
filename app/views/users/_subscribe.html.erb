@@ -1,0 +1,8 @@
+<%= form_for(current_user.subscriptions.build(feed_id: feed.id),
+                       remote: false) do |f| %>
+  <div><%= f.hidden_field :feed_id %></div>
+  <div class="actions">
+    <%= f.submit "Subscribe to #{feed.name}", :class => "btn btn-large btn-primary" %>
+    <strong><%= feed.name %></strong>
+  </div>
+<% end %>

@@ -5,7 +5,7 @@ Scirate3::Application.routes.draw do
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
   get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
   get '/users/:id/comments', to: 'users#comments', as: "comments_user"
-
+  get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
 
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
 
@@ -20,6 +20,8 @@ Scirate3::Application.routes.draw do
 
   resources :scites, only: [:create]
   delete '/scites', to: 'scites#destroy', as: 'scites'
+
+  resources :subscriptions, only: [:create, :destroy]
 
   resources :comments, only: [:create]
 

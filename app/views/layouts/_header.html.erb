@@ -6,6 +6,7 @@
       <% if signed_in? %>
         <li><%= link_to "Profile", current_user %></li>
         <li><%= link_to "Settings", edit_user_path(current_user) %></li>
+        <li><%= link_to "Subscriptions", subscriptions_user_path(current_user) %></li>
       <% end %>
       <li><%= link_to "About", about_path %></li>
       <% if signed_in? %>

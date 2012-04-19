@@ -1,0 +1,12 @@
+<% provide :title, "Subscriptions for #{@user.name}" %>
+<table class="profile">
+  <tr>
+    <td class="main">
+      <h1>
+        Available Feeds
+      </h1>
+      <%= render partial: 'subscribe_form', collection: @feeds, as: :feed %>
+    </td>
+    <%= render 'sidebar' %>
+  </tr>
+</table>

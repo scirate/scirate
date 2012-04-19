@@ -331,4 +331,77 @@ describe "User pages" do
       end
     end
   end
+
+  describe "subscriptions" do
+    let(:user)       { FactoryGirl.create(:user) }
+    let(:feed1)      { FactoryGirl.create(:feed) }
+    let(:feed2)      { FactoryGirl.create(:feed) }
+    let(:feed3)      { FactoryGirl.create(:feed) }
+
+    before do
+      feed1.save
+      feed2.save
+      feed3.save
+
+      sign_in(user)
+
+      visit subscriptions_user_path(user)
+    end
+
+    it { should have_title "Subscriptions for #{user.name}" }
+
+    it "should list all feeds" do
+      for feed in Feed.all do
+        should have_content feed.name
+      end
+    end
+
+    describe "subscribing and unsubscribing" do
+
+      describe "subscribing to a feed" do
+        before { visit subscriptions_user_path(user) }
+
+        it "should increment the subscription count" do
+          expect do
+            click_button "Subscribe to #{feed1.name}"
+          end.to change(user.subscriptions, :count).by(1)
+        end
+
+        it "should increment the feed's subscriber count" do
+          expect do
+            click_button "Subscribe to #{feed1.name}"
+          end.to change(feed1.users, :count).by(1)
+        end
+
+        describe "toggling the button" do
+          before { click_button "Subscribe to #{feed1.name}" }
+          it { should have_selector('input', value: "Unsubscribe from #{feed1.name}") }
+        end
+      end
+
+      describe "unsubscribing from a feed" do
+        before do
+          user.subscribe!(feed2)
+          visit subscriptions_user_path(user)
+        end
+
+        it "should decement the subscription count" do
+          expect do
+            click_button "Unsubscribe from #{feed2.name}"
+          end.to change(user.subscriptions, :count).by(-1)
+        end
+
+        it "should decrement the feed's subscriber count" do
+          expect do
+            click_button "Unsubscribe from #{feed2.name}"
+          end.to change(feed2.users, :count).by(-1)
+        end
+
+        describe "toggling the button" do
+          before { click_button "Unsubscribe from #{feed2.name}" }
+          it { should have_selector('input', value: "Subscribe from #{feed2.name}") }
+        end
+      end
+    end
+  end
 end
