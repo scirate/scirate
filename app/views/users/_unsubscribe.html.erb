@@ -1,8 +1,0 @@
-<%= form_for current_user.subscriptions.find_by_feed_id(feed),
-             html: { method: :delete },
-             remote: false do |f| %>
-  <div class="actions">
-    <%= f.submit "Unsubscribe from #{feed.name}", :class => "btn btn-large btn-primary" %>
-    <strong><%= feed.name %></strong>
-  </div>
-<% end %>

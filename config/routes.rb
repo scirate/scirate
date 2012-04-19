@@ -1,5 +1,5 @@
 Scirate3::Application.routes.draw do
-  
+
   resources :sessions, only: [:new, :create, :destroy]
 
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
@@ -8,7 +8,6 @@ Scirate3::Application.routes.draw do
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
 
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
-
 
   #custom routes to use arXiv identifiers as id's for papers
   get '/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
@@ -21,7 +20,7 @@ Scirate3::Application.routes.draw do
   resources :scites, only: [:create]
   delete '/scites', to: 'scites#destroy', as: 'scites'
 
-  resources :subscriptions, only: [:create, :destroy]
+  put '/subscriptions', to: 'subscriptions#update'
 
   resources :comments, only: [:create]
 

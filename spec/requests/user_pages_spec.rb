@@ -363,19 +363,16 @@ describe "User pages" do
 
         it "should increment the subscription count" do
           expect do
-            click_button "Subscribe to #{feed1.name}"
+            check "#{feed1.name}"
+            click_button "Submit"
           end.to change(user.subscriptions, :count).by(1)
         end
 
         it "should increment the feed's subscriber count" do
           expect do
-            click_button "Subscribe to #{feed1.name}"
+            check "#{feed1.name}"
+            click_button "Submit"
           end.to change(feed1.users, :count).by(1)
-        end
-
-        describe "toggling the button" do
-          before { click_button "Subscribe to #{feed1.name}" }
-          it { should have_selector('input', value: "Unsubscribe from #{feed1.name}") }
         end
       end
 
@@ -387,19 +384,32 @@ describe "User pages" do
 
         it "should decement the subscription count" do
           expect do
-            click_button "Unsubscribe from #{feed2.name}"
+            uncheck "#{feed2.name}"
+            click_button "Submit"
           end.to change(user.subscriptions, :count).by(-1)
         end
 
         it "should decrement the feed's subscriber count" do
           expect do
-            click_button "Unsubscribe from #{feed2.name}"
+            uncheck "#{feed2.name}"
+            click_button "Submit"
           end.to change(feed2.users, :count).by(-1)
         end
+      end
 
-        describe "toggling the button" do
-          before { click_button "Unsubscribe from #{feed2.name}" }
-          it { should have_selector('input', value: "Subscribe from #{feed2.name}") }
+      describe "unsubscribing from all feeds" do
+        before do
+          user.subscribe!(feed1)
+          user.subscribe!(feed2)
+          visit subscriptions_user_path(user)
+        end
+
+        it "should leave the user with no subscriptions" do
+          expect do
+            uncheck "#{feed1.name}"
+            uncheck "#{feed2.name}"
+            click_button "Submit"
+          end.to change(feed2.users, :count).to(0)
         end
       end
     end

@@ -150,13 +150,8 @@ describe "Authentication" do
       end
 
       describe "in the Subscriptions controller" do
-        describe "submitting to the create action" do
-          before { post subscriptions_path }
-          specify { response.should redirect_to(signin_path) }
-        end
-
-        describe "submitting to the destroy action" do
-          before { delete subscription_path(1) }
+        describe "submitting to the update action" do
+          before { put subscriptions_path }
           specify { response.should redirect_to(signin_path) }
         end
       end

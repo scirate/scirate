@@ -1,7 +1,0 @@
-<div id="<%="subscribe_form_#{feed.name}" %>" >
-  <% if current_user.subscribed?(feed) %>
-    <%= render partial: 'unsubscribe', object: feed, as: :feed %>
-  <% else %>
-    <%= render partial: 'subscribe', object: feed, as: :feed %>
-  <% end %>
-</div>
