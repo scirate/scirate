@@ -1,12 +1,26 @@
 class PapersController < ApplicationController
+  include PapersHelper
+
   def show
     @paper = Paper.includes(comments: :user).find_by_identifier!(params[:id])
   end
 
   def index
-    @feed, @date = parse_params params
 
-    @papers = @feed.papers.find_all_by_pubdate(@date)
+    if params[:feed] == nil && signed_in? && current_user.has_subscriptions?
+      @date = parse_date params, last_date(current_user.feed)
+      @papers = current_user.feed.find_all_by_pubdate(@date)
+
+      @feed_name = "#{current_user.name}'s feed"
+      @feed = nil
+    else
+      @feed = parse_feed params
+      @date = parse_date params, last_date(@feed.papers)
+
+      @papers = @feed.papers.find_all_by_pubdate(@date)
+      @feed_name = @feed.name
+    end
+
     @papers = @papers.sort_by{ |p| [-p.scites.size, -p.comments.size, p.identifier] }
 
     #this is premature optimization, but it saves one query per unscited paper
@@ -16,48 +30,68 @@ class PapersController < ApplicationController
   end
 
   def next
-    feed, date = parse_params params
 
-    next_date = feed.next_date(date)
+    if params[:feed].nil? && signed_in? && current_user.has_subscriptions?
+      date = parse_date params, last_date(current_user.feed)
+      papers = current_user.feed
+    else
+      feed = parse_feed params
+      date = parse_date params, last_date(feed.papers)
 
-    if next_date.nil?
-      flash[:error] = "No future papers found!"
-      next_date = date
+      papers = feed.papers
     end
 
-    if feed.is_default?
-      redirect_to papers_path(date: next_date)
+    ndate = next_date(papers, date)
+
+    if ndate.nil?
+      flash[:error] = "No future papers found!"
+      ndate = date
+    end
+
+    if params[:feed].nil?
+      redirect_to papers_path(date: ndate)
     else
-      redirect_to papers_path(date: next_date, feed: feed.name)
+      redirect_to papers_path(date: ndate, feed: feed.name)
     end
   end
 
   def prev
-    feed, date = parse_params params
+    if params[:feed].nil? && signed_in? && current_user.has_subscriptions?
+      date = parse_date params, last_date(current_user.feed)
+      papers = current_user.feed
+    else
+      feed = parse_feed params
+      date = parse_date params, last_date(feed.papers)
 
-    prev_date = feed.prev_date(date)
-
-    if prev_date.nil?
-      flash[:error] = "No past papers found!"
-      prev_date = date
+      papers = feed.papers
     end
 
-    if feed.is_default?
-      redirect_to papers_path(date: prev_date)
+    pdate = prev_date(papers, date)
+
+    if pdate.nil?
+      flash[:error] = "No past papers found!"
+      pdate = date
+    end
+
+    if params[:feed].nil?
+      redirect_to papers_path(date: pdate)
     else
-      redirect_to papers_path(date: prev_date, feed: feed.name)
+      redirect_to papers_path(date: pdate, feed: feed.name)
     end
   end
 
   private
 
-    def parse_params params
-      feed = Feed.find_by_name(params[:feed]) || Feed.default
-
-      date = Chronic.parse(params[:date]) || feed.last_date
+    def parse_date params, default
+      date = Chronic.parse(params[:date]) || default
       date = date.to_date
 
-      return [feed,date]
+      return date
     end
 
+    def parse_feed params
+      feed = Feed.find_by_name(params[:feed]) || Feed.default
+
+      return feed
+    end
 end

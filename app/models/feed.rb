@@ -13,25 +13,6 @@ class Feed < ActiveRecord::Base
     default = Feed.find_by_name("quant-ph") || Feed.create_default
   end
 
-  def last_date
-    last = papers.find(:first, order: "pubdate DESC")
-    last.nil? ? Date.today : last.pubdate
-  end
-
-  def next_date(date)
-    next_paper = papers.find(:last,
-                            order: "pubdate DESC",
-                            conditions: ["pubdate > ?", date])
-    next_paper.nil? ? nil : next_paper.pubdate
-  end
-
-  def prev_date(date)
-    prev_paper = papers.find(:first,
-                            order: "pubdate DESC",
-                            conditions: ["pubdate < ?", date])
-    prev_paper.nil? ? nil : prev_paper.pubdate
-  end
-
   def is_default?
     self == Feed.default
   end

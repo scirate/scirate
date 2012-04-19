@@ -364,18 +364,12 @@ describe "Paper pages" do
     describe "feeds" do
       let(:feed) { FactoryGirl.create(:feed) }
 
-      before(:all) do
-        3.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.today) }
-        3.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.yesterday) }
-        3.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.yesterday - 1.day) }
-        3.times { FactoryGirl.create(:paper, feed: Feed.default, pubdate: Date.yesterday) }
-      end
-      after(:all) do
-        Paper.delete_all
-        Feed.delete_all
-      end
-
       before do
+        2.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.today) }
+        2.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.yesterday) }
+        2.times { FactoryGirl.create(:paper, feed: feed, pubdate: Date.yesterday - 1.day) }
+        2.times { FactoryGirl.create(:paper, feed: Feed.default, pubdate: Date.yesterday) }
+
         visit papers_path(feed: feed.name, date: Date.yesterday)
       end
 
@@ -397,7 +391,7 @@ describe "Paper pages" do
         before { click_link "Next day >>>" }
 
         it "should remain on the same feed" do
-          page.should have_content "papers for #{feed.name}"
+          page.should have_content "papers from #{feed.name}"
         end
 
         it "should go to the right date" do
@@ -409,11 +403,43 @@ describe "Paper pages" do
         before { click_link "<<< Previous day" }
 
         it "should remain on the same feed" do
-          page.should have_content "papers for #{feed.name}"
+          page.should have_content "papers from #{feed.name}"
         end
 
         it "should go to the right date" do
           page.should have_content "#{(Date.yesterday - 1.day).to_formatted_s(:rfc822)}"
+        end
+      end
+
+      describe "with subscriptions" do
+        let(:new_user) { FactoryGirl.create(:user) }
+        let(:feed1) { FactoryGirl.create(:feed) }
+        let(:feed2) { FactoryGirl.create(:feed) }
+
+        before do
+          3.times { FactoryGirl.create(:paper, feed: feed1, pubdate: Date.today) }
+          3.times { FactoryGirl.create(:paper, feed: feed2, pubdate: Date.today) }
+
+          sign_in(new_user)
+          new_user.subscribe!(feed1)
+
+          visit papers_path
+        end
+
+        it { should have_content "papers from #{new_user.name}'s feed" }
+
+        it "should list most recent papers from subscribed feed" do
+          feed1.papers.find_all_by_pubdate(Date.today).each do |paper|
+            page.should have_link paper.identifier
+            page.should have_content paper.title
+          end
+        end
+
+        it "should not list any papers from other feeds" do
+          feed2.papers.each do |paper|
+            page.should_not have_link paper.identifier
+            page.should_not have_content paper.title
+          end
         end
       end
     end

@@ -44,6 +44,8 @@ class Paper < ActiveRecord::Base
     updated_date > pubdate
   end
 
+  # Returns papers from feeds subscribed to by the given user
+  scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
 
   private
 
@@ -53,5 +55,13 @@ class Paper < ActiveRecord::Base
       if updated_date < pubdate
         errors.add(:updated_date, "must not be earlier than pubdate")
       end
+    end
+
+    # Returns SQL condition for papers from feeds subscribed
+    # to by the given user.
+    def self.subscribed_by(user)
+      subscribed_ids = %(SELECT feed_id FROM subscriptions
+                         WHERE user_id = #{user.id})
+      where("feed_id IN (#{subscribed_ids})")
     end
 end

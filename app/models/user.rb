@@ -56,6 +56,14 @@ class User < ActiveRecord::Base
     subscriptions.find_by_feed_id(feed.id).destroy
   end
 
+  def has_subscriptions?
+    subscriptions.size > 0
+  end
+
+  def feed
+    Paper.from_feeds_subscribed_by(self)
+  end
+
   def send_signup_confirmation
     generate_token(:confirmation_token)
     save!
