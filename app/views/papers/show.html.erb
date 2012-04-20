@@ -1,11 +1,14 @@
 <% provide :title, @paper.identifier %>
 <div class="paper">
   <div class="title">
-    <%= @paper.identifier %>
     <%= @paper.title %>
   </div>
   <div class="authors">
     <%= @paper.authors.join(', ') %>
+  </div>
+  <div class="identifier">
+    <%= @paper.identifier %>
+    [<%= @paper.feed.name %>]
   </div>
   <div class="abstract">
     <%= @paper.abstract %>

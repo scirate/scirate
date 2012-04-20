@@ -9,7 +9,11 @@
    </div>
    <div class="title">
      <span class="identifier">
-       <%= link_to paper.identifier, paper %>
+       <% if @feed.nil? %>
+         <%= link_to "#{paper.identifier} [#{paper.feed.name}]", paper %>
+       <% else %>
+         <%= link_to paper.identifier, paper %>
+       <% end %>
      </span>
      <span class="title">
        <%= paper.title %>
@@ -18,7 +22,7 @@
        <%= paper.authors.join(', ') %>
      </div>
    </div>
-   <div class ="<%= "abstract_#{paper.id}" %>">     
+   <div class ="<%= "abstract_#{paper.id}" %>">
      <%= render partial: 'abstract', object: paper, as: :paper %>
    </div
 </li>
