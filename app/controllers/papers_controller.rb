@@ -9,7 +9,7 @@ class PapersController < ApplicationController
 
     if params[:feed] == nil && signed_in? && current_user.has_subscriptions?
       @date = parse_date params, last_date(current_user.feed)
-      @papers = current_user.feed.find_all_by_pubdate(@date)
+      @papers = current_user.feed.includes(:feed).find_all_by_pubdate(@date)
 
       @feed_name = "#{current_user.name}'s feed"
       @feed = nil
