@@ -1,7 +1,20 @@
+# == Schema Information
+#
+# Table name: feeds
+#
+#  id           :integer         not null, primary key
+#  name         :string(255)
+#  url          :string(255)
+#  feed_type    :string(255)
+#  created_at   :datetime        not null
+#  updated_at   :datetime        not null
+#  updated_date :date
+#
+
 class Feed < ActiveRecord::Base
   attr_accessible :name, :url, :feed_type
 
-  has_many :papers
+  has_many :papers, validate: false
   has_many :subscriptions, dependent: :destroy
   has_many :users, through: :subscriptions
 

@@ -2,17 +2,19 @@
 #
 # Table name: papers
 #
-#  id           :integer         not null, primary key
-#  title        :string(255)
-#  authors      :text
-#  abstract     :text
-#  identifier   :string(255)
-#  url          :string(255)
-#  created_at   :datetime        not null
-#  updated_at   :datetime        not null
-#  pubdate      :date
-#  updated_date :date
-#  scites_count :integer         default(0)
+#  id             :integer         not null, primary key
+#  title          :string(255)
+#  authors        :text
+#  abstract       :text
+#  identifier     :string(255)
+#  url            :string(255)
+#  created_at     :datetime        not null
+#  updated_at     :datetime        not null
+#  pubdate        :date
+#  updated_date   :date
+#  scites_count   :integer         default(0)
+#  comments_count :integer         default(0)
+#  feed_id        :integer
 #
 
 class Paper < ActiveRecord::Base

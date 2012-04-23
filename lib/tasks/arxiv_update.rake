@@ -2,10 +2,17 @@ namespace :db do
   desc "Update database with yesterday's papers"
   task arxiv_update: :environment do
 
-    Feed.all.each do |feed|
+    # only update those feeds we haven't succesfully updated already
+    feeds = Feed.where("updated_date <> ?", Date.today)
+
+    if feeds.size == 0
+      puts "No feeds need updating"
+    end
+
+    feeds.each do |feed|
       puts "Updating #{feed.name} ... "
 
-      print "Fetching RSS feed ... "
+      print "\tFetching RSS feed ... "
 
       #fetch the latest RSS feed and add it to the DB
       feed_day = fetch_arxiv_rss feed
@@ -16,15 +23,20 @@ namespace :db do
         #create Paper stubs (date, identifier, feed)
         papers = parse_arxiv feed, feed_day
 
-        puts "Updating papers for #{feed.name} #{feed_day.pubdate} - #{papers[:all].count - papers[:updates].count} new, #{papers[:updates].count} updates"
-
-        print "Fetching metadata ... "
+        print "\tUpdating papers for #{feed.name} #{feed_day.pubdate} - #{papers[:all].count - papers[:updates].count} new, #{papers[:updates].count} updates ... "
 
         #fetch metadata from arXiv OAI interface
         update_metadata papers
 
         puts "Done!"
       end
+
+      print "\tMarking #{feed.name} as updated ... "
+      feed.updated_date = Date.today
+      feed.save!
+      puts "Done!"
+
+      puts ""
     end
   end
 end

@@ -7,6 +7,7 @@
 #  content    :text
 #  created_at :datetime        not null
 #  updated_at :datetime        not null
+#  feed_name  :string(255)
 #
 
 class FeedDay < ActiveRecord::Base

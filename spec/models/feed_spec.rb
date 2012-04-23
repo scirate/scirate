@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: feeds
+#
+#  id           :integer         not null, primary key
+#  name         :string(255)
+#  url          :string(255)
+#  feed_type    :string(255)
+#  created_at   :datetime        not null
+#  updated_at   :datetime        not null
+#  updated_date :date
+#
+
 require 'spec_helper'
 
 describe Feed do
@@ -16,6 +29,7 @@ describe Feed do
   it { should respond_to(:is_default?) }
   it { should respond_to(:subscriptions) }
   it { should respond_to(:users) }
+  it { should respond_to(:updated_date) }
 
   it { should be_valid }
 
