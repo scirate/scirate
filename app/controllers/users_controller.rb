@@ -101,6 +101,11 @@ class UsersController < ApplicationController
   def subscriptions
     @user = User.find(params[:id])
     @feeds = Feed.order("name")
+
+    # This is to avoid loading each subscription individually.  There is
+    # presumably some way to do this with eager loading, but I cannot make
+    # rails use the eager-loaded data for feeds the user is not subscribed to.
+    @subscriptions = Set.new( @user.subscriptions.map { |s| s.feed_id } )
   end
 
   private
