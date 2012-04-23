@@ -100,7 +100,7 @@ class UsersController < ApplicationController
 
   def subscriptions
     @user = User.find(params[:id])
-    @feeds = Feed.all
+    @feeds = Feed.order("name")
   end
 
   private

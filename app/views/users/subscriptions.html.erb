@@ -1,12 +1,5 @@
 <% provide :title, "Subscriptions for #{@user.name}" %>
-<table class="profile">
-  <tr>
-    <td class="main">
-      <h1>
-        Subscribed Feeds
-      </h1>
-      <%= render 'subscription_form' %>
-    </td>
-    <%= render 'sidebar' %>
-  </tr>
-</table>
+<h1>
+  Subscribed Feeds
+</h1>
+<%= render 'subscription_form' %>
