@@ -12,7 +12,7 @@
 #
 
 class Feed < ActiveRecord::Base
-  attr_accessible :name, :url, :feed_type
+  attr_accessible :name, :url, :feed_type, :updated_date
 
   has_many :papers, validate: false
   has_many :subscriptions, dependent: :destroy
