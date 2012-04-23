@@ -63,7 +63,7 @@ class Paper < ActiveRecord::Base
     # to by the given user.
     def self.subscribed_by(user)
       subscribed_ids = %(SELECT feed_id FROM subscriptions
-                         WHERE user_id = #{user.id})
-      where("feed_id IN (#{subscribed_ids})")
+                         WHERE user_id = ?)
+      where("feed_id IN (#{subscribed_ids})", user.id)
     end
 end
