@@ -2,6 +2,12 @@ namespace :db do
   desc "Update database with yesterday's papers"
   task arxiv_update: :environment do
 
+    # if it's not yet time for the update, abort
+    if Time.now.utc.hour < 2
+      puts "Cannot update until 0200 UTC when arXiv is updated"
+      next
+    end
+
     # only update those feeds we haven't succesfully updated already
     feeds = Feed.where("updated_date <> ?", Date.today)
 
