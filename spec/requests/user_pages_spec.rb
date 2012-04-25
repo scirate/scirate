@@ -112,33 +112,61 @@ describe "User pages" do
                                         confirmation_sent_at: 2.hours.ago) }
 
         describe "with valid information" do
-          before { visit activate_user_path(user.id, user.confirmation_token) }
+          describe "it should give the correct response" do
+            before { visit activate_user_path(user.id, user.confirmation_token) }
 
-          it { should have_title "" }
-          it { should have_content("Your account has been activated") }
+            it { should have_title "" }
+            it { should have_content("Your account has been activated") }
+          end
+
+          it "it should activate the user" do
+            expect do
+              visit activate_user_path(user.id, user.confirmation_token)
+              user.reload
+            end.to change(user, :active).to(true)
+          end
         end
 
         describe "with invalid confirmation" do
-          before { visit activate_user_path(user.id, "bogus") }
+          describe "it should give the an error message" do
+            before { visit activate_user_path(user.id, "bogus") }
 
-          it { should have_title "" }
-          it { should have_content("link is invalid") }
+            it { should have_title "" }
+            it { should have_content("link is invalid") }
+          end
+
+          it "it should not activate the user" do
+            expect do
+              visit activate_user_path(user.id, "bogus")
+              user.reload
+            end.not_to change(user, :active).to(true)
+          end
         end
 
         describe "with expired confirmation" do
           before do
             user.confirmation_sent_at = 3.days.ago
             user.save!
-            visit activate_user_path(user.id, user.confirmation_token)
           end
 
-          it { should have_content("link has expired") }
-          it { should have_content("email has been sent") }
+          describe "should give an error message" do
+            before { visit activate_user_path(user.id, user.confirmation_token) }
 
-          it "should send the email" do
-            user_updated = User.find_by_email!(user.email)
-            last_email.to.should include(user_updated.email)
-            last_email.body.should include(user_updated.confirmation_token)
+            it { should have_content("link has expired") }
+            it { should have_content("email has been sent") }
+
+            it "should send the email" do
+              user_updated = User.find_by_email!(user.email)
+              last_email.to.should include(user_updated.email)
+              last_email.body.should include(user_updated.confirmation_token)
+            end
+          end
+
+          it "it should not activate the user" do
+            expect do
+              visit activate_user_path(user.id, user.confirmation_token)
+              user.reload
+            end.not_to change(user, :active).to(true)
           end
         end
 

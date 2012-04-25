@@ -97,7 +97,7 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    active = true
+    self.active = true
     clear_token(:confirmation_token)
     save!
   end
