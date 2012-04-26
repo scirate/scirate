@@ -140,7 +140,15 @@ def update_metadata papers
 
     paper.authors = []
     item.elements.each('authors/author') do |author|
-      name = "#{author.elements['forenames'].text} #{author.elements['keyname'].text}"
+      forenames = author.elements['forenames']
+      keyname   = author.elements['keyname']
+
+      if forenames.nil?
+        name = keyname.text
+      else
+        name "#{forenames.text} #{keyname.text}"
+      end
+
       paper.authors << name
     end
 
