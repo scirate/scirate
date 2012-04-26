@@ -35,8 +35,9 @@ group :test do
   gem 'factory_girl_rails', '1.4.0'
   gem 'database_cleaner', '0.7.0'
   gem 'launchy'
-end 
+end
 
 group :production do
   gem 'pg', '0.12.2'
+  gem 'newrelic_rpm'
 end
