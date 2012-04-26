@@ -9,7 +9,8 @@ namespace :db do
     end
 
     # only update those feeds we haven't succesfully updated already
-    feeds = Feed.where("updated_date <> ?", Date.today)
+    # feeds are updated in decreasing order of subscriber count
+    feeds = Feed.where("updated_date <> ?", Date.today).order("subscriptions_count DESC")
 
     if feeds.size == 0
       puts "No feeds need updating"
@@ -146,7 +147,7 @@ def update_metadata papers
       if forenames.nil?
         name = keyname.text
       else
-        name "#{forenames.text} #{keyname.text}"
+        name = "#{forenames.text} #{keyname.text}"
       end
 
       paper.authors << name
