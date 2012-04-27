@@ -411,6 +411,31 @@ describe "Paper pages" do
         end
       end
 
+      describe "with a date range" do
+        before do
+          visit papers_path(feed: feed.name, since: Date.yesterday, date: Date.today)
+        end
+
+        it "should list all papers from feed in the range" do
+          feed.papers.each do |paper|
+            if [Date.yesterday, Date.today].include? paper.pubdate
+              page.should have_link paper.identifier
+              page.should have_content paper.title
+            else
+              page.should_not have_link paper.identifier
+              page.should_not have_content paper.title
+            end
+          end
+        end
+
+        it "should not list any papers from default feed" do
+          Feed.default.papers.each do |paper|
+            page.should_not have_link paper.identifier
+            page.should_not have_content paper.title
+          end
+        end
+      end
+
       describe "with subscriptions" do
         let(:new_user) { FactoryGirl.create(:user) }
         let(:feed1) { FactoryGirl.create(:feed) }
@@ -439,6 +464,34 @@ describe "Paper pages" do
           feed2.papers.each do |paper|
             page.should_not have_link paper.identifier
             page.should_not have_content paper.title
+          end
+        end
+
+        describe "with date range" do
+          before do
+            3.times { FactoryGirl.create(:paper, feed: feed1, pubdate: Date.yesterday) }
+            3.times { FactoryGirl.create(:paper, feed: feed1, pubdate: Date.today - 2.day) }
+
+            visit papers_path(since: Date.yesterday)
+          end
+
+          it "should list all papers from subscribed feeds in the range" do
+            feed1.papers.each do |paper|
+              if [Date.yesterday, Date.today].include? paper.pubdate
+                page.should have_link paper.identifier
+                page.should have_content paper.title
+              else
+                page.should_not have_link paper.identifier
+                page.should_not have_content paper.title
+              end
+            end
+          end
+
+          it "should not list any papers from default feed" do
+            feed2.papers.each do |paper|
+              page.should_not have_link paper.identifier
+              page.should_not have_content paper.title
+            end
           end
         end
       end

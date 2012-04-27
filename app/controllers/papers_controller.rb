@@ -6,18 +6,20 @@ class PapersController < ApplicationController
   end
 
   def index
+    @date, @since = parse_date params
+    @feed = parse_feed params
 
-    if params[:feed] == nil && signed_in? && current_user.has_subscriptions?
-      @date = parse_date params, last_date(current_user.feed)
-      @papers = current_user.feed.includes(:feed).find_all_by_pubdate(@date)
+    if @feed.nil? && signed_in? && current_user.has_subscriptions?
+      @date = last_date(current_user.feed) if @date.nil?
+      @papers = fetch_papers current_user.feed.includes(:feed), @date, @since
 
       @feed_name = "#{current_user.name}'s feed"
       @feed = nil
     else
-      @feed = parse_feed params
-      @date = parse_date params, last_date(@feed.papers)
+      @feed ||= Feed.default
+      @date = last_date(@feed.papers) if @date.nil?
 
-      @papers = @feed.papers.find_all_by_pubdate(@date)
+      @papers = fetch_papers @feed.papers, @date, @since
       @feed_name = @feed.name
     end
 
@@ -30,13 +32,16 @@ class PapersController < ApplicationController
   end
 
   def next
+    date = parse_date(params)[0]
+    feed = parse_feed params
 
-    if params[:feed].nil? && signed_in? && current_user.has_subscriptions?
-      date = parse_date params, last_date(current_user.feed)
+    if feed.nil? && signed_in? && current_user.has_subscriptions?
+       date ||= last_date(current_user.feed)
+
       papers = current_user.feed
     else
-      feed = parse_feed params
-      date = parse_date params, last_date(feed.papers)
+      feed ||= Feed.default
+      date ||= last_date(feed.papers)
 
       papers = feed.papers
     end
@@ -56,13 +61,15 @@ class PapersController < ApplicationController
   end
 
   def prev
-    if params[:feed].nil? && signed_in? && current_user.has_subscriptions?
-      date = parse_date params, last_date(current_user.feed)
+    date = parse_date(params)[0]
+    feed = parse_feed params
+
+    if feed.nil? && signed_in? && current_user.has_subscriptions?
+      date ||= last_date(current_user.feed)
       papers = current_user.feed
     else
-      feed = parse_feed params
-      date = parse_date params, last_date(feed.papers)
-
+      feed ||= Feed.default
+      date ||= last_date(feed.papers)
       papers = feed.papers
     end
 
@@ -82,16 +89,27 @@ class PapersController < ApplicationController
 
   private
 
-    def parse_date params, default
-      date = Chronic.parse(params[:date]) || default
-      date = date.to_date
+    def parse_date params
+      date = Chronic.parse(params[:date])
+      date = date.to_date if !date.nil?
 
-      return date
+      since = Chronic.parse(params[:since])
+      since = since.to_date if !since.nil?
+
+      return date, since
     end
 
     def parse_feed params
-      feed = Feed.find_by_name(params[:feed]) || Feed.default
+      feed = Feed.find_by_name(params[:feed])
 
       return feed
+    end
+
+    def fetch_papers feed, date, since
+      if since.nil?
+        return feed.find_all_by_pubdate(date)
+      else
+        return feed.where("pubdate >= ? AND pubdate <= ?", since, date)
+      end
     end
 end

@@ -2,7 +2,13 @@
 
 <%= render 'next_prev_links' %>
 
-<h1>All papers from <%= @feed_name %> from <%= @date.to_formatted_s(:rfc822) %></h1>
+<% if @since.nil? %>
+  <h1>All papers from <%= @feed_name %> from <%= @date.to_formatted_s(:rfc822) %></h1>
+<% else %>
+  <h1>All papers from <%= @feed_name %> from
+      <%= @since.to_formatted_s(:rfc822) %> to
+      <%= @date.to_formatted_s(:rfc822) %></h1>
+<% end %>
 
 <ul class="papers">
   <%= render @papers %>
