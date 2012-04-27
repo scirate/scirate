@@ -388,7 +388,7 @@ describe "Paper pages" do
       end
 
       describe "next button and feeds" do
-        before { click_link "Next day >>>" }
+        before { click_link "Next day >>" }
 
         it "should remain on the same feed" do
           page.should have_content "papers from #{feed.name}"
@@ -400,7 +400,7 @@ describe "Paper pages" do
       end
 
       describe "prev button and feeds" do
-        before { click_link "<<< Previous day" }
+        before { click_link "<< Prev day" }
 
         it "should remain on the same feed" do
           page.should have_content "papers from #{feed.name}"
@@ -413,7 +413,11 @@ describe "Paper pages" do
 
       describe "with a date range" do
         before do
-          visit papers_path(feed: feed.name, since: Date.yesterday, date: Date.today)
+          visit papers_path(feed: feed.name, range: 2, date: Date.today)
+        end
+
+        it "should have the right heading" do
+          page.should have_content "#{(Date.today - 1.day).to_formatted_s(:rfc822)} to #{Date.today.to_formatted_s(:rfc822)}"
         end
 
         it "should list all papers from feed in the range" do
@@ -472,7 +476,11 @@ describe "Paper pages" do
             3.times { FactoryGirl.create(:paper, feed: feed1, pubdate: Date.yesterday) }
             3.times { FactoryGirl.create(:paper, feed: feed1, pubdate: Date.today - 2.day) }
 
-            visit papers_path(since: Date.yesterday)
+            visit papers_path(range: 2)
+          end
+
+          it "should have the right heading" do
+            page.should have_content "#{(Date.today - 1.day).to_formatted_s(:rfc822)} to #{Date.today.to_formatted_s(:rfc822)}"
           end
 
           it "should list all papers from subscribed feeds in the range" do

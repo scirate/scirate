@@ -22,6 +22,10 @@ class Feed < ActiveRecord::Base
   validates :url, presence: true, uniqueness: true
   validates :feed_type, presence: true
 
+  def to_param
+    name
+  end
+
   def self.default
     default = Feed.find_by_name("quant-ph") || Feed.create_default
   end

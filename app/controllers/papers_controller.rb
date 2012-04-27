@@ -6,12 +6,13 @@ class PapersController < ApplicationController
   end
 
   def index
-    @date, @since = parse_date params
+    @date = parse_date params
     @feed = parse_feed params
+    @range = parse_range params
 
     if @feed.nil? && signed_in? && current_user.has_subscriptions?
       @date = last_date(current_user.feed) if @date.nil?
-      @papers = fetch_papers current_user.feed.includes(:feed), @date, @since
+      @papers = fetch_papers current_user.feed.includes(:feed), @date, @range
 
       @feed_name = "#{current_user.name}'s feed"
       @feed = nil
@@ -19,7 +20,7 @@ class PapersController < ApplicationController
       @feed ||= Feed.default
       @date = last_date(@feed.papers) if @date.nil?
 
-      @papers = fetch_papers @feed.papers, @date, @since
+      @papers = fetch_papers @feed.papers, @date, @range
       @feed_name = @feed.name
     end
 
@@ -32,7 +33,7 @@ class PapersController < ApplicationController
   end
 
   def next
-    date = parse_date(params)[0]
+    date = parse_date params
     feed = parse_feed params
 
     if feed.nil? && signed_in? && current_user.has_subscriptions?
@@ -53,15 +54,11 @@ class PapersController < ApplicationController
       ndate = date
     end
 
-    if params[:feed].nil?
-      redirect_to papers_path(date: ndate)
-    else
-      redirect_to papers_path(date: ndate, feed: feed.name)
-    end
+    redirect_to papers_path(params.merge(date: ndate, action: nil))
   end
 
   def prev
-    date = parse_date(params)[0]
+    date = parse_date params
     feed = parse_feed params
 
     if feed.nil? && signed_in? && current_user.has_subscriptions?
@@ -80,11 +77,7 @@ class PapersController < ApplicationController
       pdate = date
     end
 
-    if params[:feed].nil?
-      redirect_to papers_path(date: pdate)
-    else
-      redirect_to papers_path(date: pdate, feed: feed.name)
-    end
+    redirect_to papers_path(params.merge(date: pdate, action: nil))
   end
 
   private
@@ -93,10 +86,7 @@ class PapersController < ApplicationController
       date = Chronic.parse(params[:date])
       date = date.to_date if !date.nil?
 
-      since = Chronic.parse(params[:since])
-      since = since.to_date if !since.nil?
-
-      return date, since
+      return date
     end
 
     def parse_feed params
@@ -105,11 +95,19 @@ class PapersController < ApplicationController
       return feed
     end
 
-    def fetch_papers feed, date, since
-      if since.nil?
-        return feed.find_all_by_pubdate(date)
-      else
-        return feed.where("pubdate >= ? AND pubdate <= ?", since, date)
-      end
+    def parse_range range
+      range = params[:range].to_i
+
+      # I expect range=2 to show me two days
+      range -= 1
+
+      # negative date windows are confusing
+      range = 0 if range < 0
+
+      return range
+    end
+
+    def fetch_papers feed, date, range
+      return feed.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
     end
 end
