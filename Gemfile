@@ -5,13 +5,13 @@ gem 'bcrypt-ruby', '3.0.1'
 gem 'faker', '1.0.1'
 gem 'chronic'
 gem 'oai'
-gem 'taps'
 
 group :development do
   gem 'sqlite3', '>= 1.3.5'
   gem 'annotate', '~> 2.4.1.beta'
   gem 'rspec-rails', '>= 2.8.1'
   gem 'guard-rspec', '>= 0.5.5'
+  gem 'taps'
 end
 
 # Gems used only for assets and not required
