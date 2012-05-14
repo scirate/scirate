@@ -50,10 +50,11 @@ end
 
 namespace :db do
   desc "Completely reload metadata from feed cache -- will not destroy papers"
-  task reload_metadata: :environment do
+  task :reload_metadata, [:start_date] => :environment do |t,args|
 
     #get FeedDay objects in ascending order of pubday
-    FeedDay.find(:all, order: 'pubdate').each do |feed_day|
+    FeedDay.where("pubdate >= ?", args.start_date).find(:all, \
+                                         order: 'pubdate').each do |feed_day|
       feed = Feed.find_by_name(feed_day.feed_name)
 
       #create stubs
@@ -105,6 +106,9 @@ def parse_arxiv feed, feed_day
 
   xml.elements.each('rdf:RDF/item') do |item|
     id = item.attributes["about"][-9,9]
+
+    # skip paper if id looks wrong (i.e. old-style identifiers)
+    next unless id =~ /\d{4}\.\d{4}/
 
     if item.elements["title"].text =~ /\[#{feed.name}\]/
       stub = feed.papers.build(identifier: id, pubdate: date)
