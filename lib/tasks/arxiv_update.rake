@@ -49,16 +49,13 @@ namespace :db do
 end
 
 namespace :db do
-  desc "Completely rebuild metadata database from cache of feed"
+  desc "Completely reload metadata from feed cache -- will not destroy papers"
   task rebuild_metadata: :environment do
 
     #ensure we have the latest RSS feeds
     Feed.all.each do |feed|
       fetch_arxiv_rss feed
     end
-
-    puts "Deleting papers from DB"
-    Paper.destroy_all
 
     #get FeedDay objects in ascending order of pubday
     FeedDay.find(:all, order: 'pubdate').each do |feed_day|
@@ -71,6 +68,19 @@ namespace :db do
       update_metadata papers
       puts "Done!"
     end
+  end
+end
+
+namespace :db do
+  desc "Update a paper (passed as argument)"
+  task :update_paper, [:paper_id] => :environment do |t,args|
+    stubs = {}
+    stub = Paper.new(identifier: args.paper_id)
+    stubs[:all] = [stub]
+    stubs[:updates] = [] #don't change update date
+    stubs[:cross_lists] = [stub]
+
+    update_metadata stubs
   end
 end
 
@@ -93,6 +103,7 @@ end
 def parse_arxiv feed, feed_day
   papers = []
   updates = Set.new
+  cross_lists = Set.new
 
   xml = REXML::Document.new(feed_day.content)
   date = feed_day.pubdate
@@ -108,9 +119,16 @@ def parse_arxiv feed, feed_day
         updates << stub
       end
     end
+
+    # Cross-listed papers are from a different feed
+    if item.elements["title"].text =~ /CROSS LISTED\)/
+      stub = Paper.new(identifier: id, pubdate: date)
+      papers << stub
+      cross_lists << stub
+    end
   end
 
-  return {all: papers, updates: updates}
+  return {all: papers, updates: updates, cross_lists: cross_lists}
 end
 
 def update_metadata papers
@@ -123,7 +141,8 @@ def update_metadata papers
     paper = Paper.find_by_identifier(stub.identifier)
 
     # don't add new papers on updates
-    next if paper.nil? && papers[:updates].include?(stub)
+    next if paper.nil? && \
+        (papers[:updates].include?(stub) || papers[:cross_lists].include?(stub))
 
     # use the stub if we didn't find an existing paper
     paper ||= stub
@@ -137,8 +156,13 @@ def update_metadata papers
     paper.title = item.elements["title"].text
     paper.abstract = item.elements["abstract"].text
     paper.url = "http://arxiv.org/abs/#{paper.identifier}"
-    paper.updated_date = stub.pubdate
 
+    # don't update updated_date for new paper or cross-list
+    if papers[:updates].include?(stub)
+      paper.updated_date = stub.pubdate
+    end
+
+    # fetch authors as an array
     paper.authors = []
     item.elements.each('authors/author') do |author|
       forenames = author.elements['forenames']
@@ -151,6 +175,13 @@ def update_metadata papers
       end
 
       paper.authors << name
+    end
+
+    # fetch crosslists -- the first returned element is the primary category
+    categories = item.elements['categories'].text.split.drop(1)
+    categories.each do |c|
+      #save crosslists here
+      puts "Ignoring cross-list #{c} for #{paper.identifier}"
     end
 
     paper.save(validate: false)
