@@ -2,14 +2,14 @@
 #
 # Table name: papers
 #
-#  id             :integer         not null, primary key
+#  id             :integer         primary key
 #  title          :string(255)
 #  authors        :text
 #  abstract       :text
 #  identifier     :string(255)
 #  url            :string(255)
-#  created_at     :datetime        not null
-#  updated_at     :datetime        not null
+#  created_at     :timestamp       not null
+#  updated_at     :timestamp       not null
 #  pubdate        :date
 #  updated_date   :date
 #  scites_count   :integer         default(0)
@@ -26,6 +26,9 @@ class Paper < ActiveRecord::Base
   has_many  :scites, dependent: :destroy
   has_many  :sciters, through: :scites, order: "name ASC"
   has_many  :comments, dependent: :destroy, order: "created_at ASC"
+  has_many  :cross_lists, dependent: :destroy
+  has_many  :cross_listed_feeds, through: :cross_lists, \
+                source: :feed, order: "name ASC"
 
   validates :title, presence: true
   validates :authors, presence: true

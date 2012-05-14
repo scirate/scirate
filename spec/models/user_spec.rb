@@ -2,20 +2,20 @@
 #
 # Table name: users
 #
-#  id                     :integer         not null, primary key
+#  id                     :integer         primary key
 #  name                   :string(255)
 #  email                  :string(255)
 #  remember_token         :string(255)
-#  created_at             :datetime        not null
-#  updated_at             :datetime        not null
+#  created_at             :timestamp       not null
+#  updated_at             :timestamp       not null
 #  password_digest        :string(255)
 #  scites_count           :integer         default(0)
 #  password_reset_token   :string(255)
-#  password_reset_sent_at :datetime
+#  password_reset_sent_at :timestamp
 #  confirmation_token     :string(255)
 #  active                 :boolean         default(FALSE)
 #  comments_count         :integer         default(0)
-#  confirmation_sent_at   :datetime
+#  confirmation_sent_at   :timestamp
 #  subscriptions_count    :integer         default(0)
 #
 

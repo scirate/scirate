@@ -11,54 +11,67 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120426045036) do
+ActiveRecord::Schema.define(:version => 20120514045445) do
 
   create_table "comments", :force => true do |t|
-    t.text     "content"
-    t.integer  "user_id"
-    t.integer  "paper_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.text      "content"
+    t.integer   "user_id"
+    t.integer   "paper_id"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
   end
 
   add_index "comments", ["paper_id"], :name => "index_comments_on_paper_id"
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
+  create_table "cross_lists", :force => true do |t|
+    t.integer  "paper_id"
+    t.integer  "feed_id"
+    t.date     "cross_list_date"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "cross_lists", ["feed_id", "cross_list_date"], :name => "index_cross_lists_on_feed_id_and_cross_list_date"
+  add_index "cross_lists", ["feed_id"], :name => "index_cross_lists_on_feed_id"
+  add_index "cross_lists", ["paper_id", "feed_id"], :name => "index_cross_lists_on_paper_id_and_feed_id", :unique => true
+  add_index "cross_lists", ["paper_id"], :name => "index_cross_lists_on_paper_id"
+
   create_table "feed_days", :force => true do |t|
-    t.date     "pubdate"
-    t.text     "content"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.string   "feed_name"
+    t.date      "pubdate"
+    t.text      "content"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
+    t.string    "feed_name"
   end
 
   add_index "feed_days", ["pubdate", "feed_name"], :name => "index_feed_days_on_pubdate_and_feed_name", :unique => true
 
   create_table "feeds", :force => true do |t|
-    t.string   "name"
-    t.string   "url"
-    t.string   "feed_type"
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-    t.date     "updated_date"
-    t.integer  "subscriptions_count", :default => 0
+    t.string    "name"
+    t.string    "url"
+    t.string    "feed_type"
+    t.timestamp "created_at",                         :null => false
+    t.timestamp "updated_at",                         :null => false
+    t.date      "updated_date"
+    t.integer   "subscriptions_count", :default => 0
   end
 
   add_index "feeds", ["name"], :name => "index_feeds_on_name", :unique => true
 
   create_table "papers", :force => true do |t|
-    t.string   "title"
-    t.text     "authors"
-    t.text     "abstract"
-    t.string   "identifier"
-    t.string   "url"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-    t.date     "pubdate"
-    t.date     "updated_date"
-    t.integer  "scites_count",   :default => 0
-    t.integer  "comments_count", :default => 0
-    t.integer  "feed_id"
+    t.string    "title"
+    t.text      "authors"
+    t.text      "abstract"
+    t.string    "identifier"
+    t.string    "url"
+    t.timestamp "created_at",                    :null => false
+    t.timestamp "updated_at",                    :null => false
+    t.date      "pubdate"
+    t.date      "updated_date"
+    t.integer   "scites_count",   :default => 0
+    t.integer   "comments_count", :default => 0
+    t.integer   "feed_id"
   end
 
   add_index "papers", ["feed_id"], :name => "index_papers_on_feed_id"
@@ -66,10 +79,10 @@ ActiveRecord::Schema.define(:version => 20120426045036) do
   add_index "papers", ["pubdate"], :name => "index_papers_on_date"
 
   create_table "scites", :force => true do |t|
-    t.integer  "sciter_id"
-    t.integer  "paper_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer   "sciter_id"
+    t.integer   "paper_id"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
   end
 
   add_index "scites", ["paper_id"], :name => "index_scites_on_paper_id"
@@ -77,10 +90,10 @@ ActiveRecord::Schema.define(:version => 20120426045036) do
   add_index "scites", ["sciter_id"], :name => "index_scites_on_sciter_id"
 
   create_table "subscriptions", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "feed_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer   "user_id"
+    t.integer   "feed_id"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
   end
 
   add_index "subscriptions", ["feed_id"], :name => "index_subscriptions_on_feed_id"
@@ -88,20 +101,20 @@ ActiveRecord::Schema.define(:version => 20120426045036) do
   add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "remember_token"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.string   "password_digest"
-    t.integer  "scites_count",           :default => 0
-    t.string   "password_reset_token"
-    t.datetime "password_reset_sent_at"
-    t.string   "confirmation_token"
-    t.boolean  "active",                 :default => false
-    t.integer  "comments_count",         :default => 0
-    t.datetime "confirmation_sent_at"
-    t.integer  "subscriptions_count",    :default => 0
+    t.string    "name"
+    t.string    "email"
+    t.string    "remember_token"
+    t.timestamp "created_at",                                :null => false
+    t.timestamp "updated_at",                                :null => false
+    t.string    "password_digest"
+    t.integer   "scites_count",           :default => 0
+    t.string    "password_reset_token"
+    t.timestamp "password_reset_sent_at"
+    t.string    "confirmation_token"
+    t.boolean   "active",                 :default => false
+    t.integer   "comments_count",         :default => 0
+    t.timestamp "confirmation_sent_at"
+    t.integer   "subscriptions_count",    :default => 0
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

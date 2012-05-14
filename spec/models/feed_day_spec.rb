@@ -2,11 +2,11 @@
 #
 # Table name: feed_days
 #
-#  id         :integer         not null, primary key
+#  id         :integer         primary key
 #  pubdate    :date
 #  content    :text
-#  created_at :datetime        not null
-#  updated_at :datetime        not null
+#  created_at :timestamp       not null
+#  updated_at :timestamp       not null
 #  feed_name  :string(255)
 #
 

@@ -50,12 +50,7 @@ end
 
 namespace :db do
   desc "Completely reload metadata from feed cache -- will not destroy papers"
-  task rebuild_metadata: :environment do
-
-    #ensure we have the latest RSS feeds
-    Feed.all.each do |feed|
-      fetch_arxiv_rss feed
-    end
+  task reload_metadata: :environment do
 
     #get FeedDay objects in ascending order of pubday
     FeedDay.find(:all, order: 'pubdate').each do |feed_day|
@@ -177,13 +172,22 @@ def update_metadata papers
       paper.authors << name
     end
 
+    # save the paper
+    paper.save(validate: false)
+
     # fetch crosslists -- the first returned element is the primary category
     categories = item.elements['categories'].text.split.drop(1)
-    categories.each do |c|
-      #save crosslists here
-      puts "Ignoring cross-list #{c} for #{paper.identifier}"
-    end
 
-    paper.save(validate: false)
+    # create crosslists
+    categories.each do |c|
+      feed = Feed.find_by_name(c)
+      date = stub.pubdate || paper.pubdate
+
+      # don't recreate cross-list if it already exists
+      if !paper.cross_listed_feeds.include? feed
+        paper.cross_lists.create!(feed_id: feed.id, \
+                                  cross_list_date: date)
+      end
+    end
   end
 end

@@ -2,13 +2,14 @@
 #
 # Table name: feeds
 #
-#  id           :integer         not null, primary key
-#  name         :string(255)
-#  url          :string(255)
-#  feed_type    :string(255)
-#  created_at   :datetime        not null
-#  updated_at   :datetime        not null
-#  updated_date :date
+#  id                  :integer         primary key
+#  name                :string(255)
+#  url                 :string(255)
+#  feed_type           :string(255)
+#  created_at          :timestamp       not null
+#  updated_at          :timestamp       not null
+#  updated_date        :date
+#  subscriptions_count :integer         default(0)
 #
 
 require 'spec_helper'
@@ -30,6 +31,8 @@ describe Feed do
   it { should respond_to(:subscriptions) }
   it { should respond_to(:users) }
   it { should respond_to(:updated_date) }
+  it { should respond_to(:cross_lists) }
+  it { should respond_to(:cross_listed_papers) }
 
   it { should be_valid }
 

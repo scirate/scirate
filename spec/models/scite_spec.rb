@@ -2,11 +2,11 @@
 #
 # Table name: scites
 #
-#  id         :integer         not null, primary key
+#  id         :integer         primary key
 #  sciter_id  :integer
 #  paper_id   :integer
-#  created_at :datetime        not null
-#  updated_at :datetime        not null
+#  created_at :timestamp       not null
+#  updated_at :timestamp       not null
 #
 
 require 'spec_helper'

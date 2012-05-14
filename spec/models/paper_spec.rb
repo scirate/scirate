@@ -2,14 +2,14 @@
 #
 # Table name: papers
 #
-#  id             :integer         not null, primary key
+#  id             :integer         primary key
 #  title          :string(255)
 #  authors        :text
 #  abstract       :text
 #  identifier     :string(255)
 #  url            :string(255)
-#  created_at     :datetime        not null
-#  updated_at     :datetime        not null
+#  created_at     :timestamp       not null
+#  updated_at     :timestamp       not null
 #  pubdate        :date
 #  updated_date   :date
 #  scites_count   :integer         default(0)
@@ -43,6 +43,8 @@ describe Paper do
   it { should respond_to(:sciters) }
   it { should respond_to(:comments) }
   it { should respond_to(:feed) }
+  it { should respond_to(:cross_lists) }
+  it { should respond_to(:cross_listed_feeds) }
 
   it { should be_valid }
 

@@ -2,12 +2,12 @@
 #
 # Table name: comments
 #
-#  id         :integer         not null, primary key
+#  id         :integer         primary key
 #  content    :text
 #  user_id    :integer
 #  paper_id   :integer
-#  created_at :datetime        not null
-#  updated_at :datetime        not null
+#  created_at :timestamp       not null
+#  updated_at :timestamp       not null
 #
 
 class Comment < ActiveRecord::Base
