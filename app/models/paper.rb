@@ -41,6 +41,8 @@ class Paper < ActiveRecord::Base
 
   validate  :updated_date_is_after_pubdate
 
+  after_create { cross_list_primary_feed }
+
   def to_param
     identifier
   end
@@ -51,8 +53,14 @@ class Paper < ActiveRecord::Base
 
   # Returns papers from feeds subscribed to by the given user
   scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
+  scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
   private
+
+    def cross_list_primary_feed
+      self.cross_lists.create(feed_id: self.feed.id, \
+                              cross_list_date: self.pubdate)
+    end
 
     def updated_date_is_after_pubdate
       return unless pubdate and updated_date
@@ -68,5 +76,11 @@ class Paper < ActiveRecord::Base
       subscribed_ids = %(SELECT feed_id FROM subscriptions
                          WHERE user_id = ?)
       where("feed_id IN (#{subscribed_ids})", user.id)
+    end
+
+    def self.subscribed_by_cl(user)
+      subscribed_ids = %(SELECT feed_id FROM subscriptions
+                         WHERE user_id = ?)
+      includes(:cross_lists).where("cross_lists.feed_id IN (#{subscribed_ids})", user.id)
     end
 end

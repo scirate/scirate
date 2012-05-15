@@ -299,6 +299,45 @@ describe "Paper pages" do
       end
     end
 
+    describe "cross-listed papers" do
+      let(:other_feed) { FactoryGirl.create(:feed) }
+      let(:other_paper) { FactoryGirl.create(:paper, pubdate: Date.today, feed: other_feed) }
+      let(:yet_another_paper) { FactoryGirl.create(:paper, pubdate: Date.today, feed: other_feed) }
+
+      before do
+        other_paper.cross_lists.create!(feed_id: feed.id, cross_list_date: Date.today)
+        visit papers_path(date: Date.today)
+      end
+
+      it "should list the cross-listed paper" do
+        page.should have_link other_paper.identifier
+        page.should have_content other_paper.title
+      end
+
+      it "should not list non cross-listed papers" do
+        page.should_not have_link yet_another_paper.identifier
+        page.should_not have_content yet_another_paper.title
+      end
+
+      describe "with subscriptions" do
+        before do
+          user.subscribe!(feed)
+          sign_in user
+          visit papers_path(date: Date.today)
+        end
+
+        it "should list the cross-listed paper" do
+          page.should have_link other_paper.identifier
+          page.should have_content other_paper.title
+        end
+
+        it "should not list non cross-listed papers" do
+          page.should_not have_link yet_another_paper.identifier
+          page.should_not have_content yet_another_paper.title
+        end
+      end
+    end
+
     describe "pagination" do
       before(:all) do
         3.times { FactoryGirl.create(:paper, pubdate: Date.today, feed: Feed.default) }

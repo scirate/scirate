@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   end
 
   def feed
-    Paper.from_feeds_subscribed_by(self)
+    Paper.from_feeds_subscribed_by_cl(self)
   end
 
   def send_signup_confirmation

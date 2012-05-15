@@ -18,9 +18,9 @@ class PapersController < ApplicationController
       @feed = nil
     else
       @feed ||= Feed.default
-      @date = last_date(@feed.papers) if @date.nil?
+      @date = last_date(@feed.cross_listed_papers) if @date.nil?
 
-      @papers = fetch_papers @feed.papers, @date, @range
+      @papers = fetch_papers @feed.cross_listed_papers.includes(:feed), @date, @range
       @feed_name = @feed.name
     end
 
@@ -42,9 +42,9 @@ class PapersController < ApplicationController
       papers = current_user.feed
     else
       feed ||= Feed.default
-      date ||= last_date(feed.papers)
+      date ||= last_date(feed.cross_listed_papers)
 
-      papers = feed.papers
+      papers = feed.cross_listed_papers.includes(:feed)
     end
 
     ndate = next_date(papers, date)
@@ -66,8 +66,8 @@ class PapersController < ApplicationController
       papers = current_user.feed
     else
       feed ||= Feed.default
-      date ||= last_date(feed.papers)
-      papers = feed.papers
+      date ||= last_date(feed.cross_listed_papers)
+      papers = feed.cross_listed_papers.includes(:feed)
     end
 
     pdate = prev_date(papers, date)

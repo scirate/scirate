@@ -9,11 +9,7 @@
    </div>
    <div class="title">
      <span class="identifier">
-       <% if @feed.nil? %>
-         <%= link_to "#{paper.identifier} [#{paper.feed.name}]", paper %>
-       <% else %>
-         <%= link_to paper.identifier, paper %>
-       <% end %>
+       <%= link_to "#{paper.identifier} [#{paper.feed.name}]", paper %>
      </span>
      <span class="title">
        <%= paper.title %>

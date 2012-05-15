@@ -155,11 +155,7 @@ def update_metadata papers
     paper.title = item.elements["title"].text
     paper.abstract = item.elements["abstract"].text
     paper.url = "http://arxiv.org/abs/#{paper.identifier}"
-
-    # don't update updated_date for new paper or cross-list
-    if papers[:updates].include?(stub)
-      paper.updated_date = stub.pubdate
-    end
+    paper.updated_date = stub.pubdate
 
     # fetch authors as an array
     paper.authors = []
