@@ -13,6 +13,15 @@
   <div class="abstract">
     <%= @paper.abstract %>
   </div>
+  <% if @categories.length > 0 %>
+    <div class="categories">
+      Subjects:
+      <strong><%= @paper.feed.name %></strong>
+      <% @categories.each do |c| %>
+        <%= c.name %>
+      <% end %>
+    </div>
+  <% end %>
   <div class="dates">
     Published on <%= @paper.pubdate.to_formatted_s(:rfc822) %><br />
     <% if @paper.updated? %>

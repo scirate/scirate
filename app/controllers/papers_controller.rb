@@ -3,6 +3,7 @@ class PapersController < ApplicationController
 
   def show
     @paper = Paper.includes(comments: :user).find_by_identifier!(params[:id])
+    @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)  
   end
 
   def index

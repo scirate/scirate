@@ -42,6 +42,40 @@ describe "Paper pages" do
       it { should have_content paper.updated_date.to_formatted_s(:rfc822) }
     end
 
+    describe "cross-listed papers" do
+      let(:other_feed) { FactoryGirl.create(:feed) }
+
+      describe "when there are no cross-listings" do
+
+        before do
+          visit paper_path(paper)
+        end
+
+        it "should not display cross-listings" do
+          page.should_not have_content "Subjects:"
+        end
+      end
+
+      describe "when there are cross-listings" do
+
+        before do
+          paper.cross_lists.create!(feed_id: other_feed.id, \
+                                    cross_list_date: Date.today)
+          visit paper_path(paper)
+        end
+
+        it "should display cross-listings" do
+          page.should have_content "Subjects:"
+        end
+
+        it "should list the cross-listed feeds" do
+          paper.cross_listed_feeds.each do |f|
+            page.should have_content f.name
+          end
+        end
+      end
+    end
+
     describe "sciting/unsciting" do
       let(:user) { FactoryGirl.create(:user) }
       before { sign_in user }
