@@ -71,6 +71,14 @@ class User < ActiveRecord::Base
     Paper.from_feeds_subscribed_by_cl(self)
   end
 
+  def feed_without_cross_lists
+    Paper.from_feeds_subscribed_by(self)
+  end
+
+  def feed_updated_date
+    feeds.find(:first, order: "updated_date DESC").updated_date
+  end
+
   def send_signup_confirmation
     generate_token(:confirmation_token)
     save!

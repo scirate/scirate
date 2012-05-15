@@ -11,14 +11,14 @@ class PapersController < ApplicationController
     @range = parse_range params
 
     if @feed.nil? && signed_in? && current_user.has_subscriptions?
-      @date = last_date(current_user.feed) if @date.nil?
+      @date ||= current_user.feed_updated_date
       @papers = fetch_papers current_user.feed.includes(:feed), @date, @range
 
       @feed_name = "#{current_user.name}'s feed"
       @feed = nil
     else
       @feed ||= Feed.default
-      @date = last_date(@feed.cross_listed_papers) if @date.nil?
+      @date ||= @feed.updated_date
 
       @papers = fetch_papers @feed.cross_listed_papers.includes(:feed), @date, @range
       @feed_name = @feed.name
@@ -37,12 +37,12 @@ class PapersController < ApplicationController
     feed = parse_feed params
 
     if feed.nil? && signed_in? && current_user.has_subscriptions?
-       date ||= last_date(current_user.feed)
+       date ||= current_user.feed_updated_date
 
       papers = current_user.feed
     else
       feed ||= Feed.default
-      date ||= last_date(feed.cross_listed_papers)
+      date ||= feed.updated_date
 
       papers = feed.cross_listed_papers.includes(:feed)
     end
@@ -62,11 +62,11 @@ class PapersController < ApplicationController
     feed = parse_feed params
 
     if feed.nil? && signed_in? && current_user.has_subscriptions?
-      date ||= last_date(current_user.feed)
+      date ||= current_user.feed_updated_date
       papers = current_user.feed
     else
       feed ||= Feed.default
-      date ||= last_date(feed.cross_listed_papers)
+      date ||= feed.updated_date
       papers = feed.cross_listed_papers.includes(:feed)
     end
 
