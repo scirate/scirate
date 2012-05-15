@@ -19,7 +19,8 @@ describe Feed do
   before do
     @feed = Feed.new(name: "test-feed",
                      url: "http://scirate.com/feed",
-                     feed_type: "arxiv")
+                     feed_type: "arxiv",
+                     updated_date: Date.today)
   end
 
   subject { @feed }
@@ -72,6 +73,11 @@ describe Feed do
 
   describe "when feed_type is not present" do
     before { @feed.feed_type = " " }
+    it { should_not be_valid }
+  end
+
+  describe "when updated_date is not present" do
+    before { @feed.updated_date = nil }
     it { should_not be_valid }
   end
 

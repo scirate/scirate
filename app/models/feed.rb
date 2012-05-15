@@ -24,6 +24,7 @@ class Feed < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :url, presence: true, uniqueness: true
   validates :feed_type, presence: true
+  validates :updated_date, presence: true
 
   def to_param
     name
@@ -40,6 +41,7 @@ class Feed < ActiveRecord::Base
   def self.create_default
     Feed.create(name: "quant-ph",
                 url: "http://export.arxiv.org/rss/quant-ph",
-                feed_type: "arxiv")
+                feed_type: "arxiv",
+                updated_date: Date.today)
   end
 end

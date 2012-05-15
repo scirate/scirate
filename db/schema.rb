@@ -25,11 +25,11 @@ ActiveRecord::Schema.define(:version => 20120514045445) do
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
   create_table "cross_lists", :force => true do |t|
-    t.integer  "paper_id"
-    t.integer  "feed_id"
-    t.date     "cross_list_date"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.integer   "paper_id"
+    t.integer   "feed_id"
+    t.date      "cross_list_date"
+    t.timestamp "created_at",      :null => false
+    t.timestamp "updated_at",      :null => false
   end
 
   add_index "cross_lists", ["feed_id", "cross_list_date"], :name => "index_cross_lists_on_feed_id_and_cross_list_date"
