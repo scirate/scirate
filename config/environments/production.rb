@@ -81,5 +81,5 @@ Scirate3::Application.configure do
     :user_name => ENV['GMAIL_SMTP_USER'],
     :password => ENV['GMAIL_SMTP_PASSWORD']
   }
-  config.action_mailer.default_url_options = { :host => "vivid-fog-5450.herokuapp.com" }
+  config.action_mailer.default_url_options = { :host => "scirate3.herokuapp.com" }
 end
