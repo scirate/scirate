@@ -73,13 +73,12 @@ Scirate3::Application.configure do
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.raise_delivery_errors = true
   ActionMailer::Base.smtp_settings = {
-    :address => "smtp.gmail.com",
+    :address => "smtp.sendgrid.net",
     :port => "587",
-    :domain => "gmail.com",
-    :enable_starttls_auto => true,
-    :authentication => :login,
-    :user_name => ENV['GMAIL_SMTP_USER'],
-    :password => ENV['GMAIL_SMTP_PASSWORD']
+    :domain => "heroku.com",
+    :authentication => :plain,
+    :user_name => ENV['SENDGRID_USERNAME'],
+    :password => ENV['SENDGRID_PASSWORD']
   }
   config.action_mailer.default_url_options = { :host => "scirate3.herokuapp.com" }
 end
