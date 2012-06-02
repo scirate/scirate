@@ -490,7 +490,8 @@ describe "Paper pages" do
         end
 
         it "should have the right heading" do
-          page.should have_content "#{(Date.today - 1.day).to_formatted_s(:rfc822)} to #{Date.today.to_formatted_s(:rfc822)}"
+          page.should have_content "#{(Date.today - 1.day).to_formatted_s(:rfc822)}"
+          page.should have_content "#{Date.today.to_formatted_s(:rfc822)}"
         end
 
         it "should list all papers from feed in the range" do
@@ -553,7 +554,8 @@ describe "Paper pages" do
           end
 
           it "should have the right heading" do
-            page.should have_content "#{(Date.today - 1.day).to_formatted_s(:rfc822)} to #{Date.today.to_formatted_s(:rfc822)}"
+            page.should have_content "#{(Date.today - 1.day).to_formatted_s(:rfc822)}"
+            page.should have_content "#{Date.today.to_formatted_s(:rfc822)}"
           end
 
           it "should list all papers from subscribed feeds in the range" do
