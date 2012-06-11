@@ -2,12 +2,12 @@
 #
 # Table name: cross_lists
 #
-#  id              :integer         not null, primary key
+#  id              :integer         primary key
 #  paper_id        :integer
 #  feed_id         :integer
 #  cross_list_date :date
-#  created_at      :datetime        not null
-#  updated_at      :datetime        not null
+#  created_at      :timestamp       not null
+#  updated_at      :timestamp       not null
 #
 
 class CrossList < ActiveRecord::Base

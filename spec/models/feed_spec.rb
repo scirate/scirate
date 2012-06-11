@@ -2,14 +2,15 @@
 #
 # Table name: feeds
 #
-#  id                  :integer         primary key
+#  id                  :integer         not null, primary key
 #  name                :string(255)
 #  url                 :string(255)
 #  feed_type           :string(255)
-#  created_at          :timestamp       not null
-#  updated_at          :timestamp       not null
+#  created_at          :datetime        not null
+#  updated_at          :datetime        not null
 #  updated_date        :date
 #  subscriptions_count :integer         default(0)
+#  last_paper_date     :date
 #
 
 require 'spec_helper'

@@ -75,8 +75,8 @@ class User < ActiveRecord::Base
     Paper.from_feeds_subscribed_by(self)
   end
 
-  def feed_updated_date
-    feeds.find(:first, order: "updated_date DESC").updated_date
+  def feed_last_paper_date
+    feeds.find(:first, order: "last_paper_date DESC").last_paper_date
   end
 
   def send_signup_confirmation

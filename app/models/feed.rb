@@ -2,18 +2,19 @@
 #
 # Table name: feeds
 #
-#  id                  :integer         primary key
+#  id                  :integer         not null, primary key
 #  name                :string(255)
 #  url                 :string(255)
 #  feed_type           :string(255)
-#  created_at          :timestamp       not null
-#  updated_at          :timestamp       not null
+#  created_at          :datetime        not null
+#  updated_at          :datetime        not null
 #  updated_date        :date
 #  subscriptions_count :integer         default(0)
+#  last_paper_date     :date
 #
 
 class Feed < ActiveRecord::Base
-  attr_accessible :name, :url, :feed_type, :updated_date
+  attr_accessible :name, :url, :feed_type, :updated_date, :last_paper_date
 
   has_many :papers, validate: false
   has_many :subscriptions, dependent: :destroy
@@ -42,6 +43,7 @@ class Feed < ActiveRecord::Base
     Feed.create(name: "quant-ph",
                 url: "http://export.arxiv.org/rss/quant-ph",
                 feed_type: "arxiv",
-                updated_date: Date.today)
+                updated_date: Date.today,
+                last_paper_date: Date.today)
   end
 end

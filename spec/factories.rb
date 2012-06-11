@@ -28,5 +28,6 @@ FactoryGirl.define do
     sequence(:url)       { |n| "http://intractable.ca/feed/#{n}" }
     sequence(:feed_type) { |n| "arxiv" }
     updated_date Date.today
+    last_paper_date Date.today
   end
 end

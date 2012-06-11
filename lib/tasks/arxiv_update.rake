@@ -36,6 +36,10 @@ namespace :db do
         update_metadata papers
 
         puts "Done!"
+
+        if papers[:all].length > papers[:updates].length
+          feed.last_paper_date = Date.today
+        end
       end
 
       print "\tMarking #{feed.name} as updated ... "
