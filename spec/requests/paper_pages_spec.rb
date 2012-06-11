@@ -397,8 +397,15 @@ describe "Paper pages" do
       end
 
       it "should have links to the next and previous days" do
-        page.should have_link "Next"
-        page.should have_link "Prev"
+        page.should have_link "Next", href: papers_next_path(Date.today)
+        page.should have_link "Prev", href: papers_prev_path(Date.today)
+      end
+
+      it "should have links to date ranges" do
+        [2, 3, 4, 7].each do |v|
+          page.should have_link v.to_s
+          find_link(v.to_s)[:href].should match "range=#{v}"
+        end
       end
 
       describe "next day" do
