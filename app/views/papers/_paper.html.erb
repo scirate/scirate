@@ -8,11 +8,11 @@
                          paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
    </div>
    <div class="title">
-     <span class="title">
-       <%= link_to "#{paper.identifier} [#{paper.feed.name}]" paper.title %>
-     </span>
      <span class="identifier">
        <%= link_to "#{paper.identifier} [#{paper.feed.name}]", paper %>
+     </span>
+     <span class="title">
+       <%= paper.title %>
      </span>
      <div class="authors">
        <%= paper.authors.join(', ') %>
