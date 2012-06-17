@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe ScitesController do
 
   let(:user)  { FactoryGirl.create(:user) }
