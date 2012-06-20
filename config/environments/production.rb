@@ -67,7 +67,8 @@ Scirate3::Application.configure do
 
   config.assets.precompile += [ "blueprint/*.css" ]
 
-  config.force_ssl = true
+  # we redirect to https in ApplicationController, so as to set the host first
+  config.force_ssl = false
 
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.perform_deliveries = true
