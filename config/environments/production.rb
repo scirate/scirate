@@ -80,5 +80,5 @@ Scirate3::Application.configure do
     :user_name => ENV['SENDGRID_USERNAME'],
     :password => ENV['SENDGRID_PASSWORD']
   }
-  config.action_mailer.default_url_options = { :host => "scirate3.herokuapp.com" }
+  config.action_mailer.default_url_options = { :host => ENV['HOST'] }
 end
