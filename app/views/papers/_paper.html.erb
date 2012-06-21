@@ -8,11 +8,13 @@
                          paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
    </div>
    <div class="title">
-     <span class="identifier">
-       <%= link_to "#{paper.identifier} [#{paper.feed.name}]", paper %>
-     </span>
      <span class="title">
-       <%= paper.title %>
+       <%= link_to paper.title, paper %>
+     </span>
+     <span class="identifier"><br>
+       <%= "arXiv:#{paper.identifier} [#{paper.feed.name}]" %>
+<%= link_to "(abs)", "http://arxiv.org/abs/#{paper.identifier}" %>
+<%= link_to "(pdf)", "http://arxiv.org/pdf/#{paper.identifier}.pdf" %>
      </span>
      <div class="authors">
        <%= paper.authors.join(', ') %>
