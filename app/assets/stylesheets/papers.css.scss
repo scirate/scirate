@@ -31,12 +31,16 @@ ul.papers {
             margin-left: 1em;
 
             span.identifier {
-                font-weight: bold;
+                color: #777
             }
 
             span.title {
                 font-weight: bold;
             }
+
+	    span.links {
+	    	font-weight: bold;
+	    }
         }
 
         div.abstract {

@@ -13,11 +13,16 @@
      </span>
      <span class="identifier"><br>
        <%= "arXiv:#{paper.identifier} [#{paper.feed.name}]" %>
+       </span>
+     <span class="links">
 <%= link_to "(abs)", "http://arxiv.org/abs/#{paper.identifier}" %>
 <%= link_to "(pdf)", "http://arxiv.org/pdf/#{paper.identifier}.pdf" %>
      </span>
      <div class="authors">
        <%= paper.authors.join(', ') %>
+<%# TODO: hyperlink each author with a link of the form
+"http://arxiv.org/find/#{paper.feed.name}/1/au:+Nest_M/0/1/0/all/0/1"
+ %>
      </div>
    </div>
    <div class ="<%= "abstract_#{paper.id}" %>">
