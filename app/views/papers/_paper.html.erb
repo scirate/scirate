@@ -19,10 +19,15 @@
 <%= link_to "(pdf)", "http://arxiv.org/pdf/#{paper.identifier}.pdf" %>
      </span>
      <div class="authors">
-       <%= paper.authors.join(', ') %>
-<%# TODO: hyperlink each author with a link of the form
-"http://arxiv.org/find/#{paper.feed.name}/1/au:+Nest_M/0/1/0/all/0/1"
- %>
+<%= raw(paper.authors.map { |auth_iter| 
+          auth_names = auth_iter.split(' ')
+          auth_processed_name = "#{auth_names[-1].tr('-','_')}_#{auth_names[0][0]}"
+          auth_URL = "http://arxiv.org/find/#{paper.feed.name.partition('.')[0]}/1/au:+#{auth_processed_name}/0/1/0/all/0/1"
+          link_to(auth_iter, auth_URL)
+        }.join(', '))
+    %>
+         
+<%# TODO: let users specify their local mirrors %>
      </div>
    </div>
    <div class ="<%= "abstract_#{paper.id}" %>">
