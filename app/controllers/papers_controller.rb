@@ -25,7 +25,7 @@ class PapersController < ApplicationController
       @feed_name = @feed.name
     end
 
-    @papers = @papers.sort_by{ |p| [-p.scites.size, -p.comments.size, p.identifier] }
+    @papers = @papers.sort_by{ |p| [p.scites.size, p.comments.size, p.identifier] }.reverse
 
     #this is premature optimization, but it saves one query per unscited paper
     if signed_in?
