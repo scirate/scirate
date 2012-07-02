@@ -31,8 +31,8 @@ class PapersController < ApplicationController
     if signed_in?
       @scited_papers = Set.new( current_user.scited_papers )
     end
-    @recent_comments = Comment.find(:all, :order => "created_at DESC",
-                              :limit => 10)
+
+    @recent_comments = Comment.includes(:paper, :user).limit(10).find(:all, order: "created_at DESC")
   end
 
   def next
