@@ -7,7 +7,7 @@
 <blockquote style="margin-top:5px">
 <%= comment.content[0..499] %>
 <%= if comment.content.length>500
-link_to "...(continued)",paper
+link_to "...(continued)",comment.paper
 end
  %>
 </blockquote>
