@@ -1,0 +1,18 @@
+<h3>recent comments</h3>
+<% @recent_comments.each do |comment| %>
+<div class="recent_comment">
+<%= paper=Paper.find(comment.paper_id)
+link_to paper.title, paper %><br>
+ On <%= comment.created_at.to_date.to_formatted_s(format = :short) %>,
+<%= user=User.find(comment.user_id) 
+link_to user.name,user_path(user) %> wrote: <br> 
+<blockquote style="margin-top:5px">
+<%= comment.content[0..499] %>
+<%= if comment.content.length>500
+link_to "...(continued)",paper
+end
+ %>
+</blockquote>
+<hr width="50%" >
+</div>
+<% end %>
