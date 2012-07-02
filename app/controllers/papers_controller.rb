@@ -31,6 +31,8 @@ class PapersController < ApplicationController
     if signed_in?
       @scited_papers = Set.new( current_user.scited_papers )
     end
+    @recent_comments = Comment.find(:all, :order => "created_at DESC",
+                              :limit => 10)
   end
 
   def next
@@ -110,6 +112,6 @@ class PapersController < ApplicationController
     end
 
     def fetch_papers feed, date, range
-      return feed.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
+      return feed.limit(500).where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
     end
 end

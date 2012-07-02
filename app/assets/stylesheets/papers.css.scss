@@ -12,10 +12,10 @@ ul.papers {
         list-style-type: none;
         padding-bottom: 1em;
         padding-top: 1em;
-        clear: both;
+/*        clear: both; */
 
         div.scite {
-            width: 20%px;
+            width: 20px;
             min-width: 80px;
             float: left;
             padding: 0.5em;
@@ -27,8 +27,9 @@ ul.papers {
 
         div.title {
             width: 80%;
-            float: left;
+            text-align: left;
             margin-left: 1em;
+	    padding-left: 6em;
 
             span.identifier {
                 color: #777
@@ -45,10 +46,27 @@ ul.papers {
 
         div.abstract {
             text-align: justify;
-            clear: both;
             padding: 0.5em;
         }
     }
+}
+
+/* sidebar */
+div.paperlist
+{
+}
+
+div.sidebar
+{
+float:right;
+width:25%;
+padding:20px;
+margin-left:20px;
+background-color:#ddf;
+}
+
+div.recent_comment
+{
 }
 
 /* Paper show page */
