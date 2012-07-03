@@ -164,7 +164,6 @@ GEM
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sqlite3 (1.3.6)
     taps (0.3.24)
       rack (>= 1.0.1)
       rest-client (>= 1.4.0, < 1.7.0)
@@ -208,6 +207,5 @@ DEPENDENCIES
   rspec-rails (>= 2.8.1)
   sass-rails (>= 3.2.3)
   spork (~> 0.9.0.rc)
-  sqlite3 (>= 1.3.5)
   taps
   uglifier (>= 1.0.3)

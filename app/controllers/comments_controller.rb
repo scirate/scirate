@@ -11,4 +11,9 @@ class CommentsController < ApplicationController
 
     redirect_to @comment.paper
   end
+
+  def index
+    @recent_comments = Comment.includes(:paper, :user).limit(100).find(:all, order: "created_at DESC")
+  end
+
 end

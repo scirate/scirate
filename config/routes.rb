@@ -23,6 +23,7 @@ Scirate3::Application.routes.draw do
   put '/subscriptions', to: 'subscriptions#update'
 
   resources :comments, only: [:create]
+  match '/comments', to: 'comments#index'
 
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
