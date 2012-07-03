@@ -31,6 +31,14 @@ RSpec::Matchers.define :have_error_message do |message|
   end
 end
 
+#custom matcher to determine if a list of papers includes the given one
+RSpec::Matchers.define :have_paper do |paper|
+  match do |page|
+    page.should have_content paper.identifier
+    page.should have_link paper.title
+  end
+end
+
 def valid_signup(params = {})
   params[:name]  ||= "Example User"
   params[:email] ||= "user@example.com"

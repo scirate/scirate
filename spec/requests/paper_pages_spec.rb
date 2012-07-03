@@ -344,13 +344,11 @@ describe "Paper pages" do
       end
 
       it "should list the cross-listed paper" do
-        page.should have_link other_paper.identifier
-        page.should have_content other_paper.title
+        page.should have_paper other_paper
       end
 
       it "should not list non cross-listed papers" do
-        page.should_not have_link yet_another_paper.identifier
-        page.should_not have_content yet_another_paper.title
+        page.should_not have_paper yet_another_paper
       end
 
       describe "with subscriptions" do
@@ -361,13 +359,11 @@ describe "Paper pages" do
         end
 
         it "should list the cross-listed paper" do
-          page.should have_link other_paper.identifier
-          page.should have_content other_paper.title
+          page.should have_paper other_paper
         end
 
         it "should not list non cross-listed papers" do
-          page.should_not have_link yet_another_paper.identifier
-          page.should_not have_content yet_another_paper.title
+          page.should_not have_paper yet_another_paper
         end
       end
     end
@@ -384,15 +380,13 @@ describe "Paper pages" do
 
       it "should list all papers from today" do
         Feed.default.papers.find_all_by_pubdate(Date.today).each do |paper|
-          page.should have_link paper.identifier
-          page.should have_content paper.title
+          page.should have_paper paper
         end
       end
 
       it "should not list all papers from yesterday" do
         Feed.default.papers.find_all_by_pubdate(Date.yesterday).each do |paper|
-          page.should_not have_link paper.identifier
-          page.should_not have_content paper.title
+          page.should_not have_paper paper
         end
       end
 
@@ -455,15 +449,13 @@ describe "Paper pages" do
 
       it "should list all of right day's papers from first feed" do
         feed.papers.find_all_by_pubdate(Date.yesterday).each do |paper|
-          page.should have_link paper.identifier
-          page.should have_content paper.title
+          page.should have_paper paper
         end
       end
 
       it "should not list any papers from default feed" do
         Feed.default.papers.each do |paper|
-          page.should_not have_link paper.identifier
-          page.should_not have_content paper.title
+          page.should_not have_paper paper
         end
       end
 
@@ -504,19 +496,16 @@ describe "Paper pages" do
         it "should list all papers from feed in the range" do
           feed.papers.each do |paper|
             if [Date.yesterday, Date.today].include? paper.pubdate
-              page.should have_link paper.identifier
-              page.should have_content paper.title
+              page.should have_paper paper
             else
-              page.should_not have_link paper.identifier
-              page.should_not have_content paper.title
+              page.should_not have_paper paper
             end
           end
         end
 
         it "should not list any papers from default feed" do
           Feed.default.papers.each do |paper|
-            page.should_not have_link paper.identifier
-            page.should_not have_content paper.title
+            page.should_not have_paper paper
           end
         end
       end
@@ -540,15 +529,13 @@ describe "Paper pages" do
 
         it "should list most recent papers from subscribed feed" do
           feed1.papers.find_all_by_pubdate(Date.today).each do |paper|
-            page.should have_link paper.identifier
-            page.should have_content paper.title
+            page.should have_paper paper
           end
         end
 
         it "should not list any papers from other feeds" do
           feed2.papers.each do |paper|
-            page.should_not have_link paper.identifier
-            page.should_not have_content paper.title
+            page.should_not have_paper paper
           end
         end
 
@@ -568,19 +555,16 @@ describe "Paper pages" do
           it "should list all papers from subscribed feeds in the range" do
             feed1.papers.each do |paper|
               if [Date.yesterday, Date.today].include? paper.pubdate
-                page.should have_link paper.identifier
-                page.should have_content paper.title
+                page.should have_paper paper
               else
-                page.should_not have_link paper.identifier
-                page.should_not have_content paper.title
+                page.should_not have_paper paper
               end
             end
           end
 
           it "should not list any papers from default feed" do
             feed2.papers.each do |paper|
-              page.should_not have_link paper.identifier
-              page.should_not have_content paper.title
+              page.should_not have_paper paper
             end
           end
         end
