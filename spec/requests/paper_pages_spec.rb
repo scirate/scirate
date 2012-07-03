@@ -333,6 +333,44 @@ describe "Paper pages" do
       end
     end
 
+    describe "recent comments display" do
+      let(:comment) { user.comments.create(paper_id: paper.id, content: "Foobar") }
+
+      before do
+        comment.save
+        visit papers_path(date: Date.today)
+      end
+
+      it "should display recent comments" do
+        page.should have_recent_comment comment
+      end
+
+      it "should not display more than 10 recent" do
+        #add 10 comments to fill list
+        for i in 1..10 do
+          user.comments.create(paper_id: paper.id, content: "Bogus comment #{i}")
+        end
+        visit papers_path(date: Date.today)
+
+        page.should_not have_recent_comment comment
+      end
+
+      it "should truncate long comments at 500 chars" do
+        long = "a"*500 + "should not appear"
+        long_comment = user.comments.create(paper_id: paper.id, content: long)
+        visit papers_path(date: Date.today)
+
+        page.should have_recent_comment long_comment
+
+        # test that only the right part of comment should be displayed
+        page.should have_content ("a"*500)
+        page.should_not have_content "should not appear"
+
+        # test for link to rest of comment
+        page.should have_link "...(continued)"
+      end
+    end
+
     describe "cross-listed papers" do
       let(:other_feed) { FactoryGirl.create(:feed) }
       let(:other_paper) { FactoryGirl.create(:paper, pubdate: Date.today, feed: other_feed) }

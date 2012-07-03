@@ -6,7 +6,7 @@ def full_title(page_title = "")
     "#{base_title} | #{page_title}"
   end
 end
-  
+
 RSpec::Matchers.define :have_title do |title|
   match do |page|
     page.should have_selector('title', text: full_title(title))
@@ -39,11 +39,22 @@ RSpec::Matchers.define :have_paper do |paper|
   end
 end
 
+#custom matcher to determine if paper index page lists a recent comment
+#  currently checks: first 500 chars of content, links to paper and user, and date
+RSpec::Matchers.define :have_recent_comment do |comment|
+  match do |page|
+    page.should have_content comment.content[0..499]
+    page.should have_link comment.paper.title
+    page.should have_link comment.user.name
+    page.should have_content comment.created_at.to_date.to_formatted_s(format = :short)
+  end
+end
+
 def valid_signup(params = {})
   params[:name]  ||= "Example User"
   params[:email] ||= "user@example.com"
   params[:password] ||= "foobar"
-  
+
   fill_in "Name",         with: params[:name]
   fill_in "Email",        with: params[:email]
   fill_in "Password",     with: params[:password]
@@ -68,7 +79,7 @@ def sign_in(user)
   fill_in "Email",    with: user.email
   fill_in "Password", with: user.password
   click_button "Sign in"
-  
+
   # Sign in when not using Capybara as well.
   cookies[:remember_token] = user.remember_token
 end
@@ -76,7 +87,7 @@ end
 def last_email
   ActionMailer::Base.deliveries.last
 end
-  
+
 def reset_email
   ActionMailer::Base.deliveries = []
 end
