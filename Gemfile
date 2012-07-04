@@ -6,6 +6,7 @@ gem 'faker', '>= 1.0.1'
 gem 'chronic'
 gem 'oai'
 gem 'pg'
+gem 'will_paginate'
 
 group :development do
   gem 'annotate', '~> 2.4.1.beta'

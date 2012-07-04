@@ -13,7 +13,7 @@ class PapersController < ApplicationController
 
     if @feed.nil? && signed_in? && current_user.has_subscriptions?
       @date ||= current_user.feed_last_paper_date
-      @papers = fetch_papers current_user.feed.includes(:feed), @date, @range
+      @papers = fetch_papers current_user.feed, @date, @range
 
       @feed_name = "#{current_user.name}'s feed"
       @feed = nil
@@ -21,11 +21,9 @@ class PapersController < ApplicationController
       @feed ||= Feed.default
       @date ||= @feed.last_paper_date
 
-      @papers = fetch_papers @feed.cross_listed_papers.includes(:feed), @date, @range
+      @papers = fetch_papers @feed.cross_listed_papers, @date, @range
       @feed_name = @feed.name
     end
-
-    @papers = @papers.sort_by{ |p| [p.scites.size, p.comments.size, p.identifier] }.reverse
 
     #this is premature optimization, but it saves one query per unscited paper
     if signed_in?
@@ -47,7 +45,7 @@ class PapersController < ApplicationController
       feed ||= Feed.default
       date ||= feed.last_paper_date
 
-      papers = feed.cross_listed_papers.includes(:feed)
+      papers = feed.cross_listed_papers
     end
 
     ndate = next_date(papers, date)
@@ -71,7 +69,7 @@ class PapersController < ApplicationController
       feed ||= Feed.default
       date ||= feed.last_paper_date
 
-      papers = feed.cross_listed_papers.includes(:feed)
+      papers = feed.cross_listed_papers
     end
 
     pdate = prev_date(papers, date)
@@ -112,6 +110,9 @@ class PapersController < ApplicationController
     end
 
     def fetch_papers feed, date, range
-      return feed.limit(500).where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
+      collection = feed.paginate(page: params[:page], per_page: 100)
+      collection = collection.includes(:feed)
+      collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
+      collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
     end
 end
