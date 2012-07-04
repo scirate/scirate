@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
   end
 
   def index
-    @recent_comments = Comment.paginate(page: params[:page], per_page: 100).includes(:paper, :user).find(:all, order: "created_at DESC")
+    @comments = Comment.paginate(page: params[:page]).includes(:paper, :user).find(:all, order: "created_at DESC")
   end
 
 end

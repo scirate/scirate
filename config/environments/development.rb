@@ -48,4 +48,6 @@ Scirate3::Application.configure do
     :password => ENV['GMAIL_SMTP_PASSWORD']
   }
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
+
+  WillPaginate.per_page = 100
 end

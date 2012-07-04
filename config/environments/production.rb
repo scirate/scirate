@@ -82,4 +82,6 @@ Scirate3::Application.configure do
     :password => ENV['SENDGRID_PASSWORD']
   }
   config.action_mailer.default_url_options = { :host => ENV['HOST'] }
+
+  WillPaginate.per_page = 100
 end

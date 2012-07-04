@@ -342,7 +342,7 @@ describe "Paper pages" do
       end
 
       it "should display recent comments" do
-        page.should have_recent_comment comment
+        page.should have_comment comment
       end
 
       it "should not display more than 10 recent" do
@@ -352,7 +352,7 @@ describe "Paper pages" do
         end
         visit papers_path(date: Date.today)
 
-        page.should_not have_recent_comment comment
+        page.should_not have_comment comment
       end
 
       it "should truncate long comments at 500 chars" do
@@ -360,7 +360,7 @@ describe "Paper pages" do
         long_comment = user.comments.create(paper_id: paper.id, content: long)
         visit papers_path(date: Date.today)
 
-        page.should have_recent_comment long_comment
+        page.should have_comment long_comment
 
         # test that only the right part of comment should be displayed
         page.should have_content ("a"*500)
@@ -406,7 +406,7 @@ describe "Paper pages" do
       end
     end
 
-    describe "pagination" do
+    describe "pagination by date" do
       before(:all) do
         3.times { FactoryGirl.create(:paper, pubdate: Date.today, feed: Feed.default) }
         3.times { FactoryGirl.create(:paper, pubdate: Date.yesterday, feed: Feed.default) }
@@ -602,6 +602,44 @@ describe "Paper pages" do
 
           it "should not list any papers from default feed" do
             feed2.papers.each do |paper|
+              page.should_not have_paper paper
+            end
+          end
+        end
+      end
+    end
+
+    describe "pagination of large collections" do
+      before(:all) do
+        FactoryGirl.create_list(:paper, 10, title: "First Batch")
+        FactoryGirl.create_list(:paper, 10, title: "Second Batch")
+      end
+      after(:all) do
+        Paper.delete_all
+      end
+
+      describe "first page" do
+        before { visit papers_path(date: Date.today) }
+
+        it "should list first 10 papers but not second 10" do
+          Feed.default.papers.each do |paper|
+            if paper.title == "First Batch"
+              page.should have_paper paper
+            else
+              page.should_not have_paper paper
+            end
+          end
+        end
+      end
+
+      describe "second page" do
+        before { visit papers_path(date: Date.today, page: 2) }
+
+        it "should list second 10 papers but not first 10" do
+          Feed.default.papers.each do |paper|
+            if paper.title == "Second Batch"
+              page.should have_paper paper
+            else
               page.should_not have_paper paper
             end
           end

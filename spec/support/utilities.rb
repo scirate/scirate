@@ -41,7 +41,7 @@ end
 
 #custom matcher to determine if paper index page lists a recent comment
 #  currently checks: first 500 chars of content, links to paper and user, and date
-RSpec::Matchers.define :have_recent_comment do |comment|
+RSpec::Matchers.define :have_comment do |comment|
   match do |page|
     page.should have_content comment.content[0..499]
     page.should have_link comment.paper.title

@@ -110,7 +110,7 @@ class PapersController < ApplicationController
     end
 
     def fetch_papers feed, date, range
-      collection = feed.paginate(page: params[:page], per_page: 100)
+      collection = feed.paginate(page: params[:page])
       collection = collection.includes(:feed)
       collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
       collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
