@@ -5,9 +5,9 @@ gem 'bcrypt-ruby', '>= 3.0.1'
 gem 'faker', '>= 1.0.1'
 gem 'chronic'
 gem 'oai'
+gem 'pg'
 
 group :development do
-  gem 'pg', '0.12.2'
   gem 'annotate', '~> 2.4.1.beta'
   gem 'rspec-rails', '>= 2.8.1'
   gem 'guard-rspec', '>= 0.5.5'
@@ -39,6 +39,5 @@ group :test do
 end
 
 group :production do
-  gem 'pg', '0.12.2'
   gem 'newrelic_rpm'
 end

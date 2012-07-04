@@ -200,7 +200,7 @@ DEPENDENCIES
   launchy
   newrelic_rpm
   oai
-  pg (= 0.12.2)
+  pg
   rails (= 3.2.6)
   rb-fsevent (= 0.9.0)
   rb-readline

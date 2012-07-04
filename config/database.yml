@@ -8,7 +8,7 @@ development:
   encoding: unicode
   database: scirate_development
   pool: 5
-  username: aram
+  username: scirate
   password:
 
 # Warning: The database defined as "test" will be erased and
@@ -19,13 +19,5 @@ test:
   encoding: unicode
   database: scirate_test
   pool: 5
-  username: aram
-  password:
-
-production:
-  adapter: postgresql
-  encoding: unicode
-  database: scirate_production
-  pool: 5
-  username: aram
+  username: scirate
   password:
