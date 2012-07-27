@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.6'
+gem 'rails', '3.2.7'
 gem 'bcrypt-ruby', '>= 3.0.1'
 gem 'faker', '>= 1.0.1'
 gem 'chronic'
