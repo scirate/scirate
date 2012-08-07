@@ -8,6 +8,6 @@
     at  <%= comment.created_at.to_formatted_s(:short) %>
   </span>
   <div class="body">
-    <%= simple_format(comment.content) %>
+    <%= simple_format(strip_tags(comment.content)) %>
   </div>
 </div>

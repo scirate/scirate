@@ -3,7 +3,7 @@
  On <%= abbr_comment.created_at.to_date.to_formatted_s(format = :short) %>,
 <%= link_to abbr_comment.user.name, abbr_comment.user %> wrote: <br>
 <blockquote style="margin-top:5px">
-<%= simple_format(abbr_comment.content[0..499]) %>
+<%= simple_format(strip_tags(abbr_comment.content[0..499])) %>
 <%= if abbr_comment.content.length>500
 link_to "...(continued)",abbr_comment.paper
 end

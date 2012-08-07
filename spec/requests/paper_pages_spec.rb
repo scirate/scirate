@@ -182,6 +182,22 @@ describe "Paper pages" do
         it "should list the nubmer of comments" do
           page.should have_content "10 comments"
         end
+
+        describe "should sanitize comments" do
+          before do
+            user.comments.create(paper_id: paper.id,  content: '<a href="http://google.com">spam link</a>')
+            user.comments.create(paper_id: paper.id,  content: '<h1>Heading in Comment</h1>')
+            visit paper_path(paper)
+          end
+
+          describe "and not allow links" do
+            it { should_not have_link "spam link" }
+          end
+
+          describe "and not allow markup" do
+            it { should_not have_heading "Heading in Comment" }
+          end
+        end
       end
 
       describe "leaving a comment" do
@@ -368,6 +384,28 @@ describe "Paper pages" do
 
         # test for link to rest of comment
         page.should have_link "...(continued)"
+      end
+
+      describe "should sanitize comments" do
+        describe "and not allow links" do
+          before do
+            comment.content = '<a href="http://google.com">spam link</a>'
+            comment.save
+            visit papers_path(date: Date.today)
+          end
+
+          it { should_not have_link "spam link" }
+        end
+
+        describe "and not allow markup" do
+          before do
+            comment.content = '<h1>Heading in Comment</h1>'
+            comment.save
+            visit papers_path(date: Date.today)
+          end
+
+          it { should_not have_heading "Heading in Comment" }
+        end
       end
     end
 

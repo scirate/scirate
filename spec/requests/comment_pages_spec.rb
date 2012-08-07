@@ -22,6 +22,28 @@ describe "Comment pages" do
       it { should have_comment comment }
     end
 
+    describe "should sanitize comments" do
+      describe "and not allow links" do
+        before do
+          comment.content = '<a href="http://google.com">spam link</a>'
+          comment.save
+          visit comments_path
+        end
+
+        it { should_not have_link "spam link" }
+      end
+
+      describe "and not allow markup" do
+        before do
+          comment.content = '<h1>Heading in Comment</h1>'
+          comment.save
+          visit comments_path
+        end
+
+        it { should_not have_heading "Heading in Comment" }
+      end
+    end
+
     describe "pagination with many comments" do
       before(:all) do
         FactoryGirl.create_list(:comment, 10, content: "First Batch")
