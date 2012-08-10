@@ -46,7 +46,7 @@ describe Subscription do
     it "should not allow acces to user_id" do
       expect do
         Subscription.new(user_id: user.id)
-      end.should raise_error(ActiveModel::MassAssignmentSecurity::Error)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
   end
 end

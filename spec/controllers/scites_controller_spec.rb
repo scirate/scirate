@@ -14,7 +14,7 @@ describe ScitesController do
     it "should increment the Scite count" do
       expect do
         xhr :post, :create, scite: { paper_id: paper.id }
-      end.should change(Scite, :count).by(1)
+      end.to change(Scite, :count).by(1)
     end
 
     it "should respond with success" do
@@ -33,7 +33,7 @@ describe ScitesController do
     it "should decrement the Scite count" do
       expect do
         xhr :delete, :destroy, paper_id: paper.id
-      end.should change(Scite, :count).by(-1)
+      end.to change(Scite, :count).by(-1)
     end
 
     it "should respond with success" do
