@@ -10,7 +10,7 @@ module ApplicationHelper
     if page_title.empty?
       base_title
     else
-      "#{base_title} | #{page_title}"
+      sanitize("#{base_title} | #{page_title}")
     end
   end
 end

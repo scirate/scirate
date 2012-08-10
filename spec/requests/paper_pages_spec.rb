@@ -601,6 +601,7 @@ describe "Paper pages" do
           visit papers_path
         end
 
+        it { should have_title "Papers for #{new_user.name}'s feed from #{Date.today.to_formatted_s(:short)}" }
         it { should have_content "papers from #{new_user.name}'s feed" }
 
         it "should list most recent papers from subscribed feed" do
