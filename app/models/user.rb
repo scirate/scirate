@@ -20,7 +20,7 @@
 #
 
 class User < ActiveRecord::Base
-  attr_accessible :name, :email, :password, :password_confirmation
+  attr_accessible :name, :email, :password, :password_confirmation, :expand_abstracts
   has_secure_password
 
   has_many :scites, foreign_key: 'sciter_id', dependent: :destroy

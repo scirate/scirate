@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120611054447) do
+ActiveRecord::Schema.define(:version => 20120815023731) do
 
   create_table "comments", :force => true do |t|
     t.text     "content"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20120611054447) do
     t.integer  "comments_count",         :default => 0
     t.datetime "confirmation_sent_at"
     t.integer  "subscriptions_count",    :default => 0
+    t.boolean  "expand_abstracts",       :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

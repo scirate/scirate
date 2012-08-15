@@ -6,6 +6,10 @@ Leave password and confirmation blank to not change password.
 <%= form_for(@user) do |f| %>
   <%= render 'fields', f: f %>
   <div class="field">
+    <%= f.label :expand_abstracts, "Always expand abstracts" %><br />
+    <%= f.check_box :expand_abstracts %>
+  </div>
+  <div class="field">
     <%= f.label :old_password, "Old Password" %><br />
     <%= f.password_field :old_password %>
   </div>

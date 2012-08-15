@@ -1,4 +1,5 @@
-<% if ( (@paper && @paper.scites.count) || paper.scites.size ) > 0 %>
+<% if  (current_user && current_user.expand_abstracts?) ||
+        (((@paper && @paper.scites.count) || paper.scites.size ) > 0) %>
   <div class = "abstract">
     <%= paper.abstract %>
   </div>

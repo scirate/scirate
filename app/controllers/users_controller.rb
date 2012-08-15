@@ -45,7 +45,7 @@ class UsersController < ApplicationController
 
     old_email = @user.email
 
-    if @user.update_attributes(params[:user].slice(:name,:email,:password,:password_confirmation))
+    if @user.update_attributes(params[:user].slice(:name,:email,:password,:password_confirmation, :expand_abstracts))
       if old_email != @user.email
         @user.send_email_change_confirmation(old_email)
       end

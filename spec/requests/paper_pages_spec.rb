@@ -318,6 +318,85 @@ describe "Paper pages" do
       end
     end
 
+    describe "abstract display" do
+      describe "when the user is not signed in" do
+        describe "when the paper has no scites" do
+          before do
+            paper.save
+            visit papers_path(date: Date.today)
+          end
+
+          it { should_not have_content paper.abstract }
+        end
+
+        describe "when the paper has one scite" do
+          before do
+            user.scite!(paper)
+            visit papers_path(date: Date.today)
+          end
+
+          it { should have_content paper.abstract }
+        end
+      end
+
+      describe "when the user is signed in" do
+        before do
+          sign_in user
+        end
+
+        describe "when the user has not set expand_abstracts preference" do
+          before do
+            user.expand_abstracts = false
+            user.save!
+          end
+
+          describe "when the paper has no scites" do
+            before do
+              paper.save
+              visit papers_path(date: Date.today)
+            end
+
+            it { should_not have_content paper.abstract }
+          end
+
+          describe "when the paper has one scite" do
+            before do
+              user.scite!(paper)
+              visit papers_path(date: Date.today)
+            end
+
+            it { should have_content paper.abstract }
+          end
+        end
+
+        describe "when the user has set expand_abstracts preference" do
+          before do
+            user.expand_abstracts = true
+            user.save!
+            sign_in user
+          end
+
+          describe "when the paper has no scites" do
+            before do
+              paper.save
+              visit papers_path(date: Date.today)
+            end
+
+            it { should have_content paper.abstract }
+          end
+
+          describe "when the paper has one scite" do
+            before do
+              user.scite!(paper)
+              visit papers_path(date: Date.today)
+            end
+
+            it { should have_content paper.abstract }
+          end
+        end
+      end
+    end
+
     describe "comments display" do
       describe "when the paper has no comments" do
         before do

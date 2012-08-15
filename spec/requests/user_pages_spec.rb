@@ -263,6 +263,14 @@ describe "User pages" do
       it { should have_heading "Edit user" }
       it { should have_title "Edit user" }
       it { should have_link('change', href: 'http://gravatar.com/emails') }
+
+      describe "fields" do
+        it { should have_field "Name", with: user.name }
+        it { should have_field "Email", with: user.email }
+        it { should have_field "Password" }
+        it { should have_field "Confirmation" }
+        it { should have_field "Always expand abstracts" }
+      end
     end
 
     describe "with invalid information" do
