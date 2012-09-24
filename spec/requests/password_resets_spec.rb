@@ -33,8 +33,12 @@ describe "password resets" do
       click_button "Reset Password"
     end
 
-    it { should have_title "" }
-    it { should have_content("Email sent") }
+    it "should stay on the password reset page" do
+      should have_title "Reset password"
+    end
+
+    it { should_not have_content("Email sent") }
+    it { should have_content("address not found") }
 
     it "should not send the email" do
       last_email.should be_nil

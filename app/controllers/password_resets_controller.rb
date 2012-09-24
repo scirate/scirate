@@ -1,8 +1,14 @@
 class PasswordResetsController < ApplicationController
   def create
     user = User.find_by_email(params[:email])
-    user.send_password_reset if (user && user.active?)
-    redirect_to root_url, :notice => "Email sent with password reset instructions."
+
+    if (user && user.active?)
+      user.send_password_reset
+      redirect_to root_url, :notice => "Email sent with password reset instructions."
+    else
+      flash[:error] = "Email address not found!"
+      render 'new'
+    end
   end
 
   def edit
