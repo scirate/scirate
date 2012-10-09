@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120815023731) do
+ActiveRecord::Schema.define(:version => 20121009060303) do
 
   create_table "comments", :force => true do |t|
     t.text     "content"
@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(:version => 20120815023731) do
     t.integer  "scites_count",   :default => 0
     t.integer  "comments_count", :default => 0
     t.integer  "feed_id"
+    t.string   "pdf_url"
   end
 
   add_index "papers", ["feed_id"], :name => "index_papers_on_feed_id"

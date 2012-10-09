@@ -1,2 +1,7 @@
-<%= pluralize(@user.scites.size, "scite") %>:
-<%= @user.scited_papers.map {|p| link_to(p.identifier, paper_path(p))}.join(', ').html_safe %>
+<div class="paperlist">
+  <ul class="papers">
+    <%= render partial: 'short_paper', collection: @papers, as: :paper %>
+  </ul>
+
+  <%= will_paginate @papers %>
+</div>

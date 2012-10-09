@@ -205,8 +205,21 @@ describe "User pages" do
     end
 
     it { should have_title "Scites for #{user.name}" }
-    it { should have_link paper1.identifier }
-    it { should_not have_link paper2.identifier }
+    it { should have_heading "#{user.name}'s scited papers" }
+
+    describe "displays scited papers" do
+      it "displays identifiers" do
+        should have_content paper1.identifier
+      end
+
+      it "displays titles" do
+        should have_content paper1.title
+      end
+    end
+
+    describe "does not display non-scited papers" do
+      it { should_not have_content paper2.identifier }
+    end
   end
 
   describe "comments" do

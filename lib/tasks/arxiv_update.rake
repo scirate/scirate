@@ -159,6 +159,7 @@ def update_metadata papers
     paper.title = item.elements["title"].text
     paper.abstract = item.elements["abstract"].text
     paper.url = "http://arxiv.org/abs/#{paper.identifier}"
+    paper.pdf_url = "http://arxiv.org/pdf/#{paper.identifier}.pdf"
     paper.updated_date = stub.pubdate
 
     # fetch authors as an array

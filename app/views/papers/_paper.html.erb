@@ -7,29 +7,7 @@
      <%= link_to(pluralize(paper.comments.size, 'Comment'),
                          paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
    </div>
-   <div class="title">
-     <span class="title">
-       <%= link_to paper.title, paper %>
-     </span>
-     <span class="identifier"><br>
-       <%= "arXiv:#{paper.identifier} [#{paper.feed.name}]" %>
-       </span>
-     <span class="links">
-<%= link_to "(abs)", "http://arxiv.org/abs/#{paper.identifier}" %>
-<%= link_to "(pdf)", "http://arxiv.org/pdf/#{paper.identifier}.pdf" %>
-     </span>
-     <div class="authors">
-<%= raw(paper.authors.map { |auth_iter| 
-          auth_names = auth_iter.split(' ')
-          auth_processed_name = "#{auth_names[-1].tr('-','_').mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').to_s}_#{auth_names[0][0]}"
-          auth_URL = "http://arxiv.org/find/#{paper.feed.name.partition('.')[0]}/1/au:+#{auth_processed_name}/0/1/0/all/0/1"
-          link_to(auth_iter, auth_URL)
-        }.join(', '))
-    %>
-         
-<%# TODO: let users specify their local mirrors %>
-     </div>
-   </div>
+   <%= render 'paper_title', paper: paper %>
    <div class ="<%= "abstract_#{paper.id}" %>">
      <%= render partial: 'abstract', object: paper, as: :paper %>
    </div

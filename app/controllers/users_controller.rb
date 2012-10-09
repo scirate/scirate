@@ -92,6 +92,7 @@ class UsersController < ApplicationController
 
   def scited_papers
     @user = User.find(params[:id])
+    @papers = @user.scited_papers.paginate(page: params[:page]).includes(:feed)
   end
 
   def comments
