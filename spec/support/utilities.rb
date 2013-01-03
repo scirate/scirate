@@ -1,3 +1,5 @@
+require 'capybara/rspec'
+
 def full_title(page_title = "")
   base_title = "Scirate"
   if page_title.empty?
@@ -9,13 +11,19 @@ end
 
 RSpec::Matchers.define :have_title do |title|
   match do |page|
-    page.should have_selector('title', text: full_title(title))
+    page.body.should have_selector('title', text: full_title(title))
+  end
+end
+
+RSpec::Matchers.define :have_full_title do |title|
+  match do |page|
+    page.body.should have_selector('title', text: title)
   end
 end
 
 RSpec::Matchers.define :have_heading do |heading|
   match do |page|
-    page.should have_selector('h1', text: heading)
+    Capybara.string(page.body).has_selector?('h1', text: heading)
   end
 end
 
@@ -55,10 +63,10 @@ def valid_signup(params = {})
   params[:email] ||= "user@example.com"
   params[:password] ||= "foobar"
 
-  fill_in "Name",         with: params[:name]
-  fill_in "Email",        with: params[:email]
-  fill_in "Password",     with: params[:password]
-  fill_in "Confirmation", with: params[:password]
+  fill_in "Name",                  with: params[:name]
+  fill_in "Email",                 with: params[:email]
+  fill_in "user_password",              with: params[:password]
+  fill_in "user_password_confirmation", with: params[:password]
   click_button "Sign up"
 end
 
@@ -91,4 +99,3 @@ end
 def reset_email
   ActionMailer::Base.deliveries = []
 end
-

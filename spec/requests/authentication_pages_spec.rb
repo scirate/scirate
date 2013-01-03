@@ -39,7 +39,7 @@ describe "Authentication" do
 
       describe "followed by signout" do
         before { signout }
-        it { should have_link('Sign in'), href: signin_path }
+        it { should have_link('Sign in', href: signin_path) }
         it { should_not have_link('Sign out', href: signout_path) }
         it { should_not have_link('Profile', href: user_path(user)) }
         it { should_not have_link('Settings', href: edit_user_path(user)) }
@@ -51,7 +51,7 @@ describe "Authentication" do
   describe "authorization" do
 
     describe "for non-signed-in users" do
-      let(:user) { Factory(:user) }
+      let(:user) { FactoryGirl.create(:user) }
 
       describe "in the Users controller" do
 

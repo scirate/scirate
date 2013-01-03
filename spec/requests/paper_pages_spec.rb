@@ -97,7 +97,7 @@ describe "Paper pages" do
 
         describe "toggling the button" do
           before { click_button "Scite!" }
-          it { should have_selector('input', value: "Unscite") }
+          it { should have_button("Unscite") }
         end
       end
 
@@ -121,7 +121,7 @@ describe "Paper pages" do
 
         describe "toggling the button" do
           before { click_button "Unscite" }
-          it { should have_selector('input', value: "Scite!") }
+          it { should have_button("Scite!") }
         end
       end
 
@@ -553,7 +553,7 @@ describe "Paper pages" do
       it "should have links to date ranges" do
         [2, 3, 4, 7].each do |v|
           page.should have_link v.to_s
-          find_link(v.to_s)[:href].should match "range=#{v}"
+          first(:link, v.to_s)[:href].should match "range=#{v}"
         end
       end
 
@@ -615,7 +615,7 @@ describe "Paper pages" do
       end
 
       describe "next button and feeds" do
-        before { click_link "Next day >>" }
+        before { first(:link, "Next day >>").click }
 
         it "should remain on the same feed" do
           page.should have_content "papers from #{feed.name}"
@@ -627,7 +627,7 @@ describe "Paper pages" do
       end
 
       describe "prev button and feeds" do
-        before { click_link "<< Prev day" }
+        before { first(:link, "<< Prev day").click }
 
         it "should remain on the same feed" do
           page.should have_content "papers from #{feed.name}"

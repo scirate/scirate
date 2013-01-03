@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.10'
 gem 'bcrypt-ruby', '>= 3.0.1'
 gem 'faker', '>= 1.0.1'
 gem 'chronic'
@@ -29,13 +29,13 @@ gem 'jquery-rails', '>= 2.0.0'
 group :test do
   gem 'rspec-rails', '>= 2.8.1'
   gem 'capybara', '>= 1.1.2'
-  gem 'rb-fsevent', '0.9.0', :require => false
+  gem 'rb-fsevent', :require => false
   gem 'rb-readline'
-  gem 'growl', '1.0.3'
-  gem 'guard-spork', '0.3.2'
+  gem 'growl'
+  gem 'guard-spork'
   gem 'spork', '~> 0.9.0.rc'
-  gem 'factory_girl_rails', '1.4.0'
-  gem 'database_cleaner', '0.7.0'
+  gem 'factory_girl_rails'
+  gem 'database_cleaner'
   gem 'launchy'
 end
 

@@ -1,8 +1,9 @@
 require 'rubygems'
 require 'spork'
+require 'capybara/rspec'
 
 Spork.prefork do
-  # Loading more in this block will cause your tests to run faster. However, 
+  # Loading more in this block will cause your tests to run faster. However,
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
   # This file is copied to spec/ when you run 'rails generate rspec:install'
@@ -16,6 +17,10 @@ Spork.prefork do
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
   RSpec.configure do |config|
+
+    config.include Capybara::DSL
+    config.include Capybara::RSpecMatchers
+
     # == Mock Framework
     #
     # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:

@@ -291,9 +291,9 @@ describe "User pages" do
 
       describe "with non-matching password confirmation" do
         before do
-          fill_in "Password",     with: user.password+'right'
-          fill_in "Confirmation", with: user.password+'wrong'
-          fill_in "Old Password", with: user.password
+          fill_in "user_password", with: user.password+'right'
+          fill_in "Confirmation",  with: user.password+'wrong'
+          fill_in "Old Password",  with: user.password
           update
         end
 
@@ -302,9 +302,9 @@ describe "User pages" do
 
       describe "with incorrect old password" do
         before do
-          fill_in "Password",     with: user.password+'new'
-          fill_in "Confirmation", with: user.password+'new'
-          fill_in "Old Password", with: user.password+'wrong'
+          fill_in "user_password", with: user.password+'new'
+          fill_in "Confirmation",  with: user.password+'new'
+          fill_in "Old Password",  with: user.password+'wrong'
           update
         end
 
@@ -325,12 +325,12 @@ describe "User pages" do
 
       describe "with new password" do
         before do
-          fill_in "Password",     with: user.password+'new'
-          fill_in "Confirmation", with: user.password+'new'
+          fill_in "user_password", with: user.password+'new'
+          fill_in "Confirmation",  with: user.password+'new'
           click_button "Update"
         end
 
-        it { should have_selector('title', text: new_name) }
+        it { should have_full_title(new_name) }
         it { should have_selector('div.flash.success') }
         specify { user.reload.name.should  == new_name }
         specify { user.reload.email.should == new_email }
@@ -341,7 +341,7 @@ describe "User pages" do
           click_button "Update"
         end
 
-        it { should have_selector('title', text: new_name) }
+        it { should have_full_title(new_name) }
         it { should have_selector('div.flash.success') }
         specify { user.reload.name.should  == new_name }
         specify { user.reload.email.should == new_email }

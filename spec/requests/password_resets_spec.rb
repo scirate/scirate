@@ -53,7 +53,7 @@ describe "password resets" do
     describe "with invalid information" do
       before do
         visit edit_password_reset_path(user.password_reset_token)
-        fill_in "Password", :with => "foobar"
+        fill_in "user_password", :with => "foobar"
         click_button "Update Password"
       end
 
@@ -63,7 +63,7 @@ describe "password resets" do
     describe "with valid information" do
       before do
         visit edit_password_reset_path(user.password_reset_token)
-        fill_in "Password", :with => "foobar"
+        fill_in "user_password", :with => "foobar"
         fill_in "Password confirmation", :with => "foobar"
         click_button "Update Password"
       end
@@ -79,7 +79,7 @@ describe "password resets" do
 
     before do
       visit edit_password_reset_path(user.password_reset_token)
-      fill_in "Password", :with => "foobar"
+      fill_in "user_password", :with => "foobar"
       fill_in "Password confirmation", :with => "foobar"
       click_button "Update Password"
     end
