@@ -318,6 +318,38 @@ describe "Paper pages" do
       end
     end
 
+    describe "searching" do
+      let(:foo_paper) { FactoryGirl.create(:paper, title: "On the origin of Foo") }
+      let(:bar_paper) { FactoryGirl.create(:paper, title: "Bar: not baz") }
+
+      before do
+        foo_paper.save
+        bar_paper.save
+
+        visit papers_path(search: "foobar")
+      end
+
+      it { should_not have_content "Recent comments" }
+      it { should_not have_content "next" }
+      it { should_not have_content "prev" }
+
+      it { should have_content "Search results" }
+      it { should have_content "foobar" }
+
+      describe "for a paper that does not exist" do
+        before { visit papers_path(search: "notfound") }
+
+        it { should_not have_content foo_paper.title }
+      end
+
+      describe "for a paper that exists" do
+        before { visit papers_path(search: "foo") }
+
+        it { should have_content foo_paper.title }
+        it { should_not have_content bar_paper.title }
+      end
+    end
+
     describe "abstract display" do
       describe "when the user is not signed in" do
         describe "when the paper has no scites" do
@@ -551,9 +583,8 @@ describe "Paper pages" do
       end
 
       it "should have links to date ranges" do
-        [2, 3, 4, 7].each do |v|
+        ['2d', '3d', '1w', '1m', '1y'].each do |v|
           page.should have_link v.to_s
-          first(:link, v.to_s)[:href].should match "range=#{v}"
         end
       end
 

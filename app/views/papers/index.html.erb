@@ -1,8 +1,13 @@
-<% provide :title, "Papers for #{@feed_name} from #{@date.to_formatted_s(:short)}" %>
+<% if !params[:search] %>
+  <% provide :title, "Papers for #{@feed_name} from #{@date.to_formatted_s(:short)}" %>
+  <%= render 'next_prev_links' %>
+<% else %>
+  <% provide :title, "Search results" %>
+<% end %>
 
-<%= render 'next_prev_links' %>
-
-<% if @range == 0 %>
+<% if params[:search] %>
+  <h1>Search results for "<%= params[:search] %>"</h1>
+<% elsif @range == 0 %>
   <h1>All papers from <%= @feed_name %> from <%= @date.to_formatted_s(:rfc822) %></h1>
 <% else %>
   <h1>All papers from <%= @feed_name %> from
@@ -10,9 +15,11 @@
       <%= @date.to_formatted_s(:rfc822) %></h1>
 <% end %>
 
-<div class="sidebar">
-<%= render 'recent_comments' %>
-</div>
+<% if !params[:search] %>
+  <div class="sidebar">
+    <%= render 'recent_comments' %>
+  </div>
+<% end %>
 
 <div class="paperlist">
 <ul class="papers">
@@ -20,6 +27,8 @@
 </ul>
 </div>
 
-<%= render 'next_prev_links' %>
+<% if !params[:search] %>
+  <%= render 'next_prev_links' %>
+<% end %>
 <%= will_paginate @papers %>
 &nbsp;
