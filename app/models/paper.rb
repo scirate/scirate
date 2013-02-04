@@ -17,6 +17,8 @@
 #  feed_id        :integer
 #
 
+require 'texticle/searchable'
+
 class Paper < ActiveRecord::Base
   attr_accessible :title, :authors, :abstract, :identifier, :url, :pubdate, :updated_date
   serialize :authors, Array
@@ -42,6 +44,8 @@ class Paper < ActiveRecord::Base
   validate  :updated_date_is_after_pubdate
 
   after_create { cross_list_primary_feed }
+
+  extend Searchable(:title, :authors)
 
   def to_param
     identifier
