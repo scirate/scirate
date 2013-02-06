@@ -3,5 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 div.abbr_comment
 {
+        word-wrap: break-word;
+        overflow: hidden;
 }
 
