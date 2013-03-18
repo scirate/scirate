@@ -1,6 +1,6 @@
 <li class="papers">
    <div class="scite">
-     <%= render( partial: 'scite_form', object: paper, as: :paper) if signed_in? %>
+     <%= render( partial: 'scite_form', object: paper, as: :paper) %>
      <span class="<%= "scite_count_#{paper.id}" %>">
        <%= pluralize(paper.scites.size, 'Scite') %>
      </span><br />

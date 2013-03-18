@@ -1,5 +1,9 @@
-<%= form_for(current_user.scites.build(paper_id: paper.id),
-                       remote: true) do |f| %>
-  <div><%= f.hidden_field :paper_id %></div>
-  <%= f.submit "Scite!", :class => "btn btn-large btn-primary" %>
+<% if signed_in? %>
+  <%= form_for(current_user.scites.build(paper_id: paper.id),
+                         remote: true) do |f| %>
+    <div><%= f.hidden_field :paper_id %></div>
+    <%= f.submit "Scite!", :class => "btn btn-large btn-primary" %>
+  <% end %>
+<% else %>
+  <a href="/signin"><input type="button" value="Scite!" class="btn btn-large btn-primary" /></a>
 <% end %>
