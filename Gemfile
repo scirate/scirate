@@ -7,7 +7,7 @@ gem 'chronic'
 gem 'oai'
 gem 'pg'
 gem 'will_paginate'
-gem 'texticle', :require => 'texticle/rails'
+gem 'textacular', :require => 'textacular/rails'
 
 group :development do
   gem 'annotate', '~> 2.4.1.beta'
