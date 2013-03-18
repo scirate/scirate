@@ -8,6 +8,7 @@ gem 'oai'
 gem 'pg'
 gem 'will_paginate'
 gem 'textacular', :require => 'textacular/rails'
+gem 'acts_as_votable', '~> 0.5.0'
 
 group :development do
   gem 'annotate', '~> 2.4.1.beta'

@@ -17,7 +17,7 @@
 #  feed_id        :integer
 #
 
-require 'texticle/searchable'
+require 'textacular/searchable'
 
 class Paper < ActiveRecord::Base
   attr_accessible :title, :authors, :abstract, :identifier, :url, :pubdate, :updated_date

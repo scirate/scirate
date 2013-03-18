@@ -6,9 +6,10 @@
 #  content    :text
 #  user_id    :integer
 #  paper_id   :integer
+#  upvotes    :integer         not null, default 0
+#  downvotes  :integer         not null, default 0
 #  created_at :timestamp       not null
 #  updated_at :timestamp       not null
-#
 
 class Comment < ActiveRecord::Base
   attr_accessible :content, :paper_id
@@ -19,4 +20,6 @@ class Comment < ActiveRecord::Base
   validates :user,    presence: true
   validates :paper,   presence: true
   validates :content, presence: true
+
+  acts_as_votable
 end

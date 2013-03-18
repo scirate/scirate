@@ -7,3 +7,21 @@ div.abbr_comment
         overflow: hidden;
 }
 
+.votes {
+  float: left;
+  margin-right: 5px;
+  margin-top: 3px;
+}
+
+.upvote, .downvote {
+  width: 16px;
+  height: 16px;
+}
+
+.upvote {
+  background-image: url('/assets/upvote.png');
+}
+
+.downvote {
+  background-image: url('/assets/downvote.png');
+}

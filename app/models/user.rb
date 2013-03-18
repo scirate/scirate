@@ -39,6 +39,8 @@ class User < ActiveRecord::Base
 
   validates :password, length: { minimum: 6 }, on: :create
 
+  acts_as_voter
+
   def scited?(paper)
     scites.find_by_paper_id(paper.id)
   end

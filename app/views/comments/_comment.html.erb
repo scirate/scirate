@@ -1,4 +1,10 @@
-<div class="comment">
+<% @voted = current_user and current_user.voted_on?(comment) %>
+
+<div class="comment<%= @voted ? ' voted' : '' %>" data-id="<%= comment.id %>">
+  <div class="votes">
+    <div class="upvote"></div>
+    <div class="downvote"></div>
+  </div>
   <span class="label">
     <% if defined? @user %>
       Comment on paper <%= link_to comment.paper.identifier, comment.paper %>
@@ -7,6 +13,7 @@
     <% end %>
     at  <%= comment.created_at.to_formatted_s(:short) %>
   </span>
+  (<span class="score"><%= comment.upvotes.count-comment.downvotes.count %></span> points)
   <div class="body">
     <%= simple_format(strip_tags(comment.content)) %>
   </div>
