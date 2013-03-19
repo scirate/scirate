@@ -2,17 +2,47 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
+change_score = ($comment, shift) ->
+  current = parseInt($comment.find('.score').text())
+  $comment.find('.score').text(current + shift)
+
 $ ->
   $('.upvote').click ->
-    $comment = $(this).closest('.comment')
-    return if $comment.hasClass('voted')
-    $.post "/comments/#{$comment.attr('data-id')}/upvote", ->
-      $comment.find('.score').text(parseInt($comment.find('.score').text())+1)
+    $button = $(this)
+    $comment = $button.closest('.comment')
+    cid = $comment.attr('data-id')
 
+    if $button.hasClass('active')
+      # Undo upvote
+      $.post "/comments/#{cid}/unvote", ->
+        $button.removeClass('active')
+        change_score($comment, -1)
+    else
+      # Either new upvote or switch from downvote
+      $.post "/comments/#{cid}/upvote", ->
+        $button.addClass('active')
+        if $comment.find('.downvote').hasClass('active')
+          $comment.find('.downvote').removeClass('active')
+          change_score($comment, +2)
+        else
+          change_score($comment, +1)
 
   $('.downvote').click ->
-    $comment = $(this).closest('.comment')
-    return if $comment.hasClass('voted')
-    $.post "/comments/#{$comment.attr('data-id')}/downvote", ->
-      $comment.find('.score').text(parseInt($comment.find('.score').text())-1)
+    $button = $(this)
+    $comment = $button.closest('.comment')
+    cid = $comment.attr('data-id')
 
+    if $button.hasClass('active')
+      # Undo downvote
+      $.post "/comments/#{cid}/unvote", ->
+        $button.removeClass('active')
+        change_score($comment, +1)
+    else
+      # Either new downvote or switch from upvote
+      $.post "/comments/#{cid}/downvote", ->
+        $button.addClass('active')
+        if $comment.find('.upvote').hasClass('active')
+          $comment.find('.upvote').removeClass('active')
+          change_score($comment, -2)
+        else
+          change_score($comment, -1)

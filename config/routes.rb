@@ -26,6 +26,7 @@ Scirate3::Application.routes.draw do
   match '/comments', to: 'comments#index'
   match '/comments/:id/upvote', to: 'comments#upvote'
   match '/comments/:id/downvote', to: 'comments#downvote'
+  match '/comments/:id/unvote', to: 'comments#unvote'
 
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'

@@ -27,4 +27,10 @@ class CommentsController < ApplicationController
     comment.downvote_from(current_user)
     render :text => 'success'
   end
+
+  def unvote
+    comment = Comment.find(params[:id])
+    comment.votes.find_by_voter_id(current_user.id).delete
+    render :text => 'success'
+  end
 end
