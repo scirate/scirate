@@ -1,5 +1,6 @@
 Scirate3::Application.routes.draw do
   root to: 'papers#index', as: 'papers'
+  root to: 'papers#index'
 
   resources :feeds do
   end
