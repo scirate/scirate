@@ -1,19 +1,9 @@
 Scirate3::Application.routes.draw do
-
-  resources :sessions, only: [:new, :create, :destroy]
-
-  resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
-  get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
-  get '/users/:id/comments', to: 'users#comments', as: "comments_user"
-  get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
-
-  get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
-
-  #custom routes to use arXiv identifiers as id's for papers
-  get '/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
-
   root to: 'papers#index', as: 'papers'
-  root to: 'papers#index'
+
+  resources :feeds do
+  end
+
   get '/search', to: 'papers#search', as: 'papers_search'
   get '/next/:date', to: 'papers#next', as: 'papers_next'
   get '/prev/:date', to: 'papers#prev', as: 'papers_prev'
@@ -23,6 +13,7 @@ Scirate3::Application.routes.draw do
 
   put '/subscriptions', to: 'subscriptions#update'
 
+  match '/comments', to: 'comments#index'
   resources :comments do
     member do
       post :edit
@@ -32,14 +23,22 @@ Scirate3::Application.routes.draw do
     end
   end
 
-  match '/comments', to: 'comments#index'
-
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
   match '/signout', to: 'sessions#destroy'
   match '/about',   to: 'static_pages#about'
 
+  resources :sessions, only: [:new, :create, :destroy]
+  resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
+  get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
+  get '/users/:id/comments', to: 'users#comments', as: "comments_user"
+  get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
+  get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
   resources :password_resets, only: [:new, :create, :edit, :update]
+
+  #custom route to use arXiv identifiers as id's for papers
+  get '/papers/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
+  get '/:feed', to: 'papers#index', feed: /.+/, as: "feed"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
