@@ -7,24 +7,29 @@ div.abbr_comment
         overflow: hidden;
 }
 
-.votes {
-  float: left;
-  margin-right: 5px;
-  margin-top: 3px;
-}
+.comment {
+  .votes {
+    float: left;
+    margin-right: 5px;
+    margin-top: 3px;
+  }
 
-.upvote, .downvote {
-  width: 16px;
-  height: 16px;
-  opacity: 0.5;
-}
+  .upvote, .downvote {
+    width: 16px;
+    height: 16px;
+    opacity: 0.5;
+  }
 
-.upvote.active, .downvote.active {
-  color: green;
-}
+  .upvote.active {
+    color: green;
+  }
 
-.upvote {
-}
+  .downvote.active {
+    color: red;
+  }
 
-.downvote {
+  .actions a {
+    cursor: pointer;
+    opacity: 0.8;
+  }
 }

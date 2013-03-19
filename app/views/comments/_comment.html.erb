@@ -17,4 +17,10 @@
   <div class="body">
     <%= simple_format(strip_tags(comment.content)) %>
   </div>
+
+  <% if current_user.id == comment.user_id %>
+    <div class="actions">
+      <a class="edit">edit</a> | <%= link_to 'delete', comment, :method => :delete %>
+    </div>
+  <% end %>
 </div>

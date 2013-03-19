@@ -46,3 +46,4 @@ $ ->
           change_score($comment, -2)
         else
           change_score($comment, -1)
+
