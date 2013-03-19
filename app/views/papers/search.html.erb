@@ -1,0 +1,12 @@
+<% provide :title, "Search results" %>
+
+<h1>Search results for "<%= params[:q] %>"</h1>
+
+<div class="paperlist">
+<ul class="papers">
+  <%= render @papers %>
+</ul>
+</div>
+
+<%= will_paginate @papers %>
+&nbsp;

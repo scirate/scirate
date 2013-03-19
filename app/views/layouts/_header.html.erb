@@ -15,8 +15,8 @@
         <li><%= link_to "Sign in", signin_path %></li>
       <% end %>
     </ul>
-    <%= form_tag papers_path, :method => 'get' do %>
-      <%= text_field_tag :search, params[:search] %>
+    <%= form_tag papers_search_path, :method => 'get' do %>
+      <%= text_field_tag :q, params[:q] %>
       <%= submit_tag "Search", :name => nil %>
     <% end %>
   </nav>

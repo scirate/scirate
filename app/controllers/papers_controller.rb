@@ -11,30 +11,30 @@ class PapersController < ApplicationController
     @feed = parse_feed params
     @range = parse_range params
 
-    if params[:search]
-      @papers = Paper.basic_search(params[:search]).paginate(page: params[:page])
+    if @feed.nil? && signed_in? && current_user.has_subscriptions?
+      @date ||= current_user.feed_last_paper_date
+      @papers = fetch_papers current_user.feed, @date, @range
+
+      @feed_name = "#{current_user.name}'s feed"
+      @feed = nil
     else
-      if @feed.nil? && signed_in? && current_user.has_subscriptions?
-        @date ||= current_user.feed_last_paper_date
-        @papers = fetch_papers current_user.feed, @date, @range
+      @feed ||= Feed.default
+      @date ||= @feed.last_paper_date
 
-        @feed_name = "#{current_user.name}'s feed"
-        @feed = nil
-      else
-        @feed ||= Feed.default
-        @date ||= @feed.last_paper_date
-
-        @papers = fetch_papers @feed.cross_listed_papers, @date, @range
-        @feed_name = @feed.name
-      end
-
-      @recent_comments = Comment.includes(:paper, :user).limit(10).find(:all, order: "created_at DESC")
+      @papers = fetch_papers @feed.cross_listed_papers, @date, @range
+      @feed_name = @feed.name
     end
+
+    @recent_comments = Comment.includes(:paper, :user).limit(10).find(:all, order: "created_at DESC")
 
     #this is premature optimization, but it saves one query per unscited paper
     if signed_in?
       @scited_papers = Set.new( current_user.scited_papers )
     end
+  end
+
+  def search
+    @papers = Paper.basic_search(params[:q]).paginate(page: params[:page])
   end
 
   def next
