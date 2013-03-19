@@ -8,6 +8,13 @@ body {
   font-size: 12px;
 }
 
+.label {
+  color: inherit;
+  background-color: inherit;
+  text-shadow: none;
+  padding: 0;
+}
+
 .container {
   width: $full-width;
 }

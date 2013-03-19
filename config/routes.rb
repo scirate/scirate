@@ -13,7 +13,6 @@ Scirate3::Application.routes.draw do
 
   put '/subscriptions', to: 'subscriptions#update'
 
-  match '/comments', to: 'comments#index'
   resources :comments do
     member do
       post :edit
@@ -22,6 +21,7 @@ Scirate3::Application.routes.draw do
       post :unvote
     end
   end
+  match '/comments', to: 'comments#index'
 
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
@@ -37,7 +37,7 @@ Scirate3::Application.routes.draw do
   resources :password_resets, only: [:new, :create, :edit, :update]
 
   #custom route to use arXiv identifiers as id's for papers
-  get '/papers/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
+  get '/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
   get '/:feed', to: 'papers#index', feed: /.+/, as: "feed"
 
   # The priority is based upon order of creation:
