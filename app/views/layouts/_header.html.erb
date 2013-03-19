@@ -13,6 +13,7 @@
         <li><%= link_to "Sign out", signout_path, method: :delete %></li>
       <% else %>
         <li><%= link_to "Sign in", signin_path %></li>
+        <li><%= link_to "Sign up", signup_path %></li>
       <% end %>
     </ul>
     <%= form_tag papers_search_path, :method => 'get' do %>
