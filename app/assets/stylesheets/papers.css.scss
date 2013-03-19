@@ -80,16 +80,12 @@ span.label {
 }
 
 div.paper {
-    div.title {
-        font-size: 175%;
+    h1 {
+      margin-bottom: 0;
     }
 
-    div.authors {
-        font-size: 125%;
-    }
-
-    div.identifier {
-        font-size: 125%;
+    .authors, .identifier {
+      font-size: 110%;
     }
 
     div.abstract {
