@@ -1,5 +1,7 @@
 <% provide :title, "Papers for #{@feed_name} from #{@date.to_formatted_s(:short)}" %>
 
+<% @feed_desc = @feed ? "from #{@feed_name} " : '' %>
+
 <div class="row-fluid">
   <div class="span1 feedbar">
     <% Feed.all.each do |feed| %>
@@ -11,9 +13,9 @@
     <%= render 'next_prev_links' %>
 
     <% if @range == 0 %>
-      <h1>All papers from <%= @feed_name %> from <%= @date.to_formatted_s(:rfc822) %></h1>
+      <h1>All papers <%= @feed_desc %>from <%= @date.to_formatted_s(:rfc822) %></h1>
     <% else %>
-      <h1>All papers from <%= @feed_name %> from
+      <h1>All papers <%= @feed_desc %>from
           <%= (@date-@range.days).to_formatted_s(:rfc822) %> to
           <%= @date.to_formatted_s(:rfc822) %></h1>
     <% end %>

@@ -17,8 +17,11 @@ class PapersController < ApplicationController
 
       @feed_name = "#{current_user.name}'s feed"
       @feed = nil
+    elsif @feed.nil?
+      @date = Feed.default.last_paper_date
+      @papers = Paper.paginate(page: params[:page])
+      @feed_name = "foo"
     else
-      @feed ||= Feed.default
       @date ||= @feed.last_paper_date
 
       @papers = fetch_papers @feed.cross_listed_papers, @date, @range
