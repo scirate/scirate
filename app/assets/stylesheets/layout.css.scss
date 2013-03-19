@@ -4,6 +4,10 @@ $accent-color: #aaf;
 $link-color: #22c;
 $visited-link-color: #55c;
 
+body {
+  font-size: 12px;
+}
+
 .container {
   width: $full-width;
 }
