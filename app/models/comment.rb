@@ -6,8 +6,6 @@
 #  content    :text
 #  user_id    :integer
 #  paper_id   :integer
-#  upvotes    :integer         not null, default 0
-#  downvotes  :integer         not null, default 0
 #  created_at :timestamp       not null
 #  updated_at :timestamp       not null
 

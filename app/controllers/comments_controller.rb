@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, :only => [:destroy, :upvote, :downvote, :unvote]
+  before_filter :find_comment, :only => [:edit, :destroy, :upvote, :downvote, :unvote]
 
   def create
     @comment = current_user.comments.build(params[:comment])
@@ -13,6 +13,16 @@ class CommentsController < ApplicationController
     redirect_to @comment.paper
   end
 
+  def edit
+    if @comment.user_id == current_user.id
+      @comment.content = params['content']
+      @comment.save
+      render :text => 'success'
+    else
+      render :status => :forbidden
+    end
+  end
+
   def index
     @comments = Comment.paginate(page: params[:page]).includes(:paper, :user).find(:all, order: "created_at DESC")
   end
@@ -20,8 +30,11 @@ class CommentsController < ApplicationController
   def destroy
     if @comment.user_id == current_user.id
       @comment.delete
+      flash[:success] = "Comment deleted."
+      redirect_to request.referer
+    else
+      render :status => :forbidden
     end
-    redirect_to request.referer
   end
 
   def upvote

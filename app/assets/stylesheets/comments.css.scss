@@ -11,7 +11,10 @@ div.abbr_comment
   .votes {
     float: left;
     margin-right: 5px;
-    margin-top: 3px;
+  }
+
+  .nonvotes {
+    float: left;
   }
 
   .upvote, .downvote {
@@ -31,5 +34,9 @@ div.abbr_comment
   .actions a {
     cursor: pointer;
     opacity: 0.8;
+  }
+
+  textarea {
+    display: block;
   }
 }

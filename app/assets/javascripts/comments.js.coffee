@@ -47,3 +47,13 @@ $ ->
         else
           change_score($comment, -1)
 
+  $('.actions .edit').click ->
+    $comment = $(this).closest('.comment')
+    content = $comment.find('.body').text().trim()
+    $comment.find('.body').html("<textarea cols=40/><button class='save'>Save</button>")
+    $textarea = $comment.find('textarea').val(content)
+
+    $comment.find('.save').click ->
+      content = $textarea.val()
+      $.post "/comments/#{$comment.attr('data-id')}/edit", { content: content }, ->
+        $comment.find('.body').text(content)

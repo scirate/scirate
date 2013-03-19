@@ -24,15 +24,14 @@ Scirate3::Application.routes.draw do
 
   resources :comments do
     member do
+      post :edit
       post :upvote
       post :downvote
       post :unvote
     end
   end
+
   match '/comments', to: 'comments#index'
-  match '/comments/:id/upvote', to: 'comments#upvote'
-  match '/comments/:id/downvote', to: 'comments#downvote'
-  match '/comments/:id/unvote', to: 'comments#unvote'
 
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
