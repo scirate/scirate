@@ -18,9 +18,13 @@ class PapersController < ApplicationController
       @feed_name = "#{current_user.name}'s feed"
       @feed = nil
     elsif @feed.nil?
-      @date = Feed.default.last_paper_date
-      @papers = Paper.paginate(page: params[:page])
-      @feed_name = "foo"
+      if params[:feed] # Requesting a non-existent feed
+        return not_found
+      else
+        @date = Feed.default.last_paper_date
+        @papers = Paper.paginate(page: params[:page])
+        @feed_name = "foo"
+      end
     else
       @date ||= @feed.last_paper_date
 
