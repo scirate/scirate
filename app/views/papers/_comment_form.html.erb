@@ -4,6 +4,7 @@
   <div><%= f.hidden_field :paper_id %></div>
   <div class="field">
     <%= f.label :Comment %><br />
+    <p>Comments support <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> formatting and <a href="http://www.artofproblemsolving.com/Wiki/index.php/LaTeX:Math#Math_Mode">math mode LaTeX</a>.</p>
     <div class="wmd-panel">
       <div id="wmd-button-bar"></div>
       <%= f.text_area :content, :id => 'wmd-input', :class => 'wmd-input' %>

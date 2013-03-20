@@ -1,4 +1,4 @@
-<% @voted = current_user and current_user.voted_as_when_voted_for(comment) %>
+<% @voted = current_user && current_user.voted_as_when_voted_for(comment) %>
 
 <div class="comment<%= @voted ? ' voted' : '' %>" data-id="<%= comment.id %>" data-markup="<%= comment.content %>">
   <div class="votes">
@@ -19,7 +19,7 @@
       <%= simple_format(strip_tags(comment.content)) %>
     </div>
 
-    <% if current_user and current_user.id == comment.user_id %>
+    <% if current_user && current_user.id == comment.user_id %>
       <div class="actions">
         <a class="edit">edit</a> | <%= link_to 'delete', comment, :method => :delete %>
       </div>
