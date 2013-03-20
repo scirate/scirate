@@ -11,6 +11,12 @@ $ ->
   editor = new Markdown.Editor(converter)
   editor.run()
 
+  render_comment = ($comment) ->
+    $comment.find('.body').html converter.makeHtml($comment.attr('data-markup'))
+    MathJax.Hub.Typeset($comment.get(0))
+
+  $('.comment').each -> render_comment($(this))
+
   $('.upvote').click ->
     $button = $(this)
     $comment = $button.closest('.comment')
@@ -51,6 +57,11 @@ $ ->
         else
           change_score($comment, -1)
 
+  # Apply MathJax rendering to standard pagedown preview box
+  editor.hooks.chain 'onPreviewRefresh', ->
+    delay ->
+      MathJax.Hub.Typeset($('.wmd-preview').get(0))
+
   $('.actions .edit').click ->
     $comment = $(this).closest('.comment')
     content = $comment.attr('data-markup')
@@ -60,5 +71,5 @@ $ ->
     $comment.find('.save').click ->
       content = $textarea.val()
       $.post "/comments/#{$comment.attr('data-id')}/edit", { content: content }, ->
-        $comment.find('.body').text(content)
-        MathJax.Hub.Typeset($comment.get())
+        $comment.attr('data-markup', content)
+        render_comment($comment)
