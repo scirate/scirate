@@ -1,4 +1,4 @@
-<% provide :title, "Papers for #{@feed_name} from #{@date.to_formatted_s(:short)}" %>
+<% provide :title, "#{@feed_name}" %>
 
 <% @feed_desc = @feed ? "from #{@feed_name} " : '' %>
 
@@ -10,28 +10,32 @@
   </div>
 
   <div class="span11">
-    <%= render 'next_prev_links' %>
-
-    <% if @range == 0 %>
-      <h1>All papers <%= @feed_desc %>from <%= @date.to_formatted_s(:rfc822) %></h1>
+    <% if @papers.length == 0 %>
+      <h1>No papers found</h1>
     <% else %>
-      <h1>All papers <%= @feed_desc %>from
-          <%= (@date-@range.days).to_formatted_s(:rfc822) %> to
-          <%= @date.to_formatted_s(:rfc822) %></h1>
+      <%= render 'next_prev_links' %>
+
+      <% if @range == 0 %>
+        <h1>All papers <%= @feed_desc %>from <%= @date.to_formatted_s(:rfc822) %></h1>
+      <% else %>
+        <h1>All papers <%= @feed_desc %>from
+            <%= (@date-@range.days).to_formatted_s(:rfc822) %> to
+            <%= @date.to_formatted_s(:rfc822) %></h1>
+      <% end %>
+
+      <div class="paperlist">
+      <ul class="papers">
+        <%= render @papers %>
+      </ul>
+      </div>
+
+      <%= render 'next_prev_links' %>
+      <%= will_paginate @papers %>
+      &nbsp;
     <% end %>
 
     <div class="sidebar">
       <%= render 'recent_comments' %>
     </div>
-
-    <div class="paperlist">
-    <ul class="papers">
-      <%= render @papers %>
-    </ul>
-    </div>
-
-    <%= render 'next_prev_links' %>
-    <%= will_paginate @papers %>
-    &nbsp;
   </div>
 </div>

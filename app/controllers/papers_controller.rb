@@ -121,6 +121,7 @@ class PapersController < ApplicationController
     end
 
     def fetch_papers feed, date, range
+      return [] if date.nil?
       collection = feed.paginate(page: params[:page])
       collection = collection.includes(:feed)
       collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
