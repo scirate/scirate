@@ -5,8 +5,11 @@
 #comment_form, #comment_editor {
   textarea, .wmd-preview {
     max-width: 600px;
-    max-height: 200px;
     width: 100%;
+  }
+
+  textarea {
+    max-height: 200px;
   }
 
   .wmd-preview {

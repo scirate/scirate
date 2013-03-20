@@ -12,8 +12,7 @@ makeCommentEditor = (suffix) ->
 
   # Apply MathJax rendering to standard pagedown preview box
   editor.hooks.chain 'onPreviewRefresh', ->
-    delay 400, 'mathjax', ->
-      MathJax.Hub.Typeset($('#wmd-preview' + (suffix||''))[0])
+    MathJax.Hub.Typeset($('#wmd-preview' + (suffix||''))[0])
 
   editor.run()
 
