@@ -59,6 +59,7 @@ setupVoting = ->
 
 
 $ ->
+  $('a.has-tooltip').tooltip()
   converter = Markdown.getSanitizingConverter()
   renderComment = ($comment) ->
     $comment.find('.body').html converter.makeHtml($comment.attr('data-markup'))
