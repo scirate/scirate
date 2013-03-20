@@ -13,3 +13,12 @@
   <%= f.submit "Leave Comment", :class => "btn btn-large btn-primary" %>
   <% end %>
 </div>
+
+<div id="comment_editor" class="hidden">
+  <div class="wmd-panel">
+    <div id="wmd-button-bar-second"></div>
+    <textarea id="wmd-input-second" class="wmd-input"></textarea>
+  </div>
+  <div id="wmd-preview-second" class="wmd-panel wmd-preview well"></div>
+  <button class="save btn btn-success">Save Changes</button>
+</div>

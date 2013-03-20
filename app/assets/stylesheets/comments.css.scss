@@ -2,12 +2,13 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.comment_form {
-  textarea {
+#comment_form, #comment_editor {
+  textarea, .wmd-preview {
     max-width: 600px;
     max-height: 200px;
     width: 100%;
   }
+
 }
 
 

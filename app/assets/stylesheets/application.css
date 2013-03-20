@@ -14,3 +14,7 @@
  *= require Markdown.Editor
  *= require_tree .
 */
+
+.hidden {
+  display: none;
+}
