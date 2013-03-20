@@ -1,5 +1,5 @@
 <% provide :title, @paper.identifier %>
-<div class="paper">
+<div class="paper tex2jax">
   <h1><%= @paper.title %></h1>
   <div class="authors">
     <%= @paper.authors.join(', ') %>
@@ -8,7 +8,7 @@
     <%= @paper.identifier %>
     [<%= @paper.feed.name %>]
   </div>
-  <div class="abstract tex2jax">
+  <div class="abstract">
     <%= @paper.abstract %>
   </div>
   <% if @categories.length > 0 %>
