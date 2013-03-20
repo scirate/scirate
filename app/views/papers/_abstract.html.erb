@@ -1,6 +1,6 @@
 <% if  (current_user && current_user.expand_abstracts?) ||
         (((@paper && @paper.scites.count) || paper.scites.size ) > 0) %>
-  <div class = "abstract">
+  <div class = "abstract tex2jax">
     <%= paper.abstract %>
   </div>
 <% end %>
