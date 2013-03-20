@@ -49,7 +49,7 @@ $ ->
 
   $('.actions .edit').click ->
     $comment = $(this).closest('.comment')
-    content = $comment.find('.body').text().trim()
+    content = $comment.attr('data-markup')
     $comment.find('.body').html("<textarea cols=40/><button class='save'>Save</button>")
     $textarea = $comment.find('textarea').val(content)
 
@@ -57,3 +57,4 @@ $ ->
       content = $textarea.val()
       $.post "/comments/#{$comment.attr('data-id')}/edit", { content: content }, ->
         $comment.find('.body').text(content)
+        MathJax.Hub.Typeset($comment.get())
