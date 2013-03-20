@@ -4,7 +4,11 @@
   <div><%= f.hidden_field :paper_id %></div>
   <div class="field">
     <%= f.label :Comment %><br />
-    <%= f.text_area :content %>
+    <div class="wmd-panel">
+      <div id="wmd-button-bar"></div>
+      <%= f.text_area :content, :id => 'wmd-input', :class => 'wmd-input' %>
+    </div>
+    <div id="wmd-preview" class="wmd-panel wmd-preview well"></div>
   </div>
   <%= f.submit "Leave Comment", :class => "btn btn-large btn-primary" %>
   <% end %>

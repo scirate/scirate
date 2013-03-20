@@ -7,6 +7,10 @@ change_score = ($comment, shift) ->
   $comment.find('.score').text(current + shift)
 
 $ ->
+  converter = Markdown.getSanitizingConverter()
+  editor = new Markdown.Editor(converter)
+  editor.run()
+
   $('.upvote').click ->
     $button = $(this)
     $comment = $button.closest('.comment')

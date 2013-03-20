@@ -11,5 +11,6 @@
  *= require_self
  *= require bootstrap
  *= require font-awesome
+ *= require Markdown.Editor
  *= require_tree .
 */
