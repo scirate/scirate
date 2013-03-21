@@ -2,94 +2,119 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
-changeScore = ($comment, shift) ->
-  current = parseInt($comment.find('.score').text())
-  $comment.find('.score').text(current + shift)
+class Comment
+  @setupCommenting: ->
+    @bindEditor() # Setup the main commenting form
 
-makeCommentEditor = (suffix) ->
-  converter = Markdown.getSanitizingConverter()
-  editor = new Markdown.Editor(converter, suffix)
+    # Grab the inline editor html
+    @editor_html = $('#comment_editor').removeClass('hidden').remove()[0].outerHTML
 
-  # Apply MathJax rendering to standard pagedown preview box
-  editor.hooks.chain 'onPreviewRefresh', ->
-    MathJax.Hub.Typeset($('#wmd-preview' + (suffix||''))[0])
+    # Render markup and setup interface for individual comments
+    $('.comment').each -> new Comment($(this))
 
-  editor.run()
+  @bindEditor: (suffix) ->
+    # Binds pagedown editor functionality to #wmd-panel#{suffix}
+    @converter ?= Markdown.getSanitizingConverter()
+    editor = new Markdown.Editor(@converter, suffix)
 
-setupVoting = ->
-  $('.upvote').click ->
-    $button = $(this)
-    $comment = $button.closest('.comment')
-    cid = $comment.attr('data-id')
+    # Apply MathJax rendering to standard pagedown preview box
+    editor.hooks.chain 'onPreviewRefresh', ->
+      MathJax.Hub.Typeset($('#wmd-preview' + (suffix||''))[0])
 
-    if $button.hasClass('active')
-      # Undo upvote
-      $.post "/comments/#{cid}/unvote", ->
-        $button.removeClass('active')
-        changeScore($comment, -1)
+    editor.run()
+
+  changeScore: (shift) ->
+    """Modifies the displayed comment vote score by shift."""
+    current = parseInt(@$el.find('.score').text())
+    @$el.find('.score').text(current + shift)
+
+  upvote: ->
+    """Upvote the comment."""
+    $.post "/comments/#{@cid}/upvote", =>
+      @$el.find('.upvote').addClass('active')
+      if @votestate == 'downvote'
+        @$el.find('.downvote').removeClass('active')
+        @changeScore(+2)
+      else
+        @changeScore(+1)
+      @votestate = 'upvote'
+
+  downvote: ->
+    """Downvote the comment."""
+    $.post "/comments/#{@cid}/downvote", =>
+      @$el.find('.downvote').addClass('active')
+      if @votestate == 'upvote'
+        @$el.find('.upvote').removeClass('active')
+        @changeScore(-2)
+      else
+        @changeScore(-1)
+      @votestate = 'downvote'
+  
+  unvote: ->
+    """Undo an existing downvote or upvote."""
+    $.post "/comments/#{@cid}/unvote", =>
+      @$el.find('.upvote, .downvote').removeClass('active')
+      @changeScore(-1)
+
+  setupVoting: ->
+    # Read the DOM to find out if we've already voted
+    if @$el.find('.upvote').hasClass('active')
+      @votestate = 'upvote'
+    else if @$el.find('.downvote').hasClass('active')
+      @votestate = 'downvote'
     else
-      # Either new upvote or switch from downvote
-      $.post "/comments/#{cid}/upvote", ->
-        $button.addClass('active')
-        if $comment.find('.downvote').hasClass('active')
-          $comment.find('.downvote').removeClass('active')
-          changeScore($comment, +2)
-        else
-          changeScore($comment, +1)
+      @votestate = null
 
-  $('.downvote').click ->
-    $button = $(this)
-    $comment = $button.closest('.comment')
-    cid = $comment.attr('data-id')
+    @$el.on 'click', '.upvote', =>
+      if @votestate == 'upvote' then @unvote() # Undo upvote
+      else @upvote()
 
-    if $button.hasClass('active')
-      # Undo downvote
-      $.post "/comments/#{cid}/unvote", ->
-        $button.removeClass('active')
-        changeScore($comment, +1)
+    @$el.on 'click', '.downvote', =>
+      if @votestate == 'downvote' then @unvote()
+      else @downvote()
+
+  startEditing: ->
+    # Make a new editor for this comment
+    content = @$el.attr('data-markup')
+
+    @$el.find('.body').html(Comment.editor_html)
+    @$el.find('textarea').val(content)
+
+    Comment.bindEditor('-second')
+
+    @$el.find('.save').click =>
+      content = @$el.find('textarea').val()
+      $.post "/comments/#{@$el.attr('data-id')}/edit", { content: content }, =>
+        @$el.attr('data-markup', content)
+        @renderMarkup()
+
+  stopEditing: ->
+    $('#comment_editor').remove()
+    @renderMarkup()
+
+  toggleEditing: ->
+    if @$el.find('#comment_editor').length
+      @stopEditing()
     else
-      # Either new downvote or switch from upvote
-      $.post "/comments/#{cid}/downvote", ->
-        $button.addClass('active')
-        if $comment.find('.upvote').hasClass('active')
-          $comment.find('.upvote').removeClass('active')
-          changeScore($comment, -2)
-        else
-          changeScore($comment, -1)
+      @startEditing()
+
+  setupEditing: ->
+    @$el.find('.actions .edit').click => @toggleEditing()
+
+  renderMarkup: ->
+    """Processes markdown and LaTeX in the data-markup attribute for display."""
+    @$el.find('.body').html Comment.converter.makeHtml(@$el.attr('data-markup'))
+    MathJax.Hub.Typeset(@$el[0])
+
+  constructor: (@$el) ->
+    @cid = @$el.attr('data-id')
+    @renderMarkup()
+    @setupVoting()
+    @setupEditing()
 
 
 $ ->
   $('a.has-tooltip').tooltip()
-  converter = Markdown.getSanitizingConverter()
-  renderComment = ($comment) ->
-    $comment.find('.body').html converter.makeHtml($comment.attr('data-markup'))
-    MathJax.Hub.Typeset($comment[0])
+  return unless $('.comment').length
+  Comment.setupCommenting()
 
-  $('.comment').each -> renderComment($(this))
-
-  setupVoting()
-  makeCommentEditor()
-
-  
-
-  editor_html = $('#comment_editor').removeClass('hidden').remove()[0].outerHTML
-  $('.actions .edit').click ->
-    $comment = $(this).closest('.comment')
-    if $comment.find('#comment_editor').length
-      # Toggle editing off if we're already editing this comment
-      $('#comment_editor').remove()
-      renderComment($comment)
-    else
-      # Make a new editor for this comment
-      content = $comment.attr('data-markup')
-
-      $comment.find('.body').html(editor_html)
-      $comment.find('textarea').val(content)
-
-      editor2 = makeCommentEditor('-second')
-
-      $comment.find('.save').click ->
-        content = $comment.find('textarea').val()
-        $.post "/comments/#{$comment.attr('data-id')}/edit", { content: content }, ->
-          $comment.attr('data-markup', content)
-          renderComment($comment)
