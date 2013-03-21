@@ -3,18 +3,18 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 class Comment
-  @setupCommenting: ->
-    @bindEditor() # Setup the main commenting form
-
-    # Grab the inline editor html
-    @editor_html = $('#comment_editor').removeClass('hidden').remove()[0].outerHTML
+  @setupComments: ->
+    @converter = Markdown.getSanitizingConverter()
+    if $('#comment_form').length
+      @bindEditor() # Setup the main commenting form
+      # Grab the inline editor html
+      @editor_html = $('#comment_editor').removeClass('hidden').remove()[0].outerHTML
 
     # Render markup and setup interface for individual comments
     $('.comment').each -> new Comment($(this))
 
   @bindEditor: (suffix) ->
     # Binds pagedown editor functionality to #wmd-panel#{suffix}
-    @converter ?= Markdown.getSanitizingConverter()
     editor = new Markdown.Editor(@converter, suffix)
 
     # Apply MathJax rendering to standard pagedown preview box
@@ -66,10 +66,12 @@ class Comment
       @votestate = null
 
     @$el.on 'click', '.upvote', =>
+      return Scirate.login() unless Scirate.current_user
       if @votestate == 'upvote' then @unvote() # Undo upvote
       else @upvote()
 
     @$el.on 'click', '.downvote', =>
+      return Scirate.login() unless Scirate.current_user
       if @votestate == 'downvote' then @unvote()
       else @downvote()
 
@@ -116,5 +118,5 @@ class Comment
 $ ->
   $('a.has-tooltip').tooltip()
   return unless $('.comment').length
-  Comment.setupCommenting()
+  Comment.setupComments()
 
