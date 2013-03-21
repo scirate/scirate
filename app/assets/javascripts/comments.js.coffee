@@ -55,6 +55,7 @@ class Comment
     $.post "/comments/#{@cid}/unvote", =>
       @$el.find('.upvote, .downvote').removeClass('active')
       @changeScore(-1)
+      @votestate = null
 
   setupVoting: ->
     # Read the DOM to find out if we've already voted
