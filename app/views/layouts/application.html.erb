@@ -14,8 +14,18 @@
           displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
           processEscapes: true,
           ignoreClass: 'container',
-          processClass: 'tex2jax'
+          processClass: 'tex2jax',
         },
+        errorSettings: {
+          style: { color: "black" },
+        },
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: 'black',
+            }
+          }
+        }
       });
     </script>
   </head>
