@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, :only => [:edit, :destroy, :upvote, :downvote, :unvote]
+  before_filter :find_comment, :only => [:edit, :destroy, :upvote, :downvote, :unvote, :report, :unreport]
 
   def create
     @comment = current_user.comments.build(params[:comment])
@@ -49,6 +49,16 @@ class CommentsController < ApplicationController
 
   def unvote
     @comment.votes.find_by_voter_id(current_user.id).delete
+    render :text => 'success'
+  end
+
+  def report
+    @comment.reports.create(:user_id => current_user.id)
+    render :text => 'success'
+  end
+
+  def unreport
+    @comment.reports.find_by_user_id(current_user.id).destroy
     render :text => 'success'
   end
 

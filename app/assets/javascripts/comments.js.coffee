@@ -61,6 +61,20 @@ class Comment
         @changeScore(+1)
       @votestate = null
 
+  report: ->
+    $.post "/comments/#{@cid}/report", =>
+      @$el.find('.report')
+          .removeClass('report')
+          .addClass('unreport')
+          .text('reported (undo)')
+
+  unreport: ->
+    $.post "/comments/#{@cid}/unreport", =>
+      @$el.find('.unreport')
+          .removeClass('unreport')
+          .addClass('report')
+          .text('report')
+
   setupVoting: ->
     # Read the DOM to find out if we've already voted
     if @$el.find('.upvote').hasClass('active')
@@ -105,8 +119,10 @@ class Comment
     else
       @startEditing()
 
-  setupEditing: ->
-    @$el.find('.actions .edit').click => @toggleEditing()
+  setupActions: ->
+    @$el.on 'click', '.actions .edit', => @toggleEditing()
+    @$el.on 'click', '.actions .report', => @report()
+    @$el.on 'click', '.actions .unreport', => @unreport()
 
   renderMarkup: ->
     """Processes markdown and LaTeX in the data-markup attribute for display."""
@@ -117,7 +133,7 @@ class Comment
     @cid = @$el.attr('data-id')
     @renderMarkup()
     @setupVoting()
-    @setupEditing()
+    @setupActions()
 
 
 $ ->

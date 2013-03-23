@@ -19,10 +19,18 @@
       <%= simple_format(strip_tags(comment.content)) %>
     </div>
 
-    <% if current_user && current_user.id == comment.user_id %>
-      <div class="actions">
-        <a class="edit">edit</a> | <%= link_to 'delete', comment, :method => :delete %>
-      </div>
+    <% if current_user %>
+    <div class="actions">
+      <% if current_user.id == comment.user_id %>
+          <a class="edit">edit</a> | <%= link_to 'delete', comment, :method => :delete %>
+      <% else %>
+          <% if comment.reports.exists?(:user_id => current_user.id) %>
+            <a class="unreport">reported (undo)</a>
+          <% else %>
+            <a class="report">report</a>
+          <% end %>
+      <% end %>
+    </div>
     <% end %>
   </div>
   <div style="clear: both;"></div>

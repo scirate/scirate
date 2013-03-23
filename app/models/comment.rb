@@ -19,5 +19,7 @@ class Comment < ActiveRecord::Base
   validates :paper,   presence: true
   validates :content, presence: true
 
+  has_many :reports, class_name: "CommentReport"
+
   acts_as_votable
 end
