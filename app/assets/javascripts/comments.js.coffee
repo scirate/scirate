@@ -53,8 +53,12 @@ class Comment
   unvote: ->
     """Undo an existing downvote or upvote."""
     $.post "/comments/#{@cid}/unvote", =>
-      @$el.find('.upvote, .downvote').removeClass('active')
-      @changeScore(-1)
+      if @votestate == 'upvote'
+        @$el.find('.upvote').removeClass('active')
+        @changeScore(-1)
+      else if @votestate == 'downvote'
+        @$el.find('.downvote').removeClass('active')
+        @changeScore(+1)
       @votestate = null
 
   setupVoting: ->

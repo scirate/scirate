@@ -12,9 +12,5 @@
  *= require bootstrap
  *= require font-awesome
  *= require Markdown.Editor
- *= require_tree .
+ *= require main
 */
-
-.hidden {
-  display: none;
-}
