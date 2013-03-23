@@ -9,12 +9,10 @@
     <% end %>
   </div>
 
-  <div class="span11">
+  <div class="span9">
     <% if @papers.length == 0 %>
       <h1>No papers found</h1>
     <% else %>
-      <%= render 'next_prev_links' %>
-
       <% if @range == 0 %>
         <h1>All papers <%= @feed_desc %>from <%= @date.to_formatted_s(:rfc822) %></h1>
       <% else %>
@@ -29,12 +27,14 @@
       </ul>
       </div>
 
-      <%= render 'next_prev_links' %>
       <%= will_paginate @papers %>
       &nbsp;
     <% end %>
+  </div>
 
-    <div class="sidebar">
+  <div class="span2 sidebar">
+    <%= render 'next_prev_links' %>
+    <div class="recent-comments">
       <%= render 'recent_comments' %>
     </div>
   </div>

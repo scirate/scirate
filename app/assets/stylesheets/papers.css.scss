@@ -59,18 +59,18 @@ ul.papers {
 
 
 /* Recent comments sidebar */
-div.sidebar
+div.recent-comments
 {
-    clear: both;
-    float: right;
-    width: 30%;
-    max-width: 300px;
+    width: 100%;
     padding: 1em;
-    margin-left: 1em;
     background-color: $scite-color;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
+
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
 /* Paper show page */

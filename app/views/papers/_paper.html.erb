@@ -1,4 +1,4 @@
-<li class="papers tex2jax">
+<li class="paper tex2jax">
    <div class="scite">
      <%= render( partial: 'scite_form', object: paper, as: :paper) %>
      <span class="<%= "scite_count_#{paper.id}" %>">
@@ -8,7 +8,8 @@
                          paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
    </div>
    <%= render 'paper_title', paper: paper %>
-   <div class ="<%= "abstract_#{paper.id}" %>">
+   <div class="<%= "abstract_#{paper.id}" %>">
      <%= render partial: 'abstract', object: paper, as: :paper %>
-   </div
+   </div>
+   <div style="clear: both;"></div>
 </li>
