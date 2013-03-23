@@ -27,6 +27,7 @@ class PapersController < ApplicationController
       end
     else
       @date ||= @feed.last_paper_date
+      @date ||= Feed.default.last_paper_date
 
       @papers = fetch_papers @feed.cross_listed_papers, @date, @range
       @feed_name = @feed.name

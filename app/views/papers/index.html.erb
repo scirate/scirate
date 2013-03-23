@@ -3,7 +3,7 @@
 <% @feed_desc = @feed ? "from #{@feed_name} " : '' %>
 
 <div class="row-fluid">
-  <div class="span1 feedbar">
+  <div class="span1 sidebar left">
     <% Feed.all.each do |feed| %>
       <%= link_to feed.name, feed %>
     <% end %>
@@ -32,8 +32,7 @@
     <% end %>
   </div>
 
-  <div class="span2 sidebar">
-    <%= render 'next_prev_links' %>
+  <div class="span2 sidebar right">
     <div class="recent-comments">
       <%= render 'recent_comments' %>
     </div>

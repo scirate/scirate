@@ -57,20 +57,26 @@ ul.papers {
   a { display: block; }
 }
 
+.sidebar {
+  position: relative;
+  top: 0;
+  left:auto;
+  width: 220px; /* width of sidebar */
+}
 
 /* Recent comments sidebar */
 div.recent-comments
 {
-    width: 100%;
-    padding: 1em;
-    background-color: $scite-color;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+  width: 100%;
+  padding: 1em;
+  background-color: $scite-color;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 
-    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
 /* Paper show page */

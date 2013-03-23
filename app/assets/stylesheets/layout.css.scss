@@ -15,12 +15,13 @@ body {
   padding: 0;
 }
 
-.container {
-  width: $full-width;
-}
-
 body {
   background: $background-color;
+}
+
+.container {
+  width: $full-width;
+  min-width: 800px;
 }
 
 header {
