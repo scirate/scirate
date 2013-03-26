@@ -14,7 +14,7 @@ RegExp::flags = ->
 #####
 # Array
 #####
-#
+
 apply_test = (test, el) ->
   if _.isFunction(test) and test(el)
     return true
@@ -40,9 +40,7 @@ Array::find_all = (test) -> el for el in this when apply_test(test, el)
 Array::select = Array::find_all
 Array::reject = (test) -> el for el in this when not apply_test(test, el)
 Array::remove_all = (test) -> @remove(el) for el in @find_all(test)
-
 Array::insert = (index, el) -> @splice(index, 0, el)
-
 Array::last = -> @[@.length - 1]
 Array::first = -> @[0]
 Array::unique = ->
@@ -51,12 +49,9 @@ Array::unique = ->
   value for own key, value of output
 
 Array::pluck = (args...) -> _.pluck(this, args...)
-
 Array::all = (test) -> @find_all(test).length == @length
 Array::reversed = -> Array.prototype.slice.call(this).reverse()
-
 Array::extend = (arr) -> this.push.apply(this, arr) # Equivalent of += in saner languages
-
 Array::flatten = ->
   arr = []
   for val in this
@@ -92,33 +87,15 @@ class window.Set
 # jQuery
 #####
 
-$.fn.parametrize = ->
-  """Find input element descendants and return a name->val mapping for them."""
-  params = {}
-  for input in $(this).find('input')
-    key = $(input).attr('name') or $(input).attr('id')
-    val = $(input).val()
-    params[key] = val if key and val?
-  params
-
-$.fn.alert = (level, msg) ->
-  """Displays a bootstrap alert with the given level and message. If the element
-     already contains a .alert, it will be used, otherwise a new .alert will be
-     appended."""
-  if level == 'hide'
-    return $(this).find('.alert').hide()
-
-  $alert = $(this).find('.alert')
-  if not $alert.length
-    $alert = $(Template.render('alert'))
-    $(this).append($alert)
-
-  $alert.removeClass('alert-error alert-info alert-success').addClass("alert-#{level}")
-  $alert.find('.alert-msg').html(msg)
-  $alert.show()
-
-  this
-
+if jQuery?
+  $.fn.parametrize = ->
+    """Find input element descendants and return a name->val mapping for them."""
+    params = {}
+    for input in $(this).find('input')
+      key = $(input).attr('name') or $(input).attr('id')
+      val = $(input).val()
+      params[key] = val if key and val?
+    params
 
 #####
 # Globals
@@ -126,7 +103,7 @@ $.fn.alert = (level, msg) ->
 
 window.log = (args...) ->
   """Wrapper for console.log"""
-  console.log(args...) if Settings.DEBUG
+  console.log(args...)
 
 delayed = {}
 
@@ -161,34 +138,7 @@ window.assert = (exp, message) ->
     log message
     throw new AssertException(message)
 
-window.on_alert = (name, callback) ->
-  """Register intention to handle a particular server alert and remove it from future processing."""
-  if FromServer.alert and (not name? or FromServer.alert == name)
-    callback(FromServer.alert)
-    FromServer.alert = null
-
 window.redirect = (url) ->
-  url = '/' + url if url[0] != '/'
   window.location.pathname = url
 
 window.refresh = -> window.location.reload()
-
-window.when_confirmed = (title, message, opts, callback) ->
-  """Throws up a generic confirmation modal and continues with callback on user assent."""
-  unless callback
-    callback = opts
-    opts = {}
-
-  opts.agree ?= "Confirm"
-  opts.disagree ?= "Cancel"
-
-  $modal = $(Template.render('confirmation_prompt', _.extend(opts, title: title, message: message)))
-  $modal.find('.btn.agree').click (ev) ->
-    $modal.modal('hide')
-    $modal.on 'hidden', -> $modal.remove()
-    callback()
-    ev.preventDefault()
-
-
-  $('body').append($modal)
-  $modal.modal()

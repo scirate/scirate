@@ -1,0 +1,17 @@
+<% if signed_in? %>
+  <% if @feed.subscriptions.exists?(user_id: current_user.id) %>
+    <button class="unsubscribe btn btn-success pull-right">
+      Subscribed
+    </button>
+  <% else %>
+    <button class="subscribe btn pull-right">
+      <i class="icon-signin"></i>
+      Subscribe
+    </button>
+  <% end %>
+<% else %>
+  <a href="<%= signin_path %>" class="subscribe btn pull-right">
+    <i class="icon-signin"></i>
+    Subscribe
+  </a>
+<% end %>

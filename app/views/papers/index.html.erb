@@ -2,24 +2,30 @@
 
 <% @feed_desc = @feed ? "from #{@feed_name} " : '' %>
 
-<div class="row-fluid">
+<div class="row-fluid index">
   <div class="span1 sidebar left">
     <% Feed.all.each do |feed| %>
       <%= link_to feed.name, feed %>
     <% end %>
   </div>
 
-  <div class="span9">
-    <% if @papers.length == 0 %>
-      <h1>No papers found</h1>
-    <% else %>
-      <% if @range == 0 %>
-        <h1>All papers <%= @feed_desc %>from <%= @date.to_formatted_s(:rfc822) %></h1>
+  <div class="span9<%= @feed ? ' feed' : '' %>"<%= @feed ? " data-id=#{@feed.id}" : '' %>>
+    <header>
+      <% if @papers.length == 0 %>
+        <h1>No papers found</h1>
       <% else %>
-        <h1>All papers <%= @feed_desc %>from
-            <%= (@date-@range.days).to_formatted_s(:rfc822) %> to
-            <%= @date.to_formatted_s(:rfc822) %></h1>
-      <% end %>
+        <% if @feed %>
+          <%= render 'feeds/subscribe' %>
+        <% end %>
+
+        <% if @range == 0 %>
+          <h1>All papers <%= @feed_desc %>from <%= @date.to_formatted_s(:rfc822) %></h1>
+        <% else %>
+          <h1>All papers <%= @feed_desc %>from
+              <%= (@date-@range.days).to_formatted_s(:rfc822) %> to
+              <%= @date.to_formatted_s(:rfc822) %></h1>
+        <% end %>
+      </header>
 
       <div class="paperlist">
       <ul class="papers">

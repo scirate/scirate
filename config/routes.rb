@@ -3,6 +3,10 @@ Scirate3::Application.routes.draw do
   root to: 'papers#index'
 
   resources :feeds do
+    member do
+      post :subscribe
+      post :unsubscribe
+    end
   end
 
   get '/search', to: 'papers#search', as: 'papers_search'
