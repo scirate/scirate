@@ -1,6 +1,7 @@
-<% provide :title, "#{@feed_name}" %>
 
-<% @feed_desc = @feed ? "from #{@feed_name} " : '' %>
+<%# The title has a number of possible states #%>
+
+<% provide :title, @title %>
 
 <div class="row-fluid index">
   <div class="span1 sidebar left">
@@ -11,31 +12,24 @@
 
   <div class="span9<%= @feed ? ' feed' : '' %>"<%= @feed ? " data-id=#{@feed.id}" : '' %>>
     <header>
-      <% if @papers.length == 0 %>
-        <h1>No papers found</h1>
-      <% else %>
-        <% if @feed %>
-          <%= render 'feeds/subscribe' %>
-        <% end %>
+      <% if @feed %>
+        <%= render 'feeds/subscribe' %>
+      <% end %>
 
-        <% if @range == 0 %>
-          <h1>All papers <%= @feed_desc %>from <%= @date.to_formatted_s(:rfc822) %></h1>
-        <% else %>
-          <h1>All papers <%= @feed_desc %>from
-              <%= (@date-@range.days).to_formatted_s(:rfc822) %> to
-              <%= @date.to_formatted_s(:rfc822) %></h1>
-        <% end %>
-      </header>
+      <h1><%= @title %></h1>
 
       <div class="paperlist">
       <ul class="papers">
-        <%= render @papers %>
+        <% if @papers.length == 0 %>
+          <p>No papers found!</p>
+        <% else %>
+          <%= render @papers %>
+        <% end %>
       </ul>
       </div>
 
       <%= will_paginate @papers %>
       &nbsp;
-    <% end %>
   </div>
 
   <div class="span2 sidebar right">

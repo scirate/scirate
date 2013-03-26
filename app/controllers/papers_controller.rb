@@ -6,38 +6,49 @@ class PapersController < ApplicationController
     @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
   end
 
+  def index_subscriptions
+    # Show papers from the users's subscribed feeds
+    @date ||= current_user.feed_last_paper_date
+    @papers = fetch_papers current_user.feed, @date, @range
+    @title = "All papers in #{current_user.name}'s feed from #{describe_range(@date, @range)}"
+
+    #this is premature optimization, but it saves one query per unscited paper
+    @scited_papers = Set.new( current_user.scited_papers )
+  end
+
+  def index_all
+    # Show papers from all feeds
+    @date = Feed.default.last_paper_date
+    @papers = Paper.paginate(page: params[:page])
+    @title = "All papers from #{describe_range(@date, @range)}"
+  end
+
+  def index_feed
+    # Show papers from a particular feed
+    @date ||= @feed.last_paper_date
+    @date ||= Feed.default.last_paper_date # If feed doesn't have papers
+
+    @papers = fetch_papers @feed.cross_listed_papers, @date, @range
+    @title = "All papers in #{@feed.name} from #{describe_range(@date, @range)}"
+  end
+
   def index
     @date = parse_date params
     @feed = parse_feed params
     @range = parse_range params
 
-    if @feed.nil? && signed_in? && current_user.has_subscriptions?
-      @date ||= current_user.feed_last_paper_date
-      @papers = fetch_papers current_user.feed, @date, @range
-
-      @feed_name = "#{current_user.name}'s feed"
-      @feed = nil
-    elsif @feed.nil?
-      if params[:feed] # Requesting a non-existent feed
-        return not_found
-      else
-        @date = Feed.default.last_paper_date
-        @papers = Paper.paginate(page: params[:page])
-        @feed_name = "foo"
-      end
-    else
-      @date ||= @feed.last_paper_date
-      @date ||= Feed.default.last_paper_date
-
-      @papers = fetch_papers @feed.cross_listed_papers, @date, @range
-      @feed_name = @feed.name
-    end
-
     @recent_comments = Comment.includes(:paper, :user).limit(10).find(:all, order: "created_at DESC")
 
-    #this is premature optimization, but it saves one query per unscited paper
-    if signed_in?
-      @scited_papers = Set.new( current_user.scited_papers )
+    if @feed.nil?
+      return not_found if params[:feed]
+
+      if signed_in?
+        index_subscriptions
+      else
+        index_all
+      end
+    else
+      index_feed
     end
   end
 
@@ -127,5 +138,13 @@ class PapersController < ApplicationController
       collection = collection.includes(:feed)
       collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
       collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
+    end
+
+    def describe_range(date, range)
+      desc = date.to_formatted_s(:rfc822)
+      if range != 0
+        desc = (date-range.days).to_formatted_s(:rfc822) + " to #{desc}"
+      end
+      desc
     end
 end
