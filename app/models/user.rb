@@ -78,7 +78,8 @@ class User < ActiveRecord::Base
   end
 
   def feed_last_paper_date
-    feeds.find(:first, conditions: "last_paper_date IS NOT NULL", order: "last_paper_date DESC").last_paper_date.to_date
+    feed = feeds.find(:first, conditions: "last_paper_date IS NOT NULL", order: "last_paper_date DESC")
+    feed && feed.last_paper_date.to_date
   end
 
   def send_signup_confirmation

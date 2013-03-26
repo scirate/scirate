@@ -21,7 +21,11 @@
       <div class="paperlist">
       <ul class="papers">
         <% if @papers.length == 0 %>
-          <p>No papers found!</p>
+          <% if @feed.nil? && signed_in? && !current_user.has_subscriptions? %>
+            <p>You haven't subscribed to any feeds yet! Papers from subscribed feeds will appear here.</p>
+          <% else %>
+            <p>No papers found!</p>
+          <% end %>
         <% else %>
           <%= render @papers %>
         <% end %>

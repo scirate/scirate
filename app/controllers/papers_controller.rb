@@ -9,6 +9,7 @@ class PapersController < ApplicationController
   def index_subscriptions
     # Show papers from the users's subscribed feeds
     @date ||= current_user.feed_last_paper_date
+    @date ||= Feed.default.last_paper_date
     @papers = fetch_papers current_user.feed, @date, @range
     @title = "All papers in #{current_user.name}'s feed from #{describe_range(@date, @range)}"
 
