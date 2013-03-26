@@ -2,12 +2,12 @@ class FeedsController < ApplicationController
   before_filter :find_feed, :only => [:subscribe, :unsubscribe]
 
   def subscribe
-    @feed.subscriptions.create(user_id: current_user.id)
+    @feed.subscriptions.find_or_create_by_user_id(current_user.id)
     render :partial => 'subscribe'
   end
 
   def unsubscribe
-    @feed.subscriptions.find_by_user_id(current_user.id).destroy
+    @feed.subscriptions.where(user_id: current_user.id).destroy_all
     render :partial => 'subscribe'
   end
 
