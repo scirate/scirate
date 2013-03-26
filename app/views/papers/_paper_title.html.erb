@@ -10,6 +10,16 @@
     <%= link_to "(abs)", paper.url %>
     <%= paper.pdf_url.nil? ? '' : link_to("(pdf)", paper.pdf_url) %>
   </span>
+  <% if paper.cross_lists.length > 1 %>
+    <div class="crosslist">
+      cross-listed to:
+        <% for crosslist in paper.cross_lists %>
+          <% if crosslist.feed_id != paper.feed_id %>
+            <%= link_to crosslist.feed.name, crosslist.feed %>
+          <% end %>
+        <% end %>
+    </div>
+  <% end %>
   <div class="authors">
     <%= raw(paper.authors.map { |auth_iter| 
         auth_names = auth_iter.split(' ')
