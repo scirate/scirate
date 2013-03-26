@@ -3,7 +3,8 @@
     <%= link_to paper.title, paper %>
   </span>
   <span class="identifier"><br>
-    <%= "arXiv:#{paper.identifier} [#{paper.feed.name}]" %>
+    <%= "arXiv:#{paper.identifier}" %>
+    [<%= link_to paper.feed.name, paper.feed %>]
   </span>
   <span class="links">
     <%= link_to "(abs)", paper.url %>
