@@ -5,66 +5,66 @@ div.index {
     float: right;
     margin-top: 16px;
   }
+}
 
-  ul.papers {
-    margin: 0;
-    margin-bottom: 1.5em;
-    padding: 0;
+ul.papers {
+  margin: 0;
+  margin-bottom: 1.5em;
+  padding: 0;
+  list-style-type: none;
+
+  li {
     list-style-type: none;
+    padding-bottom: 1em;
+    padding-top: 1em;
 
-    li {
-      list-style-type: none;
-      padding-bottom: 1em;
-      padding-top: 1em;
+    div.scite {
+      width: 85px;
+      float: left;
+      padding: 0.25em;
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-right: 0.5em;
+      margin-left: 0.5em;
+      background-color: $scite-color;
+      -moz-border-radius:    10px;
+      -webkit-border-radius: 10px;
+      border-radius:         10px;
+    }
 
-      div.scite {
-        width: 85px;
-        float: left;
-        padding: 0.25em;
-        margin-top: 0;
-        margin-bottom: 0;
-        margin-right: 0.5em;
-        margin-left: 0.5em;
-        background-color: $scite-color;
-        -moz-border-radius:    10px;
-        -webkit-border-radius: 10px;
-        border-radius:         10px;
+    div.title {
+      width: 80%;
+      text-align: left;
+      margin-left: 1em;
+      padding-left: 6em;
+
+      span.identifier {
+          color: #777
       }
 
-      div.title {
-        width: 80%;
-        text-align: left;
-        margin-left: 1em;
-        padding-left: 6em;
-
-        span.identifier {
-            color: #777
-        }
-
-        span.title {
-            font-weight: bold;
-        }
-
-        span.links {
+      span.title {
           font-weight: bold;
-        }
       }
 
-      div.abstract {
-          text-align: justify;
-          padding: 0.5em;
+      span.links {
+        font-weight: bold;
       }
     }
 
-    .crosslist {
-      color: #777;
+    div.abstract {
+        text-align: justify;
+        padding: 0.5em;
     }
   }
 
-  .sidebar.left {
-    a { display: block; }
-    font-size: 90%;
+  .crosslist {
+    color: #777;
   }
+}
+
+.sidebar.left {
+  a { display: block; }
+  font-size: 90%;
 }
 
 .sidebar {
