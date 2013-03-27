@@ -10,10 +10,10 @@
     <% end %>
   </div>
 
-  <div class="span9<%= @feed ? ' feed' : '' %>"<%= @feed ? " data-id=#{@feed.id}" : '' %>>
+  <div class="span9">
     <header>
       <% if @feed %>
-        <%= render 'feeds/subscribe' %>
+        <%= render 'feeds/subscribe', :feed => @feed %>
       <% end %>
 
       <h1><%= @title %></h1>

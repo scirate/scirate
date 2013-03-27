@@ -1,14 +1,14 @@
-class Feed
+class SubscribeToggle
   subscribe: ->
     $.post "/feeds/#{@fid}/subscribe", (html) =>
-      @$el.find('.subscribe').replaceWith(html)
+      @$el.replaceWith(html)
 
   unsubscribe: ->
     $.post "/feeds/#{@fid}/unsubscribe", (html) =>
-      @$el.find('.unsubscribe').replaceWith(html)
+      @$el.replaceWith(html)
 
   constructor: (@$el) ->
-    @fid = @$el.attr('data-id')
+    @fid = @$el.attr('data-feedid')
 
     @$el.on 'click', '.subscribe', => @subscribe()
 
@@ -30,5 +30,6 @@ class Feed
 
 
 $ ->
-  if $('.feed').length
-    new Feed($('.feed'))
+  if $('.subscribe-toggle').length
+    $('.subscribe-toggle').each ->
+      new SubscribeToggle($(this))
