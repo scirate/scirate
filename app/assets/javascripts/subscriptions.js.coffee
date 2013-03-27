@@ -1,11 +1,11 @@
 class SubscribeToggle
   subscribe: ->
-    $.post "/feeds/#{@fid}/subscribe", (html) =>
-      @$el.replaceWith(html)
+    $.post "/feeds/#{@fid}/subscribe", (newel) =>
+      @$el.html($(newel).html())
 
   unsubscribe: ->
-    $.post "/feeds/#{@fid}/unsubscribe", (html) =>
-      @$el.replaceWith(html)
+    $.post "/feeds/#{@fid}/unsubscribe", (newel) =>
+      @$el.html($(newel).html())
 
   constructor: (@$el) ->
     @fid = @$el.attr('data-feedid')

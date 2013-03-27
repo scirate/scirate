@@ -1,9 +1,26 @@
 .subscribe-toggle {
+  .subscribe, .unsubscribe {
+    width: 105px;
+  }
+
   .subscribe {
     color: inherit;
   }
 
   .unsubscribe {
     color: white;
+  }
+}
+
+.user-subscriptions {
+  li.subscription {
+    list-style-type: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .feedlink {
+      display: inline-block;
+      width: 200px;
+    }
   }
 }
