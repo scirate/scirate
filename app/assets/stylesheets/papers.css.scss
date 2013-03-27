@@ -61,17 +61,16 @@ div.index {
     }
   }
 
-  .feedbar {
+  .sidebar.left {
     a { display: block; }
+    font-size: 90%;
   }
-
 }
 
 .sidebar {
   position: relative;
   top: 0;
   left:auto;
-  width: 220px; /* width of sidebar */
 }
 
 /* Paper show page */
