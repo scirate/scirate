@@ -45,6 +45,10 @@ class Paper < ActiveRecord::Base
 
   after_create { cross_list_primary_feed }
 
+  # Returns papers from feeds subscribed to by the given user
+  scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
+  scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
+
   extend Searchable(:title, :authors)
 
   def to_param
@@ -54,10 +58,6 @@ class Paper < ActiveRecord::Base
   def updated?
     updated_date > pubdate
   end
-
-  # Returns papers from feeds subscribed to by the given user
-  scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
-  scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
   private
 

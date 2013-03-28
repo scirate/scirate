@@ -15,4 +15,10 @@ class ApplicationController < ActionController::Base
     end
     return true
   end
+
+  def transaction
+    ActiveRecord::Base.transaction do
+      yield
+    end
+  end
 end

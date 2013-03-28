@@ -9,12 +9,15 @@ gem 'pg'
 gem 'will_paginate'
 gem 'textacular', :require => 'textacular/rails'
 gem 'acts_as_votable', '~> 0.5.0'
+gem 'arxiv', :git => 'git://github.com/mispy/arxiv.git'
+gem 'activerecord-import'
 
 group :development do
   gem 'annotate', '~> 2.4.1.beta'
   gem 'rspec-rails', '>= 2.8.1'
   gem 'guard-rspec', '>= 0.5.5'
   gem 'taps'
+  gem 'pry-rails'
 end
 
 # Gems used only for assets and not required

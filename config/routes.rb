@@ -43,9 +43,9 @@ Scirate3::Application.routes.draw do
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
   resources :password_resets, only: [:new, :create, :edit, :update]
 
+  get '/feed/:feed', to: 'papers#index', feed: /.+/, as: "feed"
   #custom route to use arXiv identifiers as id's for papers
-  get '/:id', to: 'papers#show', id: /\d{4}\.\d{4}/, as: "paper"
-  get '/:feed', to: 'papers#index', feed: /.+/, as: "feed"
+  get '/:id', to: 'papers#show', id: /.+/, as: "paper"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

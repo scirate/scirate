@@ -27,6 +27,12 @@ class Feed < ActiveRecord::Base
   validates :feed_type, presence: true
   validates :updated_date, presence: true
 
+  def self.map_names
+    mapping = {}
+    Feed.all.each { |feed| mapping[feed.name] = feed }
+    mapping
+  end
+
   def to_param
     name
   end
