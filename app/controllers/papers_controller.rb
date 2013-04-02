@@ -54,7 +54,7 @@ class PapersController < ApplicationController
   end
 
   def search
-    manuscripts = Arxiv.search(params[:q])
+    manuscripts = Arxiv.search(params[:q], sortBy: 'submittedDate')
     identifiers = manuscripts.map { |ms| ms.arxiv_id }
 
     existing = {}
@@ -65,35 +65,37 @@ class PapersController < ApplicationController
     feedmap = Feed.map_names
 
     @papers = []
-    manuscripts.each do |ms|
-      paper = existing[ms.arxiv_id] || Paper.new
+    transaction do
+      manuscripts.each do |ms|
+        paper = existing[ms.arxiv_id] || Paper.new
 
-      primary_category = ms.primary_category.abbreviation
-      primary_feed = feedmap[primary_category]
-      next if primary_feed.nil? # Ignore these for now
-      categories = ms.categories.map(&:abbreviation)
+        primary_category = ms.primary_category.abbreviation
+        primary_feed = feedmap[primary_category]
+        next if primary_feed.nil? # Ignore these for now
+        categories = ms.categories.map(&:abbreviation)
 
-      paper.identifier = ms.arxiv_id
-      paper.feed_id = primary_feed.id
-      paper.title = ms.title
-      paper.abstract = ms.abstract
-      paper.url = "http://arxiv.org/abs/#{paper.identifier}"
-      paper.pdf_url = "http://arxiv.org/pdf/#{paper.identifier}.pdf"
-      paper.pubdate = ms.created_at
-      paper.updated_date = ms.updated_at
-      paper.authors = ms.authors.map(&:name)
-      paper.save!
+        paper.identifier = ms.arxiv_id
+        paper.feed_id = primary_feed.id
+        paper.title = ms.title
+        paper.abstract = ms.abstract
+        paper.url = "http://arxiv.org/abs/#{paper.identifier}"
+        paper.pdf_url = "http://arxiv.org/pdf/#{paper.identifier}.pdf"
+        paper.pubdate = ms.created_at
+        paper.updated_date = ms.updated_at
+        paper.authors = ms.authors.map(&:name)
+        paper.save!
 
-      categories.each do |c|
-        next if c == primary_category
-        feed = feedmap[c]
-        next if feed.nil?
-        if paper.new_record? || !paper.cross_lists.map(&:feed_id).include?(feed.id)
-          paper.cross_lists.create(feed_id: feed.id, cross_list_date: paper.updated_at)
+        categories.each do |c|
+          next if c == primary_category
+          feed = feedmap[c]
+          next if feed.nil?
+          if paper.new_record? || !paper.cross_lists.map(&:feed_id).include?(feed.id)
+            paper.cross_lists.create(feed_id: feed.id, cross_list_date: paper.updated_at)
+          end
         end
-      end
 
-      @papers << paper
+        @papers << paper
+      end
     end
     @papers = @papers.paginate(page: params[:page])
   end

@@ -1,7 +1,7 @@
 module PapersHelper
   def last_date(papers)
     last = papers.find(:first, order: "pubdate DESC")
-    last.nil? ? Date.today : last.pubdate
+    last.nil? ? Time.now.utc.to_date : last.pubdate
   end
 
   def next_date(papers, date)

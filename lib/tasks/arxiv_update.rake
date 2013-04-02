@@ -1,16 +1,12 @@
 namespace :db do
   desc "Update database with yesterday's papers"
   task arxiv_update: :environment do
-
-    # if it's not yet time for the update, abort
-    if Time.now.utc.hour < 2
-      puts "Cannot update until 0200 UTC when arXiv is updated"
-      next
-    end
+    today = Time.now.utc.to_date
 
     # only update those feeds we haven't succesfully updated already
     # feeds are updated in decreasing order of subscriber count
-    feeds = Feed.where("updated_date <> ?", Date.today).order("subscriptions_count DESC")
+    feeds = Feed.where("updated_date <> ? OR updated_date IS NULL", today)
+                .order("subscriptions_count DESC")
 
     if feeds.size == 0
       puts "No feeds need updating"
@@ -26,24 +22,24 @@ namespace :db do
 
       puts "Done!"
 
-      if feed_day.pubdate == Date.today
+      if feed_day.pubdate == today
         #create Paper stubs (date, identifier, feed)
         papers = parse_arxiv feed, feed_day
 
         print "\tUpdating papers for #{feed.name} #{feed_day.pubdate} - #{papers[:all].count - papers[:updates].count} new, #{papers[:updates].count} updates ... "
 
-        #fetch metadata from arXiv OAI interface
+        #fetch metadata from arXiv API
         update_metadata papers
 
         puts "Done!"
 
         if papers[:all].length > papers[:updates].length
-          feed.last_paper_date = Date.today
+          feed.last_paper_date = today
         end
       end
 
       print "\tMarking #{feed.name} as updated ... "
-      feed.updated_date = Date.today
+      feed.updated_date = today
       feed.save!
       puts "Done!"
 
@@ -135,63 +131,51 @@ def parse_arxiv feed, feed_day
 end
 
 def update_metadata papers
-  oai_client = OAI::Client.new 'http://export.arxiv.org/oai2'
+  manuscripts = Arxiv.query(id_list: papers[:all].map(&:identifier).join(','),
+                            max_results: papers[:all].length.to_s)
+  identifiers = manuscripts.map { |ms| ms.arxiv_id }
 
-  #iterate over all the paper stubs
-  papers[:all].each do |stub|
+  existing = {}
+  Paper.includes(:cross_lists).find_all_by_identifier(identifiers).each do |paper|
+    existing[paper.identifier] = paper
+  end
 
-    # fetch the paper if it exists
-    paper = Paper.find_by_identifier(stub.identifier)
+  feedmap = Feed.map_names
 
-    # don't add new papers on updates
-    next if paper.nil? && \
-        (papers[:updates].include?(stub) || papers[:cross_lists].include?(stub))
+  ActiveRecord::Base.transaction do
+    papers[:all].each do |stub|
+      paper = existing[stub.identifier]
+      # don't add new papers on updates
+      next if paper.nil? && \
+          (papers[:updates].include?(stub) || papers[:cross_lists].include?(stub))
 
-    # use the stub if we didn't find an existing paper
-    paper ||= stub
+      paper ||= stub
 
-    #fetch the record from the arXiv
-    response = oai_client.get_record(
-                        identifier: "oai:arXiv.org:#{paper.identifier}",
-                        metadataPrefix: "arXiv")
-    item = response.record.metadata.elements["arXiv"]
+      ms = manuscripts[identifiers.index(stub.identifier)]
 
-    paper.title = item.elements["title"].text
-    paper.abstract = item.elements["abstract"].text
-    paper.url = "http://arxiv.org/abs/#{paper.identifier}"
-    paper.pdf_url = "http://arxiv.org/pdf/#{paper.identifier}.pdf"
-    paper.updated_date = stub.pubdate
+      primary_category = ms.primary_category.abbreviation
+      primary_feed = feedmap[primary_category]
+      next if primary_feed.nil? # Ignore these for now
+      categories = ms.categories.map(&:abbreviation)
 
-    # fetch authors as an array
-    paper.authors = []
-    item.elements.each('authors/author') do |author|
-      forenames = author.elements['forenames']
-      keyname   = author.elements['keyname']
+      paper.identifier = ms.arxiv_id
+      paper.feed_id = primary_feed.id
+      paper.title = ms.title
+      paper.abstract = ms.abstract
+      paper.url = "http://arxiv.org/abs/#{paper.identifier}"
+      paper.pdf_url = "http://arxiv.org/pdf/#{paper.identifier}.pdf"
+      paper.pubdate = paper == stub ? Time.now.utc.to_date : paper.pubdate
+      paper.updated_date = Time.now.utc.to_date
+      paper.authors = ms.authors.map(&:name)
+      paper.save!
 
-      if forenames.nil?
-        name = keyname.text
-      else
-        name = "#{forenames.text} #{keyname.text}"
-      end
-
-      paper.authors << name
-    end
-
-    # save the paper
-    paper.save(validate: false)
-
-    # fetch crosslists -- the first returned element is the primary category
-    categories = item.elements['categories'].text.split.drop(1)
-
-    # create crosslists
-    categories.each do |c|
-      feed = Feed.find_by_name(c)
-      date = stub.pubdate || paper.pubdate
-
-      # don't recreate cross-list if it already exists
-      if !paper.cross_listed_feeds.include? feed
-        paper.cross_lists.create!(feed_id: feed.id, \
-                                  cross_list_date: date)
+      categories.each do |c|
+        next if c == primary_category
+        feed = feedmap[c]
+        next if feed.nil?
+        if paper.new_record? || !paper.cross_lists.map(&:feed_id).include?(feed.id)
+          paper.cross_lists.create(feed_id: feed.id, cross_list_date: paper.pubdate)
+        end
       end
     end
   end

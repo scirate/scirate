@@ -49,7 +49,7 @@ class Feed < ActiveRecord::Base
     Feed.create(name: "quant-ph",
                 url: "http://export.arxiv.org/rss/quant-ph",
                 feed_type: "arxiv",
-                updated_date: Date.today,
-                last_paper_date: Date.today)
+                updated_date: Time.now.utc.to_date,
+                last_paper_date: Time.now.utc.to_date)
   end
 end
