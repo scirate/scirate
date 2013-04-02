@@ -49,6 +49,48 @@ class Paper < ActiveRecord::Base
   scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
   scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
+  def self.import_metadata(metadatas)
+    identifiers = metadatas.map(&:id)
+
+    # Some of these may already be in the database: update them
+    existing = {}
+    Paper.find_all_by_identifier(identifiers).each do |paper|
+      existing[paper.identifier] = paper
+    end
+
+    metadatas.each do |metadata|
+      paper = existing[metadata.id]
+      if paper.nil?
+        paper = Paper.new(identifier: metadata.id)
+        new_paper = true
+      end
+
+      paper.feed_id = Feed.get_or_create(metadata.primary_category).id
+      paper.title = metadata.title
+      paper.abstract = metadata.abstract
+      paper.url = "http://arxiv.org/abs/#{paper.identifier}"
+      paper.pdf_url = "http://arxiv.org/pdf/#{paper.identifier}.pdf"
+      paper.pubdate = metadata.created
+      paper.updated_date = metadata.updated || paper.pubdate
+      paper.authors = metadata.authors.map(&:name)
+      paper.save!
+
+      # fetch crosslists -- the first returned element is the primary category
+      categories = metadata.categories.drop(1)
+
+      # create crosslists
+      categories.each do |c|
+        feed = Feed.get_or_create(c)
+
+        # don't recreate cross-list if it already exists
+        if new_paper || !paper.cross_listed_feeds.include?(feed)
+          paper.cross_lists.create!(feed_id: feed.id, \
+                                    cross_list_date: paper.pubdate)
+        end
+      end      
+    end
+  end
+
   extend Searchable(:title, :authors)
 
   def to_param

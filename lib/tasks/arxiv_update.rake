@@ -150,6 +150,7 @@ def update_metadata papers
           (papers[:updates].include?(stub) || papers[:cross_lists].include?(stub))
 
       paper ||= stub
+      new_paper = (paper == stub)
 
       ms = manuscripts[identifiers.index(stub.identifier)]
 
@@ -173,7 +174,7 @@ def update_metadata papers
         next if c == primary_category
         feed = feedmap[c]
         next if feed.nil?
-        if paper.new_record? || !paper.cross_lists.map(&:feed_id).include?(feed.id)
+        if new_paper || !paper.cross_lists.map(&:feed_id).include?(feed.id)
           paper.cross_lists.create(feed_id: feed.id, cross_list_date: paper.pubdate)
         end
       end

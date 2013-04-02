@@ -27,6 +27,18 @@ class Feed < ActiveRecord::Base
   validates :feed_type, presence: true
   validates :updated_date, presence: true
 
+  def self.get_or_create(name)
+    feed = Feed.find_by_name(name)
+    return feed unless feed.nil?
+    feed = Feed.new
+    feed.name = name
+    feed.url = "http://export.arxiv.org/rss/#{name}"
+    feed.feed_type = 'arxiv'
+    feed.updated_date = Time.now.utc.to_date - 1.day
+    feed.save!
+    feed
+  end
+
   def self.map_names
     mapping = {}
     Feed.all.each { |feed| mapping[feed.name] = feed }
