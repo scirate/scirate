@@ -266,7 +266,7 @@ ALTER SEQUENCE feeds_id_seq OWNED BY feeds.id;
 
 CREATE TABLE papers (
     id integer NOT NULL,
-    title character varying(255),
+    title text,
     authors text,
     abstract text,
     identifier character varying(255),
@@ -906,7 +906,7 @@ CREATE INDEX index_votes_on_voter_id_and_voter_type_and_vote_scope ON votes USIN
 -- Name: papers_to_tsvector_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX papers_to_tsvector_idx ON papers USING gin (to_tsvector('english'::regconfig, (title)::text));
+CREATE INDEX papers_to_tsvector_idx ON papers USING gin (to_tsvector('english'::regconfig, title));
 
 
 --
@@ -1000,3 +1000,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130318082837');
 INSERT INTO schema_migrations (version) VALUES ('20130318093049');
 
 INSERT INTO schema_migrations (version) VALUES ('20130323085908');
+
+INSERT INTO schema_migrations (version) VALUES ('20130402054215');

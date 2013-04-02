@@ -3,7 +3,7 @@
 # Table name: papers
 #
 #  id             :integer         primary key
-#  title          :string(255)
+#  title          :text
 #  authors        :text
 #  abstract       :text
 #  identifier     :string(255)
