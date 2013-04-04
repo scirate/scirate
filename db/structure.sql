@@ -458,7 +458,8 @@ CREATE TABLE users (
     comments_count integer DEFAULT 0,
     confirmation_sent_at timestamp without time zone,
     subscriptions_count integer DEFAULT 0,
-    expand_abstracts boolean DEFAULT false
+    expand_abstracts boolean DEFAULT false,
+    account_status character varying(255) DEFAULT 'user'::character varying
 );
 
 
@@ -1002,3 +1003,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130318093049');
 INSERT INTO schema_migrations (version) VALUES ('20130323085908');
 
 INSERT INTO schema_migrations (version) VALUES ('20130402054215');
+
+INSERT INTO schema_migrations (version) VALUES ('20130403232204');

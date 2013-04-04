@@ -13,6 +13,12 @@ Leave password and confirmation blank to not change password.
     <%= f.label :old_password, "Old Password" %>
     <%= f.password_field :old_password %>
   </div>
+  <% if current_user.is_admin? %>
+    <div class="field">
+      <%= f.label :account_status %>
+      <%= f.select :account_status, User::ACCOUNT_STATES %>
+    </div>
+  <% end %>
   <div class="actions">
     <%= f.submit "Update" %>
   </div>

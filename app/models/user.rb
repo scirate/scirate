@@ -17,9 +17,15 @@
 #  comments_count         :integer         default(0)
 #  confirmation_sent_at   :timestamp
 #  subscriptions_count    :integer         default(0)
-#
+#  account_status         :string          default('user')
 
 class User < ActiveRecord::Base
+  STATUS_ADMIN = 'admin'
+  STATUS_MODERATOR = 'moderator'
+  STATUS_USER = 'user'
+  STATUS_SPAM = 'spam'
+  ACCOUNT_STATES = [STATUS_ADMIN, STATUS_MODERATOR, STATUS_USER, STATUS_SPAM]
+
   attr_accessible :name, :email, :password, :password_confirmation, :expand_abstracts
   has_secure_password
 
@@ -111,6 +117,14 @@ class User < ActiveRecord::Base
     self.active = true
     clear_token(:confirmation_token)
     save!
+  end
+
+  def is_moderator?
+    account_status == STATUS_MODERATOR || account_status == STATUS_ADMIN
+  end
+
+  def is_admin?
+    account_status == STATUS_ADMIN
   end
 
   private

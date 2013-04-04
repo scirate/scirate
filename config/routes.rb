@@ -36,7 +36,7 @@ Scirate3::Application.routes.draw do
   match '/about',   to: 'static_pages#about'
 
   resources :sessions, only: [:new, :create, :destroy]
-  resources :users, only: [:show, :new, :create, :edit, :update, :destroy]
+  resources :users, only: [:show, :new, :create, :edit, :update, :destroy, :admin]
   get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
   get '/users/:id/comments', to: 'users#comments', as: "comments_user"
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"

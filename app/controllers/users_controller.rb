@@ -37,10 +37,24 @@ class UsersController < ApplicationController
   end
 
   def update
-    if !@user.authenticate(params[:user][:old_password])
+    if !current_user.is_admin? && !@user.authenticate(params[:user][:old_password])
       flash[:error] = "Old password is incorrect!"
       render 'edit'
       return
+    end
+
+    if params[:user][:account_status]
+      unless current_user.is_admin?
+        flash[:error] = "Admin status required"
+        render 'edit'
+        return
+      end
+
+      @user.account_status = params[:user][:account_status]
+      unless @user.save
+        render 'edit'
+        return
+      end
     end
 
     old_email = @user.email
@@ -52,10 +66,9 @@ class UsersController < ApplicationController
 
       sign_in @user
       flash[:success] = "Profile updated"
-      render 'show'
-    else
-      render 'edit'
     end
+
+    render 'edit'
   end
 
   def destroy
@@ -112,8 +125,11 @@ class UsersController < ApplicationController
   private
 
     def correct_user
+      # Ensure current user has permission to edit this user
       @user = User.find(params[:id])
-      redirect_to(root_path) unless current_user?(@user)
+      unless current_user?(@user) || current_user.is_admin?
+        redirect_to(root_path)
+      end
     end
 
 end
