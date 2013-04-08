@@ -11,6 +11,7 @@ gem 'textacular', :require => 'textacular/rails'
 gem 'acts_as_votable', '~> 0.5.0'
 gem 'arxiv', :git => 'git://github.com/mispy/arxiv.git'
 gem 'activerecord-import'
+gem 'squeel'
 
 group :development do
   gem 'annotate', '~> 2.4.1.beta'

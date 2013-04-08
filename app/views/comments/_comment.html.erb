@@ -14,7 +14,7 @@
       <% end %>
       at  <%= comment.created_at.to_formatted_s(:short) %>
     </span>
-    (<span class="score"><%= comment.upvotes.count-comment.downvotes.count %></span> points)
+    (<span class="score"><%= comment.cached_votes_up-comment.cached_votes_down %></span> points)
     <div class="body tex2jax">
       <%= simple_format(strip_tags(comment.content)) %>
     </div>

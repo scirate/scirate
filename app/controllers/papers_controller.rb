@@ -2,7 +2,15 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.includes(comments: :user).find_by_identifier!(params[:id])
+    @paper = Paper.find_by_identifier!(params[:id])
+
+    # Less naive statistical comment sorting as per
+    # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
+    @comments = Comment.find_by_sql([
+      "SELECT *, COALESCE(((cached_votes_up + 1.9208) / NULLIF(cached_votes_up + cached_votes_down, 0) - 1.96 * SQRT((cached_votes_up * cached_votes_down) / NULLIF(cached_votes_up + cached_votes_down, 0) + 0.9604) / NULLIF(cached_votes_up + cached_votes_down, 0)) / (1 + 3.8416 / NULLIF(cached_votes_up + cached_votes_down, 0)), 0) AS ci_lower_bound FROM comments WHERE paper_id = ? ORDER BY ci_lower_bound DESC;",
+      @paper.id
+    ])
+
     @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
   end
 
