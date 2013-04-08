@@ -48,7 +48,7 @@ class CommentsController < ApplicationController
   end
 
   def unvote
-    @comment.votes.find_by_voter_id(current_user.id).delete
+    @comment.unvote(voter: current_user)
     render :text => 'success'
   end
 
@@ -58,7 +58,7 @@ class CommentsController < ApplicationController
   end
 
   def unreport
-    @comment.reports.find_by_user_id(current_user.id).destroy
+    @comment.reports.where(voter_id: current_user.id).destroy_all
     render :text => 'success'
   end
 

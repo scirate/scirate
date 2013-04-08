@@ -71,7 +71,9 @@ CREATE TABLE comments (
     paper_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    score integer
+    score integer,
+    cached_votes_up integer DEFAULT 0,
+    cached_votes_down integer DEFAULT 0
 );
 
 
@@ -729,6 +731,20 @@ ALTER TABLE ONLY votes
 
 
 --
+-- Name: index_comments_on_cached_votes_down; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_comments_on_cached_votes_down ON comments USING btree (cached_votes_down);
+
+
+--
+-- Name: index_comments_on_cached_votes_up; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_comments_on_cached_votes_up ON comments USING btree (cached_votes_up);
+
+
+--
 -- Name: index_comments_on_paper_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1005,3 +1021,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130323085908');
 INSERT INTO schema_migrations (version) VALUES ('20130402054215');
 
 INSERT INTO schema_migrations (version) VALUES ('20130403232204');
+
+INSERT INTO schema_migrations (version) VALUES ('20130408093659');

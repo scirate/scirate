@@ -1,44 +1,40 @@
 require 'spec_helper'
 
-describe ScitesController do
+describe CommentsController do
 
   let(:user)  { FactoryGirl.create(:user) }
   let(:paper) { FactoryGirl.create(:paper) }
+  let(:comment) { FactoryGirl.create(:comment) }
 
   before { sign_in user }
 
-  describe "creating a scite with Ajax" do
-
-    before { request.env['HTTP_REFERER'] = 'scites/new' }
-
-    it "should increment the Scite count" do
-      expect do
-        xhr :post, :create, scite: { paper_id: paper.id }
-      end.to change(Scite, :count).by(1)
+  describe "upvoting a comment" do
+    it "should allow a single upvote" do
+      expect do 
+        xhr :post, :upvote, id: comment.id
+        response.should be_success
+        xhr :post, :upvote, id: comment.id
+        comment.reload
+      end.to change(comment, :cached_votes_up).by(1)
     end
 
-    it "should respond with success" do
-      xhr :post, :create, scite: { paper_id: paper.id }
-      response.should be_success
-    end
-  end
-
-  describe "destroying a relationship with Ajax" do
-
-    before do
-      user.scite!(paper)
-      request.env['HTTP_REFERER'] = 'scites/new'
+    it "should allow a single downvote" do
+      expect do 
+        xhr :post, :downvote, id: comment.id
+        response.should be_success
+        xhr :post, :downvote, id: comment.id
+        comment.reload
+      end.to change(comment, :cached_votes_down).by(1)
     end
 
-    it "should decrement the Scite count" do
-      expect do
-        xhr :delete, :destroy, paper_id: paper.id
-      end.to change(Scite, :count).by(-1)
-    end
-
-    it "should respond with success" do
-      xhr :delete, :destroy, paper_id: paper.id
-      response.should be_success
+    it "should allow unvoting" do
+      expect do 
+        xhr :post, :upvote, id: comment.id
+        response.should be_success
+        xhr :post, :unvote, id: comment.id
+        response.should be_success
+        comment.reload
+      end.to_not change(comment, :cached_votes_up)
     end
   end
 end
