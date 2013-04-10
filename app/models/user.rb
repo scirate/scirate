@@ -127,6 +127,24 @@ class User < ActiveRecord::Base
     account_status == STATUS_ADMIN
   end
 
+  def is_spammer?
+    account_status == STATUS_SPAM
+  end
+
+  def change_status(status)
+    transaction do
+
+      # Switching to/from spam needs propagation to comments
+      if status == STATUS_SPAM
+        self.comments.update_all(hidden: true)
+      elsif account_status == STATUS_SPAM
+        self.comments.update_all(hidden: false)
+      end
+      self.account_status = status
+      self.save
+    end
+  end
+
   private
 
     # Generate a random confirmation token in column

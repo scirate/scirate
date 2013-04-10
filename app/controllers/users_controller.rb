@@ -50,8 +50,7 @@ class UsersController < ApplicationController
         return
       end
 
-      @user.account_status = params[:user][:account_status]
-      unless @user.save
+      unless @user.change_status(params[:user][:account_status])
         render 'edit'
         return
       end
@@ -64,7 +63,7 @@ class UsersController < ApplicationController
         @user.send_email_change_confirmation(old_email)
       end
 
-      sign_in @user
+      sign_in @user if current_user.id == @user.id
       flash[:success] = "Profile updated"
     end
 

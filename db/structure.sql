@@ -73,7 +73,8 @@ CREATE TABLE comments (
     updated_at timestamp without time zone NOT NULL,
     score integer,
     cached_votes_up integer DEFAULT 0,
-    cached_votes_down integer DEFAULT 0
+    cached_votes_down integer DEFAULT 0,
+    hidden boolean
 );
 
 
@@ -1023,3 +1024,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130402054215');
 INSERT INTO schema_migrations (version) VALUES ('20130403232204');
 
 INSERT INTO schema_migrations (version) VALUES ('20130408093659');
+
+INSERT INTO schema_migrations (version) VALUES ('20130408140749');

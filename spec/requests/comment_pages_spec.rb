@@ -13,13 +13,23 @@ describe "Comment pages" do
 
     it { should have_title "Comments on all papers" }
 
-    describe "it should list all comments" do
+    describe "it should list comments" do
       before do
         comment.save
         visit comments_path
       end
 
       it { should have_comment comment }
+    end
+
+    describe "it shouldn't list hidden comments" do
+      before do
+        comment.hidden = true
+        comment.save
+        visit comments_path
+      end
+
+      it { should_not have_comment comment }
     end
 
     describe "should sanitize comments" do

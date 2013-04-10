@@ -8,9 +8,10 @@
 #  paper_id   :integer
 #  created_at :timestamp       not null
 #  updated_at :timestamp       not null
+#  hidden     :boolean
 
 class Comment < ActiveRecord::Base
-  attr_accessible :content, :paper_id
+  attr_accessible :content, :paper_id, :hidden
 
   belongs_to :user, counter_cache: true
   belongs_to :paper, counter_cache: true
