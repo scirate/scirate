@@ -9,7 +9,7 @@ class PapersController < ApplicationController
     @comments = Comment.find_by_sql([
       "SELECT *, COALESCE(((cached_votes_up + 1.9208) / NULLIF(cached_votes_up + cached_votes_down, 0) - 1.96 * SQRT((cached_votes_up * cached_votes_down) / NULLIF(cached_votes_up + cached_votes_down, 0) + 0.9604) / NULLIF(cached_votes_up + cached_votes_down, 0)) / (1 + 3.8416 / NULLIF(cached_votes_up + cached_votes_down, 0)), 0) AS ci_lower_bound FROM comments WHERE paper_id = ? AND (hidden = FALSE OR user_id = ?) ORDER BY ci_lower_bound DESC;",
       @paper.id,
-      current_user.id
+      current_user ? current_user.id : nil
     ])
 
     @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
