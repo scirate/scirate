@@ -330,7 +330,6 @@ describe "User pages" do
           click_button "Update"
         end
 
-        it { should have_full_title(new_name) }
         it { should have_selector('div.flash.success') }
         specify { user.reload.name.should  == new_name }
         specify { user.reload.email.should == new_email }
@@ -341,7 +340,6 @@ describe "User pages" do
           click_button "Update"
         end
 
-        it { should have_full_title(new_name) }
         it { should have_selector('div.flash.success') }
         specify { user.reload.name.should  == new_name }
         specify { user.reload.email.should == new_email }
@@ -376,89 +374,6 @@ describe "User pages" do
 
         it "should not send email" do
           last_email.should be_nil
-        end
-      end
-    end
-  end
-
-  describe "subscriptions" do
-    let(:user)       { FactoryGirl.create(:user) }
-    let(:feed1)      { FactoryGirl.create(:feed) }
-    let(:feed2)      { FactoryGirl.create(:feed) }
-    let(:feed3)      { FactoryGirl.create(:feed) }
-
-    before do
-      feed1.save
-      feed2.save
-      feed3.save
-
-      sign_in(user)
-
-      visit subscriptions_user_path(user)
-    end
-
-    it { should have_title "Subscriptions for #{user.name}" }
-
-    it "should list all feeds" do
-      for feed in Feed.all do
-        should have_content feed.name
-      end
-    end
-
-    describe "subscribing and unsubscribing" do
-
-      describe "subscribing to a feed" do
-        before { visit subscriptions_user_path(user) }
-
-        it "should increment the subscription count" do
-          expect do
-            check "#{feed1.name}"
-            click_button "Submit"
-          end.to change(user.subscriptions, :count).by(1)
-        end
-
-        it "should increment the feed's subscriber count" do
-          expect do
-            check "#{feed1.name}"
-            click_button "Submit"
-          end.to change(feed1.users, :count).by(1)
-        end
-      end
-
-      describe "unsubscribing from a feed" do
-        before do
-          user.subscribe!(feed2)
-          visit subscriptions_user_path(user)
-        end
-
-        it "should decement the subscription count" do
-          expect do
-            uncheck "#{feed2.name}"
-            click_button "Submit"
-          end.to change(user.subscriptions, :count).by(-1)
-        end
-
-        it "should decrement the feed's subscriber count" do
-          expect do
-            uncheck "#{feed2.name}"
-            click_button "Submit"
-          end.to change(feed2.users, :count).by(-1)
-        end
-      end
-
-      describe "unsubscribing from all feeds" do
-        before do
-          user.subscribe!(feed1)
-          user.subscribe!(feed2)
-          visit subscriptions_user_path(user)
-        end
-
-        it "should leave the user with no subscriptions" do
-          expect do
-            uncheck "#{feed1.name}"
-            uncheck "#{feed2.name}"
-            click_button "Submit"
-          end.to change(feed2.users, :count).to(0)
         end
       end
     end
