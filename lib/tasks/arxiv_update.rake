@@ -8,6 +8,9 @@ namespace :db do
     feeds = Feed.where("updated_date <> ? OR updated_date IS NULL", today)
                 .order("subscriptions_count DESC")
 
+    # Don't update old/obsolete feeds which have no RSS endpoint
+    feeds.reject! { |feed| !Settings::CURRENT_FEEDS.include?(feed.name) }
+
     if feeds.size == 0
       puts "No feeds need updating"
     end
