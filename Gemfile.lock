@@ -42,18 +42,18 @@ GEM
       multi_json (~> 1.0)
     acts_as_votable (0.5.0)
       rails (>= 3.0.0)
-    addressable (2.3.3)
-    annotate (2.4.1.beta1)
+    addressable (2.3.4)
+    annotate (2.5.0)
+      rake
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
-    capybara (2.0.3)
+    capybara (2.1.0)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
-      selenium-webdriver (~> 2.0)
-      xpath (~> 1.0.0)
+      xpath (~> 2.0)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.9.1)
@@ -66,7 +66,7 @@ GEM
       execjs
     coffee-script-source (1.6.2)
     database_cleaner (0.9.1)
-    diff-lcs (1.2.2)
+    diff-lcs (1.2.4)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -81,59 +81,62 @@ GEM
       multipart-post (~> 1.1)
     faraday_middleware (0.9.0)
       faraday (>= 0.7.4, < 0.9)
-    ffi (1.6.0)
+    ffi (1.8.1)
     formatador (0.2.4)
     growl (1.0.3)
-    guard (1.7.0)
+    guard (1.8.0)
       formatador (>= 0.2.4)
-      listen (>= 0.6.0)
+      listen (>= 1.0.0)
       lumberjack (>= 1.0.2)
       pry (>= 0.9.10)
       thor (>= 0.14.6)
-    guard-rspec (2.5.1)
-      guard (>= 1.1)
-      rspec (~> 2.11)
+    guard-rspec (3.0.0)
+      guard (>= 1.8)
+      rspec (~> 2.13)
     guard-spork (1.5.0)
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
     happymapper (0.4.0)
       libxml-ruby (~> 2.0)
-    hike (1.2.1)
+    hike (1.2.2)
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.2.1)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.7.7)
-    launchy (2.2.0)
+    launchy (2.3.0)
       addressable (~> 2.3)
     libxml-ruby (2.6.0)
-    listen (0.7.3)
+    listen (1.1.0)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
+      rb-kqueue (>= 0.2)
     lumberjack (1.0.3)
     mail (2.5.3)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     method_source (0.8.1)
-    mime-types (1.22)
-    multi_json (1.7.2)
+    mime-types (1.23)
+    multi_json (1.7.3)
     multipart-post (1.2.0)
-    newrelic_rpm (3.6.0.78)
+    newrelic_rpm (3.6.2.96)
     nokogiri (1.5.9)
     oai (0.3.0)
       builder (>= 2.0.0)
       faraday
       faraday_middleware
-    pg (0.15.0)
+    pg (0.15.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
-    pry (0.9.12)
+    pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    pry-rails (0.2.2)
+    pry-rails (0.3.0)
       pry (>= 0.9.10)
     rack (1.4.5)
     rack-cache (1.2)
@@ -159,7 +162,11 @@ GEM
       thor (>= 0.14.6, < 2.0)
     rake (10.0.4)
     rb-fsevent (0.9.3)
-    rb-readline (0.4.2)
+    rb-inotify (0.9.0)
+      ffi (>= 0.5.0)
+    rb-kqueue (0.2.0)
+      ffi (>= 0.5.0)
+    rb-readline (0.5.0)
     rdoc (3.12.2)
       json (~> 1.4)
     rest-client (1.6.7)
@@ -171,25 +178,19 @@ GEM
     rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.13.0)
-    rspec-rails (2.13.0)
+    rspec-mocks (2.13.1)
+    rspec-rails (2.13.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    rubyzip (0.9.9)
-    sass (3.2.7)
+    sass (3.2.9)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    selenium-webdriver (2.31.0)
-      childprocess (>= 0.2.5)
-      multi_json (~> 1.0)
-      rubyzip
-      websocket (~> 1.0.4)
     sequel (3.20.0)
     sinatra (1.0)
       rack (>= 1.0)
@@ -212,17 +213,16 @@ GEM
     textacular (3.0.0)
       activerecord (>= 3.0, < 4.1)
     thor (0.18.1)
-    tilt (1.3.6)
+    tilt (1.4.1)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.37)
-    uglifier (1.3.0)
+    uglifier (2.1.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
-    websocket (1.0.7)
     will_paginate (3.0.4)
-    xpath (1.0.0)
+    xpath (2.0.0)
       nokogiri (~> 1.3)
 
 PLATFORMS
@@ -230,33 +230,33 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
-  acts_as_votable (~> 0.5.0)
-  annotate (~> 2.4.1.beta)
+  acts_as_votable
+  annotate
   arxiv!
-  bcrypt-ruby (>= 3.0.1)
-  capybara (>= 1.1.2)
+  bcrypt-ruby
+  capybara
   chronic
-  coffee-rails (>= 3.2.2)
+  coffee-rails
   database_cleaner
   factory_girl_rails
-  faker (>= 1.0.1)
+  faker
   growl
-  guard-rspec (>= 0.5.5)
+  guard-rspec
   guard-spork
-  jquery-rails (>= 2.0.0)
+  jquery-rails
   launchy
   newrelic_rpm
   oai
   pg
   pry-rails
-  rails (= 3.2.13)
+  rails
   rb-fsevent
   rb-readline
-  rspec-rails (>= 2.8.1)
-  sass-rails (>= 3.2.3)
-  spork (~> 0.9.0.rc)
+  rspec-rails
+  sass-rails
+  spork
   squeel
   taps
   textacular
-  uglifier (>= 1.0.3)
+  uglifier
   will_paginate

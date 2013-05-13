@@ -1,22 +1,22 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.13'
-gem 'bcrypt-ruby', '>= 3.0.1'
-gem 'faker', '>= 1.0.1'
+gem 'rails'
+gem 'bcrypt-ruby'
+gem 'faker'
 gem 'chronic'
 gem 'oai'
 gem 'pg'
 gem 'will_paginate'
 gem 'textacular', :require => 'textacular/rails'
-gem 'acts_as_votable', '~> 0.5.0'
+gem 'acts_as_votable'
 gem 'arxiv', :git => 'git://github.com/mispy/arxiv.git'
 gem 'activerecord-import'
 gem 'squeel'
 
 group :development do
-  gem 'annotate', '~> 2.4.1.beta'
-  gem 'rspec-rails', '>= 2.8.1'
-  gem 'guard-rspec', '>= 0.5.5'
+  gem 'annotate'
+  gem 'rspec-rails'
+  gem 'guard-rspec'
   gem 'taps'
   gem 'pry-rails'
 end
@@ -24,22 +24,22 @@ end
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '>= 3.2.3'
-  gem 'coffee-rails', '>= 3.2.2'
-  gem 'uglifier', '>= 1.0.3'
+  gem 'sass-rails'
+  gem 'coffee-rails'
+  gem 'uglifier'
 end
 
-gem 'jquery-rails', '>= 2.0.0'
+gem 'jquery-rails'
 
 # Test gems setup for Macintosh OS X
 group :test do
-  gem 'rspec-rails', '>= 2.8.1'
-  gem 'capybara', '>= 1.1.2'
+  gem 'rspec-rails'
+  gem 'capybara'
   gem 'rb-fsevent', :require => false
   gem 'rb-readline'
   gem 'growl'
   gem 'guard-spork'
-  gem 'spork', '~> 0.9.0.rc'
+  gem 'spork'
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'launchy'
