@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_https
     if (!request.ssl? && Rails.env.production?)
-      redirect_to protocol: "https://", host: ENV['HOST']
+      redirect_to protocol: "https://", host: Settings::HOST
     end
     return true
   end

@@ -44,8 +44,8 @@ Scirate3::Application.configure do
     :domain => "gmail.com",
     :enable_starttls_auto => true,
     :authentication => :login,
-    :user_name => ENV['GMAIL_SMTP_USER'],
-    :password => ENV['GMAIL_SMTP_PASSWORD']
+    :user_name => Settings::GMAIL_SMTP_USER,
+    :password => Settings::GMAIL_SMTP_PASSWORD
   }
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
 

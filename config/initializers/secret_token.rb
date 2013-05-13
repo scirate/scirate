@@ -5,8 +5,8 @@
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
 if Rails.env.production?
-  if ENV['SECRET_TOKEN']
-    Scirate3::Application.config.secret_token = ENV['SECRET_TOKEN']
+  if Settings::SECRET_TOKEN
+    Scirate3::Application.config.secret_token = Settings::SECRET_TOKEN
   else
     raise SecurityError, "Production server requires SECRET_TOKEN environment variable"
   end
