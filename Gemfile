@@ -12,6 +12,7 @@ gem 'acts_as_votable'
 gem 'arxiv', :git => 'git://github.com/mispy/arxiv.git'
 gem 'activerecord-import'
 gem 'squeel'
+gem 'thin'
 
 group :development do
   gem 'annotate'
@@ -20,7 +21,6 @@ group :development do
   gem 'taps'
   gem 'pry-rails'
   gem 'quiet_assets'
-  gem 'thin'
 end
 
 # Gems used only for assets and not required
