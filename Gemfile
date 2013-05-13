@@ -20,6 +20,7 @@ group :development do
   gem 'taps'
   gem 'pry-rails'
   gem 'quiet_assets'
+  gem 'webrick'
 end
 
 # Gems used only for assets and not required
