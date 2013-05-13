@@ -70,18 +70,5 @@ Scirate3::Application.configure do
   # we redirect to https in ApplicationController, so as to set the host first
   config.force_ssl = false
 
-  ActionMailer::Base.delivery_method = :smtp
-  ActionMailer::Base.perform_deliveries = true
-  ActionMailer::Base.raise_delivery_errors = true
-  ActionMailer::Base.smtp_settings = {
-    :address => "smtp.sendgrid.net",
-    :port => "587",
-    :domain => "heroku.com",
-    :authentication => :plain,
-    :user_name => Settings::SENDGRID_USERNAME,
-    :password => Settings::SENDGRID_PASSWORD
-  }
-  config.action_mailer.default_url_options = { :host => ENV['HOST'] }
-
   WillPaginate.per_page = 100
 end
