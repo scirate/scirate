@@ -30,10 +30,12 @@ Scirate3::Application.routes.draw do
   end
   match '/comments', to: 'comments#index'
 
-  match '/signup',  to: 'users#new'
-  match '/signin',  to: 'sessions#new'
-  match '/signout', to: 'sessions#destroy'
-  match '/about',   to: 'static_pages#about'
+  match '/signup',   to: 'users#new'
+  match '/signin',   to: 'sessions#new'
+  match '/signout',  to: 'sessions#destroy'
+  match '/about',    to: 'static_pages#about'
+  match '/settings', to: 'users#settings'
+  match '/settings/password', to: 'users#settings_password'
 
   resources :sessions, only: [:new, :create, :destroy]
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy, :admin]

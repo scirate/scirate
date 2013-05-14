@@ -1,0 +1,28 @@
+<% provide :title, "Settings" %> 
+<h1>Settings</h1>
+
+<%= link_to 'Password', 'settings/password' %>
+
+<%= form_for(@user, url: settings_path) do |f| %>
+  <div class="field">
+    <%= f.label :name, "Name" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= f.label :expand_abstracts, "Always expand abstracts" %>
+    <%= f.check_box :expand_abstracts %>
+  </div>
+
+  <%= f.submit "Save changes" %>
+<% end %>
+
+<div>
+  <%= gravatar_for(@user) %>
+  <%= link_to "change", "http://gravatar.com/emails", target: "_blank" %>
+</div>

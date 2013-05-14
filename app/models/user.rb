@@ -145,6 +145,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def change_password!(new_password)
+    self.password = new_password
+    UserMailer.password_change(self).deliver
+    self.save
+  end
+
   private
 
     # Generate a random confirmation token in column

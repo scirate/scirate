@@ -11,6 +11,11 @@ class UserMailer < ActionMailer::Base
     mail :to => user.email, :subject => "Password Reset"
   end
 
+  def password_change(user)
+    @user = user
+    mail :to => user.email, :subject => "Your Scirate password has been changed"
+  end
+
   def email_change(user, old_email)
     @user = user
     @old_email = old_email

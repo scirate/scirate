@@ -121,6 +121,25 @@ class UsersController < ApplicationController
     @subscriptions = Set.new( @user.subscriptions.map { |s| s.feed_id } )
   end
 
+  def settings
+    @user = current_user
+  end
+
+  def settings_password
+    @user = current_user
+    p request.put?
+    return unless request.put?
+
+    p params[:new_password]
+
+    if @user.authenticate(params[:current_password])
+      @user.change_password!(params[:new_password])
+      flash[:success] = "Password changed successfully"
+    else
+      flash[:error] = "Current password is incorrect"
+    end
+  end
+
   private
 
     def correct_user
