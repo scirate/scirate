@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_filter :signed_in_user,
-           only: [:show, :edit, :update, :destroy]
+           only: [:show, :edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
@@ -127,10 +127,7 @@ class UsersController < ApplicationController
 
   def settings_password
     @user = current_user
-    p request.put?
-    return unless request.put?
-
-    p params[:new_password]
+    return unless request.post?
 
     if @user.authenticate(params[:current_password])
       @user.change_password!(params[:new_password])
@@ -141,7 +138,6 @@ class UsersController < ApplicationController
   end
 
   private
-
     def correct_user
       # Ensure current user has permission to edit this user
       @user = User.find(params[:id])
