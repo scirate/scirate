@@ -25,21 +25,21 @@ namespace :db do
 
       puts "Done!"
 
-      if feed_day.pubdate == today
-        #create Paper stubs (date, identifier, feed)
-        papers = parse_arxiv feed, feed_day
+      #if feed_day.pubdate == today
+      #create Paper stubs (date, identifier, feed)
+      papers = parse_arxiv feed, feed_day
 
-        print "\tUpdating papers for #{feed.name} #{feed_day.pubdate} - #{papers[:all].count - papers[:updates].count} new, #{papers[:updates].count} updates ... "
+      print "\tUpdating papers for #{feed.name} #{feed_day.pubdate} - #{papers[:all].count - papers[:updates].count} new, #{papers[:updates].count} updates ... "
 
-        #fetch metadata from arXiv API
-        update_metadata papers
+      #fetch metadata from arXiv API
+      update_metadata papers
 
-        puts "Done!"
+      puts "Done!"
 
-        if papers[:all].length > papers[:updates].length
-          feed.last_paper_date = today
-        end
+      if papers[:all].length > papers[:updates].length
+        feed.last_paper_date = today
       end
+      #end
 
       print "\tMarking #{feed.name} as updated ... "
       feed.updated_date = today
