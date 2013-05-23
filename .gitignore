@@ -15,6 +15,10 @@
 /log/*.log
 /tmp
 
+# Ignore local config files
+config/database.yml
+local_settings.rb
+
 # extra ignores
 *.log
 doc/
