@@ -2,7 +2,7 @@
 
 A rewrite of [Dave Bacon's](http://dabacon.org) Scirate in Ruby on Rails, previously developed by Dave Bacon and [Bill Rosgen](http://intractable.ca/bill/).
 
-Currently deployed [here](https://scirate3.herokuapp.com/), with a testing version at [http://scirate3-dev.herokuapp.com/]().
+Currently deployed [here](https://scirate3.herokuapp.com/), with a testing version at [http://scirate3-dev.herokuapp.com/](http://scirate3-dev.herokuapp.com/).
 
 ## Contributing
 
