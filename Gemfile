@@ -13,6 +13,7 @@ gem 'arxiv', :git => 'git://github.com/mispy/arxiv.git'
 gem 'activerecord-import'
 gem 'squeel'
 gem 'thin'
+gem 'ox'
 
 group :development do
   gem 'annotate'
