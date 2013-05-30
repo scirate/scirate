@@ -15,6 +15,9 @@ module Settings
     SECRET_TOKEN = '4b4d948fe0bdde9d1f66af4bcbe15cec68339f7445038032f5313e2f00c36eacb2c8b780fe40e5e9106c9ecbc175893a579f9d138942195eb3fe76e51a767ebe'
   end
 
+  # Hostname to put in emails and such
+  HOST = "scirate.com"
+
 
   #####
   # Sensitive development settings
