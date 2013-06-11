@@ -49,46 +49,86 @@ class Paper < ActiveRecord::Base
   scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
   scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
-  def self.import_metadata(metadatas)
-    identifiers = metadatas.map(&:id)
+  def self.arxivsync_import(models)
+    ### First pass: Create any new feeds.
 
-    # Some of these may already be in the database: update them
-    existing = {}
-    Paper.find_all_by_identifier(identifiers).each do |paper|
-      existing[paper.identifier] = paper
-    end
+    existing_feeds = Feed.all.map(&:name)
 
-    metadatas.each do |metadata|
-      paper = existing[metadata.id]
-      if paper.nil?
-        paper = Paper.new(identifier: metadata.id)
-        new_paper = true
-      end
+    # Feeds to add as columns + values
+    feed_columns = [:name, :url, :feed_type]
+    feed_values = []
 
-      paper.feed_id = Feed.get_or_create(metadata.primary_category).id
-      paper.title = metadata.title
-      paper.abstract = metadata.abstract
-      paper.url = "http://arxiv.org/abs/#{paper.identifier}"
-      paper.pdf_url = "http://arxiv.org/pdf/#{paper.identifier}.pdf"
-      paper.pubdate = metadata.created
-      paper.updated_date = metadata.updated || paper.pubdate
-      paper.authors = metadata.authors.map(&:name)
-      paper.save!
-
-      # fetch crosslists -- the first returned element is the primary category
-      categories = metadata.categories.drop(1)
-
-      # create crosslists
-      categories.each do |c|
-        feed = Feed.get_or_create(c)
-
-        # don't recreate cross-list if it already exists
-        if new_paper || !paper.cross_listed_feeds.include?(feed)
-          paper.cross_lists.create!(feed_id: feed.id, \
-                                    cross_list_date: paper.pubdate)
+    models.each do |model|
+      ([model.primary_category]+model.crosslists).each do |category|
+        unless existing_feeds.include?(category)
+          feed_values.push([
+            category,
+            "http://export.arxiv.org/rss/#{category}",
+            "arxiv"
+          ])
+          existing_feeds.push(category)
         end
-      end      
+      end
     end
+
+    puts "Importing #{feed_values.length} new feeds..." unless feed_values.empty?
+    Feed.import(feed_columns, feed_values, validate: false)
+
+    feeds_by_name = Feed.map_names
+
+    ### Second pass: Add any new papers.
+
+    identifiers = models.map(&:id)
+    existing_papers = Paper.find_all_by_identifier(identifiers).map(&:identifier)
+
+    # Papers to add as columns+values
+    paper_columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date, :authors]
+    paper_values = []
+
+    models.each do |model|
+      next if existing_papers.include?(model.id)
+
+      paper = [model.id,
+        feeds_by_name[model.primary_category].id,
+        "http://arxiv.org/abs/#{model.id}",
+        "http://arxiv.org/pdf/#{model.id}.pdf",
+        model.title,
+        model.abstract,
+        model.created,
+        model.updated || model.created,
+        model.authors
+      ]
+      paper_values.push(paper)
+    end
+
+    puts "Read #{models.length} items: #{paper_values.empty? ? "No" : paper_values.length} new papers to import."
+    Paper.import(paper_columns, paper_values, validate: false)
+
+    ### Finally: crosslists!
+
+    crosslist_columns = [:paper_id, :feed_id, :cross_list_date]
+    crosslist_values = []
+
+    papers_by_ident = {}
+    new_papers = Paper.find_all_by_identifier(paper_values.map { |p| p[0] })
+    new_papers.each do |paper|
+      papers_by_ident[paper.identifier] = paper
+    end
+
+    models.each do |model|
+      paper = papers_by_ident[model.id]
+      next if paper.nil?
+      model.crosslists.each do |category|
+        crosslist_values.push([
+          papers_by_ident[model.id].id,
+          feeds_by_name[category].id,
+          model.created
+        ])
+      end
+    end
+
+    #puts "Importing #{crosslist_values.length} crosslists..." unless crosslist_values.empty?
+    CrossList.import(crosslist_columns, crosslist_values, validate: false)
   end
 
   extend Searchable(:title, :authors)

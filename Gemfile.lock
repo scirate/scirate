@@ -46,6 +46,10 @@ GEM
     annotate (2.5.0)
       rake
     arel (3.0.2)
+    arxivsync (0.0.3)
+      nokogiri
+      oai
+      ox (>= 2.0.2)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
     capybara (2.1.0)
@@ -130,7 +134,7 @@ GEM
       builder (>= 2.0.0)
       faraday
       faraday_middleware
-    ox (2.0.1)
+    ox (2.0.2)
     pg (0.15.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
@@ -242,6 +246,7 @@ DEPENDENCIES
   acts_as_votable
   annotate
   arxiv!
+  arxivsync (>= 0.0.3)
   bcrypt-ruby
   capybara
   chronic
@@ -256,7 +261,6 @@ DEPENDENCIES
   launchy
   newrelic_rpm
   oai
-  ox
   pg
   pry-rails
   quiet_assets
