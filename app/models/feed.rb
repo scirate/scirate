@@ -64,4 +64,15 @@ class Feed < ActiveRecord::Base
                 updated_date: Time.now.utc.to_date,
                 last_paper_date: Time.now.utc.to_date)
   end
+
+  def self.update_last_paper_dates
+    Feed.all.each do |feed|
+      paper = feed.papers.order("pubdate asc").last
+      unless paper.nil?
+        feed.last_paper_date = paper.pubdate
+        feed.updated_date = paper.pubdate
+        feed.save!
+      end
+    end
+  end
 end

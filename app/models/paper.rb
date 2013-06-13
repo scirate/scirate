@@ -49,6 +49,16 @@ class Paper < ActiveRecord::Base
   scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
   scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
+  def author_names
+    authors.map { |author| 
+      if author.forenames
+        author.forenames + ' ' + author.keyname 
+      else
+        author.keyname
+      end
+    }
+  end
+
   def self.arxivsync_import(models)
     ### First pass: Create any new feeds.
 
@@ -129,6 +139,8 @@ class Paper < ActiveRecord::Base
 
     #puts "Importing #{crosslist_values.length} crosslists..." unless crosslist_values.empty?
     CrossList.import(crosslist_columns, crosslist_values, validate: false)
+
+    Feed.update_last_paper_dates
   end
 
   extend Searchable(:title, :authors)

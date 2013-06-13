@@ -21,7 +21,7 @@
     </div>
   <% end %>
   <div class="authors">
-    <%= raw(paper.authors.map { |auth_iter| 
+    <%= raw(paper.author_names.map { |auth_iter| 
         auth_names = auth_iter.split(' ')
         auth_processed_name = "#{auth_names[-1].tr('-','_').mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').to_s}_#{auth_names[0][0]}"
         auth_URL = "http://arxiv.org/find/#{paper.feed.name.partition('.')[0]}/1/au:+#{auth_processed_name}/0/1/0/all/0/1"
