@@ -71,4 +71,9 @@ Scirate3::Application.configure do
   config.force_ssl = false
 
   WillPaginate.per_page = 100
+
+  Scirate3::Application.config.middleware.use ExceptionNotifier,
+    email_prefix: "[Scirate Error] ",
+    sender_address: "notifier@scirate.com",
+    exception_recipients: %w{scirate@mispy.me}
 end
