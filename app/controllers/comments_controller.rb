@@ -32,7 +32,7 @@ class CommentsController < ApplicationController
 
   def destroy
     if @comment.user_id == current_user.id
-      @comment.delete
+      @comment.destroy
       flash[:success] = "Comment deleted."
       redirect_to request.referer
     else
