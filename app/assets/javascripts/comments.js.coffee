@@ -95,6 +95,8 @@ class Comment
       else @downvote()
 
   startEditing: ->
+    @stopReply() if @replying
+
     # Make a new editor for this comment
     content = @$el.attr('data-markup')
 
@@ -108,21 +110,44 @@ class Comment
       $.post "/comments/#{@$el.attr('data-id')}/edit", { content: content }, =>
         @$el.attr('data-markup', content)
         @renderMarkup()
+      return false
+
+    @editing = true
 
   stopEditing: ->
     $('#comment_editor').remove()
     @renderMarkup()
+    @editing = false
 
   toggleEditing: ->
-    if @$el.find('#comment_editor').length
+    if @editing
       @stopEditing()
     else
       @startEditing()
+
+  startReply: ->
+    @stopEditing() if @editing
+
+    @$el.append(Comment.editor_html)
+    Comment.bindEditor('-second')
+    @$el.find('form').attr('action', "/comments/#{@$el.attr('data-id')}/reply")
+    @replying = true
+
+  stopReply: ->
+    @$el.find('#comment_editor').remove()
+    @replying = false
+
+  toggleReply: ->
+    if @replying
+      @stopReply()
+    else
+      @startReply()
 
   setupActions: ->
     @$el.on 'click', '.actions .edit', => @toggleEditing()
     @$el.on 'click', '.actions .report', => @report()
     @$el.on 'click', '.actions .unreport', => @unreport()
+    @$el.on 'click', '.actions .reply', => @toggleReply()
 
   renderMarkup: ->
     """Processes markdown and LaTeX in the data-markup attribute for display."""

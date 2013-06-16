@@ -1,8 +1,11 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, :only => [:edit, :destroy, :upvote, :downvote, :unvote, :report, :unreport]
+  before_filter :find_comment, :only => [:edit, :destroy, :upvote, :downvote, :unvote, :report, :unreport, :reply]
 
   def create
-    @comment = current_user.comments.build(params[:comment])
+    @comment = current_user.comments.build(
+      paper_id: params[:comment][:paper_id],
+      content: params[:comment][:content]
+    )
 
     if @comment.save
       flash[:success] = "Comment posted."
@@ -15,7 +18,7 @@ class CommentsController < ApplicationController
 
   def edit
     if @comment.user_id == current_user.id
-      @comment.content = params['content']
+      @comment.content = params[:content]
       @comment.save
       render :text => 'success'
     else
@@ -60,6 +63,24 @@ class CommentsController < ApplicationController
   def unreport
     @comment.reports.where(voter_id: current_user.id).destroy_all
     render :text => 'success'
+  end
+
+  def reply
+    @reply = current_user.comments.build(
+      paper_id: @comment.paper_id,
+      parent_id: @comment.id,
+      content: params[:content]
+    )
+
+    @reply.save!
+
+    if @reply.save
+      flash[:success] = "Comment posted."
+    else
+      flash[:error] = "Error posting comment."
+    end
+
+    redirect_to @reply.paper
   end
 
   protected

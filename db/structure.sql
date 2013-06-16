@@ -74,7 +74,8 @@ CREATE TABLE comments (
     score integer,
     cached_votes_up integer DEFAULT 0,
     cached_votes_down integer DEFAULT 0,
-    hidden boolean
+    hidden boolean,
+    parent_id integer
 );
 
 
@@ -1026,3 +1027,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130403232204');
 INSERT INTO schema_migrations (version) VALUES ('20130408093659');
 
 INSERT INTO schema_migrations (version) VALUES ('20130408140749');
+
+INSERT INTO schema_migrations (version) VALUES ('20130616212916');

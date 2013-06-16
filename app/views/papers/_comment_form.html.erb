@@ -15,11 +15,12 @@
   <% end %>
 </div>
 
-<div id="comment_editor" class="hidden">
+<%= form_tag('', :id => 'comment_editor', :class => 'hidden') do %>
+  <div><%= hidden_field_tag :paper_id %></div>
   <div class="wmd-panel">
     <div id="wmd-button-bar-second"></div>
-    <textarea id="wmd-input-second" class="wmd-input"></textarea>
+    <textarea name="content" id="wmd-input-second" class="wmd-input"></textarea>
   </div>
   <div id="wmd-preview-second" class="wmd-panel wmd-preview well"></div>
-  <button class="save btn btn-success">Save Changes</button>
-</div>
+  <input type="submit" class="save btn btn-success" value="Save Changes" />
+<% end %>

@@ -1,37 +1,45 @@
 <% @voted = current_user && current_user.voted_as_when_voted_for(comment) %>
 
-<div class="comment<%= @voted ? ' voted' : '' %>" data-id="<%= comment.id %>" data-markup="<%= comment.content %>">
+<div class="comment<%= @voted ? ' voted' : '' %><%= comment.parent ? ' reply' : '' %>" data-id="<%= comment.id %>" data-markup="<%= comment.content %>">
   <div class="votes">
     <div class="upvote<%= @voted == true ? ' active' : '' %>"><i class="icon-arrow-up"></i></div>
     <div class="downvote<%= @voted == false ? ' active': '' %>"><i class="icon-arrow-down"></i></div>
   </div>
   <div class="nonvotes">
     <span class="label">
-      <% if defined? @user %>
+      <% if @user %>
         Comment on paper <%= link_to comment.paper.identifier, comment.paper %>
-      <% elsif defined? @paper %>
+      <% elsif @paper %>
         <%= link_to comment.user.name, comment.user %> commented
       <% end %>
       at  <%= comment.created_at.to_formatted_s(:short) %>
     </span>
+
+    <%# Indicate reply chain if present %>
+    <% if comment.parent %>
+      in reply to <%= link_to comment.parent.user.name, comment.parent.user %>
+    <% end %>
+
     (<span class="score"><%= comment.cached_votes_up-comment.cached_votes_down %></span> points)
     <div class="body tex2jax">
       <%= simple_format(strip_tags(comment.content)) %>
     </div>
 
     <% if current_user %>
-    <div class="actions">
-      <% if current_user.id == comment.user_id %>
-          <a class="edit">edit</a> | <%= link_to 'delete', comment, :method => :delete %>
-      <% else %>
-          <% if comment.reports.exists?(:user_id => current_user.id) %>
-            <a class="unreport">reported (undo)</a>
-          <% else %>
-            <a class="report">report</a>
-          <% end %>
-      <% end %>
-    </div>
+      <div class="actions">
+        <a class="reply">reply</a>
+        <% if current_user.id == comment.user_id %>
+            | <a class="edit">edit</a> | <%= link_to 'delete', comment, :method => :delete %>
+        <% else %>
+            <% if comment.reports.exists?(:user_id => current_user.id) %>
+              <a class="unreport">reported (undo)</a>
+            <% else %>
+              <a class="report">report</a>
+            <% end %>
+        <% end %>
+      </div>
     <% end %>
+
   </div>
   <div style="clear: both;"></div>
 </div>

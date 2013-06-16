@@ -26,6 +26,7 @@ Scirate3::Application.routes.draw do
       post :unvote
       post :report
       post :unreport
+      post :reply
     end
   end
   match '/comments', to: 'comments#index'
