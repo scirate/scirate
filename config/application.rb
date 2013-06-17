@@ -2,12 +2,24 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'net/http'
+require 'exception_notifier'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
   Bundler.require(*Rails.groups(:assets => %w(development test)))
   # If you want your assets lazily compiled in production, use this line
   # Bundler.require(:default, :assets, Rails.env)
+end
+
+class Exception
+  # From http://stackoverflow.com/questions/2823748/how-do-i-add-information-to-an-exception-message-without-changing-its-class-in-r
+  def with_details(extra)
+    begin
+      raise self, "#{message} - #{extra}", backtrace
+    rescue Exception => e
+      return e
+    end
+  end
 end
 
 module Scirate3
@@ -62,5 +74,21 @@ module Scirate3
     config.assets.initialize_on_precompile = false
 
     config.action_mailer.default_url_options = { :host => Settings::HOST }
+  end
+
+  Scirate3::Application.config.middleware.use ::ExceptionNotifier,
+    email_prefix: "[Scirate Error] ",
+    sender_address: "notifier@scirate.com",
+    exception_recipients: %w{scirate@mispy.me}
+
+  class << self
+    def notify_error(exception, message=nil)
+      exception = exception.with_details(message) if message
+      puts exception.inspect
+      puts exception.backtrace.join("\n")
+      if Rails.env == "production"
+        ::ExceptionNotifier::Notifier.background_exception_notification(exception)
+      end
+    end
   end
 end

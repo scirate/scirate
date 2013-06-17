@@ -7,6 +7,12 @@ GIT
       nokogiri
       oai
 
+GIT
+  remote: git://github.com/sunkencity/exception_notification
+  revision: b54ba10cea78f62758d3d71aa5f114cea658db3a
+  specs:
+    exception_notification (1.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -74,8 +80,6 @@ GEM
     diff-lcs (1.2.4)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    exception_notification (3.0.1)
-      actionmailer (>= 3.0.4)
     execjs (1.4.0)
       multi_json (~> 1.0)
     factory_girl (4.2.0)
@@ -254,7 +258,7 @@ DEPENDENCIES
   chronic
   coffee-rails
   database_cleaner
-  exception_notification
+  exception_notification!
   factory_girl_rails
   faker
   growl

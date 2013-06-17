@@ -14,7 +14,7 @@ gem 'activerecord-import'
 gem 'squeel'
 gem 'thin'
 gem 'arxivsync', ">= 0.0.3"
-gem 'exception_notification'
+gem 'exception_notification', :git => 'git://github.com/sunkencity/exception_notification'
 
 group :development do
   gem 'annotate'

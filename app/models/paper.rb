@@ -115,8 +115,8 @@ class Paper < ActiveRecord::Base
           new_papers.push(paper)
           paper.save!
         end
-      rescue
-        puts "Error importing: #{model.id}"
+      rescue Exception => e
+        Scirate3.notify_error(e, "Error importing paper #{model.id}")
         raise
       end
     end
