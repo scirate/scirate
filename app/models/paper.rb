@@ -109,19 +109,17 @@ class Paper < ActiveRecord::Base
 
       begin
         if existing_by_ident.has_key?(model.id)
+          paper.save!
           updated_papers.push(paper)
-          paper.save!
         else
-          new_papers.push(paper)
           paper.save!
+          new_papers.push(paper)
         end
       rescue Exception => e
         Scirate3.notify_error(e, "Error importing paper #{model.id}")
-        raise
       end
     end
 
-    #Paper.import(new_papers).failed_instances
     puts "Read #{models.length} items: #{new_papers.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
     
     relevant_papers = new_papers+updated_papers
