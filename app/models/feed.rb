@@ -50,7 +50,7 @@ class Feed < ActiveRecord::Base
   end
 
   def self.default
-    default = Feed.find_by_name("quant-ph") || Feed.create_default
+    Feed.find_by_name("quant-ph") || Feed.create_default
   end
 
   def is_default?
@@ -65,14 +65,12 @@ class Feed < ActiveRecord::Base
                 last_paper_date: Time.now.utc.to_date)
   end
 
-  def self.update_last_paper_dates
-    Feed.all.each do |feed|
-      paper = feed.papers.order("pubdate asc").last
-      unless paper.nil?
-        feed.last_paper_date = paper.pubdate
-        feed.updated_date = paper.pubdate
-        feed.save!
-      end
+  def update_last_paper_date
+    paper = self.papers.order("pubdate asc").last
+    unless paper.nil?
+      self.last_paper_date = paper.pubdate
+      self.updated_date = paper.updated_date
+      self.save!
     end
   end
 end

@@ -62,85 +62,98 @@ class Paper < ActiveRecord::Base
   def self.arxivsync_import(models)
     ### First pass: Create any new feeds.
 
-    existing_feeds = Feed.all.map(&:name)
+    existing_feednames = Feed.all.map(&:name)
 
-    # Feeds to add as columns + values
-    feed_columns = [:name, :url, :feed_type]
-    feed_values = []
+    feednames = models.map { |model| 
+      [model.primary_category]+model.crosslists 
+    }.flatten.uniq
+    new_feednames = feednames - existing_feednames
 
-    models.each do |model|
-      ([model.primary_category]+model.crosslists).each do |category|
-        unless existing_feeds.include?(category)
-          feed_values.push([
-            category,
-            "http://export.arxiv.org/rss/#{category}",
-            "arxiv"
-          ])
-          existing_feeds.push(category)
-        end
-      end
+    new_feednames.each do |feedname|
+      puts "Discovered new feed: #{feedname}"
+      Feed.create!(
+        name: feedname,
+        url: "http://export.arxiv.org/rss/#{feedname}",
+        feed_type: "arxiv"
+      )
     end
-
-    puts "Importing #{feed_values.length} new feeds..." unless feed_values.empty?
-    Feed.import(feed_columns, feed_values, validate: false)
 
     feeds_by_name = Feed.map_names
 
     ### Second pass: Add any new papers.
-
+    
+    # Need to find and update existing papers, then bulk import new ones
     identifiers = models.map(&:id)
-    existing_papers = Paper.find_all_by_identifier(identifiers).map(&:identifier)
+    existing_papers = Paper.find_all_by_identifier(identifiers)
+    existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
 
-    # Papers to add as columns+values
-    paper_columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date, :authors]
-    paper_values = []
-
+    new_papers = []
+    updated_papers = []
     models.each do |model|
-      next if existing_papers.include?(model.id)
+      if existing_by_ident.has_key?(model.id)
+        paper = existing_by_ident[model.id]
+        next if paper.updated_date >= (model.updated || model.created) # No new content
+      else
+        paper = Paper.new
+      end
 
-      paper = [model.id,
-        feeds_by_name[model.primary_category].id,
-        "http://arxiv.org/abs/#{model.id}",
-        "http://arxiv.org/pdf/#{model.id}.pdf",
-        model.title,
-        model.abstract,
-        model.created,
-        model.updated || model.created,
-        model.authors
-      ]
-      paper_values.push(paper)
-    end
+      paper.identifier = model.id
+      paper.feed_id = feeds_by_name[model.primary_category].id
+      paper.url = "http://arxiv.org/abs/#{model.id}"
+      paper.pdf_url = "http://arxiv.org/pdf/#{model.id}.pdf"
+      paper.title = model.title
+      paper.abstract = model.abstract
+      paper.pubdate = model.created
+      paper.updated_date = model.updated || model.created
+      paper.authors = model.authors
 
-    puts "Read #{models.length} items: #{paper_values.empty? ? "No" : paper_values.length} new papers to import."
-    Paper.import(paper_columns, paper_values, validate: false)
-
-    ### Finally: crosslists!
-
-    crosslist_columns = [:paper_id, :feed_id, :cross_list_date]
-    crosslist_values = []
-
-    papers_by_ident = {}
-    new_papers = Paper.find_all_by_identifier(paper_values.map { |p| p[0] })
-    new_papers.each do |paper|
-      papers_by_ident[paper.identifier] = paper
-    end
-
-    models.each do |model|
-      paper = papers_by_ident[model.id]
-      next if paper.nil?
-      model.crosslists.each do |category|
-        crosslist_values.push([
-          papers_by_ident[model.id].id,
-          feeds_by_name[category].id,
-          model.created
-        ])
+      begin
+        if existing_by_ident.has_key?(model.id)
+          updated_papers.push(paper)
+          paper.save!
+        else
+          new_papers.push(paper)
+          paper.save!
+        end
+      rescue
+        puts "Error importing: #{model.id}"
+        raise
       end
     end
 
-    #puts "Importing #{crosslist_values.length} crosslists..." unless crosslist_values.empty?
-    CrossList.import(crosslist_columns, crosslist_values, validate: false)
+    #Paper.import(new_papers).failed_instances
+    puts "Read #{models.length} items: #{new_papers.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
+    
+    relevant_papers = new_papers+updated_papers
+    return if relevant_papers.empty? # Skip the rest if we found no new data
 
-    Feed.update_last_paper_dates
+    ### Finally: crosslists!
+    papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
+    paper_ids = papers_by_ident.values.map(&:id)
+    existing_crosslists = CrossList.find_all_by_paper_id(paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
+    
+    new_crosslists = []
+    models.each do |model|
+      next unless papers_by_ident.has_key?(model.id)
+      paper_id = papers_by_ident[model.id].id
+      model.crosslists.each do |feedname|
+        feed_id = feeds_by_name[feedname].id
+        next if existing_crosslists.include?([paper_id, feed_id])
+        crosslist = CrossList.new
+        crosslist.paper_id = paper_id
+        crosslist.feed_id = feed_id
+        crosslist.cross_list_date = model.created
+        new_crosslists.push(crosslist)
+      end
+    end
+
+    #puts "Importing #{new_crosslists.length} crosslists..." unless new_crosslists.empty?
+    CrossList.import(new_crosslists)
+
+    # Update last paper date for involved feeds
+    feednames.each do |feedname|
+      feeds_by_name[feedname].update_last_paper_date
+    end
   end
 
   extend Searchable(:title, :authors)
