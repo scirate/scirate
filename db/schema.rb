@@ -11,16 +11,46 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130204055603) do
+ActiveRecord::Schema.define(:version => 20130617035237) do
 
-  create_table "comments", :force => true do |t|
-    t.text     "content"
-    t.integer  "user_id"
+  create_table "authors", :force => true do |t|
+    t.string   "identifier"
+    t.string   "keyname"
+    t.string   "forenames"
+    t.string   "affiliation"
+    t.string   "suffix"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "authorships", :force => true do |t|
+    t.integer  "author_id"
     t.integer  "paper_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  create_table "comment_reports", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "comments", :force => true do |t|
+    t.text     "content"
+    t.integer  "user_id"
+    t.integer  "paper_id"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.integer  "cached_votes_up",   :default => 0
+    t.integer  "cached_votes_down", :default => 0
+    t.boolean  "hidden"
+    t.integer  "parent_id"
+  end
+
+  add_index "comments", ["cached_votes_down"], :name => "index_comments_on_cached_votes_down"
+  add_index "comments", ["cached_votes_up"], :name => "index_comments_on_cached_votes_up"
   add_index "comments", ["paper_id"], :name => "index_comments_on_paper_id"
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
@@ -62,7 +92,7 @@ ActiveRecord::Schema.define(:version => 20130204055603) do
   add_index "feeds", ["name"], :name => "index_feeds_on_name", :unique => true
 
   create_table "papers", :force => true do |t|
-    t.string   "title"
+    t.text     "title"
     t.text     "authors"
     t.text     "abstract"
     t.string   "identifier"
@@ -107,8 +137,8 @@ ActiveRecord::Schema.define(:version => 20130204055603) do
     t.string   "name"
     t.string   "email"
     t.string   "remember_token"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.string   "password_digest"
     t.integer  "scites_count",           :default => 0
     t.string   "password_reset_token"
@@ -119,10 +149,27 @@ ActiveRecord::Schema.define(:version => 20130204055603) do
     t.datetime "confirmation_sent_at"
     t.integer  "subscriptions_count",    :default => 0
     t.boolean  "expand_abstracts",       :default => false
+    t.string   "account_status",         :default => "user"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["password_reset_token"], :name => "index_users_on_password_reset_token"
   add_index "users", ["remember_token"], :name => "index_users_on_remember_token"
+
+  create_table "votes", :force => true do |t|
+    t.integer  "votable_id"
+    t.string   "votable_type"
+    t.integer  "voter_id"
+    t.string   "voter_type"
+    t.boolean  "vote_flag"
+    t.string   "vote_scope"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "votes", ["votable_id", "votable_type", "vote_scope"], :name => "index_votes_on_votable_id_and_votable_type_and_vote_scope"
+  add_index "votes", ["votable_id", "votable_type"], :name => "index_votes_on_votable_id_and_votable_type"
+  add_index "votes", ["voter_id", "voter_type", "vote_scope"], :name => "index_votes_on_voter_id_and_voter_type_and_vote_scope"
+  add_index "votes", ["voter_id", "voter_type"], :name => "index_votes_on_voter_id_and_voter_type"
 
 end

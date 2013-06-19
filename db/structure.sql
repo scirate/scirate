@@ -29,6 +29,73 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: authors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE authors (
+    id integer NOT NULL,
+    identifier character varying(255),
+    keyname character varying(255),
+    forenames character varying(255),
+    affiliation character varying(255),
+    suffix character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE authors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE authors_id_seq OWNED BY authors.id;
+
+
+--
+-- Name: authorships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE authorships (
+    id integer NOT NULL,
+    author_id integer,
+    paper_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: authorships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE authorships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authorships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE authorships_id_seq OWNED BY authorships.id;
+
+
+--
 -- Name: comment_reports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -71,7 +138,6 @@ CREATE TABLE comments (
     paper_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    score integer,
     cached_votes_up integer DEFAULT 0,
     cached_votes_down integer DEFAULT 0,
     hidden boolean,
@@ -129,70 +195,6 @@ CREATE SEQUENCE cross_lists_id_seq
 --
 
 ALTER SEQUENCE cross_lists_id_seq OWNED BY cross_lists.id;
-
-
---
--- Name: down_votes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE down_votes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: down_votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE down_votes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: down_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE down_votes_id_seq OWNED BY down_votes.id;
-
-
---
--- Name: downvotes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE downvotes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: downvotes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE downvotes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: downvotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE downvotes_id_seq OWNED BY downvotes.id;
 
 
 --
@@ -379,70 +381,6 @@ ALTER SEQUENCE subscriptions_id_seq OWNED BY subscriptions.id;
 
 
 --
--- Name: up_votes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE up_votes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: up_votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE up_votes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: up_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE up_votes_id_seq OWNED BY up_votes.id;
-
-
---
--- Name: upvotes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE upvotes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: upvotes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE upvotes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: upvotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE upvotes_id_seq OWNED BY upvotes.id;
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -526,6 +464,20 @@ ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY authors ALTER COLUMN id SET DEFAULT nextval('authors_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY authorships ALTER COLUMN id SET DEFAULT nextval('authorships_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY comment_reports ALTER COLUMN id SET DEFAULT nextval('comment_reports_id_seq'::regclass);
 
 
@@ -541,20 +493,6 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY cross_lists ALTER COLUMN id SET DEFAULT nextval('cross_lists_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY down_votes ALTER COLUMN id SET DEFAULT nextval('down_votes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY downvotes ALTER COLUMN id SET DEFAULT nextval('downvotes_id_seq'::regclass);
 
 
 --
@@ -596,20 +534,6 @@ ALTER TABLE ONLY subscriptions ALTER COLUMN id SET DEFAULT nextval('subscription
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY up_votes ALTER COLUMN id SET DEFAULT nextval('up_votes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY upvotes ALTER COLUMN id SET DEFAULT nextval('upvotes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
@@ -618,6 +542,22 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY votes ALTER COLUMN id SET DEFAULT nextval('votes_id_seq'::regclass);
+
+
+--
+-- Name: authors_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY authors
+    ADD CONSTRAINT authors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authorships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY authorships
+    ADD CONSTRAINT authorships_pkey PRIMARY KEY (id);
 
 
 --
@@ -642,22 +582,6 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY cross_lists
     ADD CONSTRAINT cross_lists_pkey PRIMARY KEY (id);
-
-
---
--- Name: down_votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY down_votes
-    ADD CONSTRAINT down_votes_pkey PRIMARY KEY (id);
-
-
---
--- Name: downvotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY downvotes
-    ADD CONSTRAINT downvotes_pkey PRIMARY KEY (id);
 
 
 --
@@ -698,22 +622,6 @@ ALTER TABLE ONLY scites
 
 ALTER TABLE ONLY subscriptions
     ADD CONSTRAINT subscriptions_pkey PRIMARY KEY (id);
-
-
---
--- Name: up_votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY up_votes
-    ADD CONSTRAINT up_votes_pkey PRIMARY KEY (id);
-
-
---
--- Name: upvotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY upvotes
-    ADD CONSTRAINT upvotes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1006,16 +914,6 @@ INSERT INTO schema_migrations (version) VALUES ('20121009060303');
 
 INSERT INTO schema_migrations (version) VALUES ('20130204055603');
 
-INSERT INTO schema_migrations (version) VALUES ('20130318074623');
-
-INSERT INTO schema_migrations (version) VALUES ('20130318074632');
-
-INSERT INTO schema_migrations (version) VALUES ('20130318081323');
-
-INSERT INTO schema_migrations (version) VALUES ('20130318082827');
-
-INSERT INTO schema_migrations (version) VALUES ('20130318082837');
-
 INSERT INTO schema_migrations (version) VALUES ('20130318093049');
 
 INSERT INTO schema_migrations (version) VALUES ('20130323085908');
@@ -1029,3 +927,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130408093659');
 INSERT INTO schema_migrations (version) VALUES ('20130408140749');
 
 INSERT INTO schema_migrations (version) VALUES ('20130616212916');
+
+INSERT INTO schema_migrations (version) VALUES ('20130617035148');
+
+INSERT INTO schema_migrations (version) VALUES ('20130617035237');
