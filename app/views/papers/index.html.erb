@@ -5,10 +5,12 @@
 
 <div class="row-fluid index">
   <div class="span1 sidebar left">
-    <% current_user.feeds.each do |feed| %>
-      <%= link_to feed.name, feed %>
+    <% if signed_in? %>
+      <% current_user.feeds.each do |feed| %>
+        <%= link_to feed.name, feed %>
+      <% end %>
+      ---
     <% end %>
-    ---
     <% Settings::CURRENT_FEEDS.each do |feedname| %>
       <a href="/feed/<%= feedname %>"><%= feedname %></a>
     <% end %>

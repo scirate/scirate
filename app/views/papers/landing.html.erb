@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= full_title(yield(:title)) %></title>
+    <%= render 'layouts/stylesheets' %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body id="landing">
+    <div class="main">
+      <h1>Scirate</h1>
+      <div> 
+        <%= link_to "Sign in", signin_path %>
+        <%= link_to "Sign up", signup_path %>
+      </div>
+      <div class="feeds">
+        <% Feed.all.each do |feed| %>
+          <%= link_to feed.name, feed %>
+        <% end %>
+      </div>
+      <%= form_tag papers_search_path, :method => 'get' do %>
+        <%= text_field_tag :q, params[:q], { autofocus: 'autofocus' } %>
+        <%= submit_tag "Search", :name => nil %>
+      <% end %>
+    </div>
+  </body>
+</html>

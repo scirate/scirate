@@ -55,7 +55,7 @@ class PapersController < ApplicationController
       if signed_in?
         index_subscriptions
       else
-        index_all
+        return render('papers/landing', :layout => nil)
       end
     else
       index_feed
