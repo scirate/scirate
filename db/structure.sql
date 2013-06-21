@@ -35,14 +35,14 @@ SET default_with_oids = false;
 CREATE TABLE authors (
     id integer NOT NULL,
     keyname character varying(255),
-    forenames character varying(255),
-    affiliation character varying(255),
+    forenames text,
+    affiliation text,
     suffix character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     uniqid character varying(255),
     searchterm character varying(255),
-    fullname character varying(255)
+    fullname text
 );
 
 
@@ -832,6 +832,27 @@ ALTER TABLE ONLY votes
 
 
 --
+-- Name: index_authors_on_fullname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authors_on_fullname ON authors USING btree (fullname);
+
+
+--
+-- Name: index_authors_on_searchterm; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authors_on_searchterm ON authors USING btree (searchterm);
+
+
+--
+-- Name: index_authors_on_uniqid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authors_on_uniqid ON authors USING btree (uniqid);
+
+
+--
 -- Name: index_comments_on_cached_votes_down; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1138,3 +1159,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130619010543');
 INSERT INTO schema_migrations (version) VALUES ('20130619010724');
 
 INSERT INTO schema_migrations (version) VALUES ('20130621041807');
+
+INSERT INTO schema_migrations (version) VALUES ('20130621053609');
+
+INSERT INTO schema_migrations (version) VALUES ('20130621053848');
