@@ -20,8 +20,7 @@
 require 'textacular/searchable'
 
 class Paper < ActiveRecord::Base
-  attr_accessible :title, :authors, :abstract, :identifier, :url, :pubdate, :updated_date
-  serialize :authors, Array
+  attr_accessible :title, :abstract, :identifier, :url, :pubdate, :updated_date
 
   belongs_to :feed
 
@@ -31,15 +30,16 @@ class Paper < ActiveRecord::Base
   has_many  :cross_lists, dependent: :destroy
   has_many  :cross_listed_feeds, through: :cross_lists, \
                 source: :feed, order: "name ASC"
+  has_many :authorships
+  has_many :authors, :through => :authorships
 
   validates :title, presence: true
-  validates :authors, presence: true
   validates :abstract, presence: true
   validates :identifier, presence: true, uniqueness: true
   validates :url, presence: true
   validates :pubdate, presence: true
   validates :updated_date, presence: true
-  validates :feed, presence: true
+  validates :feed_id, presence: true
 
   validate  :updated_date_is_after_pubdate
 
@@ -59,94 +59,111 @@ class Paper < ActiveRecord::Base
     }
   end
 
-  def self.arxivsync_import(models)
-    ### First pass: Create any new feeds.
-
-    existing_feednames = Feed.all.map(&:name)
-
-    feednames = models.map { |model| 
-      [model.primary_category]+model.crosslists 
-    }.flatten.uniq
-    new_feednames = feednames - existing_feednames
-
-    new_feednames.each do |feedname|
-      puts "Discovered new feed: #{feedname}"
-      Feed.create!(
-        name: feedname,
-        url: "http://export.arxiv.org/rss/#{feedname}",
-        feed_type: "arxiv"
-      )
-    end
-
+  def self.arxiv_import(models, opts={})
+    ### First pass: Add new Feeds.
+    feednames = models.map { |m| m.categories }.flatten.uniq
+    Feed.arxiv_import(feednames, opts)
     feeds_by_name = Feed.map_names
 
-    ### Second pass: Add any new papers.
+    ### Second pass: Add new Authors.
+    author_models = models.map(&:authors).flatten.uniq
+    Author.arxiv_import(author_models, opts)
+
+    ### Third pass: Add new papers and handle updates.
     
     # Need to find and update existing papers, then bulk import new ones
     identifiers = models.map(&:id)
     existing_papers = Paper.find_all_by_identifier(identifiers)
     existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
 
-    new_papers = []
+    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date]
+    values = []
     updated_papers = []
     models.each do |model|
-      if existing_by_ident.has_key?(model.id)
-        paper = existing_by_ident[model.id]
+      if (paper = existing_by_ident[model.id])
         next if paper.updated_date >= (model.updated || model.created) # No new content
+
+        paper.identifier = model.id
+        paper.feed_id = feeds_by_name[model.primary_category].id
+        paper.url = "http://arxiv.org/abs/#{model.id}"
+        paper.pdf_url = "http://arxiv.org/pdf/#{model.id}.pdf"
+        paper.title = model.title
+        paper.abstract = model.abstract
+        paper.pubdate = model.created
+        paper.updated_date = model.updated || model.created
+
+        paper.save!
+        updates_papers.push(paper)
       else
-        paper = Paper.new
-      end
-
-      paper.identifier = model.id
-      paper.feed_id = feeds_by_name[model.primary_category].id
-      paper.url = "http://arxiv.org/abs/#{model.id}"
-      paper.pdf_url = "http://arxiv.org/pdf/#{model.id}.pdf"
-      paper.title = model.title
-      paper.abstract = model.abstract
-      paper.pubdate = model.created
-      paper.updated_date = model.updated || model.created
-      paper.authors = model.authors
-
-      begin
-        if existing_by_ident.has_key?(model.id)
-          paper.save!
-          updated_papers.push(paper)
-        else
-          paper.save!
-          new_papers.push(paper)
-        end
-      rescue Exception => e
-        Scirate3.notify_error(e, "Error importing paper #{model.id}")
+        values << [
+          model.id,
+          feeds_by_name[model.primary_category].id,
+          "http://arxiv.org/abs/#{model.id}",
+          "http://arxiv.org/pdf/#{model.id}.pdf",
+          model.title,
+          model.abstract,
+          model.created,
+          model.updated || model.created
+        ]
       end
     end
 
-    puts "Read #{models.length} items: #{new_papers.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
-    
-    relevant_papers = new_papers+updated_papers
-    return if relevant_papers.empty? # Skip the rest if we found no new data
+    result = Paper.import(columns, values, opts)
+    unless result.failed_instances.empty?
+      Scirate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
+    end
+    puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
 
-    ### Finally: crosslists!
+    return if values.empty? && updated_papers.empty? # Skip the rest if no new data
+
+    relevant_papers = Paper.find_all_by_identifier(identifiers)
+    
+
+    ### Fourth pass: Add any new authorships.
+    authors = Author.find_all_by_uniqid(author_models.map { |model| Author.make_uniqid(model) })
+    authors_by_uniqid = Hash[authors.map { |author| [author.uniqid, author] }]
     papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
     paper_ids = papers_by_ident.values.map(&:id)
+    existing_authorships = Authorship.find_all_by_paper_id(paper_ids).map { |au| [au.paper_id, au.author_id] }
+
+    columns = [:paper_id, :author_id]
+    values = []
+    models.each do |model|
+      next unless papers_by_ident.has_key?(model.id)
+      paper_id = papers_by_ident[model.id].id
+      model.authors.each do |author|
+        author_id = authors_by_uniqid[Author.make_uniqid(author)]
+        next if existing_authorships.include?([author_id, paper_id])
+        values << [paper_id, author_id]
+      end
+    end
+
+    result = Authorship.import(columns, values, opts)
+    unless result.failed_instances.empty?
+      Scirate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
+    end
+    puts "Imported #{values.length} authorships" unless values.empty?
+
+    ### Finally: crosslists!
     existing_crosslists = CrossList.find_all_by_paper_id(paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
     
-    new_crosslists = []
+    columns = [:paper_id, :feed_id, :cross_list_date]
+    values = []
     models.each do |model|
       next unless papers_by_ident.has_key?(model.id)
       paper_id = papers_by_ident[model.id].id
       model.crosslists.each do |feedname|
         feed_id = feeds_by_name[feedname].id
         next if existing_crosslists.include?([paper_id, feed_id])
-        crosslist = CrossList.new
-        crosslist.paper_id = paper_id
-        crosslist.feed_id = feed_id
-        crosslist.cross_list_date = model.created
-        new_crosslists.push(crosslist)
+        values << [paper_id, feed_id, model.created]
       end
     end
 
-    #puts "Importing #{new_crosslists.length} crosslists..." unless new_crosslists.empty?
-    CrossList.import(new_crosslists)
+    result = CrossList.import(columns, values, opts)
+    unless result.failed_instances.empty?
+      Scirate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
+    end
+    puts "Imported #{values.length} crosslists" unless values.empty?
 
     # Update last paper date for involved feeds
     feednames.each do |feedname|

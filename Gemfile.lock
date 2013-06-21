@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/mispy/arxiv.git
-  revision: 2d7805797c42039873c0de4c865ff347ecbc385a
-  specs:
-    arxiv (0.0.7)
-      happymapper
-      nokogiri
-      oai
-
-GIT
   remote: git://github.com/sunkencity/exception_notification
   revision: b54ba10cea78f62758d3d71aa5f114cea658db3a
   specs:
@@ -52,7 +43,7 @@ GEM
     annotate (2.5.0)
       rake
     arel (3.0.2)
-    arxivsync (0.0.3)
+    arxivsync (0.0.4)
       nokogiri
       oai
       ox (>= 2.0.2)
@@ -76,7 +67,7 @@ GEM
       execjs
     coffee-script-source (1.6.2)
     daemons (1.1.9)
-    database_cleaner (0.9.1)
+    database_cleaner (1.0.1)
     diff-lcs (1.2.4)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -93,54 +84,52 @@ GEM
       multipart-post (~> 1.1)
     faraday_middleware (0.9.0)
       faraday (>= 0.7.4, < 0.9)
-    ffi (1.8.1)
+    ffi (1.9.0)
     formatador (0.2.4)
     growl (1.0.3)
-    guard (1.8.0)
+    guard (1.8.1)
       formatador (>= 0.2.4)
       listen (>= 1.0.0)
       lumberjack (>= 1.0.2)
       pry (>= 0.9.10)
       thor (>= 0.14.6)
-    guard-rspec (3.0.0)
+    guard-rspec (3.0.2)
       guard (>= 1.8)
       rspec (~> 2.13)
     guard-spork (1.5.0)
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
-    happymapper (0.4.0)
-      libxml-ruby (~> 2.0)
-    hike (1.2.2)
+    hike (1.2.3)
     i18n (0.6.1)
     journey (1.0.4)
-    jquery-rails (2.2.1)
+    jquery-rails (3.0.1)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    json (1.7.7)
+    json (1.8.0)
     launchy (2.3.0)
       addressable (~> 2.3)
-    libxml-ruby (2.6.0)
-    listen (1.1.0)
+    listen (1.2.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
     lumberjack (1.0.3)
-    mail (2.5.3)
-      i18n (>= 0.4.0)
+    mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     method_source (0.8.1)
     mime-types (1.23)
-    multi_json (1.7.3)
+    mini_portile (0.5.0)
+    multi_json (1.7.7)
     multipart-post (1.2.0)
-    newrelic_rpm (3.6.2.96)
-    nokogiri (1.5.9)
+    newrelic_rpm (3.6.4.122)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
     oai (0.3.0)
       builder (>= 2.0.0)
       faraday
       faraday_middleware
-    ox (2.0.2)
+    ox (2.0.3)
     pg (0.15.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
@@ -149,7 +138,7 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    pry-rails (0.3.0)
+    pry-rails (0.3.1)
       pry (>= 0.9.10)
     quiet_assets (1.0.2)
       railties (>= 3.1, < 5.0)
@@ -194,7 +183,7 @@ GEM
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.1)
-    rspec-rails (2.13.1)
+    rspec-rails (2.13.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -209,7 +198,7 @@ GEM
     sequel (3.20.0)
     sinatra (1.0)
       rack (>= 1.0)
-    slop (3.4.4)
+    slop (3.4.5)
     spork (0.9.2)
     sprockets (2.2.2)
       hike (~> 1.2)
@@ -233,11 +222,11 @@ GEM
       rack (>= 1.0.0)
     thor (0.18.1)
     tilt (1.4.1)
-    treetop (1.4.12)
+    treetop (1.4.14)
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.37)
-    uglifier (2.1.0)
+    uglifier (2.1.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
     will_paginate (3.0.4)
@@ -251,7 +240,6 @@ DEPENDENCIES
   activerecord-import
   acts_as_votable
   annotate
-  arxiv!
   arxivsync (>= 0.0.3)
   bcrypt-ruby
   capybara

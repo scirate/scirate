@@ -27,6 +27,27 @@ class Feed < ActiveRecord::Base
   validates :feed_type, presence: true
   validates :updated_date, presence: true
 
+  def self.arxiv_import(feednames, opts={})
+    existing = Feed.all.map(&:name)
+
+    columns = [:name, :url, :feed_type]
+    values = []
+    
+    (feednames - existing).map do |feedname|
+      puts "Discovered new feed: #{feedname}"
+      values << [
+        feedname,
+        "http://export.arxiv.org/rss/#{feedname}",
+        "arxiv"
+      ]
+    end
+
+    result = Feed.import(columns, values, opts)
+    unless result.failed_instances.empty?
+      Scirate3.notify_error("Error importing feeds: #{result.failed_instances.inspect}")
+    end
+  end
+
   def self.get_or_create(name)
     feed = Feed.find_by_name(name)
     return feed unless feed.nil?

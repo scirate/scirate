@@ -34,7 +34,7 @@ Scirate3::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
-  
+
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.raise_delivery_errors = true
