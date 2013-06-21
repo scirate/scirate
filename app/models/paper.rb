@@ -152,7 +152,7 @@ class Paper < ActiveRecord::Base
     models.each do |model|
       next unless papers_by_ident.has_key?(model.id)
       paper_id = papers_by_ident[model.id].id
-      model.crosslists.each do |feedname|
+      model.categories.each do |feedname|
         feed_id = feeds_by_name[feedname].id
         next if existing_crosslists.include?([paper_id, feed_id])
         values << [paper_id, feed_id, model.created]
