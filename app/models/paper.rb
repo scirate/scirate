@@ -49,16 +49,6 @@ class Paper < ActiveRecord::Base
   scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
   scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
-  def author_names
-    authors.map { |author| 
-      if author.forenames
-        author.forenames + ' ' + author.keyname 
-      else
-        author.keyname
-      end
-    }
-  end
-
   def self.arxiv_import(models, opts={})
     ### First pass: Add new Feeds.
     feednames = models.map { |m| m.categories }.flatten.uniq
