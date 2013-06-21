@@ -68,10 +68,13 @@ class PapersController < ApplicationController
       authors = Author.where(searchterm: query.split('au:')[1])
       @papers = Paper.joins(:authorships)
                      .where(:authorships => { :author_id => authors.map(&:id) })
+                     .includes(:authors, :cross_lists, :scites)
                      .paginate(page: params[:page])
     else
       @authors = Author.advanced_search(fullname: query).limit(50).all.uniq(&:fullname)
-      @papers = Paper.basic_search(query).paginate(page: params[:page])
+      @papers = Paper.includes(:authors, :cross_lists, :scites)
+                     .basic_search(query).except(:order)
+                     .paginate(page: params[:page])
     end
   end
 
@@ -154,7 +157,7 @@ class PapersController < ApplicationController
     def fetch_papers feed, date, range
       return [] if date.nil?
       collection = feed.paginate(page: params[:page])
-      collection = collection.includes(:feed, :cross_lists => :feed)
+      collection = collection.includes(:feed, :authors, :cross_lists => :feed)
       collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
       collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
     end
