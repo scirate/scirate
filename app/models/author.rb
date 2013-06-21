@@ -21,7 +21,7 @@ class Author < ActiveRecord::Base
     uniqids = models.map { |model| Author.make_uniqid(model) }
     existing_uniqids = Author.find_all_by_uniqid(uniqids).map(&:uniqid)
 
-    columns = [:uniqid, :affiliation, :forenames, :keyname, :suffix, :searchterm]
+    columns = [:uniqid, :affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm]
     values = []
 
     models.each_with_index do |model, i|
@@ -33,6 +33,7 @@ class Author < ActiveRecord::Base
         model.forenames,
         model.keyname,
         model.suffix,
+        Author.make_fullname(model),
         Author.make_searchterm(model)
       ]
     end
@@ -50,9 +51,10 @@ class Author < ActiveRecord::Base
     term += "_#{model.forenames[0][0]}" if model.forenames
   end
 
-  def name
-    name = keyname
-    name = forenames + ' ' + name if forenames
-    name = name + ' ' + suffix if suffix
+  def self.make_fullname(model)
+    fullname = model.keyname
+    fullname = model.forenames + ' ' + fullname if model.forenames
+    fullname = fullname + ' ' + model.suffix if model.suffix
+    fullname
   end
 end

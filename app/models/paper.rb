@@ -93,7 +93,7 @@ class Paper < ActiveRecord::Base
         paper.updated_date = model.updated || model.created
 
         paper.save!
-        updates_papers.push(paper)
+        updated_papers.push(paper)
       else
         values << [
           model.id,

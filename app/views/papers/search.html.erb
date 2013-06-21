@@ -2,6 +2,13 @@
 
 <h1>Search results for "<%= params[:q] %>"</h1>
 
+<% unless @authors.nil? || @authors.empty? %>
+  Matching authors: <% @authors.each do |author| %>
+    <%= link_to author.fullname, "/search?q=au:#{author.searchterm}" %><% unless author == @authors[-1] %>,<% end %>
+  <% end %>
+
+<% end %>
+
 <div class="paperlist">
 <ul class="papers">
   <%= render @papers %>

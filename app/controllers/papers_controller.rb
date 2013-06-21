@@ -63,7 +63,16 @@ class PapersController < ApplicationController
   end
 
   def search
-    @papers = Paper.basic_search(params[:q]).paginate(page: params[:page])
+    query = params[:q]
+    if query.start_with?('au:')
+      authors = Author.where(searchterm: query.split('au:')[1])
+      @papers = Paper.joins(:authorships)
+                     .where(:authorships => { :author_id => authors.map(&:id) })
+                     .paginate(page: params[:page])
+    else
+      @authors = Author.advanced_search(fullname: query).limit(50).all.uniq(&:fullname)
+      @papers = Paper.basic_search(query).paginate(page: params[:page])
+    end
   end
 
   def next

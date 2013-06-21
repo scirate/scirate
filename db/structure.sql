@@ -41,7 +41,8 @@ CREATE TABLE authors (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     uniqid character varying(255),
-    searchterm character varying(255)
+    searchterm character varying(255),
+    fullname character varying(255)
 );
 
 
@@ -1135,3 +1136,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130617035237');
 INSERT INTO schema_migrations (version) VALUES ('20130619010543');
 
 INSERT INTO schema_migrations (version) VALUES ('20130619010724');
+
+INSERT INTO schema_migrations (version) VALUES ('20130621041807');
