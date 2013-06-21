@@ -3,7 +3,7 @@
   <h1><%= @paper.title %></h1>
   <div class="authors">
     <% @paper.authors.each do |author| %>
-      <%= link_to author.fullname.html_safe, "/search?q=#{author.searchterm}" %><% if author != @paper.authors[-1] %>,<% end %>
+      <%= link_to author.fullname.html_safe, "/search?q=au:#{author.searchterm}" %><% if author != @paper.authors[-1] %>,<% end %>
     <% end %>
   </div>
   <div class="identifier">
