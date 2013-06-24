@@ -97,7 +97,7 @@ class PapersController < ApplicationController
 
   def search
     query = params[:q]
-    @scited_papers = Set.new( current_user.scited_papers )
+    @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
     return advanced_search unless query
     
     if query.start_with?('au:')
@@ -201,7 +201,7 @@ class PapersController < ApplicationController
 
     def fetch_papers feed, date, range
       return [] if date.nil?
-      @scited_papers = Set.new( current_user.scited_papers )
+      @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
       collection = feed.paginate(page: params[:page])
       collection = collection.includes(:feed, :authors, :cross_lists => :feed)
       collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
