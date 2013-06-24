@@ -853,6 +853,20 @@ CREATE INDEX index_authors_on_uniqid ON authors USING btree (uniqid);
 
 
 --
+-- Name: index_authorships_on_author_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authorships_on_author_id ON authorships USING btree (author_id);
+
+
+--
+-- Name: index_authorships_on_paper_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authorships_on_paper_id ON authorships USING btree (paper_id);
+
+
+--
 -- Name: index_comments_on_cached_votes_down; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1163,3 +1177,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130621041807');
 INSERT INTO schema_migrations (version) VALUES ('20130621053609');
 
 INSERT INTO schema_migrations (version) VALUES ('20130621053848');
+
+INSERT INTO schema_migrations (version) VALUES ('20130624052903');

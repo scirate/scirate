@@ -22,7 +22,7 @@
   <% end %>
   <div class="authors">
     <% paper.authors.each do |author| %>
-      <%= link_to(author.fullname.html_safe, "/search?q=au:#{author.searchterm}") %><% if author != paper.authors[-1] %>,<% end %>
+      <%= author_link_to author %><% if author != paper.authors[-1] %>,<% end %>
     <% end %>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <div id="<%="scite_form_#{paper.id}" %>" >
   <% if signed_in? %>
-    <% if (defined?(@scited_papers) && @scited_papers.include?(paper)) || current_user.scited_papers.include?(paper) %>
+    <% if (@scited_papers && @scited_papers.include?(paper)) || current_user.scited_papers.include?(paper) %>
       <%= render partial: 'unscite', object: paper, as: :paper %>
     <% else %>
       <%= render partial: 'scite', object: paper, as: :paper %>
