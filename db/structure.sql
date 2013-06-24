@@ -832,6 +832,13 @@ ALTER TABLE ONLY votes
 
 
 --
+-- Name: authors_to_tsvector_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX authors_to_tsvector_idx ON authors USING gin (to_tsvector('english'::regconfig, fullname));
+
+
+--
 -- Name: index_authors_on_fullname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1070,6 +1077,20 @@ CREATE INDEX papers_to_tsvector_idx1 ON papers USING gin (to_tsvector('english':
 
 
 --
+-- Name: papers_to_tsvector_idx2; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX papers_to_tsvector_idx2 ON papers USING gin (to_tsvector('english'::regconfig, title));
+
+
+--
+-- Name: papers_to_tsvector_idx3; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX papers_to_tsvector_idx3 ON papers USING gin (to_tsvector('english'::regconfig, abstract));
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1179,3 +1200,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130621053609');
 INSERT INTO schema_migrations (version) VALUES ('20130621053848');
 
 INSERT INTO schema_migrations (version) VALUES ('20130624052903');
+
+INSERT INTO schema_migrations (version) VALUES ('20130624065020');
+
+INSERT INTO schema_migrations (version) VALUES ('20130624075151');

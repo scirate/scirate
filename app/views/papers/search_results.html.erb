@@ -1,6 +1,6 @@
 <% provide :title, "Search results" %>
 
-<h1>Search results for "<%= params[:q] %>"</h1>
+<h1>Search results<% if params[:q] %>for "<%= params[:q] %>"<% end %></h1>
 
 <% unless @authors.nil? || @authors.empty? %>
   Matching authors: <% @authors.each do |author| %>
@@ -11,7 +11,11 @@
 
 <div class="paperlist">
 <ul class="papers">
-  <%= render @papers %>
+  <% if @papers.empty? %>
+    No papers found.
+  <% else %>
+    <%= render @papers %>
+  <% end %>
 </ul>
 </div>
 

@@ -18,7 +18,10 @@
     </ul>
     <%= form_tag papers_search_path, :method => 'get' do %>
       <%= text_field_tag :q, params[:q] %>
-      <%= submit_tag "Search", :name => nil %>
+      <div class="right">
+        <%= submit_tag "Search", :name => nil %><br>
+        <%= link_to "Advanced Search", papers_search_path %>
+      </div>
     <% end %>
   </nav>
 </header>

@@ -1,6 +1,6 @@
 <div class="title">
   <span class="title">
-    <%= link_to paper.title, paper %>
+    <%= link_to sanitize(paper.title), paper %>
   </span>
   <span class="identifier"><br>
     <%= "arXiv:#{paper.identifier}" %>

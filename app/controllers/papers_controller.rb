@@ -59,8 +59,47 @@ class PapersController < ApplicationController
     end
   end
 
+  def advanced_search
+    opts = {}
+
+    @papers = Paper
+
+    searching = false
+    params.each do |key, val|
+      next if val.empty?
+
+      case key
+      when 'authors'
+        names = val.split(/,\s*/).join('&')
+        authors = Author.advanced_search(fullname: names)
+        @papers = @papers.joins(:authorships)
+                         .where(:authorships => { :author_id => authors.map(&:id) })
+        searching = true
+      when 'abstract'
+        opts[:abstract] = val
+        searching = true
+      when 'title'
+        opts[:title] = val
+        searching = true
+      end
+    end
+
+    if searching
+      unless opts.empty?
+        @papers = @papers.basic_search(opts)
+      end
+      @papers = @papers.limit(1000).paginate(page: params[:page])
+      render :search_results
+    else
+      render :search_form
+    end
+  end
+
   def search
     query = params[:q]
+    @scited_papers = Set.new( current_user.scited_papers )
+    return advanced_search unless query
+    
     if query.start_with?('au:')
       author_query = query.split('au:', 2)[1]
       if author_query.match(/^[^_]+_[^_]$/) # arXiv style author query
@@ -81,7 +120,7 @@ class PapersController < ApplicationController
                      .paginate(page: params[:page])
     end
 
-    @scited_papers = Set.new( current_user.scited_papers )
+    render :search_results
   end
 
   def next
