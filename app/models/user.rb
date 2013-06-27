@@ -53,10 +53,12 @@ class User < ActiveRecord::Base
 
   def scite!(paper)
     scites.create!(paper_id: paper.id)
+    paper.scites_count += 1
   end
 
   def unscite!(paper)
     scites.find_by_paper_id(paper.id).destroy
+    paper.scites_count -= 1
   end
 
   def subscribed?(feed)
