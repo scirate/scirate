@@ -83,9 +83,12 @@ module Scirate3
 
   class << self
     def notify_error(exception, message=nil)
+      if exception.is_a?(String)
+        exception = RuntimeError.new(exception)
+      end
       exception = exception.with_details(message) if message
       puts exception.inspect
-      puts exception.backtrace.join("\n")
+      puts exception.backtrace.join("\n") if exception.backtrace
       if Rails.env == "production"
         ::ExceptionNotifier::Notifier.background_exception_notification(exception)
       end
