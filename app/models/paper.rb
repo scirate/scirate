@@ -98,11 +98,11 @@ class Paper < ActiveRecord::Base
       end
     end
 
+    puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(columns, values, opts)
     unless result.failed_instances.empty?
       Scirate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
     end
-    puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
 
     return if values.empty? && updated_papers.empty? # Skip the rest if no new data
 
@@ -122,17 +122,17 @@ class Paper < ActiveRecord::Base
       next unless papers_by_ident.has_key?(model.id)
       paper_id = papers_by_ident[model.id].id
       model.authors.each do |author|
-        author_id = authors_by_uniqid[Author.make_uniqid(author)]
+        author_id = authors_by_uniqid[Author.make_uniqid(author)].id
         next if existing_authorships.include?([author_id, paper_id])
         values << [paper_id, author_id]
       end
     end
 
+    puts "Importing #{values.length} authorships" unless values.empty?
     result = Authorship.import(columns, values, opts)
     unless result.failed_instances.empty?
       Scirate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
     end
-    puts "Imported #{values.length} authorships" unless values.empty?
 
     ### Finally: crosslists!
     existing_crosslists = CrossList.find_all_by_paper_id(paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
@@ -149,11 +149,11 @@ class Paper < ActiveRecord::Base
       end
     end
 
+    puts "Importing #{values.length} crosslists" unless values.empty?
     result = CrossList.import(columns, values, opts)
     unless result.failed_instances.empty?
       Scirate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
     end
-    puts "Imported #{values.length} crosslists" unless values.empty?
 
     # Update last paper date for involved feeds
     feednames.each do |feedname|
