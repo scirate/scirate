@@ -86,9 +86,10 @@ class PapersController < ApplicationController
 
     if searching
       unless opts.empty?
-        @papers = @papers.basic_search(opts)
+        @papers = @papers.basic_search(opts).except(:order)
       end
-      @papers = @papers.limit(1000).paginate(page: params[:page])
+      @papers = @papers.includes(:authors, :cross_lists, :feed)
+                       .limit(1000).paginate(page: params[:page])
       render :search_results
     else
       render :search_form
