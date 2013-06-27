@@ -6,7 +6,7 @@ namespace :db do
     last_paper = Paper.order("updated_date asc").last
 
     ArxivSync.get_metadata(from: last_paper.updated_date) do |resp, papers|
-      Paper.arxivsync_import(papers)
+      Paper.arxiv_import(papers)
     end
   end
 end

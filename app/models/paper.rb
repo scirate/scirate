@@ -114,7 +114,11 @@ class Paper < ActiveRecord::Base
     authors_by_uniqid = Hash[authors.map { |author| [author.uniqid, author] }]
     papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
     paper_ids = papers_by_ident.values.map(&:id)
-    existing_authorships = Authorship.find_all_by_paper_id(paper_ids).map { |au| [au.paper_id, au.author_id] }
+    
+    existing_authorships = Hash.new { |h,k| h[k] = [] }
+    Authorship.find_all_by_paper_id(paper_ids).each do |au|
+      existing_authorships[au.paper_id].push(au.author_id)
+    end
 
     columns = [:paper_id, :author_id]
     values = []
@@ -123,7 +127,7 @@ class Paper < ActiveRecord::Base
       paper_id = papers_by_ident[model.id].id
       model.authors.each do |author|
         author_id = authors_by_uniqid[Author.make_uniqid(author)].id
-        next if existing_authorships.include?([author_id, paper_id])
+        next if existing_authorships[paper_id].include?(author_id)
         values << [paper_id, author_id]
       end
     end

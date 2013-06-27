@@ -39,11 +39,11 @@ GEM
       multi_json (~> 1.0)
     acts_as_votable (0.5.0)
       rails (>= 3.0.0)
-    addressable (2.3.4)
+    addressable (2.3.5)
     annotate (2.5.0)
       rake
     arel (3.0.2)
-    arxivsync (0.0.4)
+    arxivsync (0.0.5)
       nokogiri
       oai
       ox (>= 2.0.2)
@@ -96,7 +96,7 @@ GEM
     guard-rspec (3.0.2)
       guard (>= 1.8)
       rspec (~> 2.13)
-    guard-spork (1.5.0)
+    guard-spork (1.5.1)
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
@@ -113,7 +113,7 @@ GEM
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
-    lumberjack (1.0.3)
+    lumberjack (1.0.4)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -129,7 +129,7 @@ GEM
       builder (>= 2.0.0)
       faraday
       faraday_middleware
-    ox (2.0.3)
+    ox (2.0.4)
     pg (0.15.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
@@ -164,7 +164,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
-    rake (10.0.4)
+    rake (10.1.0)
     rb-fsevent (0.9.3)
     rb-inotify (0.9.0)
       ffi (>= 0.5.0)
