@@ -160,9 +160,8 @@ class Comment
     @setupVoting()
     @setupActions()
 
-
 $ ->
   $('a.has-tooltip').tooltip()
-  return unless $('.comment').length
+  return unless $('.comments').length
   Comment.setupComments()
 
