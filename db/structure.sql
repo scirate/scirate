@@ -70,11 +70,11 @@ ALTER SEQUENCE authors_id_seq OWNED BY authors.id;
 --
 
 CREATE TABLE authorships (
-    id integer NOT NULL,
     author_id integer,
     paper_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    id integer NOT NULL
 );
 
 
@@ -143,8 +143,8 @@ CREATE TABLE comments (
     score integer,
     cached_votes_up integer DEFAULT 0,
     cached_votes_down integer DEFAULT 0,
-    hidden boolean,
-    parent_id integer
+    parent_id integer,
+    hidden boolean DEFAULT false
 );
 
 
@@ -860,20 +860,6 @@ CREATE INDEX index_authors_on_uniqid ON authors USING btree (uniqid);
 
 
 --
--- Name: index_authorships_on_author_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authorships_on_author_id ON authorships USING btree (author_id);
-
-
---
--- Name: index_authorships_on_paper_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authorships_on_paper_id ON authorships USING btree (paper_id);
-
-
---
 -- Name: index_comments_on_cached_votes_down; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1204,3 +1190,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130624052903');
 INSERT INTO schema_migrations (version) VALUES ('20130624065020');
 
 INSERT INTO schema_migrations (version) VALUES ('20130624075151');
+
+INSERT INTO schema_migrations (version) VALUES ('20130627181018');
