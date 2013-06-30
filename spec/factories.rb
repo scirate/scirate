@@ -8,13 +8,25 @@ FactoryGirl.define do
 
   factory :paper do |p|
     sequence(:title)       { |n| "On Hilbert's #{n}th Problem" }
-    sequence(:authors)     { |n| ["Some Author #{n}a", "Some Author #{n}b"] }
+    #sequence(:authors)     { |n| ["Some Author #{n}a", "Some Author #{n}b"] }
     sequence(:abstract)    { |n| "We solve Hilbert's #{n}th problem." }
     sequence(:identifier)  { |n| "#{1000+n}.#{1000+n}" }
     sequence(:url)         { |n| "http://arxiv.org/abs/#{1000+n}.#{1000+n}" }
     sequence(:pubdate)     { |n| Date.today }
     sequence(:updated_date){ |n| Date.today }
     feed Feed.default
+  end
+
+  factory :author do
+    sequence(:keyname) { |n| "Mongfish" }
+    sequence(:forenames) { |n| "Lucrezia" }
+    sequence(:fullname) { |n| "Lucrezia Mongfish" }
+    sequence(:searchterm) { |n| "Mongfish_L" }
+  end
+
+  factory :authorship do
+    author
+    paper
   end
 
   factory :comment do

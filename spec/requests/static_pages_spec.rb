@@ -17,11 +17,8 @@ describe "Static pages" do
     it_should_behave_like "all static pages"
   end
 
-  it "should have the right links on the layout" do
+  it "should have the right links on the landing" do
     visit root_path
-
-    click_link "About"
-    page.should have_title 'About'
 
     click_link "Sign in"
     page.should have_title 'Sign in'

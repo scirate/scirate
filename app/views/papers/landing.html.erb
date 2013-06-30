@@ -15,6 +15,11 @@
         <%= link_to "Sign in", signin_path %>
         <%= link_to "Sign up", signup_path %>
       </div>
+      <section class="round">
+      <% flash.each do |key, value| %>
+        <%= content_tag(:div, value, class: "flash #{key}") %>
+      <% end %>
+      </section>
       <div class="feeds">
         <% Feed.all.each do |feed| %>
           <%= link_to feed.name, feed %>

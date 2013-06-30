@@ -4,7 +4,6 @@
 #
 #  id             :integer         primary key
 #  title          :string(255)
-#  authors        :text
 #  abstract       :text
 #  identifier     :string(255)
 #  url            :string(255)
@@ -20,14 +19,17 @@
 require 'spec_helper'
 
 describe Paper do
+  let(:author1) { FactoryGirl.create(:author) }
+  let(:author2) { FactoryGirl.create(:author) }
 
   before do
     @feed = FactoryGirl.create(:feed)
     @paper = @feed.papers.build(title: "On NPT Bound Entanglement and the ERH", \
-                               authors: ["Some Guy, Ph.D.", "Some Other Guy"], \
                                abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
                                identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
                                pubdate: Time.now, updated_date: Time.now)
+    @paper.authorships.build(author_id: author1.id)
+    @paper.authorships.build(author_id: author2.id)
   end
 
   subject { @paper }
@@ -50,11 +52,6 @@ describe Paper do
 
   describe "when title is not present" do
     before { @paper.title = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when authors is not present" do
-    before { @paper.authors = [] }
     it { should_not be_valid }
   end
 
@@ -105,6 +102,28 @@ describe Paper do
     end
 
     its(:sciters) { should include(user) }
+  end
+
+  describe "authors" do
+    let (:author1) { FactoryGirl.create(:author) }
+    let (:author2) { FactoryGirl.create(:author) }
+
+    before {
+      author1.save
+      author2.save
+    }
+
+    let!(:authorship1) do
+      FactoryGirl.create(:authorship, author: author1, paper: @paper)
+    end
+
+    let!(:authorship2) do
+      FactoryGirl.create(:authorship, author: author2, paper: @paper)
+    end
+
+    it "should have the authors in the right order" do
+      @paper.authors.should == [author1, author2]
+    end
   end
 
   describe "comments" do

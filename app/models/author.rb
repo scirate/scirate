@@ -10,6 +10,9 @@ class Author < ActiveRecord::Base
   # String data that we receive directly from arxivsync
   attr_accessible :affiliation, :forenames, :keyname, :suffix
 
+  # Fullname composed from forenames, keyname, suffix
+  attr_accessible :fullname
+
   has_many :authorships
   has_many :papers, through: :authorships
 
