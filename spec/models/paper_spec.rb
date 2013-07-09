@@ -19,17 +19,12 @@
 require 'spec_helper'
 
 describe Paper do
-  let(:author1) { FactoryGirl.create(:author) }
-  let(:author2) { FactoryGirl.create(:author) }
-
   before do
     @feed = FactoryGirl.create(:feed)
     @paper = @feed.papers.build(title: "On NPT Bound Entanglement and the ERH", \
                                abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
                                identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
                                pubdate: Time.now, updated_date: Time.now)
-    @paper.authorships.build(author_id: author1.id)
-    @paper.authorships.build(author_id: author2.id)
   end
 
   subject { @paper }
@@ -114,11 +109,11 @@ describe Paper do
     }
 
     let!(:authorship1) do
-      FactoryGirl.create(:authorship, author: author1, paper: @paper)
+      FactoryGirl.create(:authorship, author: author1, paper: @paper, position: 0)
     end
 
     let!(:authorship2) do
-      FactoryGirl.create(:authorship, author: author2, paper: @paper)
+      FactoryGirl.create(:authorship, author: author2, paper: @paper, position: 1)
     end
 
     it "should have the authors in the right order" do

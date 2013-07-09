@@ -23,6 +23,7 @@ local_settings.rb
 *.log
 doc/
 *.swp
+*.swo
 *~
 .project
 .DS_Store
