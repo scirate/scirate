@@ -8,9 +8,9 @@ class CommentsController < ApplicationController
     )
 
     if @comment.save
-      flash[:success] = "Comment posted."
+      flash[:comment] = { status: :success, content: "Comment posted." }
     else
-      flash[:error] = "Error posting comment."
+      flash[:comment] = { status: :error, content: "Error posting comment." }
     end
 
     redirect_to @comment.paper
@@ -33,7 +33,7 @@ class CommentsController < ApplicationController
   def destroy
     if @comment.user_id == current_user.id
       @comment.destroy
-      flash[:success] = "Comment deleted."
+      flash[:comment] = { status: 'success', content: "Comment deleted." }
       redirect_to request.referer
     else
       render :status => :forbidden
@@ -75,9 +75,9 @@ class CommentsController < ApplicationController
     @reply.save!
 
     if @reply.save
-      flash[:success] = "Comment posted."
+      flash[:comment] = { status: 'success', content: "Comment posted." }
     else
-      flash[:error] = "Error posting comment."
+      flash[:comment] = { status: 'success', content: "Error posting comment." }
     end
 
     redirect_to @reply.paper

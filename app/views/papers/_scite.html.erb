@@ -2,8 +2,9 @@
   <%= form_for(current_user.scites.build(paper_id: paper.id),
                          remote: true) do |f| %>
     <div><%= f.hidden_field :paper_id %></div>
-    <%= f.submit "Scite!" %>
+    <%= f.submit "Scite!", class: 'btn scite' %>
+    <button class="btn count"><%= paper.scites_count %></button>
   <% end %>
 <% else %>
-  <a href="/signin"><input type="button" value="Scite!" /></a>
+  <a href="/signin"><input class="btn scite" type="button" value="Scite" /></a>
 <% end %>

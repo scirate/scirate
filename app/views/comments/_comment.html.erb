@@ -6,7 +6,7 @@
     <div class="downvote<%= @voted == false ? ' active': '' %>"><i class="icon-arrow-down"></i></div>
   </div>
   <div class="nonvotes">
-    <span class="label">
+    <span>
       <% if @user %>
         Comment on paper <%= link_to comment.paper.identifier, comment.paper %>
       <% elsif @paper %>

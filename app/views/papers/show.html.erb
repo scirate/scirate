@@ -1,11 +1,12 @@
 <% provide :title, @paper.identifier %>
-<div class="paper tex2jax">
-  <h1><%= sanitize(@paper.title) %></h1>
-  <div class="authors">
+<div class="row paper">
+<div class="span10 tex2jax">
+  <h1 class="title"><%= sanitize(@paper.title) %></h1>
+  <ul class="authors">
     <% @paper.authors.each do |author| %>
-      <%= link_to sanitize(author.fullname), "/search?q=au:#{author.searchterm}" %><% if author != @paper.authors[-1] %>,<% end %>
+      <li><a href="/search?q=au:<%=author.searchterm%>"><%= sanitize(author.fullname) %><% if author != @paper.authors[-1] %>,<% end %></a></li>
     <% end %>
-  </div>
+  </ul>
   <div class="identifier">
     <%= @paper.identifier %>
     [<%= @paper.feed.name %>]
@@ -29,13 +30,13 @@
     <% end %>
     <%= link_to @paper.url, @paper.url %>
   </div>
-  <div class="scites">
-    <%= render( partial: 'scite_form', object: @paper, as: :paper ) %>
-    <%= render 'sciters' %>
-  </div>
   <div class="comments">
     <a name="comments"></a>
-    <%= render 'comments' %>
+    <h4><%= pluralize(@comments.size, "comments") %></h4>
+    <% if flash[:comment] %>
+      <%= content_tag(:div, flash[:comment][:content], class: "flash #{flash[:comment][:status]}") %>
+    <% end %>
+    <%= render @comments %>
   </div>
   <div class="comment_form">
     <% if signed_in? %>
@@ -44,4 +45,10 @@
       <%= link_to "sign in to comment", signin_path() %>
     <% end %>
   </div>
-<div>
+</div>
+<div class="span2 paper-sidebar">
+  <span class="scite-toggle">
+    <%= render(partial: 'scite_form', object: @paper, as: :paper) %>
+  </span>
+</div>
+</div>
