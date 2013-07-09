@@ -30,8 +30,8 @@ class Paper < ActiveRecord::Base
   has_many  :cross_lists, dependent: :destroy
   has_many  :cross_listed_feeds, through: :cross_lists, \
                 source: :feed, order: "name ASC"
-  has_many :authorships
-  has_many :authors, :through => :authorships
+  has_many :authorships, order: :position
+  has_many :authors, :through => :authorships, order: 'authorships.position'
 
   validates :title, presence: true
   validates :abstract, presence: true
@@ -104,7 +104,7 @@ class Paper < ActiveRecord::Base
       Scirate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
     end
 
-    return if values.empty? && updated_papers.empty? # Skip the rest if no new data
+    #return if values.empty? && updated_papers.empty? # Skip the rest if no new data
 
     relevant_papers = Paper.find_all_by_identifier(identifiers)
     
@@ -120,15 +120,15 @@ class Paper < ActiveRecord::Base
       existing_authorships[au.paper_id].push(au.author_id)
     end
 
-    columns = [:paper_id, :author_id]
+    columns = [:paper_id, :author_id, :position]
     values = []
     models.each do |model|
       next unless papers_by_ident.has_key?(model.id)
       paper_id = papers_by_ident[model.id].id
-      model.authors.each do |author|
+      model.authors.each_with_index do |author, i|
         author_id = authors_by_uniqid[Author.make_uniqid(author)].id
         next if existing_authorships[paper_id].include?(author_id)
-        values << [paper_id, author_id]
+        values << [paper_id, author_id, i]
       end
     end
 

@@ -70,11 +70,12 @@ ALTER SEQUENCE authors_id_seq OWNED BY authors.id;
 --
 
 CREATE TABLE authorships (
-    id integer NOT NULL,
     author_id integer,
     paper_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    id integer NOT NULL,
+    "position" integer
 );
 
 
@@ -832,6 +833,13 @@ ALTER TABLE ONLY votes
 
 
 --
+-- Name: author_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX author_id_idx ON authorships USING btree (author_id);
+
+
+--
 -- Name: authors_to_tsvector_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -857,20 +865,6 @@ CREATE INDEX index_authors_on_searchterm ON authors USING btree (searchterm);
 --
 
 CREATE INDEX index_authors_on_uniqid ON authors USING btree (uniqid);
-
-
---
--- Name: index_authorships_on_author_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authorships_on_author_id ON authorships USING btree (author_id);
-
-
---
--- Name: index_authorships_on_paper_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authorships_on_paper_id ON authorships USING btree (paper_id);
 
 
 --
@@ -1063,6 +1057,13 @@ CREATE INDEX index_votes_on_voter_id_and_voter_type_and_vote_scope ON votes USIN
 
 
 --
+-- Name: paper_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX paper_id_idx ON authorships USING btree (paper_id);
+
+
+--
 -- Name: papers_to_tsvector_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1206,3 +1207,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130624065020');
 INSERT INTO schema_migrations (version) VALUES ('20130624075151');
 
 INSERT INTO schema_migrations (version) VALUES ('20130627181018');
+
+INSERT INTO schema_migrations (version) VALUES ('20130709021255');
