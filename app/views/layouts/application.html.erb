@@ -36,8 +36,50 @@
     </script>
   </head>
   <body>
+    <header role="banner">
+      <div class="container">
+        <span class="scirate-logo">
+          <%= image_tag "scirate-icon.png" %>
+          <a href="/">Scirate</a>
+        </span>
+
+        <nav>
+          <ul>
+            <% if signed_in? %>
+              <li><%= link_to "Home", root_path %></li>
+              <li><%= link_to "Profile", current_user %></li>
+              <li><%= link_to "Settings", settings_path %></li>
+              <li><%= link_to "Subscriptions", subscriptions_user_path(current_user) %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </header> 
+
     <div class="container">
-      <%= render 'layouts/header' %>
+      <header>
+        <nav class="round pull-right">
+          <ul>
+            <li><%= link_to "Home", root_path %></li>
+            <li><%= link_to "About", about_path %></li>
+            <% if signed_in? %>
+              <li><%= link_to "Sign out", signout_path, method: :delete %></li>
+            <% else %>
+              <li><%= link_to "Sign in", signin_path %></li>
+              <li><%= link_to "Sign up", signup_path %></li>
+            <% end %>
+          </ul>
+          <%= form_tag papers_search_path, :method => 'get' do %>
+            <%= text_field_tag :q, params[:q] %>
+            <div class="right">
+              <%= submit_tag "Search", :name => nil %><br>
+              <%= link_to "Advanced Search", papers_search_path %>
+            </div>
+          <% end %>
+        </nav>
+      </header>
+
+
       <section class="round">
       <% flash.each do |key, value| %>
         <%= content_tag(:div, value, class: "flash #{key}") %>
