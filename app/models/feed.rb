@@ -95,4 +95,8 @@ class Feed < ActiveRecord::Base
       self.save!
     end
   end
+
+  def identifier
+    "#{self.feed_type}/#{self.name}"
+  end
 end

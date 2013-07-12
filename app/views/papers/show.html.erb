@@ -20,7 +20,7 @@
     </div>
   <% end %>
   <div class="dates">
-    Published <%= @paper.pubdate.to_formatted_s(:rfc822) %> in <%= link_to @paper.feed.name, @paper.feed %><br />
+    Published <%= @paper.pubdate.to_formatted_s(:rfc822) %> in <strong><%= @paper.feed.fullname %></strong> [<%= link_to @paper.feed.identifier, @paper.feed %>]<br />
     <% if @paper.updated? %>
       Updated <%= @paper.updated_date.to_formatted_s(:rfc822) %><br />
     <% end %>
