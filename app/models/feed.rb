@@ -3,8 +3,9 @@
 # Table name: feeds
 #
 #  id                  :integer         not null, primary key
+#  parent_id           :integer
 #  name                :string(255)
-#  url                 :string(255)
+#  fullname            :text
 #  feed_type           :string(255)
 #  created_at          :datetime        not null
 #  updated_at          :datetime        not null
@@ -14,8 +15,9 @@
 #
 
 class Feed < ActiveRecord::Base
-  attr_accessible :name, :url, :feed_type, :updated_date, :last_paper_date
+  attr_accessible :name, :fullname, :feed_type, :updated_date, :last_paper_date
 
+  belongs_to :parent, class_name: "Feed"
   has_many :papers, validate: false
   has_many :subscriptions, dependent: :destroy
   has_many :users, through: :subscriptions
@@ -23,7 +25,6 @@ class Feed < ActiveRecord::Base
   has_many :cross_listed_papers, through: :cross_lists, source: :paper
 
   validates :name, presence: true, uniqueness: true
-  validates :url, presence: true, uniqueness: true
   validates :feed_type, presence: true
   validates :updated_date, presence: true
 
