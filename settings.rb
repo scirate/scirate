@@ -6,9 +6,7 @@ module Settings
   # configuration.
   
 
-  # Modern feed names which arxiv will provide in rss form 
-  # as per message at http://export.arxiv.org/rss/doesnotexist
-  ARXIV_CATEGORY_CURRENT = ['astro-ph', 'cond-mat', 'cs', 'gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math', 'math-ph', 'nlin', 'nucl-ex', 'nucl-th', 'physics', 'q-bio', 'q-fin', 'quant-ph', 'stat']
+  ARXIV_CATEGORY_TOPLEVEL = ['cond-mat', 'physics', 'math', 'nlin', 'physics', 'quant-ph', 'math', 'cs', 'q-bio', 'q-fin', 'stat']
 
   ARXIV_CATEGORY_FULLNAMES = {
     # cond-mat

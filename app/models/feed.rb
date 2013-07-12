@@ -23,10 +23,16 @@ class Feed < ActiveRecord::Base
   has_many :users, through: :subscriptions
   has_many :cross_lists, dependent: :destroy
   has_many :cross_listed_papers, through: :cross_lists, source: :paper
+  has_many :children, foreign_key: 'parent_id', class_name: 'Feed'
 
   validates :name, presence: true, uniqueness: true
   validates :feed_type, presence: true
   validates :updated_date, presence: true
+
+  # Returns toplevel arxiv categories for sidebar
+  def self.arxiv_toplevel
+    Feed.where(:name => Settings::ARXIV_CATEGORY_TOPLEVEL)
+  end
 
   def self.arxiv_import(feednames, opts={})
     existing = Feed.all.map(&:name)
