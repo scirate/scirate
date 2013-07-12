@@ -7,10 +7,6 @@
       <li><a href="/search?q=au:<%=author.searchterm%>"><%= sanitize(author.fullname) %><% if author != @paper.authors[-1] %>,<% end %></a></li>
     <% end %>
   </ul>
-  <div class="identifier">
-    <%= @paper.identifier %>
-    [<%= @paper.feed.name %>]
-  </div>
   <div class="abstract">
     <%= @paper.abstract %>
   </div>
@@ -24,11 +20,10 @@
     </div>
   <% end %>
   <div class="dates">
-    Published on <%= @paper.pubdate.to_formatted_s(:rfc822) %><br />
+    Published <%= @paper.pubdate.to_formatted_s(:rfc822) %> in <%= link_to @paper.feed.name, @paper.feed %>
     <% if @paper.updated? %>
-      Updated on <%= @paper.updated_date.to_formatted_s(:rfc822) %><br />
+      Updated <%= @paper.updated_date.to_formatted_s(:rfc822) %><br />
     <% end %>
-    <%= link_to @paper.url, @paper.url %>
   </div>
   <div class="comments">
     <a name="comments"></a>

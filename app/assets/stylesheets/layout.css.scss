@@ -74,14 +74,17 @@ header.second {
   font-size: 1.2em;
 }
 
+html {
+  overflow-y: scroll; // Force scrollbar presence
+}
+
 body {
   font: 81.25%/1.385 arial,sans-serif;
 }
 
 .paper {
-  margin-top: 20px;
-
   h1.title {
+    margin-top: 20px;
     font: 30px 'FS Albert Web Regular',Verdana,sans-serif;
     margin-bottom: 4px;
   }
@@ -98,14 +101,16 @@ body {
       font-size: medium;
     }
   }
+
+  div.abstract {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }
 
 .paper-sidebar {
-  margin-top: 20px;
   .scite-toggle {
     position: relative;
-    top: -40px;
-
 
     .scite, .unscite, .count {
       border-top: 0;
@@ -121,5 +126,99 @@ body {
     }
     .scite { color: inherit; }
     .unscite { color: white; }
+  }
+}
+
+/* Recent comments sidebar */
+div.recent-comments
+{
+  width: 100%;
+  padding: 1em;
+  background-color: $scite-color;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+div.comments {
+  margin-top: 20px;
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  div.comment {
+    padding: 0.5em;
+    -moz-border-radius:    10px;
+    -webkit-border-radius: 10px;
+    border-radius:         10px;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  div.comment.reply {
+    padding-left: 1.8em;
+  }
+}
+
+#comment_form, #comment_editor {
+  textarea, .wmd-preview {
+    max-width: 600px;
+    width: 100%;
+  }
+
+  textarea {
+    max-height: 200px;
+  }
+
+  .wmd-preview {
+    margin-bottom: 10px;
+  }
+
+}
+
+
+div.abbr_comment
+{
+        word-wrap: break-word;
+        overflow: hidden;
+}
+
+.comment {
+  .votes {
+    float: left;
+    margin-right: 5px;
+  }
+
+  .nonvotes {
+    float: left;
+  }
+
+  .upvote, .downvote {
+    width: 16px;
+    height: 16px;
+    opacity: 0.5;
+    cursor: pointer;
+  }
+
+  .upvote.active {
+    color: green;
+  }
+
+  .downvote.active {
+    color: red;
+  }
+
+  .actions a {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+
+  textarea {
+    display: block;
   }
 }
