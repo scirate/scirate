@@ -20,10 +20,11 @@
     </div>
   <% end %>
   <div class="dates">
-    Published <%= @paper.pubdate.to_formatted_s(:rfc822) %> in <%= link_to @paper.feed.name, @paper.feed %>
+    Published <%= @paper.pubdate.to_formatted_s(:rfc822) %> in <%= link_to @paper.feed.name, @paper.feed %><br />
     <% if @paper.updated? %>
       Updated <%= @paper.updated_date.to_formatted_s(:rfc822) %><br />
     <% end %>
+    <%= link_to @paper.url, @paper.url %>
   </div>
   <div class="comments">
     <a name="comments"></a>

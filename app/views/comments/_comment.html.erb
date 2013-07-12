@@ -20,7 +20,10 @@
       in reply to <%= link_to comment.parent.user.name, comment.parent.user %>
     <% end %>
 
-    (<span class="score"><%= comment.cached_votes_up-comment.cached_votes_down %></span> points)
+
+    <% if comment.cached_votes_up > 0 || comment.cached_votes_down > 0 %>
+      (<span class="score"><%= comment.cached_votes_up-comment.cached_votes_down %></span> points)
+    <% end %>
     <div class="body tex2jax">
       <%= simple_format(strip_tags(comment.content)) %>
     </div>

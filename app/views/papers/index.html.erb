@@ -11,7 +11,7 @@
       <% end %>
       ---
     <% end %>
-    <% Settings::CURRENT_FEEDS.each do |feedname| %>
+    <% Settings::ARXIV_CATEGORY_CURRENT.each do |feedname| %>
       <a href="/feed/<%= feedname %>"><%= feedname %></a>
     <% end %>
   </div>
