@@ -147,10 +147,6 @@ div.recent-comments
 div.comments {
   margin-top: 20px;
 
-  h4 {
-    margin-bottom: 0;
-  }
-
   div.comment {
     padding: 0.5em;
     -moz-border-radius:    10px;
@@ -158,6 +154,11 @@ div.comments {
     border-radius:         10px;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+  }
+
+  div.comment:first-child {
+    margin-top: 0;
+    padding-top: 0;
   }
 
   div.comment.reply {

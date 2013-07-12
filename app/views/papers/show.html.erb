@@ -30,9 +30,14 @@
     <a name="comments"></a>
     <h4><%= pluralize(@comments.size, "comments") %></h4>
     <% if flash[:comment] %>
-      <%= content_tag(:div, flash[:comment][:content], class: "flash #{flash[:comment][:status]}") %>
+      <div class="alert alert-<%= flash[:comment][:status] %>">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <%= flash[:comment][:content] %>
+      </div>
     <% end %>
-    <%= render @comments %>
+    <div class="comment-list">
+      <%= render @comments %>
+    </div>
   </div>
   <div class="comment_form">
     <% if signed_in? %>
