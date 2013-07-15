@@ -2,6 +2,9 @@
   .row-fluid
     .span10
       .title= link_to sanitize(paper.title), paper
+      .authors
+        - paper.authors.each do |author|
+          = author_link_to(author) + (author != paper.authors[-1] ? "," : ' ')
       %span.identifier
         = "arXiv:#{paper.identifier}"
         [#{link_to paper.feed.name, paper.feed}]
@@ -14,11 +17,6 @@
           - for crosslist in paper.cross_lists
             - if crosslist.feed_id != paper.feed_id
               = link_to crosslist.feed.name, crosslist.feed
-      .authors
-        - paper.authors.each do |author|
-          = author_link_to author
-          - if author != paper.authors[-1]
-            ,
     .span2
       = render 'scites/toggle', paper: paper
   %div{:class => "abstract_#{paper.id}"}

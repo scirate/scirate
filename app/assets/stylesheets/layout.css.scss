@@ -231,14 +231,6 @@ div.abbr_comment
   }
 }
 
-.paper-index {
-  margin-top: 20px;
-
-  h1 {
-    margin: 0;
-  }
-}
-
 // Feed listing sidebar
 
 ul.tree-sidebar {
@@ -275,18 +267,28 @@ ul.tree-sidebar {
 // Feed header
 
 header.feed-header {
-  .feed-subdesc {
-    font-size: 1.4em;
-    color: rgba(0, 0, 0, 0.8);
+  h1 {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .subscribe-toggle {
     position: relative;
-    top: 5px;
+    top: 6px;
   }
+
+  margin-bottom: 30px;
+}
+
+.feed-identifier {
+  color: rgba(0, 0, 0, 0.5);
 }
 
 // Feed paper listing
+
+.feed-display {
+  margin-top: 20px;
+}
 
 ul.papers {
   margin-left: 0;
@@ -347,6 +349,20 @@ li.paper {
 
 div.feed-rightbar
 {
+  padding-top: 3px;
+
+  .timelinks {
+    text-align: center;
+    li {
+      list-style-type: none;
+      display: inline-block;
+    }
+
+    li.active {
+      font-weight: bold;
+    }
+  }
+
   h3 {
     font-size: 1.5em;
   }

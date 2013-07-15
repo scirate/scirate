@@ -1,0 +1,11 @@
+%nav.timelinks
+  = link_to("<<", url_for(params.merge(date: @date-1.days)))
+  %strong= @date.to_formatted_s(:rfc822)
+  = link_to(">>", url_for(params.merge(date: @date+1.days)))
+  %div
+    Include:
+    %li{ class: params[:range] == '2' && 'active' }= link_to("2d", url_for( params.merge( range: 2 )))
+    %li{ class: params[:range] == '3' && 'active' }= link_to("3d", url_for( params.merge( range: 3 )))
+    %li{ class: params[:range] == '7' && 'active' }= link_to("1w", url_for( params.merge( range: 7 )))
+    %li{ class: params[:range] == '31' && 'active' }= link_to("1m", url_for( params.merge( range: 31 )))
+    %li{ class: params[:range] == '365' && 'active' }= link_to("1y", url_for( params.merge( range: 365 )))
