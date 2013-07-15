@@ -19,5 +19,4 @@
               = link_to crosslist.feed.name, crosslist.feed
     .span2
       = render 'scites/toggle', paper: paper
-  %div{:class => "abstract_#{paper.id}"}
-    = render partial: 'papers/abstract', object: paper, as: :paper
+  %div{ class: "abstract#{paper.scites_count > 0 ? '' : ' hidden'}" }= paper.abstract

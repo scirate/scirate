@@ -18,7 +18,7 @@
         - Feed.find_all_by_name(['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent|
           %li
             %label.tree-toggler.nav-header= parent.fullname
-            %ul.nav.nav-list.tree{ style: (@feed == parent || @feed.parent == parent) ? '' : 'display: none;' }
+            %ul.nav.nav-list.tree{ style: (@feed == parent || (@feed && @feed.parent == parent)) ? '' : 'display: none;' }
               - if parent.last_paper_date
                 %li.leaf.parent{class: @feed == parent && 'active'}= link_to(parent.fullname, parent)
               - parent.children.each do |feed|
@@ -30,28 +30,40 @@
     .span10.feed-center
       %header.feed-header
         .row-fluid
-          .span10
-            %h1= @feed.fullname
-          .span2
-            = render 'feeds/subscribe', :feed => @feed
-      %p
-        Found #{@papers.count} papers from #{describe_range(@date, @range)}
-        %span.feed-identifier
-          [#{@feed.identifier}]
-      .paperlist
-        %ul.papers
-          - if @papers.length == 0
-            - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
-              %p You haven't subscribed to any feeds yet! Papers from subscribed feeds will appear here.
-            - else
-              %p No papers found!
+          - if @feed
+            %h1
+              = @feed.fullname
+              = render 'feeds/subscribe', :feed => @feed
           - else
-            = render @papers
-      = will_paginate @papers
-      \&nbsp;
+            .span10
+              %h1= "All subscribed feeds"
 
-      -#
-        .span3.feed-rightbar
-          = render :partial => 'feeds/next_prev_links'
-          %h3 Recent comments
+      .row-fluid
+        .span10
+          -#
+            %p
+              Found #{@papers.count} papers from #{describe_range(@date, @range)}
+              %span.feed-identifier
+                [#{@feed.identifier}]
+          %h2 
+            = @date.to_formatted_s(:rfc822)
+            -# 
+              = link_to("<<", url_for(params.merge(date: @date-1.days)))
+              = link_to(">>", url_for(params.merge(date: @date+1.days)))
+
+          .paperlist
+            %ul.papers
+              - if @papers.length == 0
+                - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
+                  %p You haven't subscribed to any feeds yet! Papers from subscribed feeds will appear here.
+                - else
+                  %p No papers found!
+              - else
+                = render @papers
+          = will_paginate @papers
+
+        .span2.feed-rightbar
+          -# = render :partial => 'feeds/next_prev_links'
+          %h2 Recent comments
           = render :partial => "comments/abbr_comment", :collection => @recent_comments[0..9]
+

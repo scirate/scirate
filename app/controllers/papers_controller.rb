@@ -4,6 +4,8 @@ class PapersController < ApplicationController
   def show
     @paper = Paper.find_by_identifier!(params[:id])
 
+    @scited_papers = Set.new(current_user.scited_papers) if signed_in?
+
     # Less naive statistical comment sorting as per
     # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
     @comments = Comment.find_by_sql([
@@ -13,30 +15,6 @@ class PapersController < ApplicationController
     ])
 
     @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
-  end
-
-  def index_subscriptions
-    # Show papers from the users's subscribed feeds
-    @date ||= current_user.feed_last_paper_date
-    @date ||= Feed.default.last_paper_date
-    @papers = fetch_papers current_user.feed, @date, @range
-    @title = "All papers in #{current_user.name}'s feed from #{describe_range(@date, @range)}"
-  end
-
-  def index_all
-    # Show papers from all feeds
-    @date = Feed.default.last_paper_date
-    @papers = Paper.paginate(page: params[:page])
-    @title = "All papers from #{describe_range(@date, @range)}"
-  end
-
-  def index_feed
-    # Show papers from a particular feed
-    @date ||= @feed.last_paper_date
-    @date ||= Feed.default.last_paper_date # If feed doesn't have papers
-
-    @papers = fetch_papers @feed.cross_listed_papers, @date, @range
-    @title = "All papers in #{@feed.name} from #{describe_range(@date, @range)}"
   end
 
   def index
@@ -172,14 +150,4 @@ class PapersController < ApplicationController
 
     redirect_to papers_path(params.merge(date: pdate, action: nil))
   end
-
-  private
-    def fetch_papers feed, date, range
-      return [] if date.nil?
-      @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
-      collection = feed.paginate(page: params[:page])
-      collection = collection.includes(:feed, :authors, :cross_lists => :feed)
-      collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
-      collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
-    end
 end

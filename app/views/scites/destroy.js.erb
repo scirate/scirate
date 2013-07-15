@@ -1,4 +1,0 @@
-$("#<%= 'scite_form_' + @paper.id.to_s %>").html("<%= escape_javascript(render partial: 'scites/scite', object: @paper, as: :paper) %>")
-$(".sciters").html("<span class='label'><%= escape_javascript(pluralize(@paper.sciters.count, 'sciter')) %>: </span><%= escape_javascript(@paper.sciters.map {|s| link_to(s.name, user_path(s))}.join(', ').html_safe) %>")
-$(".<%= 'scite_count_' + @paper.id.to_s %>").html("<%= pluralize(@paper.scites.count, 'Scite') %>")
-$(".<%= 'abstract_' + @paper.id.to_s %>").html("<%= escape_javascript(render partial: 'papers/abstract', object: @paper, as: :paper) %>")

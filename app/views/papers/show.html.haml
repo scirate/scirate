@@ -1,0 +1,45 @@
+- provide :title, @paper.identifier
+.container
+  .paper.tex2jax.row
+    .span10.offset2
+      %h1.title
+        .row-fluid
+          .span10= sanitize(@paper.title)
+          .span2= render(partial: 'scites/toggle', object: @paper, as: :paper)
+        
+      %ul.authors
+        - @paper.authors.each do |author|
+          %li
+            %a{:href => "/search?q=au:#{author.searchterm}"}
+              = sanitize(author.fullname) + (author != @paper.authors[-1] ? ',' : '')
+      .abstract
+        = @paper.abstract
+      - if @categories.length > 0
+        .categories
+          Subjects:
+          %strong= @paper.feed.name
+          - @categories.each do |c|
+            = c.name
+      .dates
+        Published #{@paper.pubdate.to_formatted_s(:rfc822)} in
+        %strong= @paper.feed.fullname
+        [#{link_to @paper.feed.identifier, @paper.feed}]
+        %br/
+        - if @paper.updated?
+          Updated #{@paper.updated_date.to_formatted_s(:rfc822)}
+          %br/
+        = link_to @paper.url, @paper.url
+      .comments
+        %a{:name => "comments"}
+        %h4= pluralize(@comments.size, "comments")
+        - if flash[:comment]
+          %div{:class => "alert alert-#{flash[:comment][:status]}"}
+            %button.close{"data-dismiss" => "alert", :type => "button"} &times;
+            = flash[:comment][:content]
+        .comment-list
+          = render @comments
+      .comment_form
+        - if signed_in?
+          = render 'comment_form'
+        - else
+          = link_to "sign in to comment", signin_path()

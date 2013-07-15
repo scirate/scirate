@@ -109,8 +109,14 @@ header.second {
 div.paper {
   h1.title {
     margin-top: 20px;
-    font: 30px 'FS Albert Web Regular',Verdana,sans-serif;
     margin-bottom: 4px;
+    font-size: 2em;
+    font-family: 'Roboto Condensed', sans-serif;
+
+    .scite-toggle {
+      position: relative;
+      top: 7px;
+    }
   }
 
   ul.authors {
@@ -129,27 +135,6 @@ div.paper {
   div.abstract {
     margin-top: 10px;
     margin-bottom: 10px;
-  }
-}
-
-.paper-sidebar {
-  .scite-toggle {
-    position: relative;
-
-    .scite, .unscite, .count {
-      border-top: 0;
-      height: 40px;
-    }
-
-    .scite, .unscite { 
-      width: 102px; 
-    }
-    .count {
-      position: relative;
-      left: -5px;
-    }
-    .scite { color: inherit; }
-    .unscite { color: white; }
   }
 }
 
@@ -286,9 +271,10 @@ header.feed-header {
 
   .subscribe-toggle {
     position: relative;
-    top: 6px;
+    top: -2px;
   }
 
+  padding-bottom: 5px;
   margin-bottom: 30px;
 }
 
@@ -312,14 +298,18 @@ header.feed-header {
   padding-top: 20px;
 }
 
-.feed-center, .feed-rightbar {
+.feed-center {
   padding-top: 20px;
+  padding-left: 33px;
   background: white;
   height: 100%;
-}
 
-.feed-center {
-  padding-left: 33px;
+  h2 {
+    color: #A3A3A2;
+    text-transform: uppercase;
+    margin-top: 0;
+    font-size: 1em;
+  }
 }
 
 ul.papers {
@@ -346,34 +336,6 @@ li.paper {
     }
   }
 
-  .scite, .unscite {
-    @include border-left-radius(5px);
-  }
-
-  .scite, .scites-count .btn {
-    color: #888;
-  }
-
-  .scites-count {
-    .btn {
-      @include border-right-radius(5px);
-      border-left: 0;
-    }
-
-    position: relative;
-    display: inline-block;
-    margin-left: -4px;
-
-    .sciters-dropdown {
-      display: none;
-      position: absolute;
-      padding: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.5);
-      background: #f5f5f5;
-      width: 100px;
-    }
-  }
-
   .scites-count:hover {
     .sciters-dropdown {
       display: block;
@@ -385,6 +347,14 @@ li.paper {
 
 div.feed-rightbar
 {
+
+  h2 {
+    color: #A3A3A2;
+    text-transform: uppercase;
+    margin-top: 0;
+    font-size: 1em;
+  }
+
   .timelinks {
     text-align: center;
     li {
@@ -397,15 +367,44 @@ div.feed-rightbar
     }
   }
 
-  h3 {
-    font-size: 1.5em;
-  }
-
   .abbr-comment {
     font-size: 0.8em;
   }
 
   blockquote p {
     font-size: inherit;
+  }
+}
+
+// Scites
+
+.scite-toggle.inactive {
+  opacity: 0.5;
+}
+
+.scite-toggle {
+  .scite, .unscite {
+    @include border-left-radius(5px);
+    float: left;
+  }
+
+  .scites-count {
+    .btn {
+      @include border-right-radius(5px);
+      border-left: 0;
+      float: left;
+    }
+
+    position: relative;
+    display: inline-block;
+
+    .sciters-dropdown {
+      display: none;
+      position: absolute;
+      padding: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      background: #f5f5f5;
+      width: 100px;
+    }
   }
 }

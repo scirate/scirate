@@ -6,15 +6,17 @@ $ ->
   $('label.tree-toggler').click ->
     $(this).parent().children('ul.tree').toggle(300)
 
-  $('li.paper').on 'click', '.scite', (ev) ->
+  $('.paper').on 'click', '.scite', (ev) ->
     $toggle = $(ev.target).closest('.scite-toggle')
     console.log($toggle.attr('data-paper-id'))
     $.post '/scite', { paper_id: $toggle.attr('data-paper-id') }, (resp) =>
+      $toggle.closest('li.paper').find('.abstract').removeClass('hidden')
       $toggle.replaceWith(resp)
     return false
 
-  $('li.paper').on 'click', '.unscite', (ev) ->
+  $('.paper').on 'click', '.unscite', (ev) ->
     $toggle = $(ev.target).closest('.scite-toggle')
     $.post '/unscite', { paper_id: $toggle.attr('data-paper-id') }, (resp) =>
+      $toggle.closest('li.paper').find('.abstract').addClass('hidden')
       $toggle.replaceWith(resp)
     return false

@@ -1,6 +1,23 @@
 class FeedsController < ApplicationController
   before_filter :find_feed, :only => [:subscribe, :unsubscribe]
 
+  # Aggregated feed
+  def index
+    return render('papers/landing', :layout => nil) unless signed_in?
+
+    @date = parse_date(params) || Feed.default.last_paper_date
+    @range = parse_range(params)
+    @page = params[:page]
+
+    @recent_comments = Comment.joins(:paper)
+                              .where(:paper => {:feed_id => current_user.feeds.map(&:id) })
+                              .order("created_at DESC")
+    @scited_papers = Set.new(current_user.scited_papers)
+
+    @papers = Paper.range_query(current_user.feed, @date, @range, @page)
+    render 'feeds/show'
+  end
+
   def show
     @feed = Feed.find_by_name(params[:feed])
     @date = parse_date(params) || @feed.last_paper_date
@@ -10,7 +27,7 @@ class FeedsController < ApplicationController
     @recent_comments = Comment.joins(:paper)
                               .where(:paper => { :feed_id => @feed.id })
                               .order("created_at DESC")
-    @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
+    @scited_papers = Set.new(current_user.scited_papers) if signed_in?
 
     @papers = Paper.range_query(@feed.cross_listed_papers, @date, @range, @page)
   end
