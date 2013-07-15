@@ -4,6 +4,18 @@ $accent-color: #aaf;
 $link-color: #22c;
 $visited-link-color: #55c;
 
+// Overall
+
+html {
+  overflow-y: scroll; // Force scrollbar presence
+}
+
+body {
+  font: 81.25%/1.385 arial,sans-serif;
+}
+
+// Main header
+
 header.first {
   width: 100%;
 
@@ -74,13 +86,7 @@ header.second {
   font-size: 1.2em;
 }
 
-html {
-  overflow-y: scroll; // Force scrollbar presence
-}
-
-body {
-  font: 81.25%/1.385 arial,sans-serif;
-}
+// Individual paper page
 
 .paper {
   h1.title {
@@ -129,20 +135,7 @@ body {
   }
 }
 
-/* Recent comments sidebar */
-div.recent-comments
-{
-  width: 100%;
-  padding: 1em;
-  background-color: $scite-color;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-
-  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-  box-sizing: border-box;         /* Opera/IE 8+ */
-}
+// Paper page commenting interface
 
 div.comments {
   margin-top: 20px;
@@ -179,9 +172,7 @@ div.comments {
   .wmd-preview {
     margin-bottom: 10px;
   }
-
 }
-
 
 div.abbr_comment
 {
@@ -222,4 +213,51 @@ div.abbr_comment
   textarea {
     display: block;
   }
+}
+
+.paper-index {
+  margin-top: 20px;
+}
+
+// Paper index sidebar
+
+ul.tree-sidebar {
+  .my-feeds {
+    .tree-toggler {
+      font-size: 1em;
+    }
+
+    margin-bottom: 10px;
+  }
+
+  .source-heading {
+    font-size: 150%;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #aaa;
+  }
+
+  .tree-toggler {
+    font-size: 0.7em;
+    margin-bottom: 0;
+  }
+
+  .leaf {
+    font-size: 0.8em;
+  }
+}
+
+// Recent comments sidebar
+
+div.recent-comments
+{
+  width: 100%;
+  padding: 1em;
+  background-color: $scite-color;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
 }

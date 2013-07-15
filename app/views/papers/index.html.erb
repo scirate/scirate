@@ -3,7 +3,7 @@
 
 <% provide :title, @title %>
 
-<div class="row-fluid index">
+<div class="row-fluid paper-index">
   <div class="span2 sidebar left">
     <!--
     <% if signed_in? %>
@@ -12,13 +12,26 @@
       <% end %>
     <% end %>-->
 
-    <ul class="feeds">
-      <li class="heading">arXiv</li>
+    <ul class="nav nav-list tree-sidebar">
+      <li class="my-feeds">
+        <label class="tree-toggler nav-header">My feeds</label>
+        <ul class="nav nav-list tree">
+          <% current_user.feeds.each do |feed| %>
+            <li class="leaf"><%= link_to(feed.fullname, feed) %></li>
+          <% end %>
+        </ul>
+      </li>
+        
+      <li class="source-heading">arxiv.org</li>
       <% Feed.arxiv_toplevel.each do |parent| %>
-        <li><%= link_to parent.fullname, parent %></li>
-        <% parent.children.each do |feed| %>
-          <li><%= link_to feed.fullname, feed %></li>
-        <% end %>
+        <li>
+          <label class="tree-toggler nav-header"><%= parent.fullname %></label>
+          <ul class="nav nav-list tree" style="display: none;">
+            <% parent.children.each do |feed| %>
+              <li class="leaf"><%= link_to(feed.fullname, feed) %></li>
+            <% end %>
+          </ul>
+        </li>
       <% end %>
     </ul>
   </div>
