@@ -50,6 +50,9 @@ GEM
       oai
       ox (>= 2.0.2)
     bcrypt-ruby (3.0.1)
+    bourbon (3.1.8)
+      sass (>= 3.2.0)
+      thor
     builder (3.0.4)
     capybara (2.1.0)
       mime-types (>= 1.16)
@@ -102,6 +105,7 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
+    haml (3.1.8)
     hike (1.2.3)
     i18n (0.6.1)
     journey (1.0.4)
@@ -245,6 +249,7 @@ DEPENDENCIES
   annotate
   arxivsync (>= 0.0.3)
   bcrypt-ruby
+  bourbon
   capybara
   chronic
   coffee-rails
@@ -255,6 +260,7 @@ DEPENDENCIES
   growl
   guard-rspec
   guard-spork
+  haml
   jquery-rails
   launchy
   newrelic_rpm

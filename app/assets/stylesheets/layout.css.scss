@@ -26,6 +26,10 @@ body {
   font-weight: bold;
 }
 
+a:link, a:visited {
+  color: #3c63af;
+}
+
 // Main header
 
 header.first {
@@ -294,15 +298,33 @@ li.paper {
   list-style-type: none;
   padding: 10px 0;
 
-  span.title {
+  .title {
     font-weight: bold;
+    font-size: 1.2em;
+
+    a {
+      color: #333;
+    }
+
+    a:hover {
+      color: #3c63af;
+      text-decoration: none;
+    }
+  }
+
+  .scite, .unscite {
+    @include border-left-radius(5px);
   }
 
   .scites-count {
+    .btn {
+      @include border-right-radius(5px);
+      border-left: 0;
+    }
+
     position: relative;
     display: inline-block;
     margin-left: -4px;
-    border-left: 0;
 
     .sciters-dropdown {
       display: none;

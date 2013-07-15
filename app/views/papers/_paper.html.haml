@@ -1,0 +1,25 @@
+%li.paper.tex2jax
+  .row-fluid
+    .span10
+      .title= link_to sanitize(paper.title), paper
+      %span.identifier
+        = "arXiv:#{paper.identifier}"
+        [#{link_to paper.feed.name, paper.feed}]
+      %span.links
+        = link_to "(abs)", paper.url
+        = paper.pdf_url.nil? ? '' : link_to("(pdf)", paper.pdf_url)
+      - if paper.cross_lists.length > 1
+        .crosslist
+          cross-listed to:
+          - for crosslist in paper.cross_lists
+            - if crosslist.feed_id != paper.feed_id
+              = link_to crosslist.feed.name, crosslist.feed
+      .authors
+        - paper.authors.each do |author|
+          = author_link_to author
+          - if author != paper.authors[-1]
+            ,
+    .span2
+      = render 'scites/toggle', paper: paper
+  %div{:class => "abstract_#{paper.id}"}
+    = render partial: 'papers/abstract', object: paper, as: :paper
