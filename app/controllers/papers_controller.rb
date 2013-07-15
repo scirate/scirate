@@ -174,32 +174,6 @@ class PapersController < ApplicationController
   end
 
   private
-
-    def parse_date params
-      date = Chronic.parse(params[:date])
-      date = date.to_date if !date.nil?
-
-      return date
-    end
-
-    def parse_feed params
-      feed = Feed.find_by_name(params[:feed])
-
-      return feed
-    end
-
-    def parse_range range
-      range = params[:range].to_i
-
-      # I expect range=2 to show me two days
-      range -= 1
-
-      # negative date windows are confusing
-      range = 0 if range < 0
-
-      return range
-    end
-
     def fetch_papers feed, date, range
       return [] if date.nil?
       @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
@@ -207,13 +181,5 @@ class PapersController < ApplicationController
       collection = collection.includes(:feed, :authors, :cross_lists => :feed)
       collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
       collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
-    end
-
-    def describe_range(date, range)
-      desc = date.to_formatted_s(:rfc822)
-      if range != 0
-        desc = (date-range.days).to_formatted_s(:rfc822) + " to #{desc}"
-      end
-      desc
     end
 end

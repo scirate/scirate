@@ -3,13 +3,16 @@ class FeedsController < ApplicationController
 
   def show
     @feed = Feed.find_by_name(params[:feed])
-    @date = @feed.last_paper_date
+    @date = parse_date(params) || @feed.last_paper_date
+    @range = parse_range(params)
+    @page = params[:page]
 
+    @recent_comments = Comment.joins(:paper)
+                              .where(:paper => { :feed_id => @feed.id })
+                              .order("created_at DESC")
     @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
-    @papers = @feed.cross_listed_papers.paginate(page: params[:page])
-    @papers = @papers.includes(:feed, :authors, :cross_lists => :feed)
-    @papers = @papers.where("pubdate >= ? AND pubdate <= ?", @date, @date)
-    @papers = @papers.order("scites_count DESC, comments_count DESC, identifier ASC")
+
+    @papers = Paper.range_query(@feed.cross_listed_papers, @date, @range, @page)
   end
 
   def subscribe

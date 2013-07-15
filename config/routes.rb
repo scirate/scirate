@@ -10,8 +10,6 @@ Scirate3::Application.routes.draw do
   end
 
   get '/search', to: 'papers#search', as: 'papers_search'
-  get '/next/:date', to: 'papers#next', as: 'papers_next'
-  get '/prev/:date', to: 'papers#prev', as: 'papers_prev'
 
   resources :scites, only: [:create]
   delete '/scites', to: 'scites#destroy', as: 'scites'

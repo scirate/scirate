@@ -13,4 +13,12 @@ module ApplicationHelper
       sanitize("#{base_title} | #{page_title}")
     end
   end
+
+  def describe_range(date, range)
+    desc = date.to_formatted_s(:rfc822)
+    if range != 0
+      desc = (date-range.days).to_formatted_s(:rfc822) + " to #{desc}"
+    end
+    desc
+  end
 end

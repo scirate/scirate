@@ -1,14 +1,11 @@
 <nav class="round">
-  <ul>
-    <li><%= link_to("<< Prev day", papers_prev_path(params.merge(date: @date))) %></li>
-    <li><%= link_to("Next day >>", papers_next_path(params.merge(date: @date))) %></li>
-  </ul>
-  <ul>
+  <%= link_to("<<", url_for(params.merge(date: @date-1.days))) %>
+  <strong><%= @date.to_formatted_s(:rfc822) %></strong>
+  <%= link_to(">>", url_for(params.merge(date: @date+1.days))) %>
     Include:
     <li><%= link_to("2d", url_for( params.merge( range: 2 ))) %></li>
     <li><%= link_to("3d", url_for( params.merge( range: 3 ))) %></li>
     <li><%= link_to("1w", url_for( params.merge( range: 7 ))) %></li>
     <li><%= link_to("1m", url_for( params.merge( range: 31 ))) %></li>
     <li><%= link_to("1y", url_for( params.merge( range: 365 ))) %></li>
-  </ul>
 </nav>

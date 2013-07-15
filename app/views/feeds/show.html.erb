@@ -20,7 +20,7 @@
         </li>
       <% end %>
 
-      <li class="source-heading">arxiv.org</li>
+      <li class="source-heading">arXiv.org</li>
       <% Feed.find_all_by_name(['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent| %>
         <li>
           <label class="tree-toggler nav-header"><%= parent.fullname %></label>
@@ -43,10 +43,17 @@
 
   <div class="span8">
     <header class="feed-header">
-      <h1><%= @feed.fullname %></h1>
-      <h3>
-        <%= @date.to_formatted_s(:rfc822) %>
-      </h3>
+      <div class="row-fluid">
+        <div class="span10">
+          <h1><%= @feed.fullname %></h1>
+          <p class="feed-subdesc">
+            Found <%= @papers.count %> papers from <%= describe_range(@date, @range) %>
+          </p>
+        </div>
+        <div class="span2">
+          <%= render 'feeds/subscribe', :feed => @feed %>
+        </div>
+      </div>
     </header>
 
     <div class="paperlist">
@@ -67,7 +74,9 @@
     &nbsp;
   </div>
 
-  <div class="feed-rightbar span2">
-    <%= render 'feeds/subscribe', :feed => @feed %>
+  <div class="span2 feed-rightbar">
+    <%= render :partial => 'feeds/next_prev_links' %>
+    <h3>Recent comments</h3>
+    <%= render :partial => "comments/abbr_comment", :collection => @recent_comments[0..9] %>
   </div>
 </div>

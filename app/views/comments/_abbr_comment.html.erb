@@ -1,16 +1,17 @@
-<div class="abbr_comment">
+<div class="abbr-comment">
 <% if abbr_comment.paper.title.length>75 %>
   <%= link_to (abbr_comment.paper.title[0..72]+"..."), abbr_comment.paper %><br>
 <% else %>
   <%= link_to abbr_comment.paper.title, abbr_comment.paper %><br>
 <% end %>
-On <%= abbr_comment.created_at.to_date.to_formatted_s(format = :short) %>,
-<%= link_to abbr_comment.user.name, abbr_comment.user %> wrote: <br>
+
+<span class="username"><%= link_to abbr_comment.user.name, abbr_comment.user %></span>
+<span class="timeago"><%= time_ago_in_words(abbr_comment.created_at) %> ago</span>
+
 <blockquote style="margin-top:5px">
-<%= simple_format(strip_tags(abbr_comment.content[0..499])) %>
-<%= if abbr_comment.content.length>500
-link_to "...(continued)",abbr_comment.paper
-end
- %>
+<%= strip_tags(abbr_comment.content[0..299]) %>
+<% if abbr_comment.content.length>300 %>
+  <%= link_to "...(continued)", abbr_comment.paper %>
+<% end %>
 </blockquote>
 </div>

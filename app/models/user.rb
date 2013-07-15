@@ -52,8 +52,10 @@ class User < ActiveRecord::Base
   end
 
   def scite!(paper)
-    scites.create!(paper_id: paper.id)
-    paper.scites_count += 1
+    unless scites.find_by_paper_id(paper.id)
+      scites.create!(paper_id: paper.id)
+      paper.scites_count += 1
+    end
   end
 
   def unscite!(paper)

@@ -3,7 +3,7 @@
                          remote: true) do |f| %>
     <div><%= f.hidden_field :paper_id %></div>
     <%= f.submit "Scite!", class: 'btn scite' %>
-    <button class="btn count"><%= paper.scites_count %></button>
+    <%= render partial: 'scites/count', object: paper, as: :paper %>
   <% end %>
 <% else %>
   <a href="/signin"><input class="btn scite" type="button" value="Scite" /></a>
