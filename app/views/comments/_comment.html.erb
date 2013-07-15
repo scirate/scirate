@@ -8,11 +8,9 @@
   <div class="nonvotes">
     <span>
       <% if @user %>
-        Comment on paper <%= link_to comment.paper.identifier, comment.paper %>
-      <% elsif @paper %>
-        <%= link_to comment.user.name, comment.user %> commented
+        <div><%= link_to comment.paper.title, comment.paper %></div>
       <% end %>
-      at  <%= comment.created_at.to_formatted_s(:short) %>
+      <%= link_to comment.user.name, comment.user %>
     </span>
 
     <%# Indicate reply chain if present %>
@@ -20,6 +18,7 @@
       in reply to <%= link_to comment.parent.user.name, comment.parent.user %>
     <% end %>
 
+    <span class="timeago"><%= time_ago_in_words(comment.created_at) %> ago</span>
 
     <% if comment.cached_votes_up > 0 || comment.cached_votes_down > 0 %>
       (<span class="score"><%= comment.cached_votes_up-comment.cached_votes_down %></span> points)
@@ -28,7 +27,7 @@
       <%= simple_format(strip_tags(comment.content)) %>
     </div>
 
-    <% if current_user %>
+    <% if @paper && current_user %>
       <div class="actions">
         <a class="reply">reply</a>
         <% if current_user.id == comment.user_id %>

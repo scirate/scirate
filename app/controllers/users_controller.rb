@@ -6,6 +6,9 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+
+    @scited_papers = @user.scited_papers
+    @comments = @user.comments
   end
 
   def new

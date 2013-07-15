@@ -1,0 +1,21 @@
+- provide :title, "Settings"
+.container
+  %h1 Settings
+  %ul.nav.nav-tabs
+    %li.active= link_to 'General', '/settings'
+    %li= link_to 'Password', '/settings/password'
+  = form_for(@user, url: settings_path) do |f|
+    %table.table.table-striped
+      %tr
+        %td= f.label :name, "Name"
+        %td= f.text_field :name
+      %tr
+        %td= f.label :email, "Email"
+        %td= f.email_field :email
+      %tr
+        %td= f.label :expand_abstracts, "Always expand abstracts"
+        %td= f.check_box :expand_abstracts
+    = f.submit "Save changes"
+  %div
+    = gravatar_for(@user)
+    = link_to "change", "http://gravatar.com/emails", target: "_blank"
