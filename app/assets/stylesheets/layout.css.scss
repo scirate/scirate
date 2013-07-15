@@ -89,7 +89,10 @@ header.first {
       float: left;
       margin-left: 20px;
       margin-bottom: 0;
-      input { border-radius: 10px; }
+      input { 
+        margin-bottom: 0;
+        border-radius: 10px; 
+      }
     }
   }
 }

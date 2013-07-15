@@ -17,89 +17,76 @@ class PapersController < ApplicationController
     @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
   end
 
-  def index
-    @date = parse_date params
-    @feed = parse_feed params
-    @range = parse_range params
+  def __search(query)
+    @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
+    
 
-    @recent_comments = Comment.includes(:paper, :user).limit(10).where(hidden: false).order("created_at DESC")
+    # TODO (Mispy): Proper parsing with precedence parentheses and such
+    
+    terms = { :or => {}, :and => {} }
 
-    if @feed.nil?
-      return not_found if params[:feed]
-
-      if signed_in?
-        index_subscriptions
+    operator = :and
+    query.split.each do |term|
+      if term.upcase == "OR"
+        operator = :or
       else
-        return render('papers/landing', :layout => nil)
+        operator = :and
       end
-    else
-      index_feed
+
+      if term.start_with?('au:')
+        terms[operator][:author] = term.split('au:')[1]
+      elsif term.start_with?('ti:')
+        terms[operator][:title] = term.split('ti:')[1]
+      else
+      end
     end
+
+    @papers = Paper.basic_search(terms[:or], false).basic_search(terms[:and])
+
+#    if query.start_with?('au:')
+#      author_query = query.split('au:', 2)[1]
+#      if author_query.match(/^[^_]+_[^_]$/) # arXiv style author query
+#        authors = Author.where(searchterm: query.split('au:')[1])
+#      else
+#        authors = Author.advanced_search(fullname: author_query)
+#      end
+#
+#      @papers = Paper.joins(:authorships)
+#                     .where(:authorships => { :author_id => authors.map(&:id) })
+#                     .includes(:authors, :cross_lists, :scites, :feed)
+#                     .paginate(page: params[:page])
+#
+#    else
+#      @authors = Author.advanced_search(fullname: query).limit(50).all.uniq(&:fullname)
+#      @papers = Paper.includes(:authors, :cross_lists, :scites, :feed)
+#                     .basic_search(query).except(:order)
+#                     .paginate(page: params[:page])
+#    end
+
+    render :search
   end
 
-  def advanced_search
-    opts = {}
+  def search
+    @query = params[:q] || ''
 
-    @papers = Paper
-
-    searching = false
     params.each do |key, val|
       next if val.empty?
 
       case key
       when 'authors'
-        names = val.split(/,\s*/).join('&')
-        authors = Author.advanced_search(fullname: names)
-        @papers = @papers.joins(:authorships)
-                         .where(:authorships => { :author_id => authors.map(&:id) })
-        searching = true
-      when 'abstract'
-        opts[:abstract] = val
-        searching = true
+        authors = val.split(/,\s+/)
+        @query += authors.map { |au| "au:#{au}" }.join(' AND ')
       when 'title'
-        opts[:title] = val
-        searching = true
+        @query += " AND ti:#{val}"
+      when 'abstract'
+        @query += " AND abs:#{val}"
+      when 'feed'
+        @query += " AND feed:#{val}"
       end
     end
 
-    if searching
-      unless opts.empty?
-        @papers = @papers.basic_search(opts).except(:order)
-      end
-      @papers = @papers.includes(:authors, :cross_lists, :feed)
-                       .limit(1000).paginate(page: params[:page])
-      render :search_results
-    else
-      render :search_form
-    end
-  end
-
-  def search
-    query = params[:q]
-    @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
-    return advanced_search unless query
-    
-    if query.start_with?('au:')
-      author_query = query.split('au:', 2)[1]
-      if author_query.match(/^[^_]+_[^_]$/) # arXiv style author query
-        authors = Author.where(searchterm: query.split('au:')[1])
-      else
-        authors = Author.advanced_search(fullname: author_query)
-      end
-
-      @papers = Paper.joins(:authorships)
-                     .where(:authorships => { :author_id => authors.map(&:id) })
-                     .includes(:authors, :cross_lists, :scites, :feed)
-                     .paginate(page: params[:page])
-
-    else
-      @authors = Author.advanced_search(fullname: query).limit(50).all.uniq(&:fullname)
-      @papers = Paper.includes(:authors, :cross_lists, :scites, :feed)
-                     .basic_search(query).except(:order)
-                     .paginate(page: params[:page])
-    end
-
-    render :search_results
+    @query = @query.gsub(/^ AND /, '')
+    __search(@query)
   end
 
   def next
