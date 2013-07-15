@@ -46,7 +46,7 @@ Scirate3::Application.routes.draw do
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
   resources :password_resets, only: [:new, :create, :edit, :update]
 
-  get '/arxiv/:feed', to: 'papers#index', feed: /.+/, as: "feed"
+  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: "feed"
   #custom route to use arXiv identifiers as id's for papers
   get '/:id', to: 'papers#show', id: /.+/, as: "paper"
 

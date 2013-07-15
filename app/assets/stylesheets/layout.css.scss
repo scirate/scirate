@@ -14,6 +14,10 @@ body {
   font: 81.25%/1.385 arial,sans-serif;
 }
 
+.container {
+  width: 1170px;
+}
+
 // Main header
 
 header.first {
@@ -88,7 +92,7 @@ header.second {
 
 // Individual paper page
 
-.paper {
+div.paper {
   h1.title {
     margin-top: 20px;
     font: 30px 'FS Albert Web Regular',Verdana,sans-serif;
@@ -217,9 +221,13 @@ div.abbr_comment
 
 .paper-index {
   margin-top: 20px;
+
+  h1 {
+    margin: 0;
+  }
 }
 
-// Paper index sidebar
+// Feed page sidebar
 
 ul.tree-sidebar {
   .my-feeds {
@@ -239,10 +247,27 @@ ul.tree-sidebar {
   .tree-toggler {
     font-size: 0.7em;
     margin-bottom: 0;
+    line-height: 1.8em;
   }
 
   .leaf {
     font-size: 0.8em;
+    line-height: 1.4em;
+  }
+
+  .leaf.active {
+    font-weight: bold;
+  }
+}
+
+// Feed page paper listing
+
+li.paper {
+  list-style-type: none;
+  padding: 10px 0;
+
+  span.title {
+    font-weight: bold;
   }
 }
 

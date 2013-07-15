@@ -1,15 +1,7 @@
 <li class="paper tex2jax">
-   <div class="scite">
-     <%= render( partial: 'scite_form', object: paper, as: :paper) %>
-     <span class="<%= "scite_count_#{paper.id}" %>">
-       <%= pluralize(paper.scites.size, 'Scite') %>
-     </span><br />
-     <%= link_to(pluralize(paper.comments.size, 'Comment'),
-                         paper_path(paper, anchor: "comments")) if paper.comments.size > 0 %>
-   </div>
-   <%= render 'paper_title', paper: paper %>
+   <%= render 'papers/paper_title', paper: paper %>
    <div class="<%= "abstract_#{paper.id}" %>">
-     <%= render partial: 'abstract', object: paper, as: :paper %>
+     <%= render partial: 'papers/abstract', object: paper, as: :paper %>
    </div>
    <div style="clear: both;"></div>
 </li>

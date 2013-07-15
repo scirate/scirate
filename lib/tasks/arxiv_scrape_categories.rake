@@ -4,7 +4,13 @@ require 'open-uri'
 def make_feed(name, fullname, parent=nil)
   feed = Feed.find_or_create_by_name(name)
   feed.feed_type = 'arxiv'
-  feed.fullname = fullname
+
+  if name == "cs" # HACK (Mispy)
+    feed.fullname = "Computer Science"
+  else
+    feed.fullname = fullname
+  end
+
   feed.parent = parent
   feed.updated_date ||= Date.yesterday
   feed
@@ -44,6 +50,9 @@ namespace :arxiv do
     print "Import this feed data? [y/N]: "
     return unless STDIN.gets.strip.downcase == 'y'
 
-    feeds.each { |feed| feed.save! }
+    feeds.each_with_index do |feed, i| 
+      feed.position = i
+      feed.save!
+    end
   end
 end

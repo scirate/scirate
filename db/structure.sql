@@ -313,7 +313,8 @@ CREATE TABLE feeds (
     subscriptions_count integer DEFAULT 0,
     last_paper_date date,
     fullname text,
-    parent_id integer
+    parent_id integer,
+    "position" integer
 );
 
 
@@ -1213,3 +1214,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130627181018');
 INSERT INTO schema_migrations (version) VALUES ('20130709021255');
 
 INSERT INTO schema_migrations (version) VALUES ('20130712055848');
+
+INSERT INTO schema_migrations (version) VALUES ('20130715063331');

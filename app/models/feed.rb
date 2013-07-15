@@ -4,6 +4,7 @@
 #
 #  id                  :integer         not null, primary key
 #  parent_id           :integer
+#  position            :integer
 #  name                :string(255)
 #  fullname            :text
 #  feed_type           :string(255)
@@ -28,6 +29,8 @@ class Feed < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :feed_type, presence: true
   validates :updated_date, presence: true
+
+  default_scope order(:position)
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_toplevel

@@ -1,0 +1,66 @@
+
+<%# The title has a number of possible states #%>
+
+<% provide :title, @title %>
+
+<div class="row-fluid paper-index">
+  <div class="span2 sidebar left">
+
+    <ul class="nav nav-list tree-sidebar">
+      <% if signed_in? %>
+        <li class="my-feeds">
+          <label class="tree-toggler nav-header">My feeds</label>
+          <ul class="nav nav-list tree">
+            <% current_user.feeds.each do |feed| %>
+              <li class="leaf<% if @feed == feed %> active<% end %>">
+                <%= link_to(feed.fullname, feed) %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+
+      <li class="source-heading">arxiv.org</li>
+      <% Feed.find_all_by_name(['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent| %>
+        <li>
+          <label class="tree-toggler nav-header"><%= parent.fullname %></label>
+          <ul class="nav nav-list tree" <% unless @feed.parent == parent %>style="display: none;"<% end %>>
+            <% parent.children.each do |feed| %>
+              <li class="leaf <% if @feed == feed %> active<% end %>"><%= link_to(feed.fullname, feed) %></li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+
+      <% Feed.find_all_by_name(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed| %>
+        <li class="leaf <% if @feed == feed %> active<% end %>"><%= link_to(feed.fullname, feed) %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="span9">
+    <header>
+      <h1><%= @feed.fullname %></h1>
+      <h3>All papers from <%= @date.to_formatted_s(:rfc822) %></h3>
+
+      <%= render 'feeds/subscribe', :feed => @feed %>
+
+
+      <div class="paperlist">
+      <ul class="papers">
+        <% if @papers.length == 0 %>
+          <% if @feed.nil? && signed_in? && !current_user.has_subscriptions? %>
+            <p>You haven't subscribed to any feeds yet! Papers from subscribed feeds will appear here.</p>
+          <% else %>
+            <p>No papers found!</p>
+          <% end %>
+        <% else %>
+          <%= render @papers %>
+        <% end %>
+      </ul>
+      </div>
+
+      <%= will_paginate @papers %>
+      &nbsp;
+  </div>
+</div>
