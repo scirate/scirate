@@ -26,6 +26,8 @@ body {
   font-weight: bold;
 }
 
+.hidden { display: none; }
+
 a:link, a:visited {
   color: #3c63af;
 }
@@ -233,7 +235,13 @@ div.abbr_comment
 
 // Feed listing sidebar
 
-ul.tree-sidebar {
+ul.feedbar {
+  label {
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  font-family: 'Noto Sans', sans-serif;
+
   .my-feeds {
     .tree-toggler {
       font-size: 1em;
@@ -249,7 +257,7 @@ ul.tree-sidebar {
   }
 
   .tree-toggler {
-    font-size: 0.7em;
+    font-size: 0.8em;
     margin-bottom: 0;
     line-height: 1.8em;
   }
@@ -259,8 +267,11 @@ ul.tree-sidebar {
     line-height: 1.4em;
   }
 
-  .leaf.active {
+  .leaf.active a {
+    background-color: inherit;
+    text-shadow: none;
     font-weight: bold;
+    color: #3c63af;
   }
 }
 
@@ -270,6 +281,7 @@ header.feed-header {
   h1 {
     margin-top: 0;
     margin-bottom: 0;
+    font-size: 2.4em;
   }
 
   .subscribe-toggle {
@@ -286,8 +298,28 @@ header.feed-header {
 
 // Feed paper listing
 
-.feed-display {
-  margin-top: 20px;
+.split {
+  z-index: -100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  background: #eeeeee;
+}
+
+.feedbar {
+  padding-top: 20px;
+}
+
+.feed-center, .feed-rightbar {
+  padding-top: 20px;
+  background: white;
+  height: 100%;
+}
+
+.feed-center {
+  padding-left: 33px;
 }
 
 ul.papers {
@@ -301,7 +333,7 @@ li.paper {
   padding: 10px 0;
 
   .title {
-    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
     font-size: 1.2em;
 
     a {
@@ -316,6 +348,10 @@ li.paper {
 
   .scite, .unscite {
     @include border-left-radius(5px);
+  }
+
+  .scite, .scites-count .btn {
+    color: #888;
   }
 
   .scites-count {
@@ -349,8 +385,6 @@ li.paper {
 
 div.feed-rightbar
 {
-  padding-top: 3px;
-
   .timelinks {
     text-align: center;
     li {

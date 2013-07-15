@@ -1,7 +1,0 @@
-<%= form_tag "/scites", method: :delete, remote: true do %>
-  <div>
-    <%= hidden_field_tag :paper_id, paper.id %>
-  </div>
-  <%= submit_tag "Scited", class: 'btn unscite btn-success' %>
-  <%= render partial: 'scites/count', object: paper, as: :paper %>
-<% end %>

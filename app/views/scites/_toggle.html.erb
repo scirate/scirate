@@ -1,11 +1,9 @@
-<div id="<%="scite_form_#{paper.id}" %>" >
-  <% if signed_in? %>
-    <% if (@scited_papers && @scited_papers.include?(paper)) || current_user.scited_papers.include?(paper) %>
-      <%= render partial: 'scites/unscite', object: paper, as: :paper %>
-    <% else %>
-      <%= render partial: 'scites/scite', object: paper, as: :paper %>
-    <% end %>
+<div class="scite-toggle" data-paper-id="<%= paper.id %>" >
+  <% if signed_in? && @scited_papers && @scited_papers.include?(paper) %>
+    <button class="btn unscite btn-success">Scited</button>
+    <%= render partial: 'scites/count', object: paper, as: :paper %>
   <% else %>
-    <%= render partial: 'scites/scite', object: paper, as: :paper %>
+    <button class="btn scite">Scite!</button> 
+    <%= render partial: 'scites/count', object: paper, as: :paper %>
   <% end %>
 </div>

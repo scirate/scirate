@@ -11,8 +11,9 @@ Scirate3::Application.routes.draw do
 
   get '/search', to: 'papers#search', as: 'papers_search'
 
-  resources :scites, only: [:create]
-  delete '/scites', to: 'scites#destroy', as: 'scites'
+
+  post '/scite', to: 'scites#create'
+  post '/unscite', to: 'scites#destroy'
 
   put '/subscriptions', to: 'subscriptions#update'
 
