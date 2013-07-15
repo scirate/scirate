@@ -3,4 +3,5 @@
     <%= hidden_field_tag :paper_id, paper.id %>
   </div>
   <%= submit_tag "Scited", class: 'btn unscite btn-success' %>
+  <button class="btn count"><%= paper.scites_count %></button>
 <% end %>

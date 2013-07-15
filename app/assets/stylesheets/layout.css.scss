@@ -227,7 +227,7 @@ div.abbr_comment
   }
 }
 
-// Feed page sidebar
+// Feed listing sidebar
 
 ul.tree-sidebar {
   .my-feeds {
@@ -260,14 +260,35 @@ ul.tree-sidebar {
   }
 }
 
-// Feed page paper listing
+// Feed right sidebar
+
+div.feed-rightbar {
+  padding-top: 5px;
+}
+
+// Feed header
+
+header.feed-header {
+}
+
+// Feed paper listing
+
+ul.papers {
+  margin-left: 0;
+}
 
 li.paper {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+
   list-style-type: none;
   padding: 10px 0;
 
   span.title {
     font-weight: bold;
+  }
+
+  .count {
+    margin-left: -10px;
   }
 }
 

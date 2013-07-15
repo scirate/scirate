@@ -1,7 +1,13 @@
 <li class="paper tex2jax">
-   <%= render 'papers/paper_title', paper: paper %>
-   <div class="<%= "abstract_#{paper.id}" %>">
-     <%= render partial: 'papers/abstract', object: paper, as: :paper %>
-   </div>
-   <div style="clear: both;"></div>
+  <div class="row-fluid">
+    <div class="span10">
+      <%= render 'papers/paper_title', paper: paper %>
+    </div>
+    <div class="span2">
+      <%= render 'scites/toggle', paper: paper %>
+    </div>
+  </div>
+  <div class="<%= "abstract_#{paper.id}" %>">
+    <%= render partial: 'papers/abstract', object: paper, as: :paper %>
+  </div>
 </li>

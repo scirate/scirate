@@ -49,7 +49,6 @@
               <li><%= link_to "Home", root_path %></li>
               <li><%= link_to "Profile", current_user %></li>
               <li><%= link_to "Settings", settings_path %></li>
-              <li><%= link_to "Subscriptions", subscriptions_user_path(current_user) %></li>
 
               <!-- <li><%= link_to "Sign out", signout_path, method: :delete %></li> -->
             <% else %>
@@ -76,8 +75,6 @@
         <% end %>
       <% end %>
       <%= yield %>
-      <%= render 'layouts/footer' %>
-      <%= "<!-- #{debug(params)} -->" if Rails.env.development? %>
     </div>
   </body>
 </html>
