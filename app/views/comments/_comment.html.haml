@@ -1,0 +1,36 @@
+- @voted = current_user && current_user.voted_as_when_voted_for(comment)
+%div{:class => "comment#{@voted ? ' voted' : ''}#{comment.parent ? ' reply' : ''}", "data-id" => comment.id, "data-markup" => comment.content}
+  .votes
+    %div{:class => "upvote#{@voted == true ? ' active' : ''}"}
+      %i.icon-arrow-up
+    %div{:class => "downvote#{@voted == false ? ' active': ''}"}
+      %i.icon-arrow-down
+  .nonvotes
+    %span
+      - if @user
+        %div= link_to comment.paper.title, comment.paper
+      = link_to comment.user.name, comment.user
+      - if comment.parent
+        in reply to #{link_to comment.parent.user.name, comment.parent.user}
+      %span.timeago
+        = time_ago_in_words(comment.created_at)
+        ago
+      - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
+        (
+        %span.score= comment.cached_votes_up-comment.cached_votes_down
+        points)
+      .body.tex2jax
+        = simple_format(strip_tags(comment.content))
+      - if @paper && current_user
+        .actions
+          %a.reply reply
+          - if current_user.id == comment.user_id
+            |
+            %a.edit edit
+            | #{link_to 'delete', comment, :method => :delete}
+          - else
+            - if comment.reports.exists?(:user_id => current_user.id)
+              %a.unreport reported (undo)
+            - else
+              %a.report report
+  %div{:style => "clear: both;"}

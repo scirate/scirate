@@ -180,20 +180,19 @@ div.comments {
   }
 }
 
-div.abbr_comment
-{
-        word-wrap: break-word;
-        overflow: hidden;
+div.abbr_comment {
+  word-wrap: break-word;
+  overflow: hidden;
 }
 
 .comment {
   .votes {
     float: left;
-    margin-right: 5px;
+    margin-right: 10px;
   }
 
   .nonvotes {
-    float: left;
+    overflow: hidden;
   }
 
   .upvote, .downvote {
