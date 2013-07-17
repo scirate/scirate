@@ -1,9 +1,14 @@
 class FeedsController < ApplicationController
   before_filter :find_feed, :only => [:subscribe, :unsubscribe]
 
+  def landing
+    @feeds = Feed.map_names
+    render('papers/landing', :layout => nil)
+  end
+
   # Aggregated feed
   def index
-    return render('papers/landing', :layout => nil) unless signed_in?
+    return landing unless signed_in?
 
     @date = parse_date(params) || Feed.default.last_paper_date
     @range = parse_range(params)

@@ -21,4 +21,8 @@ module ApplicationHelper
     end
     desc
   end
+
+  def landing_column(parent)
+    render partial: 'feeds/landing_column', locals: { heading: parent.fullname, feeds: parent.children }
+  end
 end

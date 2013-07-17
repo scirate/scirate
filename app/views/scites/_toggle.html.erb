@@ -1,4 +1,4 @@
-<div class="scite-toggle <%= !@scited_papers.include?(paper) && 'inactive' %>" data-paper-id="<%= paper.id %>" >
+<div class="scite-toggle <%= (signed_in? && @scited_papers.include?(paper)) ? '' : 'inactive' %>" data-paper-id="<%= paper.id %>" >
   <% if signed_in? && @scited_papers.include?(paper) %>
     <button class="btn unscite btn-success">Scited</button>
     <%= render partial: 'scites/count', object: paper, as: :paper %>
