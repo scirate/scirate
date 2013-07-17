@@ -10,16 +10,20 @@ class FeedsController < ApplicationController
   def index
     return landing unless signed_in?
 
+    feeds = current_user.feeds.includes(:children)
+    feed_ids = feeds.map(&:id) + feeds.map(&:children).flatten.map(&:id)
+
     @date = parse_date(params) || Feed.default.last_paper_date
     @range = parse_range(params)
     @page = params[:page]
 
     @recent_comments = Comment.joins(:paper)
-                              .where(:paper => {:feed_id => current_user.feeds.map(&:id) })
+                              .where(:paper => { :feed_id => feed_ids })
                               .order("created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers)
 
-    @papers = Paper.range_query(current_user.feed, @date, @range, @page)
+    @papers = Paper.where(cross_lists: { feed_id: feed_ids })
+    @papers = Paper.range_query(@papers, @date, @range, @page)
     render 'feeds/show'
   end
 
@@ -32,7 +36,7 @@ class FeedsController < ApplicationController
     @page = params[:page]
 
     @recent_comments = Comment.joins(:paper)
-                              .where(:paper => { :feed_id => @feed.id })
+                              .where(:paper => { :feed_id => feed_ids })
                               .order("created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers) if signed_in?
 

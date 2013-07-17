@@ -21,7 +21,8 @@ body {
 .container { width: 1170px; }
 .timeago { color: rgba(0, 0, 0, 0.5); }
 .username { font-weight: bold; }
-.hidden { display: none; }
+.hidden { display: none !important; }
+.transparent { opacity: 0.0 !important; }
 .right { float: right; }
 .left { float: left; }
 

@@ -18,12 +18,13 @@
 
         %li.source-heading arXiv.org
         - Feed.find_all_by_name(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
-          %li.leaf{ class: @feed == feed && 'active' }= link_to(feed.fullname, feed)
+          %li.feed-folder
+            %label.nav-header
+              %i.icon-chevron-right.transparent
+              = link_to feed.fullname, feed
 
         - Feed.find_all_by_name(['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent|
           %li.feed-folder
-
-
             - expanded = (@feed == parent || (@feed && @feed.parent == parent))
             %label.nav-header
               %i{ class: expanded ? 'icon-chevron-down' : 'icon-chevron-right' }
