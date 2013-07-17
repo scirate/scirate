@@ -14,7 +14,12 @@
                 %li.leaf
                   = link_to(feed.fullname, feed)
 
+
         %li.source-heading arXiv.org
+
+        - Feed.find_all_by_name(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+          %li.leaf{ class: @feed == feed && 'active' }= link_to(feed.fullname, feed)
+
         - Feed.find_all_by_name(['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent|
           %li
             %label.tree-toggler.nav-header= parent.fullname
@@ -23,9 +28,6 @@
                 %li.leaf.parent{class: @feed == parent && 'active'}= link_to(parent.fullname, parent)
               - parent.children.each do |feed|
                 %li.leaf{class: @feed == feed && 'active'}= link_to(feed.fullname, feed)
-
-        - Feed.find_all_by_name(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
-          %li.leaf{ class: @feed == feed && 'active' }= link_to(feed.fullname, feed)
 
     .span10.feed-center
       %header.feed-header
