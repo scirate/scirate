@@ -96,13 +96,20 @@ class Feed < ActiveRecord::Base
                 last_paper_date: Time.now.utc.to_date)
   end
 
+  def aggregated_papers
+    feed_ids = self.id + self.children.map(&:id)
+    Paper.where(cross_lists: { feed_id: feed_ids })
+  end
+
   def update_last_paper_date
-    paper = self.papers.order("pubdate asc").last
+    paper = self.aggregated_papers.order("pubdate asc").last
     unless paper.nil?
       self.last_paper_date = paper.pubdate
       self.updated_date = paper.updated_date
       self.save!
     end
+
+    self.parent.update_last_paper_date unless self.parent.nil?
   end
 
   def identifier

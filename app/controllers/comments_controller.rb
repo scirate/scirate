@@ -69,6 +69,7 @@ class CommentsController < ApplicationController
     @reply = current_user.comments.build(
       paper_id: @comment.paper_id,
       parent_id: @comment.id,
+      ancestor_id: @comment.ancestor_id || @comment.id,
       content: params[:content]
     )
 

@@ -145,7 +145,9 @@ CREATE TABLE comments (
     cached_votes_up integer DEFAULT 0,
     cached_votes_down integer DEFAULT 0,
     parent_id integer,
-    hidden boolean DEFAULT false
+    hidden boolean DEFAULT false,
+    reply_id integer,
+    ancestor_id integer
 );
 
 
@@ -1216,3 +1218,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130709021255');
 INSERT INTO schema_migrations (version) VALUES ('20130712055848');
 
 INSERT INTO schema_migrations (version) VALUES ('20130715063331');
+
+INSERT INTO schema_migrations (version) VALUES ('20130717131348');
+
+INSERT INTO schema_migrations (version) VALUES ('20130717132402');
