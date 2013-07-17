@@ -36,13 +36,16 @@
     .span10.feed-center
       %header.feed-header
         .row-fluid
-          - if @feed
-            %h1
-              = @feed.fullname
-              = render 'feeds/subscribe', :feed => @feed
-          - else
-            .span10
-              %h1= "All subscribed feeds"
+          .span10
+            .row-fluid
+              - if @feed
+                .span10
+                  %h1= @feed.fullname
+                .span2
+                  = render 'feeds/subscribe', :feed => @feed
+              - else
+                .span10
+                  %h1= "All subscribed feeds"
 
       .row-fluid
         .span10
