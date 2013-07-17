@@ -1,0 +1,18 @@
+- provide :title, "Sign in"
+
+.container
+  %h1 Sign in
+  = form_tag sessions_path do
+    .field
+      = label_tag :email
+      = text_field_tag :email
+    .field
+      = label_tag :password
+      = password_field_tag :password
+    .field
+      = check_box_tag :remember_me, 1, params[:remember_me]
+      = label_tag :remember_me
+    .actions= submit_tag "Sign in"
+  %p
+    New user? #{link_to "Sign up now!", signup_path}
+  %p= link_to "Forgotten password?", new_password_reset_path

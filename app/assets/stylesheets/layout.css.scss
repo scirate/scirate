@@ -65,15 +65,16 @@ a:link, a:visited {
 
       @include border-bottom-radius(5px);
     }
+
+    li a:hover {
+      background: #3c63af;
+      color: white;
+      text-decoration: none;
+    }
     
     .signup a {
       color: white;
       background: #1e95f9;
-    }
-
-    .signup a:hover {
-      background: #3c63af;
-      text-decoration: none;
     }
 
     margin-bottom: 10px;
