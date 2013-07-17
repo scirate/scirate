@@ -2,10 +2,10 @@
 
 .split
 
-.container.feed-page
+.container#feed-page
   .row-fluid
-    .span2.sidebar.left
-      %ul.nav.nav-list.tree-sidebar.feedbar
+    .span2.feedbar.left
+      %ul.nav.nav-list.tree-sidebar
         - if signed_in?
           %li.my-feeds
             %label.tree-toggler.nav-header My feeds

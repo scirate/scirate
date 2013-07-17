@@ -223,7 +223,7 @@ div.abbr_comment
 
 // Feed listing sidebar
 
-ul.feedbar {
+.feedbar {
   label {
     color: rgba(0, 0, 0, 0.65);
   }
@@ -286,6 +286,15 @@ header.feed-header {
 }
 
 // Feed paper listing
+
+#feed-page {
+  overflow: hidden;
+}
+
+.feed-center {
+  margin-bottom: -99999px;
+  padding-bottom: 99999px;
+}
 
 .split {
   z-index: -100;
