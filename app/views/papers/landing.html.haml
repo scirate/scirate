@@ -11,14 +11,13 @@
   %body#landing
     %header.landing-header
       .container
-        
         %h1
           %a{ href: root_path }
             = image_tag "scirate-icon.png"
             Scirate
-        %section.round
-        - flash.each do |key, value|
-          = content_tag(:div, value, class: "flash #{key}")
+        %p An open access science aggregator
+        = form_tag papers_search_path, :method => 'get', class: 'searchbox' do
+          = text_field_tag :q, params[:q], placeholder: 'Search'
 
     %section.round
     - flash.each do |key, value|
@@ -30,13 +29,15 @@
           %ul.landing-nav
             %li= link_to "sign in", signin_path
             %li.signup= link_to "sign up", signup_path
+
+
+
+
         
+    .container
       .row-fluid
         .span3
           %h2 arXiv.org
-        .span3.offset6
-          = form_tag papers_search_path, :method => 'get', class: 'searchbox' do
-            = text_field_tag :q, params[:q], placeholder: 'Search'
       .row-fluid
         .span3
           = landing_column(@feeds['physics'])
