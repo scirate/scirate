@@ -162,6 +162,6 @@ class Comment
 
 $ ->
   $('a.has-tooltip').tooltip()
-  return unless $('.comments').length
+  return unless $('.comment').length
   Comment.setupComments()
 

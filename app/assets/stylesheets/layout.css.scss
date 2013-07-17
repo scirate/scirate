@@ -423,6 +423,10 @@ div.feed-rightbar
 // User profile page
 
 #profile-page {
+  table {
+    margin-bottom: 0;
+  }
+
   ul + li.paper {
     padding-top: 0;
     border-top: none;

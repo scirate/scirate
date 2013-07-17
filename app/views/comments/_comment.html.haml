@@ -15,10 +15,8 @@
       %span.timeago
         = time_ago_in_words(comment.created_at)
         ago
-      - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
-        (
-        %span.score= comment.cached_votes_up-comment.cached_votes_down
-        points)
+        - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
+          (<span class="score">#{comment.cached_votes_up-comment.cached_votes_down}</span> points)
       .body.tex2jax
         = simple_format(strip_tags(comment.content))
       - if @paper && current_user

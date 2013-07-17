@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     end
     
     @scited_papers = @scited_papers.paginate(page: params[:scite_page], per_page: 10)
-    @comments = @user.comments.paginate(page: params[:comment_page], per_page: 10)
+    @comments = @user.comments.paginate(page: params[:comment_page], per_page: 20)
   end
 
   def new
