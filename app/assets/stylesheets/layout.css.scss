@@ -334,12 +334,27 @@ div.abbr_comment {
 // Feed listing sidebar
 
 .feedbar {
+
+  li.feed-folder {
+    position: relative;
+    left: -18px;
+  }
+
   li.feed-folder label {
-    font-size: 0.7em;
+    font-size: 1em;
     margin-bottom: 0;
-    line-height: 1.8em;
+
+    text-transform: none;
+
+    i {
+      line-height: 1.5em;
+      float: left;
+    }
 
     a {
+      line-height: 1.4em;
+      display: block;
+      overflow: hidden;
       color: rgba(0, 0, 0, 0.65);
     }
   }
@@ -360,10 +375,10 @@ div.abbr_comment {
     border-bottom: 1px solid #aaa;
   }
 
-
   .leaf {
     font-size: 0.8em;
     line-height: 1.4em;
+    padding-left: 5px;
   }
 
   .leaf.active a {
@@ -371,6 +386,10 @@ div.abbr_comment {
     text-shadow: none;
     font-weight: bold;
     color: #3c63af;
+  }
+
+  .leaf a:hover {
+    text-decoration: underline;
   }
 }
 
