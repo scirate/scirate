@@ -37,11 +37,20 @@ class PapersController < ApplicationController
         terms[operator][:author] = term.split('au:')[1]
       elsif term.start_with?('ti:')
         terms[operator][:title] = term.split('ti:')[1]
+      elsif term.start_with?('abs:')
+        terms[operator][:abstract] = term.split('ti:')[1]
       else
+        Paper.instance_eval { searchable_columns }.each do |f|
+          terms[:or][f] = term
+        end
       end
     end
 
-    @papers = Paper.basic_search(terms[:or], false).basic_search(terms[:and])
+    p terms
+    @papers = Paper
+    @papers = @papers.basic_search(terms[:or], false) unless terms[:or].empty?
+    @papers = @papers.basic_search(terms[:and]) unless terms[:and].empty?
+    @papers = @papers.paginate(page: params[:page])
 
 #    if query.start_with?('au:')
 #      author_query = query.split('au:', 2)[1]
