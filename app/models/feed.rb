@@ -97,8 +97,8 @@ class Feed < ActiveRecord::Base
   end
 
   def aggregated_papers
-    feed_ids = self.id + self.children.map(&:id)
-    Paper.where(cross_lists: { feed_id: feed_ids })
+    feed_ids = [self.id] + self.children.map(&:id)
+    Paper.joins(:cross_lists).where(cross_lists: { feed_id: feed_ids })
   end
 
   def update_last_paper_date
