@@ -14,8 +14,9 @@ class UsersController < ApplicationController
       @scite_order = :scited
       @scited_papers = @user.scited_papers.order("scites.created_at DESC")
     end
-
-    @comments = @user.comments
+    
+    @scited_papers = @scited_papers.paginate(page: params[:scite_page], per_page: 10)
+    @comments = @user.comments.paginate(page: params[:comment_page], per_page: 10)
   end
 
   def new

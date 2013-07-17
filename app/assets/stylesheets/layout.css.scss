@@ -415,7 +415,12 @@ div.feed-rightbar
 // User profile page
 
 #profile-page {
-  li.paper:first-child {
+  ul + li.paper {
+    padding-top: 0;
     border-top: none;
+  }
+
+  .scite-toggle .btn {
+    padding: 2px 6px; 
   }
 }
