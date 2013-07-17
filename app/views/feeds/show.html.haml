@@ -8,24 +8,27 @@
       %ul.nav.nav-list.tree-sidebar
         - if signed_in?
           %li.my-feeds
-            %label.tree-toggler.nav-header My feeds
+            %label.nav-header
+              %i.icon-chevron-down
+              My feeds
             %ul.nav.nav-list.tree
               - current_user.feeds.each do |feed|
                 %li.leaf
                   = link_to(feed.fullname, feed)
 
-
         %li.source-heading arXiv.org
-
         - Feed.find_all_by_name(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
           %li.leaf{ class: @feed == feed && 'active' }= link_to(feed.fullname, feed)
 
         - Feed.find_all_by_name(['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent|
-          %li
-            %label.tree-toggler.nav-header= parent.fullname
-            %ul.nav.nav-list.tree{ style: (@feed == parent || (@feed && @feed.parent == parent)) ? '' : 'display: none;' }
-              - if parent.last_paper_date
-                %li.leaf.parent{class: @feed == parent && 'active'}= link_to(parent.fullname, parent)
+          %li.feed-folder
+
+
+            - expanded = (@feed == parent || (@feed && @feed.parent == parent))
+            %label.nav-header
+              %i{ class: expanded ? 'icon-chevron-down' : 'icon-chevron-right' }
+              = link_to parent.fullname, parent
+            %ul.nav.nav-list.tree{ style: expanded ? '' : 'display: none;' }
               - parent.children.each do |feed|
                 %li.leaf{class: @feed == feed && 'active'}= link_to(feed.fullname, feed)
 

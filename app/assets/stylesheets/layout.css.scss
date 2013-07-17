@@ -334,8 +334,14 @@ div.abbr_comment {
 // Feed listing sidebar
 
 .feedbar {
-  label {
-    color: rgba(0, 0, 0, 0.65);
+  li.feed-folder label {
+    font-size: 0.7em;
+    margin-bottom: 0;
+    line-height: 1.8em;
+
+    a {
+      color: rgba(0, 0, 0, 0.65);
+    }
   }
 
   font-family: Arial, sans-serif;
@@ -354,11 +360,6 @@ div.abbr_comment {
     border-bottom: 1px solid #aaa;
   }
 
-  .tree-toggler {
-    font-size: 0.8em;
-    margin-bottom: 0;
-    line-height: 1.8em;
-  }
 
   .leaf {
     font-size: 0.8em;

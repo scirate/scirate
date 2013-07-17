@@ -3,8 +3,10 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-  $('label.tree-toggler').click ->
-    $(this).parent().children('ul.tree').toggle(300)
+  $('.feed-folder i').click ->
+    $(this).toggleClass('icon-chevron-right')
+    $(this).toggleClass('icon-chevron-down')
+    $(this).closest('li').children('ul.tree').toggle(300)
 
   $('.paper').on 'click', '.scite', (ev) ->
     return Scirate.login() unless Scirate.current_user
