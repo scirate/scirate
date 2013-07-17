@@ -13,6 +13,8 @@ html {
 }
 
 body {
+  width: 100%;
+  height: 100%;
   font: 81.25%/1.385 arial,sans-serif;
 }
 
@@ -315,7 +317,7 @@ div.abbr_comment {
     color: rgba(0, 0, 0, 0.65);
   }
 
-  font-family: 'Noto Sans', sans-serif;
+  font-family: Arial, sans-serif;
 
   .my-feeds {
     .tree-toggler {
@@ -326,7 +328,7 @@ div.abbr_comment {
   }
 
   .source-heading {
-    font-size: 150%;
+    font-size: 1.5em;
     padding-bottom: 5px;
     border-bottom: 1px solid #aaa;
   }
@@ -376,6 +378,9 @@ header.feed-header {
 
 #feed-page {
   overflow: hidden;
+  margin-top: -60px;
+  padding-top: 60px;
+  min-height: 100%;
 }
 
 .feed-center {
