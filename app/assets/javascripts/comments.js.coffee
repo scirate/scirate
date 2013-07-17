@@ -19,6 +19,10 @@ class Comment
 
     # Apply MathJax rendering to standard pagedown preview box
     editor.hooks.chain 'onPreviewRefresh', ->
+      if $('#wmd-preview').text().empty()
+        $('#wmd-preview').addClass('hidden')
+      else
+        $('#wmd-preview').removeClass('hidden')
       MathJax.Hub.Typeset($('#wmd-preview' + (suffix||''))[0])
 
     editor.run()

@@ -1,0 +1,23 @@
+#comment_form
+  = form_for(current_user.comments.build(paper_id: @paper.id)) do |f|
+    = render 'shared/error_messages', object: f.object
+    %div= f.hidden_field :paper_id
+    .field
+      %p
+        Comments support
+        %a{:href => "http://daringfireball.net/projects/markdown/syntax"} Markdown
+        formatting and
+        = succeed "." do
+          %a.has-tooltip{"data-toggle" => "tooltip", :href => "#", :title => "Use $ for inline and $$ for displayed equations."} math mode LaTeX
+      .wmd-panel
+        #wmd-button-bar
+        = f.text_area :content, :id => 'wmd-input', :class => 'wmd-input'
+      #wmd-preview.wmd-panel.wmd-preview.well.hidden
+    = f.submit "Leave Comment", :class => "btn btn-large btn-primary"
+= form_tag('', :id => 'comment_editor', :class => 'hidden') do
+  %div= hidden_field_tag :paper_id
+  .wmd-panel
+    #wmd-button-bar-second
+    %textarea#wmd-input-second.wmd-input{:name => "content"}
+  #wmd-preview-second.wmd-panel.wmd-preview.well
+  %input.save.btn.btn-success{:type => "submit", :value => "Save Changes"}/
