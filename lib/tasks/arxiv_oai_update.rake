@@ -5,7 +5,13 @@ namespace :arxiv do
   task oai_update: :environment do
     last_paper = Paper.order("updated_date asc").last
 
-    ArxivSync.get_metadata(from: last_paper.updated_date) do |resp, papers|
+    if last_paper.nil?
+      date = Date.today-1.days
+    else
+      date = last_paper.updated_date
+    end
+
+    ArxivSync.get_metadata(from: date) do |resp, papers|
       Paper.arxiv_import(papers)
     end
   end

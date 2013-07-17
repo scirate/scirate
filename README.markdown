@@ -29,7 +29,7 @@ Edit config/database.yml and enter your auth details for the development databas
 
 ```shell
 rake db:setup
-rake db:add_feeds
+rake arxiv:scrape_categories
 rails server
 ```
 
@@ -38,10 +38,10 @@ You should now have a working local copy of Scirate! However, you'll also want s
 ## Populating the database
 
 ```shell
-rake db:arxiv_update
+rake arxiv:oai_update
 ```
 
-This will read the arXiv's daily RSS feeds for each category and grab the metadata associated with each paper. The production server runs this task every day to keep the database in sync.
+When run for the first time, this will download paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
 
 ## Testing
 
