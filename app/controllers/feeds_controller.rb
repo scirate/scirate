@@ -25,6 +25,8 @@ class FeedsController < ApplicationController
 
   def show
     @feed = Feed.find_by_name(params[:feed])
+    feed_ids = [@feed.id] + @feed.children.pluck(:id)
+
     @date = parse_date(params) || @feed.last_paper_date
     @range = parse_range(params)
     @page = params[:page]
@@ -34,7 +36,8 @@ class FeedsController < ApplicationController
                               .order("created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers) if signed_in?
 
-    @papers = Paper.range_query(@feed.cross_listed_papers, @date, @range, @page)
+    @papers = Paper.where(cross_lists: { feed_id: feed_ids })
+    @papers = Paper.range_query(@papers, @date, @range, @page)
   end
 
   def subscribe
