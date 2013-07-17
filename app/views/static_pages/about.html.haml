@@ -1,0 +1,32 @@
+- provide(:title, 'About')
+
+.container
+  %h1 About
+  %p
+    Scirate is a social networking site for academic papers from
+    = succeed "." do
+      %a{:href => "http://arxiv.org"} arXiv.org
+    The list of papers from each day is displayed in order of the
+    number of Scites, or votes, that each paper receives.
+  %p
+    To Scite papers or add comments, please create a user account from the sign-in page.
+  %p
+    This implementation of Scirate should be considered a beta:
+    currently only
+    %a{:href => "http://arxiv.org/archive/quant-ph"} quant-ph
+    is supported,
+    but other categories will be added in the future.
+  %p
+    Scirate is the idea of
+    = succeed "," do
+      %a{:href => "http://dabacon.org/"} Dave Bacon
+    but the
+    %a{:href => "http://scirate.com/"} original implementation
+    has been down
+    for some time.
+    This implementation of Scirate is due to
+    = succeed "." do
+      %a{:href => "http://intractable.ca/bill"} Bill Rosgen
+    To contribute, please consider visiting
+    %a{:href => "http://github.com/rosgen/scirate3"} github.com/rosgen/scirate3
+    to view the source or to help with the implementation.
