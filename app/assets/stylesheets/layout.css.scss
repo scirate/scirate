@@ -411,3 +411,11 @@ div.feed-rightbar
     }
   }
 }
+
+// User profile page
+
+#profile-page {
+  li.paper:first-child {
+    border-top: none;
+  }
+}

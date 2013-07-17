@@ -1,6 +1,6 @@
 - provide :title, @user.name
 
-.container.profile
+.container#profile-page
   %table.table
     %tr
       %td
@@ -11,8 +11,10 @@
     .span6
       %h3 Scites (#{@user.scites_count})
       %ul.nav.nav-tabs
-        %li.active= link_to "Sort by Scite Date", url_for(params.merge(scite_order: :scited))
-        %li= link_to "Sort by Publication Date", url_for(params.merge(scite_order: :published))
+        %li{ class: @scite_order == :scited ? 'active' : '' }
+          = link_to "Sort by Scite Date", url_for(params.merge(scite_order: :scited))
+        %li{ class: @scite_order == :published ? 'active' : '' }
+          = link_to "Sort by Publication Date", url_for(params.merge(scite_order: :published))
       = render @scited_papers
     .span6
       %h3 Comments (#{@user.comments_count})

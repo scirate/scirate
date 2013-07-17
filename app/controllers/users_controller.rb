@@ -7,7 +7,14 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
 
-    @scited_papers = @user.scited_papers
+    if params[:scite_order] == 'published'
+      @scite_order = :published
+      @scited_papers = @user.scited_papers.order("pubdate DESC")
+    else
+      @scite_order = :scited
+      @scited_papers = @user.scited_papers.order("scites.created_at DESC")
+    end
+
     @comments = @user.comments
   end
 
