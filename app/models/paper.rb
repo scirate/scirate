@@ -273,7 +273,7 @@ class Paper::Search
     end
 
     unless @authors.empty?
-      author_ids = Author.advanced_search(fullname: @authors.join(' | ')).map(&:id)
+      author_ids = Author.advanced_search({ fullname: @authors.join(' | '), searchterm: @authors.join(' | ') }, false).map(&:id)
       return @results = [] if author_ids.empty?
       @results =@results.joins(:authorships).where(:authorships => { :author_id => author_ids })
     end

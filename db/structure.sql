@@ -852,6 +852,13 @@ CREATE INDEX authors_to_tsvector_idx ON authors USING gin (to_tsvector('english'
 
 
 --
+-- Name: authors_to_tsvector_idx1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX authors_to_tsvector_idx1 ON authors USING gin (to_tsvector('english'::regconfig, (searchterm)::text));
+
+
+--
 -- Name: index_authors_on_fullname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1222,3 +1229,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130715063331');
 INSERT INTO schema_migrations (version) VALUES ('20130717131348');
 
 INSERT INTO schema_migrations (version) VALUES ('20130717132402');
+
+INSERT INTO schema_migrations (version) VALUES ('20130719133047');
