@@ -214,3 +214,73 @@ class Paper < ActiveRecord::Base
       includes(:cross_lists).where("cross_lists.feed_id IN (#{subscribed_ids})", user.id)
     end
 end
+
+class Paper::Search
+  attr_reader :results
+  attr_accessor :field_terms, :general_term, :feed
+
+  # Split string on spaces which aren't enclosed by quotes
+  def qsplit(query)
+    q = query.dup
+    quoted = false
+    indices = []
+    q.chars.each_with_index do |ch, i|
+      quoted = !quoted if ch == '"'
+      indices << i if ch == ' ' && !quoted
+    end
+    indices.each { |i| q[i] = "\x00" }
+    q.split("\x00")
+  end
+
+  # Strip field prefix and quotes
+  def tstrip(term)
+    ['au:','ti:','abs:','feed:'].each do |prefix|
+      term = term.split(':', 2)[1] if term.start_with?(prefix)
+    end
+    term.gsub("'", "''").gsub('"', "'")
+  end
+
+  def initialize(query)
+    @general_term = nil # Term to apply as OR across all text fields
+    @field_terms = {} # Terms for individual text fields
+    @feed = nil
+
+    qsplit(query).each do |term|
+      if term.start_with?('au:')
+        #field_term :author, term.split(':', 2)[1]
+      elsif term.start_with?('ti:')
+        @field_terms[:title] = tstrip(term)
+      elsif term.start_with?('abs:')
+        @field_terms[:abstract] = tstrip(term)
+      elsif term.start_with?('feed:')
+        @feed = Feed.find_by_name(tstrip(term))
+      else
+        if @general_term
+          @general_term += ' ' + term
+        else
+          @general_term = term
+        end
+      end
+    end
+
+    @results = Paper
+
+    # Limit by feed
+    if @feed
+      feed_ids = [@feed.id] + @feed.children.pluck(:id)
+      @results = @results.joins(:cross_lists).where(:cross_lists => { :feed_id => feed_ids })
+    end
+
+    @results = @results.advanced_search(@general_term) if @general_term
+    @results = @results.advanced_search(@field_terms) unless @field_terms.empty?
+  end
+
+  def field_term(key, term, operator='&')
+    if @field_terms[key]
+      @field_terms[key] += " #{operator} #{term}"
+    else
+      @field_terms[key] = term
+    end
+  end
+end
+

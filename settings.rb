@@ -6,7 +6,9 @@ module Settings
   # configuration.
   
 
-  ARXIV_CATEGORY_TOPLEVEL = ['astro-ph', 'cond-mat', 'gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nlin', 'nucl-ex', 'nucl-th', 'physics', 'quant-ph', 'math', 'cs', 'q-bio', 'q-fin', 'stat']
+  # An ordered list of the top-level arxiv categories which may or may not be parents 
+  # to other categories. Used for the sidebar, search etc
+  ARXIV_FOLDERS = ['astro-ph', 'cond-mat', 'gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nlin', 'nucl-ex', 'nucl-th', 'physics', 'quant-ph', 'math', 'cs', 'q-bio', 'q-fin', 'stat']
 
   # Rails secret token for signing cookies, should be in ENV for production
   if ENV['RAILS_ENV'] != 'production'

@@ -29,64 +29,6 @@ class PapersController < ApplicationController
     @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
   end
 
-  def __search(query)
-    @scited_papers = Set.new( current_user.scited_papers ) if signed_in?
-    
-
-    # TODO (Mispy): Proper parsing with precedence parentheses and such
-    
-    terms = { :or => {}, :and => {} }
-
-    operator = :and
-    query.split.each do |term|
-      if term.upcase == "OR"
-        operator = :or
-      else
-        operator = :and
-      end
-
-      if term.start_with?('au:')
-        terms[operator][:author] = term.split('au:')[1]
-      elsif term.start_with?('ti:')
-        terms[operator][:title] = term.split('ti:')[1]
-      elsif term.start_with?('abs:')
-        terms[operator][:abstract] = term.split('ti:')[1]
-      else
-        Paper.instance_eval { searchable_columns }.each do |f|
-          terms[:or][f] = term
-        end
-      end
-    end
-
-    p terms
-    @papers = Paper
-    @papers = @papers.basic_search(terms[:or], false) unless terms[:or].empty?
-    @papers = @papers.basic_search(terms[:and]) unless terms[:and].empty?
-    @papers = @papers.paginate(page: params[:page])
-
-#    if query.start_with?('au:')
-#      author_query = query.split('au:', 2)[1]
-#      if author_query.match(/^[^_]+_[^_]$/) # arXiv style author query
-#        authors = Author.where(searchterm: query.split('au:')[1])
-#      else
-#        authors = Author.advanced_search(fullname: author_query)
-#      end
-#
-#      @papers = Paper.joins(:authorships)
-#                     .where(:authorships => { :author_id => authors.map(&:id) })
-#                     .includes(:authors, :cross_lists, :scites, :feed)
-#                     .paginate(page: params[:page])
-#
-#    else
-#      @authors = Author.advanced_search(fullname: query).limit(50).all.uniq(&:fullname)
-#      @papers = Paper.includes(:authors, :cross_lists, :scites, :feed)
-#                     .basic_search(query).except(:order)
-#                     .paginate(page: params[:page])
-#    end
-
-    render :search
-  end
-
   def search
     @query = params[:q] || ''
 
@@ -96,18 +38,27 @@ class PapersController < ApplicationController
       case key
       when 'authors'
         authors = val.split(/,\s+/)
-        @query += authors.map { |au| "au:#{au}" }.join(' AND ')
+        @query += authors.map { |au| "au:#{au}" }.join(' ')
       when 'title'
-        @query += " AND ti:#{val}"
+        @query += " ti:#{val}"
       when 'abstract'
-        @query += " AND abs:#{val}"
+        @query += " abs:#{val}"
       when 'feed'
-        @query += " AND feed:#{val}"
+        @query += " feed:#{val}"
+      when 'general'
+        @query += " #{val}"
       end
     end
 
-    @query = @query.gsub(/^ AND /, '')
-    __search(@query)
+    @query = @query.strip
+    @search = Paper::Search.new(@query)
+
+    # Determine which folder we should have selected
+    @folder_id = @search.feed && (@search.feed.parent_id || @search.feed.id)
+
+    @papers = @search.results.paginate(page: params[:page])
+    @scited_papers = Set.new(current_user.scited_papers)
+    render :search
   end
 
   def next
