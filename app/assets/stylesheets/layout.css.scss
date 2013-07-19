@@ -335,6 +335,8 @@ div.abbr_comment {
 
 .feedbar {
 
+  // Feed folders and headings
+
   li.feed-folder {
     position: relative;
     left: -18px;
@@ -343,6 +345,7 @@ div.abbr_comment {
   li.feed-folder label {
     font-size: 1em;
     margin-bottom: 0;
+    font-weight: normal;
 
     text-transform: none;
 
@@ -359,13 +362,11 @@ div.abbr_comment {
     }
   }
 
-  font-family: Arial, sans-serif;
+  li.feed-folder.active label {
+    font-weight: bold;
+  }
 
   .my-feeds {
-    .tree-toggler {
-      font-size: 1em;
-    }
-
     margin-bottom: 10px;
   }
 
@@ -374,6 +375,8 @@ div.abbr_comment {
     padding-bottom: 5px;
     border-bottom: 1px solid #aaa;
   }
+  
+  // The individual non-aggregated feeds
 
   .leaf {
     font-size: 0.8em;
