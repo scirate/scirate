@@ -21,7 +21,7 @@
           %td= label_tag :feed, "Category"
           %td
             %select#folder{ name: 'folder' }
-              %option (all)
+              %option{ value: 'all' } (all)
               %optgroup{ label: 'arXiv.org' }
                 - Feed.arxiv_folders.each do |folder|
                   %option{ value: folder.id, selected: folder.id == @folder_id }= folder.fullname
