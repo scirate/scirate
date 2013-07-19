@@ -217,7 +217,7 @@ end
 
 class Paper::Search
   attr_reader :results
-  attr_accessor :field_terms, :general_term, :feed
+  attr_accessor :field_terms, :general_term, :feed, :authors
 
   # Split string on spaces which aren't enclosed by quotes
   def qsplit(query)
@@ -237,17 +237,18 @@ class Paper::Search
     ['au:','ti:','abs:','feed:'].each do |prefix|
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
-    term.gsub("'", "''").gsub('"', "'")
+    term#.gsub("'", "''").gsub('"', "'")
   end
 
   def initialize(query)
     @general_term = nil # Term to apply as OR across all text fields
     @field_terms = {} # Terms for individual text fields
     @feed = nil
+    @authors = []
 
     qsplit(query).each do |term|
       if term.start_with?('au:')
-        #field_term :author, term.split(':', 2)[1]
+        @authors << tstrip(term)
       elsif term.start_with?('ti:')
         @field_terms[:title] = tstrip(term)
       elsif term.start_with?('abs:')
@@ -269,6 +270,12 @@ class Paper::Search
     if @feed
       feed_ids = [@feed.id] + @feed.children.pluck(:id)
       @results = @results.joins(:cross_lists).where(:cross_lists => { :feed_id => feed_ids })
+    end
+
+    unless @authors.empty?
+      author_ids = Author.advanced_search(fullname: @authors.join(' | ')).map(&:id)
+      return @results = [] if author_ids.empty?
+      @results =@results.joins(:authorships).where(:authorships => { :author_id => author_ids })
     end
 
     @results = @results.advanced_search(@general_term) if @general_term

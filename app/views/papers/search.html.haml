@@ -7,7 +7,7 @@
       %table.table.table-striped
         %tr
           %td= label_tag :authors, "Author(s)"
-          %td= text_field_tag :authors
+          %td= text_field_tag :authors, @search.authors.join(',')
           %td Comma-separated author names
         %tr
           %td= label_tag :title, "Title"
@@ -21,7 +21,7 @@
           %td= label_tag :feed, "Category"
           %td
             %select#folder{ name: 'folder' }
-              %option All
+              %option (all)
               %optgroup{ label: 'arXiv.org' }
                 - Feed.arxiv_folders.each do |folder|
                   %option{ value: folder.id, selected: folder.id == @folder_id }= folder.fullname
@@ -44,8 +44,8 @@
       .field
         = submit_tag "Search"
 
-  %h2
-    Results for "#{@query}"
+  %h3
+    Results for #{@query}
   - unless @authors.nil? || @authors.empty?
     Matching authors:
     - @authors.each do |author|

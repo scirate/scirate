@@ -29,6 +29,11 @@ class PapersController < ApplicationController
     @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
   end
 
+  def __quote(val)
+    val = val.gsub('"', '')
+    val.include?(' ') ? "\"#{val}\"" : val
+  end
+
   def search
     @query = params[:q] || ''
 
@@ -37,14 +42,14 @@ class PapersController < ApplicationController
 
       case key
       when 'authors'
-        authors = val.split(/,\s+/)
-        @query += authors.map { |au| "au:#{au}" }.join(' ')
+        authors = val.split(/,\s*/)
+        @query += authors.map { |au| "au:#{__quote(au)}" }.join(' ')
       when 'title'
-        @query += " ti:#{val}"
+        @query += " ti:#{__quote(val)}"
       when 'abstract'
-        @query += " abs:#{val}"
+        @query += " abs:#{__quote(val)}"
       when 'feed'
-        @query += " feed:#{val}"
+        @query += " feed:#{__quote(val)}"
       when 'general'
         @query += " #{val}"
       end
