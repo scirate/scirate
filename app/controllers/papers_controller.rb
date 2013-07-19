@@ -62,7 +62,7 @@ class PapersController < ApplicationController
     @folder_id = @search.feed && (@search.feed.parent_id || @search.feed.id)
 
     @papers = @search.results.paginate(page: params[:page])
-    @scited_papers = Set.new(current_user.scited_papers)
+    @scited_papers = Set.new(current_user.scited_papers) if current_user
     render :search
   end
 
