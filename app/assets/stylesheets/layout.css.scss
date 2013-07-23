@@ -127,6 +127,14 @@ a:link, a:visited {
     }
   }
 
+  ul.big-feeds {
+    margin-top: 20px;
+    margin-left: 0;
+    li {
+      list-style: none;
+    }
+  }
+
   h2 {
     display: inline;
   }
@@ -139,6 +147,7 @@ a:link, a:visited {
   li.feed {
     line-height: 16px;
   }
+
 }
 
 // Main header

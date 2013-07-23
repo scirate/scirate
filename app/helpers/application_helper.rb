@@ -23,6 +23,6 @@ module ApplicationHelper
   end
 
   def landing_column(parent)
-    render partial: 'feeds/landing_column', locals: { heading: parent.fullname, feeds: parent.children }
+    render partial: 'feeds/landing_column', locals: { parent: parent, feeds: parent.children }
   end
 end
