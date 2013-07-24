@@ -76,10 +76,11 @@ class Paper < ActiveRecord::Base
     existing_papers = Paper.find_all_by_identifier(identifiers)
     existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
 
-    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date]
+    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date, :author_str]
     values = []
     updated_papers = []
     models.each do |model|
+      author_str = model.authors.map { |au| Author.make_fullname(au) }.join(',')
       if (paper = existing_by_ident[model.id])
         next if paper.updated_date >= (model.updated || model.created) # No new content
 
@@ -91,6 +92,8 @@ class Paper < ActiveRecord::Base
         paper.abstract = model.abstract
         paper.pubdate = model.created
         paper.updated_date = model.updated || model.created
+        paper.author_str = author_str
+
 
         paper.save!
         updated_papers.push(paper)
@@ -103,7 +106,8 @@ class Paper < ActiveRecord::Base
           model.title,
           model.abstract,
           model.created,
-          model.updated || model.created
+          model.updated || model.created,
+          model.author_str
         ]
       end
     end
@@ -249,6 +253,11 @@ class Paper::Search
     qsplit(query).each do |term|
       if term.start_with?('au:')
         @authors << tstrip(term)
+        if @field_terms[:author_str]
+          @field_terms[:author_str] = @field_terms[:author_str] + " & #{tstrip(term)}"
+        else
+          @field_terms[:author_str] = tstrip(term)
+        end
       elsif term.start_with?('ti:')
         @field_terms[:title] = tstrip(term)
       elsif term.start_with?('abs:')
@@ -270,12 +279,6 @@ class Paper::Search
     if @feed
       feed_ids = [@feed.id] + @feed.children.pluck(:id)
       @results = @results.joins(:cross_lists).where(:cross_lists => { :feed_id => feed_ids })
-    end
-
-    unless @authors.empty?
-      author_ids = Author.advanced_search({ fullname: @authors.join(' | '), searchterm: @authors.join(' | ') }, false).map(&:id)
-      return @results = [] if author_ids.empty?
-      @results =@results.joins(:authorships).where(:authorships => { :author_id => author_ids })
     end
 
     @results = @results.advanced_search(@general_term) if @general_term
