@@ -4,7 +4,7 @@
 #
 #  id             :integer         primary key
 #  title          :text
-#  authors        :text
+#  author_str     :text
 #  abstract       :text
 #  identifier     :string(255)
 #  url            :string(255)
@@ -179,7 +179,7 @@ class Paper < ActiveRecord::Base
     end
   end
 
-  extend Searchable(:title, :authors)
+  extend Searchable(:title, :abstract, :author_str)
 
   def to_param
     identifier

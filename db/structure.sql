@@ -346,7 +346,6 @@ ALTER SEQUENCE feeds_id_seq OWNED BY feeds.id;
 CREATE TABLE papers (
     id integer NOT NULL,
     title text,
-    authors text,
     abstract text,
     identifier character varying(255),
     url character varying(255),
@@ -1081,21 +1080,6 @@ CREATE INDEX paper_id_idx ON authorships USING btree (paper_id);
 --
 
 CREATE INDEX papers_to_tsvector_idx ON papers USING gin (to_tsvector('english'::regconfig, title));
-
-
---
--- Name: papers_to_tsvector_idx1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX papers_to_tsvector_idx1 ON papers USING gin (to_tsvector('english'::regconfig, authors));
-
-
---
--- Name: papers_to_tsvector_idx2; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX papers_to_tsvector_idx2 ON papers USING gin (to_tsvector('english'::regconfig, title));
-
 
 --
 -- Name: papers_to_tsvector_idx3; Type: INDEX; Schema: public; Owner: -; Tablespace: 
