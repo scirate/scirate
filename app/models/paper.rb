@@ -59,7 +59,7 @@ class Paper < ActiveRecord::Base
     collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
   end
 
-  def self.arxiv_import(models, opts={})
+  def self._arxiv_import(models, opts={})
     ### First pass: Add new Feeds.
     feednames = models.map { |m| m.categories }.flatten.uniq
     Feed.arxiv_import(feednames, opts)
@@ -107,7 +107,7 @@ class Paper < ActiveRecord::Base
           model.abstract,
           model.created,
           model.updated || model.created,
-          model.author_str
+          author_str
         ]
       end
     end
@@ -176,6 +176,12 @@ class Paper < ActiveRecord::Base
     # Update last paper date for involved feeds
     feednames.each do |feedname|
       feeds_by_name[feedname].update_last_paper_date
+    end
+  end
+
+  def self.arxiv_import(models, opts={})
+    transaction do
+      self._arxiv_import(models, opts)
     end
   end
 
