@@ -70,5 +70,7 @@ Scirate3::Application.configure do
   # we redirect to https in ApplicationController, so as to set the host first
   config.force_ssl = false
 
+  config.eager_load = true
+
   WillPaginate.per_page = 100
 end

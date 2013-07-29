@@ -20,18 +20,16 @@
 require 'textacular/searchable'
 
 class Paper < ActiveRecord::Base
-  attr_accessible :title, :abstract, :identifier, :url, :pubdate, :updated_date
-
   belongs_to :feed
 
   has_many  :scites, dependent: :destroy
-  has_many  :sciters, through: :scites, order: "name ASC"
-  has_many  :comments, dependent: :destroy, order: "created_at ASC"
+  has_many  :sciters, -> { order("name ASC") }, through: :scites
+  has_many  :comments, -> { order("created_at ASC") }, dependent: :destroy
   has_many  :cross_lists, dependent: :destroy
-  has_many  :cross_listed_feeds, through: :cross_lists, \
-                source: :feed, order: "name ASC"
-  has_many :authorships, order: :position
-  has_many :authors, :through => :authorships, order: 'authorships.position'
+  has_many  :cross_listed_feeds, -> { order("name ASC") }, through: :cross_lists, \
+                source: :feed
+  has_many :authorships, -> { order(:position) }
+  has_many :authors, -> { order('authorships.position') }, :through => :authorships
 
   validates :title, presence: true
   validates :abstract, presence: true

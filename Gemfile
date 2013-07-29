@@ -1,14 +1,14 @@
 source 'http://rubygems.org'
 
 gem 'rails'
-gem 'bcrypt-ruby'
+gem 'bcrypt-ruby', "~> 3.0.0"
 gem 'faker'
 gem 'chronic'
-gem 'oai'
+gem 'oai', :git => 'git://github.com/code4lib/ruby-oai'
 gem 'pg'
 gem 'will_paginate'
 gem 'textacular', :require => 'textacular/rails'
-gem 'acts_as_votable'
+gem 'acts_as_votable', :git => 'git://github.com/ryanto/acts_as_votable'
 gem 'activerecord-import'
 gem 'squeel'
 gem 'thin'

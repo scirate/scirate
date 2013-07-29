@@ -11,8 +11,6 @@
 #
 
 class CrossList < ActiveRecord::Base
-  attr_accessible :feed_id, :cross_list_date
-
   belongs_to :paper
   belongs_to :feed
 

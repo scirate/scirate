@@ -13,8 +13,6 @@
 #  hidden     :boolean
 
 class Comment < ActiveRecord::Base
-  attr_accessible :parent_id, :ancestor_id, :paper_id, :content, :hidden
-
   belongs_to :user, counter_cache: true
   belongs_to :paper, counter_cache: true
 

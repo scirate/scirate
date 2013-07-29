@@ -10,8 +10,6 @@
 #
 
 class Scite < ActiveRecord::Base
-  attr_accessible :paper_id
-
   belongs_to :sciter, class_name: "User", counter_cache: true
   belongs_to :paper, counter_cache: true 
 

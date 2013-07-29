@@ -26,7 +26,6 @@ class User < ActiveRecord::Base
   STATUS_SPAM = 'spam'
   ACCOUNT_STATES = [STATUS_ADMIN, STATUS_MODERATOR, STATUS_USER, STATUS_SPAM]
 
-  attr_accessible :name, :email, :password, :password_confirmation, :expand_abstracts
   has_secure_password
 
   has_many :scites, foreign_key: 'sciter_id', dependent: :destroy
@@ -88,7 +87,7 @@ class User < ActiveRecord::Base
   end
 
   def feed_last_paper_date
-    feed = feeds.find(:first, conditions: "last_paper_date IS NOT NULL", order: "last_paper_date DESC")
+    feed = feeds.where("last_paper_date IS NOT NULL").order("last_paper_date DESC").first
     feed && feed.last_paper_date.to_date
   end
 

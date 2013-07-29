@@ -10,8 +10,6 @@
 #
 
 class Subscription < ActiveRecord::Base
-  attr_accessible :feed_id, :user_id
-
   belongs_to :user, counter_cache: true
   belongs_to :feed, counter_cache: true
 

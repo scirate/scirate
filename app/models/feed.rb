@@ -16,8 +16,6 @@
 #
 
 class Feed < ActiveRecord::Base
-  attr_accessible :name, :fullname, :feed_type, :updated_date, :last_paper_date
-
   belongs_to :parent, class_name: "Feed"
   has_many :papers, validate: false
   has_many :subscriptions, dependent: :destroy
@@ -30,7 +28,7 @@ class Feed < ActiveRecord::Base
   validates :feed_type, presence: true
   validates :updated_date, presence: true
 
-  default_scope order(:position)
+  default_scope { order(:position) }
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders

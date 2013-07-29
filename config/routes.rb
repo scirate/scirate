@@ -1,13 +1,6 @@
 Scirate3::Application.routes.draw do
   root to: 'feeds#index'
 
-  resources :feeds do
-    member do
-      post :subscribe
-      post :unsubscribe
-    end
-  end
-
   get '/search', to: 'papers#search', as: 'papers_search'
 
 
@@ -27,14 +20,20 @@ Scirate3::Application.routes.draw do
       post :reply
     end
   end
-  match '/comments', to: 'comments#index'
+  get '/comments', to: 'comments#index'
 
-  match '/signup',   to: 'users#new'
-  match '/signin',   to: 'sessions#new'
-  match '/signout',  to: 'sessions#destroy'
-  match '/about',    to: 'static_pages#about'
-  match '/settings', to: 'users#settings'
-  match '/settings/password', to: 'users#settings_password'
+  get '/signup',   to: 'users#new'
+  get '/signin',   to: 'sessions#new'
+  get '/signout',  to: 'sessions#destroy'
+  get '/about',    to: 'static_pages#about'
+
+  get '/settings', to: 'users#settings'
+  post '/settings', to: 'users#settings'
+
+  get '/settings/password', to: 'users#settings_password'
+  post '/settings/password', to: 'users#settings_password'
+
+
 
   resources :sessions, only: [:new, :create, :destroy]
   resources :users, only: [:show, :new, :create, :edit, :update, :destroy, :admin]
@@ -45,6 +44,9 @@ Scirate3::Application.routes.draw do
   resources :password_resets, only: [:new, :create, :edit, :update]
 
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: "feed"
+  post '/feed/:id/subscribe', to: 'feeds#subscribe'
+  post '/feed/:id/unsubscribe', to: 'feeds#unsubscribe'
+
   #custom route to use arXiv identifiers as id's for papers
   get '/:id', to: 'papers#show', id: /.+/, as: "paper"
 
@@ -52,11 +54,11 @@ Scirate3::Application.routes.draw do
   # first created -> highest priority.
 
   # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
+  #   get 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
+  #   get 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
@@ -103,5 +105,5 @@ Scirate3::Application.routes.draw do
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
+  # get ':controller(/:action(/:id))(.:format)'
 end
