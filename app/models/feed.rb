@@ -32,7 +32,7 @@ class Feed < ActiveRecord::Base
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders
-    Feed.find_all_by_name(Settings::ARXIV_FOLDERS)
+    Feed.where(name: Settings::ARXIV_FOLDERS)
   end
 
   def self.arxiv_import(feednames, opts={})

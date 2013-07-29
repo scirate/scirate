@@ -8,7 +8,7 @@ class Author < ActiveRecord::Base
 
   def self.arxiv_import(models, opts={})
     uniqids = models.map { |model| Author.make_uniqid(model) }
-    existing_uniqids = Author.find_all_by_uniqid(uniqids).map(&:uniqid)
+    existing_uniqids = Author.where(uniqid: uniqids).map(&:uniqid)
 
     columns = [:uniqid, :affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm]
     values = []

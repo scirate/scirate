@@ -13,12 +13,12 @@ describe ScitesController do
 
     it "should increment the Scite count" do
       expect do
-        xhr :post, :create, scite: { paper_id: paper.id }
+        xhr :post, :create, paper_id: paper.id
       end.to change(Scite, :count).by(1)
     end
 
     it "should respond with success" do
-      xhr :post, :create, scite: { paper_id: paper.id }
+      xhr :post, :create, paper_id: paper.id
       response.should be_success
     end
   end

@@ -38,7 +38,7 @@
       .row-fluid
         .span3
           %ul.big-feeds
-            - Feed.find_all_by_name(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+            - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
               %li
                 = link_to(feed.fullname, feed)
           = landing_column(@feeds['physics'])

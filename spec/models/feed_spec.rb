@@ -57,21 +57,6 @@ describe Feed do
     it { should_not be_valid }
   end
 
-  describe "when url is not present" do
-    before { @feed.url = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when url is not unique" do
-    before do
-      feed_same_url = @feed.dup
-      feed_same_url.name += 'delta'
-      feed_same_url.save!
-    end
-
-    it { should_not be_valid }
-  end
-
   describe "when feed_type is not present" do
     before { @feed.feed_type = " " }
     it { should_not be_valid }

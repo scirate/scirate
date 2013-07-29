@@ -17,13 +17,13 @@
                   = link_to(feed.fullname, feed)
 
         %li.source-heading arXiv.org
-        - Feed.find_all_by_name(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+        - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
           %li.feed-folder{ class: @feed == feed ? 'active' : '' }
             %label.nav-header
               %i.icon-chevron-right.transparent
               = link_to feed.fullname, feed
 
-        - Feed.find_all_by_name(['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent|
+        - Feed.where(name: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).each do |parent|
           %li.feed-folder{ class: @feed == parent ? 'active' : '' }
             - expanded = (@feed == parent || (@feed && @feed.parent == parent))
             %label.nav-header

@@ -30,7 +30,7 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      @user = User.new(params[:user])
+      @user = User.new(params.required(:user).permit(:name, :email, :password, :password_confirmation))
       if @user.save
         @user.send_signup_confirmation
         flash[:success] = "Welcome to Scirate!  Confirmation mail sent to: #{@user.email}"
@@ -69,7 +69,10 @@ class UsersController < ApplicationController
 
     old_email = @user.email
 
-    if @user.update_attributes(params[:user].slice(:name,:email,:password,:password_confirmation, :expand_abstracts))
+    user_params = params.required(:user)
+                        .permit(:name, :email, :password, :password_confirmation, :expand_abstracts)
+
+    if @user.update_attributes(user_params)
       if old_email != @user.email
         @user.send_email_change_confirmation(old_email)
       end

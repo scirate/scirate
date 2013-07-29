@@ -71,7 +71,7 @@ class Paper < ActiveRecord::Base
     
     # Need to find and update existing papers, then bulk import new ones
     identifiers = models.map(&:id)
-    existing_papers = Paper.find_all_by_identifier(identifiers)
+    existing_papers = Paper.where(identifier: identifiers)
     existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
 
     columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date, :author_str]
@@ -118,17 +118,17 @@ class Paper < ActiveRecord::Base
 
     #return if values.empty? && updated_papers.empty? # Skip the rest if no new data
 
-    relevant_papers = Paper.find_all_by_identifier(identifiers)
+    relevant_papers = Paper.where(identifier: identifiers)
     
 
     ### Fourth pass: Add any new authorships.
-    authors = Author.find_all_by_uniqid(author_models.map { |model| Author.make_uniqid(model) })
+    authors = Author.where(uniqid: author_models.map { |model| Author.make_uniqid(model) })
     authors_by_uniqid = Hash[authors.map { |author| [author.uniqid, author] }]
     papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
     paper_ids = papers_by_ident.values.map(&:id)
     
     existing_authorships = Hash.new { |h,k| h[k] = [] }
-    Authorship.find_all_by_paper_id(paper_ids).each do |au|
+    Authorship.where(paper_id: paper_ids).each do |au|
       existing_authorships[au.paper_id].push(au.author_id)
     end
 
@@ -151,7 +151,7 @@ class Paper < ActiveRecord::Base
     end
 
     ### Finally: crosslists!
-    existing_crosslists = CrossList.find_all_by_paper_id(paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
+    existing_crosslists = CrossList.where(paper_id: paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
     
     columns = [:paper_id, :feed_id, :cross_list_date]
     values = []

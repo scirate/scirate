@@ -3,6 +3,7 @@ FactoryGirl.define do
     sequence(:name)  { |n| "Person #{n}" }
     sequence(:email) { |n| "person_#{n}@example.com"}
     password "foobar"
+    password_confirmation "foobar"
     sequence(:active){ |n| true }
   end
 
@@ -14,7 +15,7 @@ FactoryGirl.define do
     sequence(:url)         { |n| "http://arxiv.org/abs/#{1000+n}.#{1000+n}" }
     sequence(:pubdate)     { |n| Date.today }
     sequence(:updated_date){ |n| Date.today }
-    feed Feed.default
+    sequence(:feed_id) { |n| Feed.default.id }
   end
 
   factory :author do
