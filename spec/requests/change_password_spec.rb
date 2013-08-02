@@ -17,7 +17,7 @@ describe "Change Password" do
       click_button "Save changes"
     end
 
-    it { should have_selector('div.flash.error') }
+    it { should have_selector('.alert-error') }
     specify { user.reload.authenticate('iamsleethacker').should be_false }
   end
 
@@ -29,7 +29,7 @@ describe "Change Password" do
       click_button "Save changes"
     end
 
-    it { should have_selector('div.flash.success') }
+    it { should have_selector('.alert-success') }
     specify { user.reload.authenticate(user.password+'new').should be_true }
 
     it "should send an email notification" do

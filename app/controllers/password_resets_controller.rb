@@ -4,36 +4,38 @@ class PasswordResetsController < ApplicationController
 
     if (user && user.active?)
       user.send_password_reset
-      redirect_to root_url, :notice => "Email sent with password reset instructions."
+      flash[:success] = "Email sent with password reset instructions."
+      redirect_to root_url
     else
       flash[:error] = "Email address not found!"
-      render 'new'
+      render :new
     end
   end
 
-  def edit
+  def confirm
     @user = User.find_by_password_reset_token(params[:id])
 
     if @user.nil?
-      redirect_to root_url, :notice => "Password reset has already been used or is invalid!"
+      flash[:error] = "Password reset has already been used or is invalid!"
+      redirect_to root_url
     end
   end
 
-  def update
+  def submit
     @user = User.find_by_password_reset_token!(params[:id])
 
     if @user.password_reset_sent_at < 2.hours.ago
-      redirect_to new_password_reset_path, :alert => "Password reset has expired."
-    else 
-      @user.password = params[:password]
-      @user.password_confirmation = params[:password_confirmation]
-      if @user.save
-        @user.clear_password_reset
-        sign_in(@user)
-        redirect_to root_url, :notice => "Password has been changed!"
-      else
-        render :edit
-      end
+      flash[:warning] = "Password reset has expired."
+      redirect_to reset_password_path
+    elsif params[:password] != params[:password_confirmation]
+      flash[:error] = "Password doesn't match confirmation"
+      render :confirm
+    else
+      @user.change_password!(params[:password])
+      @user.clear_password_reset
+      sign_in(@user)
+      flash[:success] = "Password has been changed!"
+      redirect_to root_url
     end
   end
 end

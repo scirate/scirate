@@ -220,50 +220,20 @@ describe "User pages" do
     end
   end
 
-  describe "edit" do
+  describe "settings" do
     let(:user) { FactoryGirl.create(:user) }
     before do
       sign_in user
-      visit edit_user_path(user)
+      visit settings_path
     end
 
     describe "page" do
-      it { should have_heading "Edit user" }
-      it { should have_title "Edit user" }
       it { should have_link('change', href: 'http://gravatar.com/emails') }
 
       describe "fields" do
         it { should have_field "Name", with: user.name }
         it { should have_field "Email", with: user.email }
-        it { should have_field "Password" }
-        it { should have_field "Confirmation" }
         it { should have_field "Always expand abstracts" }
-      end
-    end
-
-    describe "with invalid information" do
-      let(:error) { '1 error prohibited this user from being saved' }
-
-      describe "with non-matching password confirmation" do
-        before do
-          fill_in "user_password", with: user.password+'right'
-          fill_in "Confirmation",  with: user.password+'wrong'
-          fill_in "Old Password",  with: user.password
-          update
-        end
-
-        it { should have_content(error) }
-      end
-
-      describe "with incorrect old password" do
-        before do
-          fill_in "user_password", with: user.password+'new'
-          fill_in "Confirmation",  with: user.password+'new'
-          fill_in "Old Password",  with: user.password+'wrong'
-          update
-        end
-
-        it { should have_content("Old password is incorrect!") }
       end
     end
 
@@ -275,10 +245,10 @@ describe "User pages" do
       before do
         fill_in "Name",         with: new_name
         fill_in "Email",        with: new_email
-        click_button "Update"
+        click_button "Save changes"
       end
 
-      it { should have_selector('div.flash.success') }
+      it { should have_selector('.alert-success') }
       specify { user.reload.name.should  == new_name }
       specify { user.reload.email.should == new_email }
     end
@@ -290,7 +260,7 @@ describe "User pages" do
       describe "with new email address" do
         before do
           fill_in "Email", with: new_email
-          click_button "Update"
+          click_button "Save changes"
         end
 
         it "should send email to old address" do
@@ -302,7 +272,7 @@ describe "User pages" do
       describe "without new email address" do
         before do
           fill_in "Name", with: new_name
-          click_button "Update"
+          click_button "Save changes"
         end
 
         it "should not send email" do

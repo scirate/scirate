@@ -59,7 +59,7 @@ describe UserMailer do
     end
 
     it 'assigns the right url' do
-      mail.body.encoded.should match( edit_password_reset_url(user.password_reset_token))
+      mail.body.encoded.should match( reset_password_confirm_url(user.password_reset_token))
     end
   end
 

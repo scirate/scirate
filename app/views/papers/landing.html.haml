@@ -19,10 +19,6 @@
         = form_tag papers_search_path, :method => 'get', class: 'searchbox' do
           = text_field_tag :q, params[:q], placeholder: 'Search'
 
-    %section.round
-    - flash.each do |key, value|
-      = content_tag(:div, value, class: "flash #{key}")
-
     .container
       .row-fluid
         .span3.offset9
@@ -30,8 +26,9 @@
             %li= link_to "sign in", signin_path
             %li.signup= link_to "sign up", signup_path
             %li= link_to "about", about_path
-        
+
     .container
+      = render 'sessions/flash'
       .row-fluid
         .span3
           %h2 arXiv.org

@@ -150,8 +150,9 @@ class User < ActiveRecord::Base
 
   def change_password!(new_password)
     self.password = new_password
+    self.password_confirmation = new_password
     UserMailer.password_change(self).deliver
-    self.save
+    self.save!
   end
 
   private

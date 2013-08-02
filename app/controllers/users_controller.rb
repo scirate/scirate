@@ -112,7 +112,8 @@ class UsersController < ApplicationController
         redirect_to root_url
       end
     else
-      redirect_to root_url, :notice => "Account is already active or link is invalid!"
+      flash[:error] = "Account is already active or link is invalid!"
+      redirect_to root_url
     end
   end
 
@@ -137,6 +138,23 @@ class UsersController < ApplicationController
 
   def settings
     @user = current_user
+    return unless request.post?
+
+    old_email = @user.email
+
+    user_params = params.required(:user)
+                        .permit(:name, :email, :expand_abstracts)
+
+    if @user.update_attributes(user_params)
+      if old_email != @user.email
+        @user.send_email_change_confirmation(old_email)
+      end
+
+      sign_in @user
+      flash[:success] = "Profile updated"
+    else
+      flash[:error] = @user.errors.full_messages
+    end
   end
 
   def settings_password
@@ -144,8 +162,12 @@ class UsersController < ApplicationController
     return unless request.post?
 
     if @user.authenticate(params[:current_password])
-      @user.change_password!(params[:new_password])
-      flash[:success] = "Password changed successfully"
+      if params[:new_password] == params[:confirm_password]
+        @user.change_password!(params[:new_password])
+        flash[:success] = "Password changed successfully"
+      else
+        flash[:error] = "New password confirmation does not match"
+      end
     else
       flash[:error] = "Current password is incorrect"
     end

@@ -11,7 +11,7 @@ describe "password resets" do
       visit signin_path
       click_link "password"
       fill_in "Email", :with => user.email
-      click_button "Reset Password"
+      click_button "Reset password"
     end
 
     it { should have_title "" }
@@ -30,7 +30,7 @@ describe "password resets" do
       visit signin_path
       click_link "password"
       fill_in "Email", :with => "bogus@bogus.bogus"
-      click_button "Reset Password"
+      click_button "Reset password"
     end
 
     it "should stay on the password reset page" do
@@ -52,8 +52,8 @@ describe "password resets" do
 
     describe "with invalid information" do
       before do
-        visit edit_password_reset_path(user.password_reset_token)
-        fill_in "user_password", :with => "foobar"
+        visit reset_password_confirm_path(user.password_reset_token)
+        fill_in "password", :with => "foobar"
         click_button "Update Password"
       end
 
@@ -62,8 +62,8 @@ describe "password resets" do
 
     describe "with valid information" do
       before do
-        visit edit_password_reset_path(user.password_reset_token)
-        fill_in "user_password", :with => "foobar"
+        visit reset_password_confirm_path(user.password_reset_token)
+        fill_in "password", :with => "foobar"
         fill_in "Password confirmation", :with => "foobar"
         click_button "Update Password"
       end
@@ -78,8 +78,8 @@ describe "password resets" do
                                     :password_reset_sent_at => 5.hour.ago) }
 
     before do
-      visit edit_password_reset_path(user.password_reset_token)
-      fill_in "user_password", :with => "foobar"
+      visit reset_password_confirm_path(user.password_reset_token)
+      fill_in "password", :with => "foobar"
       fill_in "Password confirmation", :with => "foobar"
       click_button "Update Password"
     end
@@ -89,32 +89,10 @@ describe "password resets" do
 
   describe "when the password token is invalid" do
     before do
-      visit edit_password_reset_path("invalid")
+      visit reset_password_confirm_path("invalid")
     end
 
     it { should have_title "" }
     it { should have_content("Password reset has already been used or is invalid!") }
-  end
-
-  describe "does not allow mass assignment to name or email" do
-    let(:user) { FactoryGirl.create(:user,
-                                    :password_reset_token => "asdf1234zxcv",
-                                    :password_reset_sent_at => 1.hour.ago) }
-
-    before do
-      put (password_reset_path(user.password_reset_token) \
-                               + '?user[name]=hacked' \
-                               + '&user[email]=hacked@hacker.org' \
-                               + '&user[password]=foobar'\
-                               + '&user[password_confirmation]=foobar')
-    end
-
-    it "should not change name" do
-      User.find_by_id(user.id).name.should_not eq('hacked')
-    end
-
-    it "should not change email" do
-      User.find_by_id(user.id).email.should_not eq('hacked@hacker.org')
-    end
   end
 end

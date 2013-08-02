@@ -27,6 +27,12 @@ Scirate3::Application.routes.draw do
   get '/signout',  to: 'sessions#destroy'
   get '/about',    to: 'static_pages#about'
 
+  get '/reset_password', to: 'password_resets#new', as: :reset_password
+  post '/reset_password', to: 'password_resets#create'
+
+  get '/reset_password/:id', to: 'password_resets#confirm', as: :reset_password_confirm
+  post '/reset_password/:id', to: 'password_resets#submit'
+
   get '/settings', to: 'users#settings'
   post '/settings', to: 'users#settings'
 
@@ -41,7 +47,6 @@ Scirate3::Application.routes.draw do
   get '/users/:id/comments', to: 'users#comments', as: "comments_user"
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
-  resources :password_resets, only: [:new, :create, :edit, :update]
 
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: "feed"
   post '/feed/:id/subscribe', to: 'feeds#subscribe'
