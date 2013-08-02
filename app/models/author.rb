@@ -29,7 +29,7 @@ class Author < ActiveRecord::Base
 
     result = Author.import(columns, values, opts)
     unless result.failed_instances.empty?
-      Scirate3.notify_error("Error importing authors: #{result.failed_instances.inspect}")
+      SciRate3.notify_error("Error importing authors: #{result.failed_instances.inspect}")
     end
 
     puts "Read #{models.length} authors: #{values.length} new [#{models[0].keyname} to #{models[-1].keyname}]"

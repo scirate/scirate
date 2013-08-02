@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
 
   def signup_confirmation(user)
     @user = user
-    mail to: user.email, subject: "Welcome to Scirate!"
+    mail to: user.email, subject: "Welcome to SciRate!"
   end
 
   def password_reset(user)
@@ -13,7 +13,7 @@ class UserMailer < ActionMailer::Base
 
   def password_change(user)
     @user = user
-    mail :to => user.email, :subject => "Your Scirate password has been changed"
+    mail :to => user.email, :subject => "Your SciRate password has been changed"
   end
 
   def email_change(user, old_email)

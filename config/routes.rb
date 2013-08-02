@@ -1,4 +1,4 @@
-Scirate3::Application.routes.draw do
+SciRate3::Application.routes.draw do
   root to: 'feeds#index'
 
   get '/search', to: 'papers#search', as: 'papers_search'

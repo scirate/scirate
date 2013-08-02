@@ -1,7 +1,7 @@
 require 'capybara/rspec'
 
 def full_title(page_title = "")
-  base_title = "Scirate"
+  base_title = "SciRate"
   if page_title.empty?
     base_title
   else

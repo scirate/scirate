@@ -52,7 +52,7 @@ describe "User pages" do
         let(:user) { User.find_by_email('test-new@example.com') }
 
         it { should have_title "" }
-        it { should have_success_message 'Welcome to Scirate!' }
+        it { should have_success_message 'Welcome to SciRate!' }
         it { should have_success_message user.email }
       end
     end

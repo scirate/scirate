@@ -24,7 +24,7 @@ class Exception
   end
 end
 
-module Scirate3
+module SciRate3
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -78,8 +78,8 @@ module Scirate3
     config.action_mailer.default_url_options = { :host => Settings::HOST }
   end
 
-  Scirate3::Application.config.middleware.use ::ExceptionNotifier,
-    email_prefix: "[Scirate Error] ",
+  SciRate3::Application.config.middleware.use ::ExceptionNotifier,
+    email_prefix: "[SciRate Error] ",
     sender_address: "notifier@scirate.com",
     exception_recipients: %w{scirate@mispy.me}
 

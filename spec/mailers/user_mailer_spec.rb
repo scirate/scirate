@@ -9,7 +9,7 @@ describe UserMailer do
     let(:mail) { UserMailer.signup_confirmation(user) }
 
     it 'renders the subject' do
-      mail.subject.should == 'Welcome to Scirate!'
+      mail.subject.should == 'Welcome to SciRate!'
     end
 
     it 'renders the sender email' do
@@ -17,7 +17,7 @@ describe UserMailer do
     end
 
     it 'has the right body content' do
-      mail.body.encoded.should match("Welcome to Scirate!  To activate your account, click the URL below.")
+      mail.body.encoded.should match("Welcome to SciRate!  To activate your account, click the URL below.")
     end
 
     it 'renders the receiver email' do
@@ -77,7 +77,7 @@ describe UserMailer do
     end
 
     it 'has the right body content' do
-      mail.body.encoded.should match("email address associated with your Scirate account has recently been changed.")
+      mail.body.encoded.should match("email address associated with your SciRate account has recently been changed.")
       mail.body.encoded.should match(old_email)
       mail.body.encoded.should match(user.email)
     end

@@ -1,6 +1,6 @@
-# Scirate 3
+# SciRate 3
 
-A rewrite of [Dave Bacon's](http://dabacon.org) Scirate in Ruby on Rails, previously developed by Dave Bacon and [Bill Rosgen](http://intractable.ca/bill/).
+A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon and [Bill Rosgen](http://intractable.ca/bill/).
 
 Currently deployed [here](https://scirate3.herokuapp.com/), with a testing version at [http://scirate3-dev.herokuapp.com/](http://scirate3-dev.herokuapp.com/).
 
@@ -33,7 +33,7 @@ rake arxiv:scrape_categories
 rails server
 ```
 
-You should now have a working local copy of Scirate! However, you'll also want some papers to fiddle with.
+You should now have a working local copy of SciRate! However, you'll also want some papers to fiddle with.
 
 ## Populating the database
 

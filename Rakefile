@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Scirate3::Application.load_tasks
+SciRate3::Application.load_tasks

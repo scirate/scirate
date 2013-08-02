@@ -1,7 +1,7 @@
 module Settings
   # Definable application-wide settings which can be
   # overrided by either a local_settings.rb file or values
-  # of ENV (in that order). Intended to separate Scirate
+  # of ENV (in that order). Intended to separate SciRate
   # settings (some of which are sensitive) from general Rails 
   # configuration.
   

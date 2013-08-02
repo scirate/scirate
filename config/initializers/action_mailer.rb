@@ -10,5 +10,5 @@ if Rails.env.production?
     :user_name => Settings::SENDGRID_USERNAME,
     :password => Settings::SENDGRID_PASSWORD
   }
-  Scirate3::Application.config.action_mailer.default_url_options = { :host => Settings::HOST }
+  SciRate3::Application.config.action_mailer.default_url_options = { :host => Settings::HOST }
 end

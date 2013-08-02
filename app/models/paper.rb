@@ -113,7 +113,7 @@ class Paper < ActiveRecord::Base
     puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(columns, values, opts)
     unless result.failed_instances.empty?
-      Scirate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
+      SciRate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
     end
 
     #return if values.empty? && updated_papers.empty? # Skip the rest if no new data
@@ -147,7 +147,7 @@ class Paper < ActiveRecord::Base
     puts "Importing #{values.length} authorships" unless values.empty?
     result = Authorship.import(columns, values, opts)
     unless result.failed_instances.empty?
-      Scirate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
+      SciRate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
     end
 
     ### Finally: crosslists!
@@ -168,7 +168,7 @@ class Paper < ActiveRecord::Base
     puts "Importing #{values.length} crosslists" unless values.empty?
     result = CrossList.import(columns, values, opts)
     unless result.failed_instances.empty?
-      Scirate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
+      SciRate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
     end
 
     # Update last paper date for involved feeds

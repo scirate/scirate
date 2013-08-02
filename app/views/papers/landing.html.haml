@@ -14,7 +14,7 @@
         %h1
           %a{ href: root_path }
             = image_tag "scirate-icon.png"
-            Scirate
+            SciRate
         %p An open access science aggregator
         = form_tag papers_search_path, :method => 'get', class: 'searchbox' do
           = text_field_tag :q, params[:q], placeholder: 'Search'

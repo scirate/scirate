@@ -9,7 +9,7 @@ $ ->
     $(this).closest('li').children('ul.tree').toggle(300)
 
   $('.paper').on 'click', '.scite', (ev) ->
-    return Scirate.login() unless Scirate.current_user
+    return SciRate.login() unless SciRate.current_user
     $toggle = $(ev.target).closest('.scite-toggle')
     console.log($toggle.attr('data-paper-id'))
     $.post '/scite', { paper_id: $toggle.attr('data-paper-id') }, (resp) =>
@@ -18,7 +18,7 @@ $ ->
     return false
 
   $('.paper').on 'click', '.unscite', (ev) ->
-    return Scirate.login() unless Scirate.current_user
+    return SciRate.login() unless SciRate.current_user
     $toggle = $(ev.target).closest('.scite-toggle')
     $.post '/unscite', { paper_id: $toggle.attr('data-paper-id') }, (resp) =>
       $toggle.closest('li.paper').find('.abstract').addClass('hidden')

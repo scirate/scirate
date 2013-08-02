@@ -52,7 +52,7 @@ class Feed < ActiveRecord::Base
 
     result = Feed.import(columns, values, opts)
     unless result.failed_instances.empty?
-      Scirate3.notify_error("Error importing feeds: #{result.failed_instances.inspect}")
+      SciRate3.notify_error("Error importing feeds: #{result.failed_instances.inspect}")
     end
   end
 

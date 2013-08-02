@@ -33,7 +33,7 @@ class UsersController < ApplicationController
       @user = User.new(params.required(:user).permit(:name, :email, :password, :password_confirmation))
       if @user.save
         @user.send_signup_confirmation
-        flash[:success] = "Welcome to Scirate!  Confirmation mail sent to: #{@user.email}"
+        flash[:success] = "Welcome to SciRate!  Confirmation mail sent to: #{@user.email}"
         redirect_to root_path
       else
         render 'new'

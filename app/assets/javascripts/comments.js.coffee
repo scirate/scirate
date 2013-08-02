@@ -89,12 +89,12 @@ class Comment
       @votestate = null
 
     @$el.on 'click', '.upvote', =>
-      return Scirate.login() unless Scirate.current_user
+      return SciRate.login() unless SciRate.current_user
       if @votestate == 'upvote' then @unvote() # Undo upvote
       else @upvote()
 
     @$el.on 'click', '.downvote', =>
-      return Scirate.login() unless Scirate.current_user
+      return SciRate.login() unless SciRate.current_user
       if @votestate == 'downvote' then @unvote()
       else @downvote()
 
