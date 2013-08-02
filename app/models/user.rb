@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
 
   has_many :scites, foreign_key: 'sciter_id', dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
-  has_many :comments, dependent: :destroy, order: "created_at DESC"
+  has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :feeds, through: :subscriptions
 
