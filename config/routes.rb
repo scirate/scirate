@@ -49,8 +49,8 @@ SciRate3::Application.routes.draw do
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
 
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: "feed"
-  post '/feed/:id/subscribe', to: 'feeds#subscribe'
-  post '/feed/:id/unsubscribe', to: 'feeds#unsubscribe'
+  post '/feed/:id/subscribe', to: 'feeds#subscribe', as: "subscribe"
+  post '/feed/:id/unsubscribe', to: 'feeds#unsubscribe', as: "unsubscribe"
 
   #custom route to use arXiv identifiers as id's for papers
   get '/:id', to: 'papers#show', id: /.+/, as: "paper"

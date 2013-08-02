@@ -45,7 +45,7 @@ class FeedsController < ApplicationController
   end
 
   def subscribe
-    @feed.subscriptions.find_or_create_by_user_id(current_user.id)
+    @feed.subscriptions.find_or_create_by(user_id: current_user.id)
     render :partial => 'subscribe', :locals => { :feed => @feed }
   end
 
