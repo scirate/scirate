@@ -45,6 +45,8 @@ Spork.prefork do
 
     config.before(:each) { reset_email }
   end
+
+  load "#{Rails.root}/db/seeds.rb"
 end
 
 Spork.each_run do

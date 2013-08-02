@@ -19,6 +19,7 @@ gem 'haml'
 gem 'bourbon'
 
 group :development do
+  gem 'yaml_db'
   gem 'annotate'
   gem 'rspec-rails'
   gem 'guard-rspec'
