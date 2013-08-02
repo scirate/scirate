@@ -5,12 +5,9 @@ require 'net/http'
 require 'exception_notifier'
 
 if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
   ActiveSupport::Deprecation.silence do
-    Bundler.require(*Rails.groups(:assets => %w(development test)))
+    Bundler.require(:default, Rails.env)
   end
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
 end
 
 class Exception

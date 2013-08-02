@@ -1,3 +1,4 @@
+ruby '2.0.0'
 source 'http://rubygems.org'
 
 gem 'rails'
@@ -19,7 +20,6 @@ gem 'haml'
 gem 'bourbon'
 
 group :development do
-  gem 'yaml_db'
   gem 'annotate'
   gem 'rspec-rails'
   gem 'guard-rspec'
@@ -28,13 +28,11 @@ group :development do
   gem 'quiet_assets'
 end
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails'
-  gem 'coffee-rails'
-  gem 'uglifier'
-end
+# assets
+gem 'sass-rails'
+gem 'coffee-rails'
+gem 'uglifier'
+
 
 gem 'jquery-rails'
 

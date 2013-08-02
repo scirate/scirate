@@ -10,12 +10,6 @@ module Settings
   # to other categories. Used for the sidebar, search etc
   ARXIV_FOLDERS = ['astro-ph', 'cond-mat', 'gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nlin', 'nucl-ex', 'nucl-th', 'physics', 'quant-ph', 'math', 'cs', 'q-bio', 'q-fin', 'stat']
 
-  # Rails secret token for signing cookies, should be in ENV for production
-  if ENV['RAILS_ENV'] != 'production'
-    SECRET_KEY_BASE = '027d35bd099187fe704c6cb189fced29f1562ff46397d77c8e6cfc3e2e66667b98ecb61fa0809807b80934fde0ac4b874ac6c6a3a78e3dcd8e0d906288d1306f'
-    SECRET_TOKEN = '4b4d948fe0bdde9d1f66af4bcbe15cec68339f7445038032f5313e2f00c36eacb2c8b780fe40e5e9106c9ecbc175893a579f9d138942195eb3fe76e51a767ebe'
-  end
-
   # Hostname to put in emails and such
   HOST = "scirate.com"
 
@@ -35,9 +29,19 @@ module Settings
   # Define in Heroku ENV config
   #####
 
+  # Rails secret token for signing cookies
+  SECRET_KEY_BASE = ''
+  SECRET_TOKEN = ''
+
+  # For development/testing
+  if ENV['RAILS_ENV'] != 'production'
+    SECRET_KEY_BASE = '027d35bd099187fe704c6cb189fced29f1562ff46397d77c8e6cfc3e2e66667b98ecb61fa0809807b80934fde0ac4b874ac6c6a3a78e3dcd8e0d906288d1306f'
+    SECRET_TOKEN = '4b4d948fe0bdde9d1f66af4bcbe15cec68339f7445038032f5313e2f00c36eacb2c8b780fe40e5e9106c9ecbc175893a579f9d138942195eb3fe76e51a767ebe'
+  end
+
   # Sendgrid auth details used in production to send UserMailer mail
-  # SENDGRID_USERNAME = ''
-  # SENDGRID_PASSWORD = ''
+  SENDGRID_USERNAME = ''
+  SENDGRID_PASSWORD = ''
   
   # New Relic app monitoring auth details
   # NEW_RELIC_LICENSE_KEY = ''
