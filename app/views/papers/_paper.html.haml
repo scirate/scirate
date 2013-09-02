@@ -8,9 +8,6 @@
       %span.identifier
         = "arXiv:#{paper.identifier}"
         [#{link_to paper.feed.name, paper.feed}]
-      %span.links
-        = link_to "(abs)", paper.url
-        = paper.pdf_url.nil? ? '' : link_to("(pdf)", paper.pdf_url)
       - if paper.cross_lists.length > 1
         .crosslist
           cross-listed to:
@@ -19,4 +16,11 @@
               = link_to crosslist.feed.name, crosslist.feed
     .span2
       = render 'scites/toggle', paper: paper
+      %span.links
+        %a.btn{ href: paper.url } ABS
+        - unless paper.pdf_url.nil?
+          %a.btn{ href: paper.pdf_url } 
+            %i.icon-file-text
+            PDF
+
   %div{ class: "abstract#{paper.scites_count > 0 ? '' : ' hidden'}" }= paper.abstract
