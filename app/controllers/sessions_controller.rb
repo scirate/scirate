@@ -6,9 +6,6 @@ class SessionsController < ApplicationController
   def create
     session[:return_to] = params[:return_to] if params[:return_to]
 
-    p params[:return_to]
-    p session[:return_to]
-
     user = User.find_by_email(params[:email])
     if user && user.authenticate(params[:password])
       if user.active?

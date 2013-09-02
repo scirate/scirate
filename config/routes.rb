@@ -3,10 +3,10 @@ SciRate3::Application.routes.draw do
 
   get '/search', to: 'papers#search', as: 'papers_search'
 
-  match '/api/scite/:paper_id', to: 'api#scite', via: [:get, :post]
-  match '/api/unscite/:paper_id', to: 'api#unscite', via: [:get, :post]
-  match '/api/subscribe/:feed_id', to: 'api#subscribe', via: [:get, :post]
-  match '/api/unsubscribe/:feed_id', to: 'api#unsubscribe', via: [:get, :post]
+  match '/api/scite/:paper_id', to: 'api#scite', via: [:get, :post], as: :scite
+  match '/api/unscite/:paper_id', to: 'api#unscite', via: [:get, :post], as: :unscite
+  match '/api/subscribe/:feed_id', to: 'api#subscribe', via: [:get, :post], as: :subscribe
+  match '/api/unsubscribe/:feed_id', to: 'api#unsubscribe', via: [:get, :post], as: :unsubscribe
 
   put '/subscriptions', to: 'subscriptions#update'
 
@@ -50,8 +50,6 @@ SciRate3::Application.routes.draw do
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
 
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: "feed"
-  post '/feed/:id/subscribe', to: 'feeds#subscribe', as: "subscribe"
-  post '/feed/:id/unsubscribe', to: 'feeds#unsubscribe', as: "unsubscribe"
 
   #custom route to use arXiv identifiers as id's for papers
   get '/:id', to: 'papers#show', id: /.+/, as: "paper"

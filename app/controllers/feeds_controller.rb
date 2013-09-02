@@ -44,16 +44,6 @@ class FeedsController < ApplicationController
     @papers = Paper.range_query(@papers, @date, @range, @page)
   end
 
-  def subscribe
-    @feed.subscriptions.find_or_create_by(user_id: current_user.id)
-    render :partial => 'subscribe', :locals => { :feed => @feed }
-  end
-
-  def unsubscribe
-    @feed.subscriptions.where(user_id: current_user.id).destroy_all
-    render :partial => 'subscribe', :locals => { :feed => @feed }
-  end
-
   protected
     def find_feed
       @feed = Feed.find(params[:id])
