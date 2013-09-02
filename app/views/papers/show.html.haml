@@ -42,4 +42,4 @@
         - if signed_in?
           = render 'comment_form'
         - else
-          = link_to "sign in to comment", signin_path()
+          = link_to "sign in to comment", signin_path()+'?return_to='+paper_path(@paper)

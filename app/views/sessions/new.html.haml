@@ -12,6 +12,8 @@
     .field
       = check_box_tag :remember_me, 1, params[:remember_me]
       = label_tag :remember_me
+    - if params[:return_to]
+      = hidden_field_tag :return_to, params[:return_to]
     .actions= submit_tag "Sign in"
   %p
     New user? #{link_to "Sign up now!", signup_path}
