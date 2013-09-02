@@ -534,6 +534,23 @@ li.paper {
       display: block;
     }
   }
+
+  .abs-toggle {
+    font-size: 10px;
+    color: #ccc;
+    cursor: pointer;
+    line-height: 10px;
+  }
+}
+
+li.paper:hover {
+  .abs-toggle {
+    display: inline !important;
+  }
+
+  .links {
+    display: block !important;
+  }
 }
 
 // Feed right-hand sidebar

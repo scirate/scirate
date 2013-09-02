@@ -8,10 +8,3 @@ $ ->
     $(this).toggleClass('icon-chevron-right')
     $(this).toggleClass('icon-chevron-down')
     $(this).closest('li').children('ul.tree').toggle(300)
-
-  # Show links on hover
-  $('.paper').on 'mouseover', (ev) ->
-    $(this).find('.links').removeClass('hidden')
-
-  $('.paper').on 'mouseout', (ev) ->
-    $(this).find('.links').addClass('hidden')

@@ -1,7 +1,11 @@
 %li.paper.tex2jax
   .row-fluid
     .span10
-      .title= link_to sanitize(paper.title), paper
+      .title
+        = link_to sanitize(paper.title), paper
+        %span.abs-toggle.hidden
+          %a.expand{ class: paper.scites_count > 0 ? ' hidden' : '' } show abstract
+          %a.collapse{ class: paper.scites_count > 0 ? '' : ' hidden' } hide abstract
       .authors
         - paper.authors.each do |author|
           = author_link_to(author) + (author != paper.authors[-1] ? "," : ' ')
@@ -16,7 +20,7 @@
               = link_to crosslist.feed.name, crosslist.feed
     .span2
       = render 'scites/toggle', paper: paper
-      %span.links.hidden
+      %div.links.hidden
         %a.btn.btn-abspdf{ href: paper.url } 
           %i.icon-file-text
           ABS
@@ -24,5 +28,6 @@
           %a.btn.btn-abspdf{ href: paper.pdf_url } 
             %i.icon-download-alt
             PDF
+
 
   %div{ class: "abstract#{paper.scites_count > 0 ? '' : ' hidden'}" }= paper.abstract

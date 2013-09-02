@@ -19,12 +19,14 @@ class View.PaperItem extends View
   events:
     'click .scite': "scite"
     'click .unscite': "unscite"
+    'click .expand': "expand"
+    'click .collapse': "collapse"
 
   scite: ->
     $toggle = @$('.scite-toggle')
     paper_id = $toggle.attr('data-paper-id')
     $.post "/api/scite/#{paper_id}", (resp) =>
-      $toggle.closest('li.paper').find('.abstract').removeClass('hidden')
+      @expand()
       $toggle.replaceWith(resp)
     return false
 
@@ -32,9 +34,20 @@ class View.PaperItem extends View
     $toggle = @$('.scite-toggle')
     paper_id = $toggle.attr('data-paper-id')
     $.post "/api/unscite/#{paper_id}", (resp) =>
-      $toggle.closest('li.paper').find('.abstract').addClass('hidden')
+      @collapse()
       $toggle.replaceWith(resp)
     return false
+
+  expand: ->
+    @$('.abstract').removeClass('hidden')
+    @$('.expand').addClass('hidden')
+    @$('.collapse').removeClass('hidden')
+
+  collapse: ->
+    @$('.abstract').addClass('hidden')
+    @$('.expand').removeClass('hidden')
+    @$('.collapse').addClass('hidden')
+
 
 class View.SubscribeToggle extends View
   initialize: ->
