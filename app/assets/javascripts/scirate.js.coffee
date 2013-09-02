@@ -83,6 +83,10 @@ $ ->
   $(document).ajaxError (ev, jqxhr, settings, err) ->
     if err == "Unauthorized"
       SciRate.login()
+
+  $('.dropdown').each ->
+    $(this).mouseenter -> $(this).find('.dropdown-toggle').dropdown('toggle')
+    $(this).mouseleave -> $(this).find('.dropdown-toggle').dropdown('toggle')
     
   $('#landing').each ->
     $('.searchbox input').focus()

@@ -26,6 +26,10 @@ body {
 .right { float: right; }
 .left { float: left; }
 
+.dropdown-menu {
+  margin-top: 0;
+}
+
 a:link, a:visited {
   color: #3c63af;
 }
