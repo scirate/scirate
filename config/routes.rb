@@ -3,9 +3,10 @@ SciRate3::Application.routes.draw do
 
   get '/search', to: 'papers#search', as: 'papers_search'
 
-
-  post '/scite', to: 'scites#create'
-  post '/unscite', to: 'scites#destroy'
+  match '/api/scite/:paper_id', to: 'api#scite', via: [:get, :post]
+  match '/api/unscite/:paper_id', to: 'api#unscite', via: [:get, :post]
+  match '/api/subscribe/:feed_id', to: 'api#subscribe', via: [:get, :post]
+  match '/api/unsubscribe/:feed_id', to: 'api#unsubscribe', via: [:get, :post]
 
   put '/subscriptions', to: 'subscriptions#update'
 

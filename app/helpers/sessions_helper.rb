@@ -8,6 +8,10 @@ module SessionsHelper
         cookies[:remember_token] = user.remember_token
       end
 
+      if session[:api_action]
+        
+      end
+
       current_user = user
     end
   end
