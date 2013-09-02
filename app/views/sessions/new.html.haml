@@ -14,6 +14,9 @@
       = label_tag :remember_me
     - if params[:return_to]
       = hidden_field_tag :return_to, params[:return_to]
+    - elsif request.referer
+      = hidden_field_tag :return_to, request.referer
+
     .actions= submit_tag "Sign in"
   %p
     New user? #{link_to "Sign up now!", signup_path}
