@@ -30,6 +30,20 @@ a:link, a:visited {
   color: #3c63af;
 }
 
+.btn-abspdf {
+  background-color: #52ccd9;
+  color: white !important;
+  border: none;
+  border-radius: 2px;
+  padding: 2px 8px;
+  font-size: 10px;
+}
+
+.btn-abspdf:hover {
+  background-color: #586576;
+}
+
+
 // Landing page
 #landing {
   height: 100%;

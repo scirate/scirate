@@ -16,11 +16,13 @@
               = link_to crosslist.feed.name, crosslist.feed
     .span2
       = render 'scites/toggle', paper: paper
-      %span.links
-        %a.btn{ href: paper.url } ABS
+      %span.links.hidden
+        %a.btn.btn-abspdf{ href: paper.url } 
+          %i.icon-file-text
+          ABS
         - unless paper.pdf_url.nil?
-          %a.btn{ href: paper.pdf_url } 
-            %i.icon-file-text
+          %a.btn.btn-abspdf{ href: paper.pdf_url } 
+            %i.icon-download-alt
             PDF
 
   %div{ class: "abstract#{paper.scites_count > 0 ? '' : ' hidden'}" }= paper.abstract

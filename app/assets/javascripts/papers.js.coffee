@@ -3,11 +3,13 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
+  # Feed sidebar tree expansion
   $('.feed-folder i').click ->
     $(this).toggleClass('icon-chevron-right')
     $(this).toggleClass('icon-chevron-down')
     $(this).closest('li').children('ul.tree').toggle(300)
 
+  # AJAX Scite toggle
   $('.paper').on 'click', '.scite', (ev) ->
     return SciRate.login() unless SciRate.current_user
     $toggle = $(ev.target).closest('.scite-toggle')
@@ -24,3 +26,10 @@ $ ->
       $toggle.closest('li.paper').find('.abstract').addClass('hidden')
       $toggle.replaceWith(resp)
     return false
+
+  # Show links on hover
+  $('.paper').on 'mouseover', (ev) ->
+    $(this).find('.links').removeClass('hidden')
+
+  $('.paper').on 'mouseout', (ev) ->
+    $(this).find('.links').addClass('hidden')
