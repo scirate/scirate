@@ -36,6 +36,9 @@ class ApplicationController < ActionController::Base
   end
 
   def parse_range params
+    return nil unless params.has_key?(:range)
+    return :since_last if params[:range] == 'since_last'
+
     range = params[:range].to_i
 
     # I expect range=2 to show me two days

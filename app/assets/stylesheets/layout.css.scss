@@ -572,6 +572,11 @@ div.feed-rightbar
 
   .timelinks {
     text-align: center;
+
+    li.last-visited {
+      display: block;
+    }
+
     li {
       list-style-type: none;
       display: inline-block;

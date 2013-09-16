@@ -301,6 +301,41 @@ ALTER SEQUENCE feed_days_id_seq OWNED BY feed_days.id;
 
 
 --
+-- Name: feed_preferences; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE feed_preferences (
+    id integer NOT NULL,
+    user_id integer,
+    feed_id integer,
+    last_visited timestamp without time zone,
+    previous_last_visited timestamp without time zone,
+    selected_range integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: feed_preferences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE feed_preferences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: feed_preferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE feed_preferences_id_seq OWNED BY feed_preferences.id;
+
+
+--
 -- Name: feeds; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -657,6 +692,13 @@ ALTER TABLE ONLY feed_days ALTER COLUMN id SET DEFAULT nextval('feed_days_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY feed_preferences ALTER COLUMN id SET DEFAULT nextval('feed_preferences_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY feeds ALTER COLUMN id SET DEFAULT nextval('feeds_id_seq'::regclass);
 
 
@@ -771,6 +813,14 @@ ALTER TABLE ONLY downvotes
 
 ALTER TABLE ONLY feed_days
     ADD CONSTRAINT feed_days_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: feed_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY feed_preferences
+    ADD CONSTRAINT feed_preferences_pkey PRIMARY KEY (id);
 
 
 --
@@ -1081,6 +1131,14 @@ CREATE INDEX paper_id_idx ON authorships USING btree (paper_id);
 
 CREATE INDEX papers_to_tsvector_idx ON papers USING gin (to_tsvector('english'::regconfig, title));
 
+
+--
+-- Name: papers_to_tsvector_idx2; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX papers_to_tsvector_idx2 ON papers USING gin (to_tsvector('english'::regconfig, title));
+
+
 --
 -- Name: papers_to_tsvector_idx3; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
@@ -1105,6 +1163,8 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 --
 -- PostgreSQL database dump complete
 --
+
+SET search_path TO "$user",public;
 
 INSERT INTO schema_migrations (version) VALUES ('20120313073916');
 
@@ -1229,3 +1289,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130723204128');
 INSERT INTO schema_migrations (version) VALUES ('20130723214946');
 
 INSERT INTO schema_migrations (version) VALUES ('20130724001439');
+
+INSERT INTO schema_migrations (version) VALUES ('20130916061905');

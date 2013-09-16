@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :feeds, through: :subscriptions
+  has_many :feed_preferences
 
   before_save { generate_token(:remember_token) }
 
@@ -47,11 +48,6 @@ class User < ActiveRecord::Base
 
 
   acts_as_voter
-
-  before_create :set_defaults
-  def set_defaults
-    self.last_visited ||= Time.now
-  end
 
   def scited?(paper)
     scites.find_by_paper_id(paper.id)

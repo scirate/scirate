@@ -4,14 +4,16 @@
   to
   %strong= @backdate.to_formatted_s(:rfc822)
   = link_to(">>", url_for(params.merge(date: @date+1.days)))
-  %div.btn-group
-    %li{ class: params[:range] == '2' && 'active' }
+  %div-group
+    %li.last-visited{ class: @since_last && 'active' }
+      = link_to("Since Last Visited", url_for(params.merge(range: 'since_last')))
+    %li{ class: @range == 1 && 'active' }
       = link_to("2d", url_for( params.merge( range: 2 )))
-    %li{ class: params[:range] == '3' && 'active' }
+    %li{ class: @range == 2 && 'active' }
       = link_to("3d", url_for( params.merge( range: 3 )))
-    %li{ class: params[:range] == '7' && 'active' }
+    %li{ class: @range == 6 && 'active' }
       = link_to("1w", url_for( params.merge( range: 7 )))
-    %li{ class: params[:range] == '31' && 'active' }
+    %li{ class: @range == 30 && 'active' }
       = link_to("1m", url_for( params.merge( range: 31 )))
-    %li{ class: params[:range] == '365' && 'active' }
+    %li{ class: @range == 364 && 'active' }
       = link_to("1y", url_for( params.merge( range: 365 )))

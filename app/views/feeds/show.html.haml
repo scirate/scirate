@@ -71,10 +71,9 @@
                 = render @papers
           = will_paginate @papers
 
-        - unless @recent_comments.empty?
-          .span2.feed-rightbar
-            -#
-              = render :partial => 'feeds/next_prev_links'
+        .span2.feed-rightbar
+          = render :partial => 'feeds/next_prev_links'
+          - unless @recent_comments.empty?
             %h2 Recent comments
             = render :partial => "comments/abbr_comment", :collection => @recent_comments[0..9]
 

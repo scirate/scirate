@@ -12,35 +12,75 @@ class FeedsController < ApplicationController
 
     feeds = current_user.feeds.includes(:children)
     feed_ids = feeds.map(&:id) + feeds.map(&:children).flatten.map(&:id)
+    feed_papers = Paper.where(cross_lists: { feed_id: feed_ids })
+    preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
+    @preferences = preferences
 
     @date = parse_date(params) || Feed.default.last_paper_date
-    @range = parse_range(params)
-    @backdate = @date - @range.days
+    @range = parse_range(params) || preferences.range
     @page = params[:page]
+
+    preferences.pref_update!(@range)
+
+    if @range == :since_last
+      @range = ((Time.now - preferences.previous_last_visited) / 1.day).round
+      @since_last = true
+    end
+
+    @backdate = @date - @range.days
 
     @recent_comments = Comment.joins(:paper)
                               .where(:paper => { :feed_id => feed_ids })
                               .order("created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers)
 
-    @papers = Paper.where(cross_lists: { feed_id: feed_ids })
-    @papers = Paper.range_query(@papers, @date, @range, @page)
+    @papers = Paper.range_query(feed_papers, @date, @range, @page)
 
     render 'feeds/show'
   end
 
-  def show
+  def show_nouser
     @feed = Feed.find_by_name(params[:feed])
     feed_ids = [@feed.id] + @feed.children.pluck(:id)
 
     @date = parse_date(params) || @feed.last_paper_date || Date.today
-    @range = parse_range(params)
+    @range = parse_range(params) || 0
     @page = params[:page]
+
+    @backdate = @date - @range.days
 
     @recent_comments = Comment.joins(:paper)
                               .where(:paper => { :feed_id => feed_ids })
                               .order("created_at DESC")
-    @scited_papers = Set.new(current_user.scited_papers) if signed_in?
+
+    @papers = Paper.where(cross_lists: { feed_id: feed_ids })
+    @papers = Paper.range_query(@papers, @date, @range, @page)
+  end
+
+  def show
+    return show_nouser unless signed_in?
+
+    @feed = Feed.find_by_name(params[:feed])
+    feed_ids = [@feed.id] + @feed.children.pluck(:id)
+    preferences = current_user.feed_preferences.where(feed_id: @feed.id).first_or_create
+
+    @date = parse_date(params) || @feed.last_paper_date || Date.today
+    @range = parse_range(params) || preferences.range
+    @page = params[:page]
+
+    preferences.pref_update!(@range)
+
+    if @range == :since_last
+      @range = ((Time.now - preferences.previous_last_visited) / 1.day).round
+      @since_last = true
+    end
+
+    @backdate = @date - @range.days
+
+    @recent_comments = Comment.joins(:paper)
+                              .where(:paper => { :feed_id => feed_ids })
+                              .order("created_at DESC")
+    @scited_papers = Set.new(current_user.scited_papers)
 
     @papers = Paper.where(cross_lists: { feed_id: feed_ids })
     @papers = Paper.range_query(@papers, @date, @range, @page)
