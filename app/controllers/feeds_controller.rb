@@ -15,6 +15,7 @@ class FeedsController < ApplicationController
 
     @date = parse_date(params) || Feed.default.last_paper_date
     @range = parse_range(params)
+    @backdate = @date - @range.days
     @page = params[:page]
 
     @recent_comments = Comment.joins(:paper)
@@ -24,6 +25,7 @@ class FeedsController < ApplicationController
 
     @papers = Paper.where(cross_lists: { feed_id: feed_ids })
     @papers = Paper.range_query(@papers, @date, @range, @page)
+
     render 'feeds/show'
   end
 

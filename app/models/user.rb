@@ -18,6 +18,7 @@
 #  confirmation_sent_at   :timestamp
 #  subscriptions_count    :integer         default(0)
 #  account_status         :string          default('user')
+#  last_visited           :timestamp       not null
 
 class User < ActiveRecord::Base
   STATUS_ADMIN = 'admin'
@@ -44,7 +45,13 @@ class User < ActiveRecord::Base
 
   validates :password, length: { minimum: 6 }, on: :create
 
+
   acts_as_voter
+
+  before_create :set_defaults
+  def set_defaults
+    self.last_visited ||= Time.now
+  end
 
   def scited?(paper)
     scites.find_by_paper_id(paper.id)
