@@ -1,5 +1,6 @@
 - flash.each do |key, val|
   - if [:error, :warning, :success].include?(key)
+    - flash.delete(key)
     %div.alert{ class: "alert-#{key}" }
       %button.close{ type: "button", 'data-dismiss' => "alert" } &times;
       = val
