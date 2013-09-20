@@ -4,37 +4,9 @@
     <title><%= full_title(yield(:title)) %></title>
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <%= render 'layouts/stylesheets' %>
-    <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
     <%= favicon_link_tag 'favicon.png' %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        jax: ["input/TeX", "output/HTML-CSS"],
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-          processEscapes: true,
-          ignoreClass: 'container',
-          processClass: 'tex2jax',
-        },
-        showMathMenu: false,
-        errorSettings: {
-          style: { color: "black" },
-        },
-        TeX: {
-          noUndefined: {
-            attributes: {
-              mathcolor: 'black',
-            }
-          }
-        }
-      });
-    </script>
-    <script type="text/javascript">
-      SciRate.current_user = <%= !!current_user %>;
-    </script>
   </head>
   <body>
     <header class="first" role="banner">
@@ -76,5 +48,34 @@
       <%= render 'sessions/flash' %>
     </div>
     <%= yield %>
+
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          ignoreClass: 'container',
+          processClass: 'tex2jax',
+        },
+        showMathMenu: false,
+        errorSettings: {
+          style: { color: "black" },
+        },
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: 'black',
+            }
+          }
+        }
+      });
+    </script>
+    <script type="text/javascript">
+      SciRate.current_user = <%= !!current_user %>;
+    </script>
+    <%= javascript_include_tag "application" %>
   </body>
 </html>
