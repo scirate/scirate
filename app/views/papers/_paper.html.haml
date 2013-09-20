@@ -1,11 +1,12 @@
+- showabs = (showabs.nil? ? paper.scites_count > 0 : showabs)
 %li.paper.tex2jax
   .row-fluid
     .span10
       .title
         = link_to sanitize(paper.title), paper
         %span.abs-toggle.hidden
-          %a.expand{ class: paper.scites_count > 0 ? ' hidden' : '' } show abstract
-          %a.collapse{ class: paper.scites_count > 0 ? '' : ' hidden' } hide abstract
+          %a.expand{ class: showabs ? ' hidden' : '' } show abstract
+          %a.collapse{ class: showabs ? '' : ' hidden' } hide abstract
       .authors
         - paper.authors.each do |author|
           = author_link_to(author) + (author != paper.authors[-1] ? "," : ' ')
@@ -30,4 +31,4 @@
             PDF
 
 
-  %div{ class: "abstract#{paper.scites_count > 0 ? '' : ' hidden'}" }= paper.abstract
+  %div{ class: "abstract#{showabs ? '' : ' hidden'}" }= paper.abstract
