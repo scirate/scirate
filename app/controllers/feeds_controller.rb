@@ -29,9 +29,9 @@ class FeedsController < ApplicationController
 
     @backdate = @date - @range.days
 
-    @recent_comments = Comment.joins(:paper)
+    @recent_comments = Comment.includes(:paper, :user)
                               .where(:paper => { :feed_id => feed_ids })
-                              .order("created_at DESC")
+                              .order("comments.created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers)
 
     @papers = Paper.range_query(feed_papers, @date, @range, @page)
@@ -49,9 +49,9 @@ class FeedsController < ApplicationController
 
     @backdate = @date - @range.days
 
-    @recent_comments = Comment.joins(:paper)
+    @recent_comments = Comment.includes(:paper, :user)
                               .where(:paper => { :feed_id => feed_ids })
-                              .order("created_at DESC")
+                              .order("comments.created_at DESC")
 
     @papers = Paper.where(cross_lists: { feed_id: feed_ids })
     @papers = Paper.range_query(@papers, @date, @range, @page)
@@ -77,9 +77,9 @@ class FeedsController < ApplicationController
 
     @backdate = @date - @range.days
 
-    @recent_comments = Comment.joins(:paper)
+    @recent_comments = Comment.includes(:paper, :user)
                               .where(:paper => { :feed_id => feed_ids })
-                              .order("created_at DESC")
+                              .order("comments.created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers)
 
     @papers = Paper.where(cross_lists: { feed_id: feed_ids })

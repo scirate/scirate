@@ -1,0 +1,15 @@
+.abbr-comment
+  - if abbr_comment.paper.title.length>75
+    = link_to (abbr_comment.paper.title[0..72]+"..."), abbr_comment.paper
+    %br
+  - else
+    = link_to abbr_comment.paper.title, abbr_comment.paper
+    %br
+  %span.username= link_to abbr_comment.user.name, abbr_comment.user
+  %span.timeago
+    = time_ago_in_words(abbr_comment.created_at)
+    ago
+  %blockquote{:style => "margin-top:5px"}
+    = strip_tags(abbr_comment.content[0..299])
+    - if abbr_comment.content.length>300
+      = link_to "...(continued)", abbr_comment.paper

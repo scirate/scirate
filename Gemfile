@@ -26,6 +26,7 @@ group :development do
   gem 'taps'
   gem 'pry-rails'
   gem 'quiet_assets'
+  #gem 'sql-logging'
 end
 
 # assets

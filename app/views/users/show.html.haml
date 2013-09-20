@@ -15,6 +15,7 @@
           = link_to "Sort by Scite Date", url_for(params.merge(scite_order: :scited))
         %li{ class: @scite_order == :published ? 'active' : '' }
           = link_to "Sort by Publication Date", url_for(params.merge(scite_order: :published))
+
       = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
       = will_paginate @scited_papers, param_name: 'scite_page'
     .span6

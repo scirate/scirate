@@ -8,11 +8,12 @@
 #  name                :string(255)
 #  fullname            :text
 #  feed_type           :string(255)
-#  created_at          :datetime        not null
-#  updated_at          :datetime        not null
-#  updated_date        :date
+#  created_at          :timestamp       not null
+#  updated_at          :timestamp       not null
+#  updated_date        :timestamp
 #  subscriptions_count :integer         default(0)
-#  last_paper_date     :date
+#  last_paper_date     :timestamp
+#  last_comment_date   :timestamp
 #
 
 class Feed < ActiveRecord::Base

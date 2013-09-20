@@ -268,39 +268,6 @@ ALTER SEQUENCE downvotes_id_seq OWNED BY downvotes.id;
 
 
 --
--- Name: feed_days; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE feed_days (
-    id integer NOT NULL,
-    pubdate date,
-    content text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    feed_name character varying(255)
-);
-
-
---
--- Name: feed_days_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE feed_days_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: feed_days_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE feed_days_id_seq OWNED BY feed_days.id;
-
-
---
 -- Name: feed_preferences; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -685,13 +652,6 @@ ALTER TABLE ONLY downvotes ALTER COLUMN id SET DEFAULT nextval('downvotes_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY feed_days ALTER COLUMN id SET DEFAULT nextval('feed_days_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY feed_preferences ALTER COLUMN id SET DEFAULT nextval('feed_preferences_id_seq'::regclass);
 
 
@@ -805,14 +765,6 @@ ALTER TABLE ONLY down_votes
 
 ALTER TABLE ONLY downvotes
     ADD CONSTRAINT downvotes_pkey PRIMARY KEY (id);
-
-
---
--- Name: feed_days_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY feed_days
-    ADD CONSTRAINT feed_days_pkey PRIMARY KEY (id);
 
 
 --
@@ -986,13 +938,6 @@ CREATE UNIQUE INDEX index_cross_lists_on_paper_id_and_feed_id ON cross_lists USI
 
 
 --
--- Name: index_feed_days_on_pubdate_and_feed_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_feed_days_on_pubdate_and_feed_name ON feed_days USING btree (pubdate, feed_name);
-
-
---
 -- Name: index_feeds_on_last_paper_date; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1025,6 +970,13 @@ CREATE INDEX index_papers_on_feed_id ON papers USING btree (feed_id);
 --
 
 CREATE UNIQUE INDEX index_papers_on_identifier ON papers USING btree (identifier);
+
+
+--
+-- Name: index_papers_on_pubdate; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_papers_on_pubdate ON papers USING btree (pubdate);
 
 
 --
@@ -1291,3 +1243,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130723214946');
 INSERT INTO schema_migrations (version) VALUES ('20130724001439');
 
 INSERT INTO schema_migrations (version) VALUES ('20130916061905');
+
+INSERT INTO schema_migrations (version) VALUES ('20130920083302');
+
+INSERT INTO schema_migrations (version) VALUES ('20130920083426');

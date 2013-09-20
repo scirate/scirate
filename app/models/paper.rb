@@ -51,10 +51,11 @@ class Paper < ActiveRecord::Base
   # a date, a number of days into the past to look, and
   # an optional page index
   def self.range_query(papers, date, range=0, page=nil)
-    collection = papers.paginate(page: page)
-    collection = collection.includes(:feed, :authors, :cross_lists => :feed)
-    collection = collection.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
-    collection = collection.order("scites_count DESC, comments_count DESC, identifier ASC")
+    papers = papers.includes(:feed, :authors, :cross_lists => :feed)
+    papers = papers.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
+    papers = papers.order("scites_count DESC, comments_count DESC, identifier ASC")
+    papers = papers.limit(30)
+    papers
   end
 
   def self._arxiv_import(models, opts={})

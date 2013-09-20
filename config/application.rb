@@ -73,6 +73,8 @@ module SciRate3
     config.assets.initialize_on_precompile = false
 
     config.action_mailer.default_url_options = { :host => Settings::HOST }
+
+    config.cache_store = :memory_store
   end
 
   SciRate3::Application.config.middleware.use ::ExceptionNotifier,

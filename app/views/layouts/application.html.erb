@@ -20,21 +20,23 @@
 
         <nav>
           <ul>
-            <% if signed_in? %>
-              <li><%= link_to "Home", root_path %></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.name %> <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><%= link_to "Profile", current_user %></li>
-                  <li><%= link_to "Settings", settings_path %></li>
-                  <li><%= link_to "Sign out", signout_path %></li>
-                </ul>
-              </li>
-            <% else %>
-              <li><%= link_to "Sign in", signin_path %></li>
-              <li><%= link_to "Sign up", signup_path %></li>
+            <% cache current_user do %>
+              <% if signed_in? %>
+                <li><%= link_to "Home", root_path %></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.name %> <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><%= link_to "Profile", current_user %></li>
+                    <li><%= link_to "Settings", settings_path %></li>
+                    <li><%= link_to "Sign out", signout_path %></li>
+                  </ul>
+                </li>
+              <% else %>
+                <li><%= link_to "Sign in", signin_path %></li>
+                <li><%= link_to "Sign up", signup_path %></li>
+              <% end %>
             <% end %>
-          <%= form_tag papers_search_path, method: 'get', class: 'searchbox' do %>
+            <%= form_tag papers_search_path, method: 'get', class: 'searchbox' do %>
             <%= text_field_tag :q, params[:q], placeholder: 'Search' %>
           <% end %>
           </ul>
@@ -49,33 +51,35 @@
     </div>
     <%= yield %>
 
-    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        jax: ["input/TeX", "output/HTML-CSS"],
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-          processEscapes: true,
-          ignoreClass: 'container',
-          processClass: 'tex2jax',
-        },
-        showMathMenu: false,
-        errorSettings: {
-          style: { color: "black" },
-        },
-        TeX: {
-          noUndefined: {
-            attributes: {
-              mathcolor: 'black',
+    <% if Settings::ENABLE_MATHJAX %>
+      <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          jax: ["input/TeX", "output/HTML-CSS"],
+          tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            ignoreClass: 'container',
+            processClass: 'tex2jax',
+          },
+          showMathMenu: false,
+          errorSettings: {
+            style: { color: "black" },
+          },
+          TeX: {
+            noUndefined: {
+              attributes: {
+                mathcolor: 'black',
+              }
             }
           }
-        }
-      });
-    </script>
+        });
+      </script>
+    <% end %>
+    <%= javascript_include_tag "application" %>
     <script type="text/javascript">
       SciRate.current_user = <%= !!current_user %>;
     </script>
-    <%= javascript_include_tag "application" %>
   </body>
 </html>

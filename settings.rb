@@ -13,6 +13,9 @@ module Settings
   # Hostname to put in emails and such
   HOST = "scirate.com"
 
+  # Whether to use Mathjax rendering for tex
+  ENABLE_MATHJAX = true
+
 
   #####
   # Sensitive development settings

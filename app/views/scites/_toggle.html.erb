@@ -1,9 +1,17 @@
 <div class="scite-toggle <%= (signed_in? && @scited_papers.include?(paper)) ? '' : 'inactive' %>" data-paper-id="<%= paper.id %>" >
   <% if signed_in? && @scited_papers.include?(paper) %>
     <button class="btn unscite btn-success">Scited</button>
-    <%= render partial: 'scites/count', object: paper, as: :paper %>
   <% else %>
     <button class="btn scite">Scite!</button> 
-    <%= render partial: 'scites/count', object: paper, as: :paper %>
   <% end %>
+  <div class="scites-count">
+    <button class="btn count"><%= paper.scites_count %></button>
+    <% if paper.scites_count > 0 %>
+      <div class="sciters-dropdown">
+        <% paper.sciters.each do |user| %>
+          <%= link_to user.name, user %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>
