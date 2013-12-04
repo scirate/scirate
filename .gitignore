@@ -27,5 +27,4 @@ doc/
 *~
 .project
 .DS_Store
-.rvmrc
 backup/*.dump
