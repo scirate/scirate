@@ -16,7 +16,7 @@ We encourage contributions!
 
 ## Setting up for development
 
-You will need [Ruby 1.9.3](http://www.ruby-lang.org/en/) and a UNIX environment of some kind. Familiarity with [Rails 3](http://rubyonrails.org/) is recommended.
+You will need [Ruby 2.0](http://www.ruby-lang.org/en/) and a UNIX environment of some kind. Familiarity with [Rails 3](http://rubyonrails.org/) is recommended.
 
 ```shell
 git clone git@github.com:draftable/scirate3
