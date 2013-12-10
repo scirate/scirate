@@ -22,10 +22,14 @@ gem 'bourbon'
 group :development do
   gem 'annotate'
   gem 'rspec-rails'
-  gem 'guard-rspec'
   gem 'taps'
   gem 'pry-rails'
   gem 'quiet_assets'
+
+  # Rails application preloader
+  # Speeds up rake/rspec startup
+  gem 'spring'
+  gem 'spring-commands-rspec'
   #gem 'sql-logging'
 end
 
@@ -44,8 +48,6 @@ group :test do
   gem 'rb-fsevent', :require => false
   gem 'rb-readline'
   gem 'growl'
-  gem 'guard-spork'
-  gem 'spork'
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'launchy'
