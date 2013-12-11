@@ -10,15 +10,20 @@
   .row-fluid
     .span6
       %h3 Scites (#{@user.scites_count})
-      %ul.nav.nav-tabs
-        %li{ class: @scite_order == :scited ? 'active' : '' }
-          = link_to "Sort by Scite Date", url_for(params.merge(scite_order: :scited))
-        %li{ class: @scite_order == :published ? 'active' : '' }
-          = link_to "Sort by Publication Date", url_for(params.merge(scite_order: :published))
-
-      = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
-      = will_paginate @scited_papers, param_name: 'scite_page'
+      - if @scited_papers.length == 0
+        %p No papers scited.
+      - else
+        %ul.nav.nav-tabs
+          %li{ class: @scite_order == :scited ? 'active' : '' }
+            = link_to "Sort by Scite Date", url_for(params.merge(scite_order: :scited))
+          %li{ class: @scite_order == :published ? 'active' : '' }
+            = link_to "Sort by Publication Date", url_for(params.merge(scite_order: :published))
+          = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
+        = will_paginate @scited_papers, param_name: 'scite_page'
     .span6
       %h3 Comments (#{@user.comments_count})
-      = render @comments
-      = will_paginate @comments, param_name: 'comment_page'
+      - if @user.comments_count == 0
+        %p No comments posted.
+      - else
+        = render @comments
+        = will_paginate @comments, param_name: 'comment_page'
