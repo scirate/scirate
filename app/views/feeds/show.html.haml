@@ -4,19 +4,19 @@
 
 .container#feed-page
   .row-fluid
-    - cache 'feedbar.left.1' do
-      .span2.feedbar.left
-        %ul.nav.nav-list.tree-sidebar
-          - if signed_in?
-            %li.feed-folder.my-feeds
-              %label.nav-header
-                %i.icon-chevron-down
-                My feeds
-              %ul.nav.nav-list.tree
-                - current_user.feeds.each do |feed|
-                  %li.leaf
-                    = link_to(feed.fullname, feed)
+    .span2.feedbar.left
+      %ul.nav.nav-list.tree-sidebar
+        - if signed_in?
+          %li.feed-folder.my-feeds
+            %label.nav-header
+              %i.icon-chevron-down
+              My feeds
+            %ul.nav.nav-list.tree
+              - current_user.feeds.each do |feed|
+                %li.leaf
+                  = link_to(feed.fullname, feed)
 
+        - cache 'feedbar.left.3' do
           %li.source-heading arXiv.org
           - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
             %li.feed-folder{ class: @feed == feed ? 'active' : '' }
