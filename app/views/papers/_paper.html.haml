@@ -11,7 +11,9 @@
         - paper.authors.each do |author|
           = author_link_to(author) + (author != paper.authors[-1] ? "," : ' ')
       %span.identifier
-        = "arXiv:#{paper.identifier}"
+        = paper.pubdate.strftime("%b %d %Y")
+        -#
+          = "arXiv:#{paper.identifier}"
         [#{link_to paper.feed.name, paper.feed}]
       - if paper.cross_lists.length > 1
         .crosslist
