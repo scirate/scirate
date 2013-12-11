@@ -1,19 +1,17 @@
 module SessionsHelper
 
   def sign_in(user, options = {})
-    if user.active?
-      if options[:remember_me] == true
-        cookies.permanent[:remember_token] = user.remember_token
-      else
-        cookies[:remember_token] = user.remember_token
-      end
-
-      if session[:api_action]
-        
-      end
-
-      current_user = user
+    if options[:remember_me] == true
+      cookies.permanent[:remember_token] = user.remember_token
+    else
+      cookies[:remember_token] = user.remember_token
     end
+
+    if session[:api_action]
+      
+    end
+
+    self.current_user = user
   end
 
   def signed_in?
@@ -53,13 +51,12 @@ module SessionsHelper
   end
 
   private
+    def user_from_remember_token
+      remember_token = cookies[:remember_token]
+      User.find_by_remember_token(remember_token) unless remember_token.nil?
+    end
 
-      def user_from_remember_token
-        remember_token = cookies[:remember_token]
-        User.find_by_remember_token(remember_token) unless remember_token.nil?
-      end
-
-      def clear_return_to
-        session.delete(:return_to)
-      end
+    def clear_return_to
+      session.delete(:return_to)
+    end
 end

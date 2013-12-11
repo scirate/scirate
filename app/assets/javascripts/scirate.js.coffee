@@ -84,18 +84,30 @@ $ ->
     if err == "Unauthorized"
       SciRate.login()
 
+  # Setup generic dropdowns
   $('.dropdown').each ->
     $(this).mouseenter -> $(this).find('.dropdown-toggle').dropdown('toggle')
     $(this).mouseleave -> $(this).find('.dropdown-toggle').dropdown('toggle')
-    
-  $('#landing').each ->
-    $('.searchbox input').focus()
 
-  $('#search_page').each ->
-    new View.Search(el: this)
-
+  # Make little paper widgets functional
   $('li.paper').each ->
     new View.PaperItem(el: this)
 
+  # Feed subscription toggles
   $('.subscribe-toggle').each ->
     new View.SubscribeToggle(el: this)
+
+  # Welcome banner resend confirm button
+  $('#resend-confirm-email').click ->
+    $.post '/api/resend_confirm', ->
+      $('#resend-confirm-email').popover(
+        content: "Sent"
+      )
+    
+  # Landing page specific
+  $('#landing').each ->
+    $('.searchbox input').focus()
+
+  # Search page specific
+  $('#search_page').each ->
+    new View.Search(el: this)

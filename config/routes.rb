@@ -7,6 +7,7 @@ SciRate3::Application.routes.draw do
   match '/api/unscite/:paper_id', to: 'api#unscite', via: [:get, :post], as: :unscite
   match '/api/subscribe/:feed_id', to: 'api#subscribe', via: [:get, :post], as: :subscribe
   match '/api/unsubscribe/:feed_id', to: 'api#unsubscribe', via: [:get, :post], as: :unsubscribe
+  post '/api/resend_confirm', to: 'api#resend_confirm', as: :resend_confirm
 
   put '/subscriptions', to: 'subscriptions#update'
 

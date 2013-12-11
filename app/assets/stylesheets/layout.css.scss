@@ -25,6 +25,7 @@ body {
 .transparent { opacity: 0.0 !important; }
 .right { float: right; }
 .left { float: left; }
+.alert { margin-bottom: 0; }
 
 .dropdown-menu {
   margin-top: 0;
@@ -263,6 +264,21 @@ header.second {
   background: #1e95f9;
   color: white;
   font-size: 1.2em;
+}
+
+// Welcome banner displayed on all pages
+// Until user confirms their email address
+.welcome-banner {
+  padding: 8px 35px 8px 14px;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #468847;
+  line-height: 35px;
+
+  .btn {
+    position: relative;
+    top: -1px;
+  }
 }
 
 // Individual paper page

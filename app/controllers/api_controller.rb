@@ -45,6 +45,11 @@ class ApiController < ApplicationController
     end
   end
 
+  def resend_confirm
+    current_user.send_signup_confirmation
+    render json: { success: true }
+  end
+
   private
     def authorize
       unless signed_in?

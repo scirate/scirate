@@ -48,6 +48,18 @@
 
     <div class="container">
       <%= render 'sessions/flash' %>
+
+      <% if signed_in? && !current_user.active? %>
+        <div class="welcome-banner">
+          Welcome to SciRate! A confirmation message was sent to <b><%= current_user.email %></b>.
+
+          <div class="pull-right">
+            <button id="resend-confirm-email" class="btn">
+              Resend Confirmation
+            </button>
+          </div>
+        </div>
+      <% end %>
     </div>
     <%= yield %>
 
