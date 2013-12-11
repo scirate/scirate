@@ -39,6 +39,7 @@ class FeedsController < ApplicationController
     render 'feeds/show'
   end
 
+  # Showing a feed while we aren't signed in
   def show_nouser
     @feed = Feed.find_by_name(params[:feed])
     feed_ids = [@feed.id] + @feed.children.pluck(:id)
@@ -46,6 +47,12 @@ class FeedsController < ApplicationController
     @date = parse_date(params) || @feed.last_paper_date || Date.today
     @range = parse_range(params) || 0
     @page = params[:page]
+
+    if @range == :since_last
+      # If we're not signed in, there's no sense
+      # in which we can do "since last"
+      @range = 1 
+    end
 
     @backdate = @date - @range.days
 

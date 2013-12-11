@@ -2,11 +2,13 @@
   = link_to("<<", url_for(params.merge(date: @date-1.days)))
   %strong= @date.to_formatted_s(:rfc822)
   to
-  %strong= @backdate.to_formatted_s(:rfc822)
-  = link_to(">>", url_for(params.merge(date: @date+1.days)))
+  %div
+    %strong= @backdate.to_formatted_s(:rfc822)
+    = link_to(">>", url_for(params.merge(date: @date+1.days)))
   %div-group
-    %li.last-visited{ class: @since_last && 'active' }
-      = link_to("Since Last Visited", url_for(params.merge(range: 'since_last')))
+    - if signed_in?
+      %li.last-visited{ class: @since_last && 'active' }
+        = link_to("Since Last Visited", url_for(params.merge(range: 'since_last')))
     %li{ class: @range == 1 && 'active' }
       = link_to("2d", url_for( params.merge( range: 2 )))
     %li{ class: @range == 2 && 'active' }
