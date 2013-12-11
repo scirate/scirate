@@ -44,13 +44,19 @@ gem 'jquery-rails'
 # Test gems setup for Macintosh OS X
 group :test do
   gem 'rspec-rails'
-  gem 'capybara'
   gem 'rb-fsevent', :require => false
   gem 'rb-readline'
   gem 'growl'
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'launchy'
+
+  # Capybara for integration tests
+  gem 'capybara'
+
+  # Minitest integration
+  gem 'minitest-rails'
+  gem 'minitest-rails-capybara'
 end
 
 group :production do
