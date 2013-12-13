@@ -37,8 +37,6 @@ class User < ActiveRecord::Base
   has_many :feeds, through: :subscriptions
   has_many :feed_preferences
 
-  before_save { generate_token(:remember_token) }
-
   validates :name, presence: true, length: { maximum: 50 }
 
   valid_email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -103,6 +101,7 @@ class User < ActiveRecord::Base
 
   def send_password_reset
     generate_token(:password_reset_token)
+    generate_token(:remember_token)
     save!
     UserMailer.password_reset(self).deliver
   end
@@ -156,6 +155,7 @@ class User < ActiveRecord::Base
     self.password = new_password
     self.password_confirmation = new_password
     UserMailer.password_change(self).deliver
+    generate_token(:remember_token)
     self.save!
   end
 
