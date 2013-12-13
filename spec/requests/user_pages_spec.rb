@@ -58,24 +58,6 @@ describe "User pages" do
     end
 
     describe "account confirmation" do
-
-      describe "new signup is inactive" do
-        let(:user) { User.find_by_email('test-new@example.com') }
-
-        before do
-          visit signup_path
-          valid_signup(email: 'new@example.com', password: 'foobar')
-
-          visit signin_path
-          fill_in "Email",    with: 'new@example.com'
-          fill_in "Password", with: 'foobar'
-          click_button "Sign in"
-        end
-
-        it { should have_title "" }
-        it { should have_content "Account is inactive!" }
-      end
-
       describe "emails user on signup" do
         before do
           visit signup_path

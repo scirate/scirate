@@ -1,15 +1,15 @@
 ruby '2.0.0'
 source 'http://rubygems.org'
 
-gem 'rails'
-gem 'bcrypt-ruby', "~> 3.0.0"
+gem 'rails', "~> 4.0.0"
+gem 'bcrypt-ruby'
 gem 'faker'
 gem 'chronic'
 gem 'oai', :git => 'git://github.com/code4lib/ruby-oai'
 gem 'pg'
 gem 'will_paginate'
 gem 'textacular', :require => 'textacular/rails'
-gem 'acts_as_votable', :git => 'git://github.com/ryanto/acts_as_votable'
+gem 'acts_as_votable'
 gem 'activerecord-import'
 gem 'squeel'
 gem 'thin'
@@ -37,8 +37,6 @@ end
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
-
-
 gem 'jquery-rails'
 
 # Test gems setup for Macintosh OS X
