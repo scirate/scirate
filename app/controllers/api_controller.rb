@@ -1,5 +1,5 @@
 class ApiController < ApplicationController
-  before_action :authorize
+  before_filter :authorize
 
   def scite
     @paper = Paper.find(params[:paper_id])

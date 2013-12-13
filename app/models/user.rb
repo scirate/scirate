@@ -48,6 +48,12 @@ class User < ActiveRecord::Base
 
   acts_as_voter
 
+  before_save do
+    if new_record? || password_digest_changed? || email_changed?
+      generate_token(:remember_token)
+    end
+  end
+
   def scited?(paper)
     scites.find_by_paper_id(paper.id)
   end
@@ -101,7 +107,6 @@ class User < ActiveRecord::Base
 
   def send_password_reset
     generate_token(:password_reset_token)
-    generate_token(:remember_token)
     save!
     UserMailer.password_reset(self).deliver
   end
@@ -155,7 +160,6 @@ class User < ActiveRecord::Base
     self.password = new_password
     self.password_confirmation = new_password
     UserMailer.password_change(self).deliver
-    generate_token(:remember_token)
     self.save!
   end
 
@@ -169,7 +173,6 @@ class User < ActiveRecord::Base
   end
 
   private
-
     # Generate a random confirmation token in column
     # Also puts the time in self[ column - '_token' + '_sent_at' ] if it exists
     def generate_token(column)
