@@ -577,7 +577,8 @@ CREATE TABLE votes (
     vote_flag boolean,
     vote_scope character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    vote_weight integer
 );
 
 
@@ -1257,3 +1258,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130920083302');
 INSERT INTO schema_migrations (version) VALUES ('20130920083426');
 
 INSERT INTO schema_migrations (version) VALUES ('20131213045624');
+
+INSERT INTO schema_migrations (version) VALUES ('20131213121346');
