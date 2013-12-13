@@ -8,6 +8,20 @@ SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -334,6 +348,7 @@ ALTER SEQUENCE feeds_id_seq OWNED BY feeds.id;
 CREATE TABLE papers (
     id integer NOT NULL,
     title text,
+    authors text,
     abstract text,
     identifier character varying(255),
     url character varying(255),
@@ -1071,6 +1086,13 @@ CREATE INDEX papers_to_tsvector_idx ON papers USING gin (to_tsvector('english'::
 
 
 --
+-- Name: papers_to_tsvector_idx1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX papers_to_tsvector_idx1 ON papers USING gin (to_tsvector('english'::regconfig, authors));
+
+
+--
 -- Name: papers_to_tsvector_idx2; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1233,3 +1255,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130916061905');
 INSERT INTO schema_migrations (version) VALUES ('20130920083302');
 
 INSERT INTO schema_migrations (version) VALUES ('20130920083426');
+
+INSERT INTO schema_migrations (version) VALUES ('20131213045624');
