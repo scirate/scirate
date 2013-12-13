@@ -13,7 +13,7 @@
             %a{:href => "/search?q=au:#{author.searchterm}"}
               = sanitize(author.fullname) + (author != @paper.authors[-1] ? ',' : '')
       .abstract
-        = @paper.abstract
+        = sanitize(@paper.abstract)
       - if @categories.length > 0
         .categories
           Subjects:

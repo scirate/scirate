@@ -32,4 +32,4 @@
             %i.icon-download-alt
             PDF
 
-  %div{ class: "abstract#{showabs ? '' : ' hidden'}" }= paper.abstract
+  %div{ class: "abstract#{showabs ? '' : ' hidden'}" }= sanitize(paper.abstract)
