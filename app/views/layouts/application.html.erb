@@ -91,7 +91,7 @@
     <% end %>
     <%= javascript_include_tag "application" %>
     <script type="text/javascript">
-      SciRate.current_user = <%= !!current_user %>;
+      SciRate.current_user = <%= raw (current_user ? current_user.to_js : false) %>;
     </script>
   </body>
 </html>

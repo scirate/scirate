@@ -26,6 +26,9 @@ body {
 .right { float: right; }
 .left { float: left; }
 .alert { margin-bottom: 0; }
+.pseudolink {
+  cursor: pointer;
+}
 
 .dropdown-menu {
   margin-top: 0;
@@ -466,7 +469,7 @@ div.abbr_comment {
 
 // Feed header
 
-header.feed-header {
+.feed-header {
   h1 {
     margin-top: 0;
     margin-bottom: 0;
@@ -478,7 +481,19 @@ header.feed-header {
   }
 
   padding-bottom: 5px;
-  margin-bottom: 30px;
+
+  min-height: 80px;
+
+  // Abstract toggle appears on hover
+  .abstract-toggle {
+    display: none;
+  }
+}
+
+.feed-header:hover {
+  .abstract-toggle {
+    display: inline !important;
+  }
 }
 
 .feed-identifier {

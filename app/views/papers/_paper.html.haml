@@ -4,9 +4,6 @@
     .span10
       .title
         = link_to sanitize(paper.title), paper
-        %span.abs-toggle.hidden
-          %a.expand{ class: showabs ? ' hidden' : '' } show abstract
-          %a.collapse{ class: showabs ? '' : ' hidden' } hide abstract
       .authors
         - paper.authors.each do |author|
           = author_link_to(author) + (author != paper.authors[-1] ? "," : ' ')
@@ -32,4 +29,4 @@
             %i.icon-download-alt
             PDF
 
-  %div{ class: "abstract#{showabs ? '' : ' hidden'}" }= sanitize(paper.abstract)
+  %div{ class: "abstract#{showabs ? '' : ' hideable hidden'}" }= sanitize(paper.abstract)

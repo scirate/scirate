@@ -19,6 +19,7 @@
 #  subscriptions_count    :integer         default(0)
 #  account_status         :string          default('user')
 #  last_visited           :timestamp       not null
+#  expand_abstracts       :boolean         not null
 
 class User < ActiveRecord::Base
   STATUS_ADMIN = 'admin'
@@ -156,6 +157,15 @@ class User < ActiveRecord::Base
     self.password_confirmation = new_password
     UserMailer.password_change(self).deliver
     self.save!
+  end
+
+  # Data sent to the browser for JS interaction
+  def to_js
+    { 
+      name: self.name,
+      email: self.email,
+      expand_abstracts: self.expand_abstracts
+    }.to_json
   end
 
   private

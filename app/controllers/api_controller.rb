@@ -1,5 +1,5 @@
 class ApiController < ApplicationController
-  before_filter :authorize
+  before_action :authorize
 
   def scite
     @paper = Paper.find(params[:paper_id])
@@ -48,6 +48,17 @@ class ApiController < ApplicationController
   def resend_confirm
     current_user.send_signup_confirmation
     render json: { success: true }
+  end
+
+  # Retrieve or update misc. user account settings
+  def settings
+    settings = [:expand_abstracts]
+
+    if request.post?
+      current_user.update!(params.permit(*settings))
+    end
+
+    render json: current_user.slice(*settings)
   end
 
   private

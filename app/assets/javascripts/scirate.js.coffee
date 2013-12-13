@@ -79,6 +79,41 @@ class View.SubscribeToggle extends View
       .addClass('btn-success')
       .text("Subscribed")
 
+class View.AbstractToggle extends View
+  initialize: ->
+    if SciRate.current_user
+      @expand = SciRate.current_user.expand_abstracts
+    else
+      @expand = false
+    @render()
+
+  events:
+    'click': 'toggle'
+
+  render: ->
+    if @expand
+      $('.abstract.hideable').removeClass('hidden')
+      @$el.html('hide unscited abstracts')
+    else
+      $('.abstract.hideable').addClass('hidden')
+      @$el.html('show all abstracts')
+
+  toggle: ->
+    if @expand
+      @disable()
+    else
+      @enable()
+
+  disable: ->
+    @expand = false; @render()
+    if SciRate.current_user
+      $.post '/api/settings', { expand_abstracts: false }
+
+  enable: ->
+    @expand = true; @render()
+    if SciRate.current_user
+      $.post '/api/settings', { expand_abstracts: true }
+
 $ ->
   $(document).ajaxError (ev, jqxhr, settings, err) ->
     if err == "Unauthorized"
@@ -96,6 +131,10 @@ $ ->
   # Feed subscription toggles
   $('.subscribe-toggle').each ->
     new View.SubscribeToggle(el: this)
+
+  # Global toggle for showing all abstracts
+  $('.abstract-toggle').each ->
+    new View.AbstractToggle(el: this)
 
   # Welcome banner resend confirm button
   $('#resend-confirm-email').click ->
