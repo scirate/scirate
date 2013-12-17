@@ -512,29 +512,12 @@ div.abbr_comment {
   min-height: 100%;
 }
 
-.feed-center {
-  margin-bottom: -99999px;
-  padding-bottom: 99999px;
-}
-
-.split {
-  z-index: -100;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 50%;
-  min-width: 200px;
-  background: #eeeeee;
-}
-
 .feedbar {
   padding-top: 20px;
 }
 
 .feed-center {
   padding-top: 20px;
-  padding-left: 33px;
   background: white;
   height: 100%;
 
@@ -639,6 +622,7 @@ div.feed-rightbar
 }
 
 .scite-toggle {
+  white-space: nowrap;
   .scite, .unscite {
     @include border-right-radius(0);
     float: left;
