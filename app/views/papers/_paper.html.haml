@@ -1,7 +1,7 @@
 - showabs = (showabs.nil? ? paper.scites_count > 0 : showabs)
 %li.paper.tex2jax
   .row
-    .col-md-10
+    .col-md-9
       .title
         = link_to sanitize(paper.title), paper
       .authors
@@ -18,7 +18,7 @@
           - for crosslist in paper.cross_lists
             - if crosslist.feed_id != paper.feed_id
               = link_to crosslist.feed.name, crosslist.feed
-    .col-md-2
+    .col-md-3
       = render 'scites/toggle', paper: paper
       %div.links.hidden
         %a.btn.btn-abspdf{ href: paper.url } 

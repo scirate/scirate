@@ -5,17 +5,23 @@
     .col-md-6
       %h1 Join SciRate
 
+      - if @user.errors.any?
+        #error_explanation.alert.alert-danger
+          %ul
+          - @user.errors.full_messages.each do |msg|
+            %li= msg
+
       = form_for(@user) do |f|
         .form-group
-          = label_tag :name
-          = text_field_tag :name, nil, class: 'form-control'
+          = f.label :name
+          = f.text_field :name, class: 'form-control'
         .form-group
-          = label_tag :email
-          = text_field_tag :email, nil, class: 'form-control'
+          = f.label :email
+          = f.text_field :email, class: 'form-control'
         .form-group
-          = label_tag :password
-          = password_field_tag :password, nil, class: 'form-control'
+          = f.label :password
+          = f.password_field :password, class: 'form-control'
         .form-group
-          = label_tag :password_confirmation
-          = password_field_tag :password_confirmation, nil, class: 'form-control'
+          = f.label :password_confirmation
+          = f.password_field :password_confirmation, class: 'form-control'
         = f.submit "Sign up", class: 'btn btn-default'

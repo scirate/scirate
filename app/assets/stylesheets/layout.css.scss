@@ -254,17 +254,10 @@ header.navbar {
         text-align: center;
       }
     }
+  }
 
-    .searchbox {
-      float: left;
-      margin-left: 20px;
-      margin-bottom: 0;
-
-      input { 
-        margin-bottom: 0;
-        border-radius: 10px; 
-      }
-    }
+  .searchbox {
+    margin-left: 20px;
   }
 }
 
@@ -647,13 +640,13 @@ div.feed-rightbar
 
 .scite-toggle {
   .scite, .unscite {
-    @include border-left-radius(5px);
+    @include border-right-radius(0);
     float: left;
   }
 
   .scites-count {
     .btn {
-      @include border-right-radius(5px);
+      @include border-left-radius(0);
       border-left: 0;
       float: left;
     }
@@ -680,12 +673,16 @@ div.feed-rightbar
   }
 
   ul + li.paper {
-    padding-top: 0;
     border-top: none;
+
+  }
+
+  .scite-toggle {
+    float: right;
   }
 
   .scite-toggle .btn {
-    padding: 2px 6px; 
+    padding: 4px 8px; 
   }
 }
 
