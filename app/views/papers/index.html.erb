@@ -3,8 +3,8 @@
 
 <% provide :title, @title %>
 
-<div class="row-fluid paper-index">
-  <div class="span2 sidebar left">
+<div class="row paper-index">
+  <div class="col-md-2 sidebar left">
     <!--
     <% if signed_in? %>
       <% current_user.feeds.each do |feed| %>
@@ -36,7 +36,7 @@
     </ul>
   </div>
 
-  <div class="span9">
+  <div class="col-md-9">
     <header>
       <% if @feed %>
         <%= render 'feeds/subscribe', :feed => @feed %>
@@ -62,7 +62,7 @@
       &nbsp;
   </div>
 
-  <div class="span2 sidebar right">
+  <div class="col-md-2 sidebar right">
     <%= render 'next_prev_links' %>
     <div class="recent-comments">
       <%= render 'recent_comments' %>

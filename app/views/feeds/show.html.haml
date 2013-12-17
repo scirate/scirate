@@ -1,8 +1,8 @@
 - provide :title, @title
 
 .container#feed-page
-  .row-fluid
-    .span2.feedbar.left
+  .row
+    .col-md-2.feedbar.left
       %ul.nav.nav-list.tree-sidebar
         - if signed_in?
           %li.feed-folder.my-feeds
@@ -32,24 +32,24 @@
                 - parent.children.each do |feed|
                   %li.leaf{ class: @feed == feed ? 'active' : '' }= link_to(feed.fullname, feed)
 
-    .span10.feed-center
+    .col-md-10.feed-center
       %header.feed-header
-        .row-fluid
-          .span10
-            .row-fluid
+        .row
+          .col-md-10
+            .row
               - if @feed
-                .span10
+                .col-md-10
                   %h1= @feed.fullname
-                .span2
+                .col-md-2
                   = render 'feeds/subscribe', :feed => @feed
               - else
-                .span10
+                .col-md-10
                   %h1= "All subscribed feeds"
-            .row-fluid
+            .row
               %a.abstract-toggle.pseudolink
 
-      .row-fluid
-        .span10
+      .row
+        .col-md-10
           -#
             %p
               Found #{@papers.count} papers from #{describe_range(@date, @range)}
@@ -67,7 +67,7 @@
                 - @papers.each do |paper|
                   = render partial: "papers/paper", object: paper
 
-        .span2.feed-rightbar
+        .col-md-2.feed-rightbar
           = render :partial => 'feeds/next_prev_links'
           - unless @recent_comments.empty?
             %h2 Recent comments

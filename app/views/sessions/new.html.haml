@@ -3,21 +3,23 @@
 .container
   %h1 Sign in
   = form_tag sessions_path do
-    .field
+    .form-group
       = label_tag :email
-      = text_field_tag :email
-    .field
+      = text_field_tag :email, nil, class: 'form_control'
+    .form-group
       = label_tag :password
       = password_field_tag :password
-    .field
-      = check_box_tag :remember_me, 1, params[:remember_me]
-      = label_tag :remember_me
+    .checkbox
+      %label
+        = check_box_tag :remember_me, 1, params[:remember_me]
+        Remember me
+
     - if params[:return_to]
       = hidden_field_tag :return_to, params[:return_to]
     - elsif request.referer
       = hidden_field_tag :return_to, request.referer
 
-    .actions= submit_tag "Sign in"
+    .actions= submit_tag "Sign in", class: 'btn btn-default'
   %p
     New user? #{link_to "Sign up now!", signup_path}
   %p= link_to "Forgotten password?", reset_password_path

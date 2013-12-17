@@ -4,23 +4,23 @@
   %h1 Search SciRate
   #advanced_search_form
     = form_tag(papers_search_path, method: :get) do |f|
-      %table.table.table-striped
+      %table.table.table-striped.table-form
         %tr
           %td= label_tag :authors, "Author(s)"
-          %td= text_field_tag :authors, @search.authors.join(',')
+          %td= text_field_tag :authors, @search.authors.join(','), class: 'form-control'
           %td Comma-separated author names
         %tr
           %td= label_tag :title, "Title"
-          %td= text_field_tag :title, @search.field_terms[:title]
+          %td= text_field_tag :title, @search.field_terms[:title], class: 'form-control'
           %td Contents of paper title
         %tr
           %td= label_tag :abstract, "Abstract"
-          %td= text_field_tag :abstract, @search.field_terms[:abstract]
+          %td= text_field_tag :abstract, @search.field_terms[:abstract], class: 'form-control'
           %td Contents of paper abstract
         %tr
           %td= label_tag :feed, "Category"
           %td
-            %select#folder{ name: 'folder' }
+            %select.form-control#folder{ name: 'folder' }
               %option{ value: 'all' } (all)
               %optgroup{ label: 'arXiv.org' }
                 - Feed.arxiv_folders.each do |folder|
@@ -37,7 +37,7 @@
           %td Search a subcategory
         %tr
           %td= label_tag :general, "General"
-          %td= text_field_tag :general, @search.general_term
+          %td= text_field_tag :general, @search.general_term, class: 'form-control'
           %td All available paper metadata
 
 

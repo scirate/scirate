@@ -1,11 +1,11 @@
 - provide :title, @paper.identifier
 .container
-  .paper.tex2jax.row-fluid
-    .span10
-      .row-fluid.title-row
-        .span10 
+  .paper.tex2jax.row
+    .col-md-10
+      .row.title-row
+        .col-md-10 
           %h1.title= sanitize(@paper.title)
-        .span2= render(partial: 'scites/toggle', object: @paper, as: :paper)
+        .col-md-2= render(partial: 'scites/toggle', object: @paper, as: :paper)
         
       %ul.authors
         - @paper.authors.each do |author|

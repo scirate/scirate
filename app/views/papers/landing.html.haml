@@ -20,8 +20,8 @@
           = text_field_tag :q, params[:q], placeholder: 'Search'
 
     .container
-      .row-fluid
-        .span3.offset9
+      .row
+        .col-md-3.offset9
           %ul.landing-nav
             %li= link_to "sign in", signin_path
             %li.signup= link_to "sign up", signup_path
@@ -29,23 +29,23 @@
 
     .container
       = render 'sessions/flash'
-      .row-fluid
-        .span3
+      .row
+        .col-md-3
           %h2 arXiv.org
-      .row-fluid
-        .span3
+      .row
+        .col-md-3
           %ul.big-feeds
             - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
               %li
                 = link_to(feed.fullname, feed)
           = landing_column(@feeds['physics'])
           = landing_column(@feeds['astro-ph'])
-        .span3
+        .col-md-3
           = landing_column(@feeds['math'])
           = landing_column(@feeds['stat'])
-        .span3
+        .col-md-3
           = landing_column(@feeds['cs'])
-        .span3
+        .col-md-3
           = landing_column(@feeds['cond-mat'])
           = landing_column(@feeds['q-bio'])
           = landing_column(@feeds['q-fin'])

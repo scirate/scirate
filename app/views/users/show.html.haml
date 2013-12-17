@@ -7,8 +7,8 @@
         %h1
           = gravatar_for @user, size: 100
           = @user.name
-  .row-fluid
-    .span6
+  .row
+    .col-md-6
       %h3 Scites (#{@user.scites_count})
       - if @scited_papers.length == 0
         %p No papers scited.
@@ -20,7 +20,7 @@
             = link_to "Sort by Publication Date", url_for(params.merge(scite_order: :published))
           = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
         = will_paginate @scited_papers, param_name: 'scite_page'
-    .span6
+    .col-md-6
       %h3 Comments (#{@user.comments_count})
       - if @user.comments_count == 0
         %p No comments posted.

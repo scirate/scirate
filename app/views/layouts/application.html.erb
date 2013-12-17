@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= full_title(yield(:title)) %></title>
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
@@ -9,17 +9,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-    <header class="first" role="banner">
+    <header class="navbar navbar-inverse" role="banner">
       <div class="container">
-        <span class="scirate-logo">
-          <a href="/">
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/" class="navbar-brand">
             <%= image_tag "scirate-icon.png" %>
             SciRate
           </a>
-        </span>
+        </div>
 
-        <nav>
-          <ul>
+        <nav class="collapse navbar-collapse" role="navigation">
+          <%= form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do %>
+            <%= text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control' %>
+          <% end %>
+          <ul class="nav navbar-nav navbar-right">
             <% cache current_user do %>
               <% if signed_in? %>
                 <li><%= link_to "Home", root_path %></li>
@@ -36,9 +45,6 @@
                 <li><%= link_to "Sign up", signup_path %></li>
               <% end %>
             <% end %>
-            <%= form_tag papers_search_path, method: 'get', class: 'searchbox' do %>
-            <%= text_field_tag :q, params[:q], placeholder: 'Search' %>
-          <% end %>
           </ul>
         </nav>
       </div>
