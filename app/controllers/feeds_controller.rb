@@ -6,13 +6,18 @@ class FeedsController < ApplicationController
     render('papers/landing', :layout => nil)
   end
 
+  def _range_query(feed_ids, backdate, date)
+    paper_ids = Paper.joins(:cross_lists).where("cross_lists.feed_id IN (?) AND cross_lists.cross_list_date >= ? AND cross_lists.cross_list_date <= ?", feed_ids, backdate, date).order("scites_count DESC, comments_count DESC").limit(30).pluck(:id)
+    Paper.includes(:feed, :authors, :cross_lists => :feed).where(id: paper_ids)
+  end
+
   # Aggregated feed
   def index
     return landing unless signed_in?
 
     feeds = current_user.feeds.includes(:children)
     feed_ids = feeds.map(&:id) + feeds.map(&:children).flatten.map(&:id)
-    feed_papers = Paper.where(cross_lists: { feed_id: feed_ids })
+
     preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
     @preferences = preferences
 
@@ -20,21 +25,20 @@ class FeedsController < ApplicationController
     @range = parse_range(params) || preferences.range
     @page = params[:page]
 
-    preferences.pref_update!(@range)
-
     if @range == :since_last
       @range = ((Time.now - preferences.previous_last_visited) / 1.day).round
       @since_last = true
     end
 
     @backdate = @date - @range.days
+    preferences.pref_update!(@range)
 
     @recent_comments = Comment.includes(:paper, :user)
                               .where(:paper => { :feed_id => feed_ids })
                               .order("comments.created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers)
 
-    @papers = Paper.range_query(feed_papers, @date, @range, @page)
+    @papers = _range_query(feed_ids, @backdate, @date)
 
     render 'feeds/show'
   end
@@ -60,8 +64,7 @@ class FeedsController < ApplicationController
                               .where(:paper => { :feed_id => feed_ids })
                               .order("comments.created_at DESC")
 
-    @papers = Paper.where(cross_lists: { feed_id: feed_ids })
-    @papers = Paper.range_query(@papers, @date, @range, @page)
+    @papers = _range_query(feed_ids, @backdate, @date)
   end
 
   def show
@@ -89,8 +92,7 @@ class FeedsController < ApplicationController
                               .order("comments.created_at DESC")
     @scited_papers = Set.new(current_user.scited_papers)
 
-    @papers = Paper.where(cross_lists: { feed_id: feed_ids })
-    @papers = Paper.range_query(@papers, @date, @range, @page)
+    @papers = _range_query(feed_ids, @backdate, @date)
   end
 
   protected

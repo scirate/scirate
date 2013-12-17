@@ -884,6 +884,27 @@ CREATE INDEX index_authors_on_uniqid ON authors USING btree (uniqid);
 
 
 --
+-- Name: index_authorships_on_author_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authorships_on_author_id ON authorships USING btree (author_id);
+
+
+--
+-- Name: index_authorships_on_paper_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authorships_on_paper_id ON authorships USING btree (paper_id);
+
+
+--
+-- Name: index_authorships_on_paper_id_and_author_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authorships_on_paper_id_and_author_id ON authorships USING btree (paper_id, author_id);
+
+
+--
 -- Name: index_comments_on_cached_votes_down; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -909,6 +930,13 @@ CREATE INDEX index_comments_on_paper_id ON comments USING btree (paper_id);
 --
 
 CREATE INDEX index_comments_on_user_id ON comments USING btree (user_id);
+
+
+--
+-- Name: index_cross_lists_on_cross_list_date; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cross_lists_on_cross_list_date ON cross_lists USING btree (cross_list_date);
 
 
 --
@@ -954,6 +982,13 @@ CREATE UNIQUE INDEX index_feeds_on_name ON feeds USING btree (name);
 
 
 --
+-- Name: index_papers_on_comments_count; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_papers_on_comments_count ON papers USING btree (comments_count DESC);
+
+
+--
 -- Name: index_papers_on_date; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -979,6 +1014,20 @@ CREATE UNIQUE INDEX index_papers_on_identifier ON papers USING btree (identifier
 --
 
 CREATE INDEX index_papers_on_pubdate ON papers USING btree (pubdate);
+
+
+--
+-- Name: index_papers_on_scites_count; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_papers_on_scites_count ON papers USING btree (scites_count DESC);
+
+
+--
+-- Name: index_papers_on_scites_count_and_comments_count; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_papers_on_scites_count_and_comments_count ON papers USING btree (scites_count DESC, comments_count DESC);
 
 
 --
@@ -1260,3 +1309,11 @@ INSERT INTO schema_migrations (version) VALUES ('20130920083426');
 INSERT INTO schema_migrations (version) VALUES ('20131213045624');
 
 INSERT INTO schema_migrations (version) VALUES ('20131213121346');
+
+INSERT INTO schema_migrations (version) VALUES ('20131217081840');
+
+INSERT INTO schema_migrations (version) VALUES ('20131217083040');
+
+INSERT INTO schema_migrations (version) VALUES ('20131217134749');
+
+INSERT INTO schema_migrations (version) VALUES ('20131217150844');
