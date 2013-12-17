@@ -277,7 +277,9 @@ class Paper::Search
         end
       end
     end
+  end
 
+  def run
     @results = Paper
 
     # Limit by feed

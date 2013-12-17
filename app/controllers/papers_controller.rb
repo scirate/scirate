@@ -56,13 +56,19 @@ class PapersController < ApplicationController
     end
 
     @query = @query.strip
+
     @search = Paper::Search.new(@query)
 
-    # Determine which folder we should have selected
-    @folder_id = @search.feed && (@search.feed.parent_id || @search.feed.id)
+    if !@query.empty?
+      @search.run
 
-    @papers = @search.results.paginate(page: params[:page])
-    @scited_papers = Set.new(current_user.scited_papers) if current_user
+      # Determine which folder we should have selected
+      @folder_id = @search.feed && (@search.feed.parent_id || @search.feed.id)
+
+      @papers = @search.results.paginate(page: params[:page])
+      @scited_papers = Set.new(current_user.scited_papers) if current_user
+    end
+
     render :search
   end
 

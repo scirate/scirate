@@ -44,18 +44,19 @@
       .field
         = submit_tag "Search"
 
-  %h3
-    Results for #{@query}
-  - unless @authors.nil? || @authors.empty?
-    Matching authors:
-    - @authors.each do |author|
-      = link_to author.fullname, "/search?q=au:#{author.searchterm}"
-      - unless author == @authors[-1]
-        ,
-  .paperlist
-    %ul.papers
-      - if @papers.empty?
-        No papers found.
-      - else
-        = render @papers
-  = will_paginate @papers
+  - if @papers
+    %h3
+      Results for #{@query}
+    - unless @authors.nil? || @authors.empty?
+      Matching authors:
+      - @authors.each do |author|
+        = link_to author.fullname, "/search?q=au:#{author.searchterm}"
+        - unless author == @authors[-1]
+          ,
+    .paperlist
+      %ul.papers
+        - if @papers.empty?
+          No papers found.
+        - else
+          = render @papers
+    = will_paginate @papers
