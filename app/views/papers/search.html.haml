@@ -30,7 +30,7 @@
           %td= label_tag :subfeed, "Subcategory"
           %td
             - Feed.arxiv_folders.each do |folder|
-              %select.hidden{ id: "feed_#{folder.id}", class: 'feed', name: 'feed', disabled: true }
+              %select.hidden{ id: "feed_#{folder.id}", class: 'feed form-control', name: 'feed', disabled: true }
                 %option{ value: folder.name } (all)
                 - folder.children.each do |feed|
                   %option{ value: feed.name, selected: feed == @search.feed }= feed.fullname
@@ -42,7 +42,7 @@
 
 
       .field
-        = submit_tag "Search"
+        = submit_tag "Search", class: 'btn btn-default'
 
   - if @papers
     %h3

@@ -17,13 +17,13 @@
             SciRate
         %p An open access science aggregator
         = form_tag papers_search_path, :method => 'get', class: 'searchbox' do
-          = text_field_tag :q, params[:q], placeholder: 'Search'
+          = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
 
     .container
       .row
-        .col-md-3.offset9
+        .col-md-3.col-md-offset-9
           %ul.landing-nav
-            %li= link_to "sign in", signin_path
+            %li= link_to "sign in", login_path
             %li.signup= link_to "sign up", signup_path
             %li= link_to "about", about_path
 

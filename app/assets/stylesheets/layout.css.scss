@@ -17,6 +17,10 @@ body {
   height: 100%;
 }
 
+ul {
+  padding-left: 0;
+}
+
 .timeago { color: rgba(0, 0, 0, 0.5); }
 .username { font-weight: bold; }
 .hidden { display: none !important; }
@@ -99,11 +103,11 @@ a:link, a:visited {
     .searchbox {
       line-height: 40px;
       position: relative;
-      display: inline;
+      display: inline-block;
       input { 
         margin: 0;
         width: 490px;
-        height: 22px;
+        height: 32px;
       }
     }
   }
@@ -165,17 +169,19 @@ a:link, a:visited {
 
   h2 {
     display: inline;
+    font-weight: bold;
   }
 
   h3 {
     font-size: 1.5em;
+    font-weight: bold;
+    line-height: 40px;
     margin-bottom: 0;
   }
 
   li.feed {
     line-height: 16px;
   }
-
 }
 
 // Main header
@@ -188,13 +194,13 @@ header.navbar {
   background: #202226;
   color: white;
 
-  max-height: 60px;
+  max-height: 50px;
 
   margin-bottom: 0;
 
   .navbar-brand {
-    font-size: 32px;
-    line-height: 60px;
+    font-size: 28px;
+    line-height: 50px;
     padding: 0;
     color: white;
 
@@ -205,7 +211,7 @@ header.navbar {
     img {
       position: relative;
       top: -3px;
-      width: 36px;
+      width: 32px;
     }
   }
 
@@ -214,9 +220,9 @@ header.navbar {
       display: block;
       padding: 0 21px;
 
-      line-height: 60px;
+      line-height: 50px;
       color: white;
-      font-size: 1.4em;
+      font-size: 18px;
       font-weight: 400;
     }
 
@@ -306,7 +312,6 @@ div.paper {
   }
 
   ul.authors {
-    margin: 0;
     margin-bottom: 2px;
 
     li { 
@@ -409,15 +414,16 @@ div.abbr_comment {
 // Feed listing sidebar
 
 .feedbar {
+  .my-feeds {
+    margin-bottom: 10px;
+    label {
+      display: block;
+    }
+  }
 
   // Feed folders and headings
 
-  li.feed-folder {
-    position: relative;
-  }
-
-  li.feed-folder label {
-    font-size: 1em;
+  li.feed-folder .nav-header {
     margin-bottom: 0;
     font-weight: normal;
 
@@ -426,6 +432,8 @@ div.abbr_comment {
     i {
       line-height: 1.5em;
       float: left;
+      cursor: pointer;
+      padding-right: 3px;
     }
 
     a {
@@ -440,13 +448,10 @@ div.abbr_comment {
     font-weight: bold;
   }
 
-  .my-feeds {
-    margin-bottom: 10px;
-  }
-
   .source-heading {
     font-size: 1.5em;
     padding-bottom: 5px;
+    margin-bottom: 5px;
     border-bottom: 1px solid #aaa;
   }
   
@@ -456,6 +461,10 @@ div.abbr_comment {
     font-size: 0.8em;
     line-height: 1.4em;
     padding-left: 5px;
+  }
+
+  .leaf a {
+    padding: 3px 15px;
   }
 
   .leaf.active a {
@@ -546,6 +555,7 @@ div.abbr_comment {
 
 ul.papers {
   margin-left: 0;
+  padding-left: 0;
 }
 
 li.paper {

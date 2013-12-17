@@ -1,9 +1,21 @@
-- provide(:title, 'Sign up')
+- provide(:title, 'Join SciRate')
 
 .container
-  %h1 Sign up
+  .row
+    .col-md-6
+      %h1 Join SciRate
 
-  = form_for(@user) do |f|
-    = render 'fields', f: f
-    .actions
-      = f.submit "Sign up"
+      = form_for(@user) do |f|
+        .form-group
+          = label_tag :name
+          = text_field_tag :name, nil, class: 'form-control'
+        .form-group
+          = label_tag :email
+          = text_field_tag :email, nil, class: 'form-control'
+        .form-group
+          = label_tag :password
+          = password_field_tag :password, nil, class: 'form-control'
+        .form-group
+          = label_tag :password_confirmation
+          = password_field_tag :password_confirmation, nil, class: 'form-control'
+        = f.submit "Sign up", class: 'btn btn-default'

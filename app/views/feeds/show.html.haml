@@ -14,23 +14,22 @@
                 %li.leaf
                   = link_to(feed.fullname, feed)
 
-        - cache 'feedbar.left.3' do
-          %li.source-heading arXiv.org
-          - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
-            %li.feed-folder{ class: @feed == feed ? 'active' : '' }
-              %label.nav-header
-                %i.icon-chevron-right.transparent
-                = link_to feed.fullname, feed
+        %li.source-heading arXiv.org
+        - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+          %li.feed-folder{ class: @feed == feed ? 'active' : '' }
+            %label.nav-header
+              %i.icon-chevron-right.transparent
+              = link_to feed.fullname, feed
 
-          - Feed.where(name: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).includes(:children).each do |parent|
-            %li.feed-folder{ class: @feed == parent ? 'active' : '' }
-              - expanded = (@feed == parent || (@feed && @feed.parent == parent))
-              %label.nav-header
-                %i{ class: expanded ? 'icon-chevron-down' : 'icon-chevron-right' }
-                = link_to parent.fullname, parent
-              %ul.nav.nav-list.tree{ style: expanded ? '' : 'display: none;' }
-                - parent.children.each do |feed|
-                  %li.leaf{ class: @feed == feed ? 'active' : '' }= link_to(feed.fullname, feed)
+        - Feed.where(name: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).includes(:children).each do |parent|
+          %li.feed-folder{ class: @feed == parent ? 'active' : '' }
+            - expanded = (@feed == parent || (@feed && @feed.parent == parent))
+            %label.nav-header
+              %i{ class: expanded ? 'icon-chevron-down' : 'icon-chevron-right' }
+              = link_to parent.fullname, parent
+            %ul.nav.nav-list.tree{ style: expanded ? '' : 'display: none;' }
+              - parent.children.each do |feed|
+                %li.leaf{ class: @feed == feed ? 'active' : '' }= link_to(feed.fullname, feed)
 
     .col-md-10.feed-center
       %header.feed-header
@@ -46,7 +45,8 @@
                 .col-md-10
                   %h1= "All subscribed feeds"
             .row
-              %a.abstract-toggle.pseudolink
+              .col-md-10
+                %a.abstract-toggle.pseudolink
 
       .row
         .col-md-10

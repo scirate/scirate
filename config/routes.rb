@@ -27,9 +27,12 @@ SciRate3::Application.routes.draw do
   get '/comments', to: 'comments#index'
 
   get '/signup',   to: 'users#new'
-  get '/signin',   to: 'sessions#new'
-  get '/signout',  to: 'sessions#destroy'
+  get '/login',    to: 'sessions#new'
+  get '/logout',   to: 'sessions#destroy'
   get '/about',    to: 'static_pages#about'
+
+  get '/signin',   to: redirect('/login')
+  get '/signout',  to: redirect('/logout')
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'
