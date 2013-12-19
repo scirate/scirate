@@ -9,21 +9,23 @@ class Comment
       @bindEditor() # Setup the main commenting form
       # Grab the inline editor html
       @editor_html = $('#comment_editor').removeClass('hidden').remove()[0].outerHTML
+      @reply_html = $('#comment_reply').removeClass('hidden').remove()[0].outerHTML
 
     # Render markup and setup interface for individual comments
     $('.comment').each -> new Comment($(this))
 
   @bindEditor: (suffix) ->
+    suffix ?= ''
     # Binds pagedown editor functionality to #wmd-panel#{suffix}
     editor = new Markdown.Editor(@converter, suffix)
 
     # Apply MathJax rendering to standard pagedown preview box
     editor.hooks.chain 'onPreviewRefresh', ->
-      if $('#wmd-preview').text().empty()
-        $('#wmd-preview').addClass('hidden')
+      if $("#wmd-preview#{suffix}").text().empty()
+        $("#wmd-preview#{suffix}").addClass('hidden')
       else
-        $('#wmd-preview').removeClass('hidden')
-      MathJax.Hub.Typeset($('#wmd-preview' + (suffix||''))[0])
+        $("#wmd-preview#{suffix}").removeClass('hidden')
+      MathJax.Hub.Typeset($("#wmd-preview#{suffix}")[0])
 
     editor.run()
 
@@ -58,28 +60,28 @@ class Comment
   
   unvote: ->
     """Undo an existing downvote or upvote."""
-    $.post "/comments/#{@cid}/unvote", =>
-      if @votestate == 'upvote'
-        @$el.find('.upvote').removeClass('active')
-        @changeScore(-1)
-      else if @votestate == 'downvote'
-        @$el.find('.downvote').removeClass('active')
-        @changeScore(+1)
-      @votestate = null
+    if @votestate == 'upvote'
+      @$el.find('.upvote').removeClass('active')
+      @changeScore(-1)
+    else if @votestate == 'downvote'
+      @$el.find('.downvote').removeClass('active')
+      @changeScore(+1)
+    @votestate = null
+    $.post "/comments/#{@cid}/unvote"
 
   report: ->
-    $.post "/comments/#{@cid}/report", =>
-      @$el.find('.report')
-          .removeClass('report')
-          .addClass('unreport')
-          .text('reported (undo)')
+    @$el.find('.report')
+        .removeClass('report')
+        .addClass('unreport')
+        .text('reported (undo)')
+    $.post "/comments/#{@cid}/report"
 
   unreport: ->
-    $.post "/comments/#{@cid}/unreport", =>
-      @$el.find('.unreport')
-          .removeClass('unreport')
-          .addClass('report')
-          .text('report')
+    @$el.find('.unreport')
+        .removeClass('unreport')
+        .addClass('report')
+        .text('report')
+    $.post "/comments/#{@cid}/unreport"
 
   setupVoting: ->
     # Read the DOM to find out if we've already voted
@@ -101,6 +103,7 @@ class Comment
       else @downvote()
 
   startEditing: ->
+    @editing = true
     @stopReply() if @replying
 
     # Make a new editor for this comment
@@ -109,7 +112,8 @@ class Comment
     @$el.find('.body').html(Comment.editor_html)
     @$el.find('textarea').val(content)
 
-    Comment.bindEditor('-second')
+    Comment.bindEditor('-edit')
+    @$el.find('.wmd-input').focus()
 
     @$el.find('.save').click =>
       content = @$el.find('textarea').val()
@@ -117,8 +121,6 @@ class Comment
         @$el.attr('data-markup', content)
         @renderMarkup()
       return false
-
-    @editing = true
 
   stopEditing: ->
     $('#comment_editor').remove()
@@ -132,15 +134,16 @@ class Comment
       @startEditing()
 
   startReply: ->
+    @replying = true
     @stopEditing() if @editing
 
-    @$el.append(Comment.editor_html)
-    Comment.bindEditor('-second')
+    @$el.append(Comment.reply_html)
+    Comment.bindEditor('-reply')
     @$el.find('form').attr('action', "/comments/#{@$el.attr('data-id')}/reply")
-    @replying = true
+    @$el.find('.wmd-input').focus()
 
   stopReply: ->
-    @$el.find('#comment_editor').remove()
+    @$el.find('#comment_reply').remove()
     @replying = false
 
   toggleReply: ->

@@ -349,7 +349,11 @@ div.comments {
   }
 }
 
-#comment_form, #comment_editor {
+#comment_reply {
+  margin-top: 10px;
+}
+
+#comment_form, #comment_editor, #comment_reply {
   textarea, .wmd-preview {
     max-width: 600px;
     width: 100%;
@@ -360,7 +364,11 @@ div.comments {
   }
 
   .wmd-preview {
-    margin-bottom: 10px;
+    margin-bottom: 0;
+  }
+
+  .btn.leave-comment {
+    margin-top: 10px;
   }
 }
 

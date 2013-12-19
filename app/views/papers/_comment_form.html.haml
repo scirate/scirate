@@ -13,11 +13,21 @@
         #wmd-button-bar
         = f.text_area :content, :id => 'wmd-input', :class => 'wmd-input'
       #wmd-preview.wmd-panel.wmd-preview.well.hidden
-    = f.submit "Leave Comment", :class => "btn btn-large btn-primary"
+    = f.submit "Leave Comment", :class => "btn btn-large btn-primary leave-comment"
+
 = form_tag('', :id => 'comment_editor', :class => 'hidden') do
   %div= hidden_field_tag :paper_id
   .wmd-panel
-    #wmd-button-bar-second
-    %textarea#wmd-input-second.wmd-input{:name => "content"}
-  #wmd-preview-second.wmd-panel.wmd-preview.well
-  %input.save.btn.btn-success{:type => "submit", :value => "Save Changes"}/
+    #wmd-button-bar-edit
+    %textarea#wmd-input-edit.wmd-input{:name => "content"}
+  #wmd-preview-edit.wmd-panel.wmd-preview.well.hidden
+  %input.save.btn.btn-success{:type => "submit", :value => "Save Changes", :class => "leave-comment"}/
+
+= form_tag('', :id => 'comment_reply', :class => 'hidden') do
+  %div= hidden_field_tag :paper_id
+  .wmd-panel
+    #wmd-button-bar-reply
+    %textarea#wmd-input-reply.wmd-input{:name => "content"}
+  #wmd-preview-reply.wmd-panel.wmd-preview.well.hidden
+  %input.save.btn.btn-primary{:type => "submit", :value => "Leave Reply", :class => "leave-comment"}/
+
