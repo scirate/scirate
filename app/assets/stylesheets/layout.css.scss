@@ -481,16 +481,28 @@ div.abbr_comment {
     font-size: 2.4em;
   }
 
-  .subscribe-toggle {
-    line-height: 40px;
-  }
-
   padding-bottom: 5px;
 
   min-height: 80px;
 
   // Abstract toggle appears on hover
   .abstract-toggle {
+    display: none;
+  }
+}
+
+.subscribe-toggle {
+  line-height: 40px;
+}
+
+.subscribe-toggle:not(.active) {
+  .unsubscribe {
+    display: none;
+  }
+}
+
+.subscribe-toggle.active {
+  .subscribe {
     display: none;
   }
 }
@@ -619,8 +631,20 @@ div.feed-rightbar
 
 // Scites
 
-.scite-toggle.inactive {
+.scite-toggle:not(.active) {
   opacity: 0.5;
+
+  .scited {
+    display: none;
+  }
+}
+
+.scite-toggle.active {
+  opacity: 1;
+
+  .unscited {
+    display: none;
+  }
 }
 
 .scite-toggle {

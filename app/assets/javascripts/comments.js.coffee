@@ -34,25 +34,27 @@ class Comment
 
   upvote: ->
     """Upvote the comment."""
-    $.post "/comments/#{@cid}/upvote", =>
-      @$el.find('.upvote').addClass('active')
-      if @votestate == 'downvote'
-        @$el.find('.downvote').removeClass('active')
-        @changeScore(+2)
-      else
-        @changeScore(+1)
-      @votestate = 'upvote'
+    @$el.find('.upvote').addClass('active')
+    if @votestate == 'downvote'
+      @$el.find('.downvote').removeClass('active')
+      @changeScore(+2)
+    else
+      @changeScore(+1)
+    @votestate = 'upvote'
+
+    $.post "/comments/#{@cid}/upvote"
 
   downvote: ->
     """Downvote the comment."""
-    $.post "/comments/#{@cid}/downvote", =>
-      @$el.find('.downvote').addClass('active')
-      if @votestate == 'upvote'
-        @$el.find('.upvote').removeClass('active')
-        @changeScore(-2)
-      else
-        @changeScore(-1)
-      @votestate = 'downvote'
+    @$el.find('.downvote').addClass('active')
+    if @votestate == 'upvote'
+      @$el.find('.upvote').removeClass('active')
+      @changeScore(-2)
+    else
+      @changeScore(-1)
+    @votestate = 'downvote'
+
+    $.post "/comments/#{@cid}/downvote"
   
   unvote: ->
     """Undo an existing downvote or upvote."""

@@ -15,7 +15,7 @@ class View.Search extends View
     $sel = @$('#feed_' + @$('#folder').val())
     $sel.removeClass('hidden').attr('disabled', false)
 
-class View.PaperItem extends View
+class View.SciteToggle extends View
   events:
     'click .scite': "scite"
     'click .unscite': "unscite"
@@ -23,30 +23,32 @@ class View.PaperItem extends View
     'click .collapse': "collapse"
 
   scite: ->
-    $toggle = @$('.scite-toggle')
-    paper_id = $toggle.attr('data-paper-id')
-    $.post "/api/scite/#{paper_id}", (resp) =>
-      @expand()
-      $toggle.replaceWith(resp)
+    paper_id = @$el.attr('data-paper-id')
+    @expand()
+    @$el.addClass('active')
+    # We don't wait for the post to come back before updating UI
+    # May want error handling here at some stage
+    $.post "/api/scite/#{paper_id}"
     return false
 
   unscite: ->
-    $toggle = @$('.scite-toggle')
-    paper_id = $toggle.attr('data-paper-id')
-    $.post "/api/unscite/#{paper_id}", (resp) =>
-      @collapse()
-      $toggle.replaceWith(resp)
+    paper_id = @$el.attr('data-paper-id')
+    @collapse()
+    @$el.removeClass('active')
+    $.post "/api/unscite/#{paper_id}"
     return false
 
   expand: ->
-    @$('.abstract').removeClass('hidden')
-    @$('.expand').addClass('hidden')
-    @$('.collapse').removeClass('hidden')
+    $paper = @$el.closest('li.paper')
+    $paper.find('.abstract').removeClass('hidden')
+    $paper.find('.expand').addClass('hidden')
+    $paper.find('.collapse').removeClass('hidden')
 
   collapse: ->
-    @$('.abstract').addClass('hidden')
-    @$('.expand').removeClass('hidden')
-    @$('.collapse').addClass('hidden')
+    $paper = @$el.closest('li.paper')
+    $paper.find('.abstract').addClass('hidden')
+    $paper.find('.expand').removeClass('hidden')
+    $paper.find('.collapse').addClass('hidden')
 
 
 class View.SubscribeToggle extends View
@@ -60,12 +62,12 @@ class View.SubscribeToggle extends View
     'mouseleave .unsubscribe': "rolloverStop"
 
   subscribe: ->
-    $.post "/api/subscribe/#{@fid}", (newel) =>
-      @$el.html($(newel).html())
+    @$el.addClass('active')
+    $.post "/api/subscribe/#{@fid}"
 
   unsubscribe: ->
-    $.post "/api/unsubscribe/#{@fid}", (newel) =>
-      @$el.html($(newel).html())
+    @$el.removeClass('active')
+    $.post "/api/unsubscribe/#{@fid}"
 
   rolloverStart: ->
     @$('.unsubscribe')
@@ -124,9 +126,9 @@ $ ->
     $(this).mouseenter -> $(this).find('.dropdown-toggle').dropdown('toggle')
     $(this).mouseleave -> $(this).find('.dropdown-toggle').dropdown('toggle')
 
-  # Make little paper widgets functional
-  $('li.paper').each ->
-    new View.PaperItem(el: this)
+  # Bind scite toggles
+  $('.scite-toggle').each ->
+    new View.SciteToggle(el: this)
 
   # Feed subscription toggles
   $('.subscribe-toggle').each ->
