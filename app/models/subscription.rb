@@ -10,7 +10,7 @@
 #
 
 class Subscription < ActiveRecord::Base
-  belongs_to :user, counter_cache: true
+  belongs_to :user, counter_cache: true, touch: true
   belongs_to :feed, counter_cache: true
 
   validates :user_id, presence: true
