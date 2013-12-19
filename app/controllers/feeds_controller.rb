@@ -8,7 +8,7 @@ class FeedsController < ApplicationController
 
   def _range_query(feed_ids, backdate, date)
     paper_ids = Paper.joins(:cross_lists).where("cross_lists.feed_id IN (?) AND cross_lists.cross_list_date >= ? AND cross_lists.cross_list_date <= ?", feed_ids, backdate, date).order("scites_count DESC, comments_count DESC").limit(30).pluck(:id)
-    Paper.includes(:feed, :authors, :cross_lists => :feed).where(id: paper_ids)
+    Paper.includes(:feed, :authors, :cross_lists => :feed).where(id: paper_ids).index_by(&:id).slice(*paper_ids).values
   end
 
   # Aggregated feed
