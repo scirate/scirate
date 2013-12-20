@@ -17,8 +17,6 @@
 #  feed_id        :integer
 #
 
-require 'textacular/searchable'
-
 class Paper < ActiveRecord::Base
   belongs_to :feed
 
@@ -184,8 +182,6 @@ class Paper < ActiveRecord::Base
     end
   end
 
-  extend Searchable(:title, :abstract, :author_str)
-
   def to_param
     identifier
   end
@@ -226,7 +222,7 @@ end
 
 class Paper::Search
   attr_reader :results
-  attr_accessor :field_terms, :general_term, :feed, :authors
+  attr_accessor :conditions, :general_term, :feed, :authors
 
   # Split string on spaces which aren't enclosed by quotes
   def qsplit(query)
@@ -251,22 +247,24 @@ class Paper::Search
 
   def initialize(query)
     @general_term = nil # Term to apply as OR across all text fields
-    @field_terms = {} # Terms for individual text fields
+
+    @conditions = {}
+
     @feed = nil
     @authors = []
 
     qsplit(query).each do |term|
       if term.start_with?('au:')
         @authors << tstrip(term)
-        if @field_terms[:author_str]
-          @field_terms[:author_str] = @field_terms[:author_str] + " & #{tstrip(term)}"
+        if @conditions[:author_str]
+          @conditions[:author_str] = @conditions[:author_str] + " & #{tstrip(term)}"
         else
-          @field_terms[:author_str] = tstrip(term)
+          @conditions[:author_str] = tstrip(term)
         end
       elsif term.start_with?('ti:')
-        @field_terms[:title] = tstrip(term)
+        @conditions[:title] = tstrip(term)
       elsif term.start_with?('abs:')
-        @field_terms[:abstract] = tstrip(term)
+        @conditions[:abstract] = tstrip(term)
       elsif term.start_with?('feed:')
         @feed = Feed.find_by_name(tstrip(term))
       else
@@ -280,24 +278,9 @@ class Paper::Search
   end
 
   def run
-    @results = Paper
-
-    # Limit by feed
-    if @feed
-      feed_ids = [@feed.id] + @feed.children.pluck(:id)
-      @results = @results.joins(:cross_lists).where(:cross_lists => { :feed_id => feed_ids })
-    end
-
-    @results = @results.advanced_search(@general_term) if @general_term
-    @results = @results.advanced_search(@field_terms) unless @field_terms.empty?
-  end
-
-  def field_term(key, term, operator='&')
-    if @field_terms[key]
-      @field_terms[key] += " #{operator} #{term}"
-    else
-      @field_terms[key] = term
-    end
+    params = { conditions: @conditions }
+    params[:with] = { feed_ids: @feed.id } unless @feed.nil?
+    @results = Paper.search(@general_term, params)
   end
 end
 

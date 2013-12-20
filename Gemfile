@@ -8,7 +8,6 @@ gem 'chronic'
 gem 'oai', :git => 'git://github.com/code4lib/ruby-oai'
 gem 'pg'
 gem 'will_paginate'
-gem 'textacular', :require => 'textacular/rails'
 gem 'acts_as_votable'
 gem 'activerecord-import'
 gem 'squeel'
@@ -18,6 +17,10 @@ gem 'exception_notification', :git => 'git://github.com/sunkencity/exception_not
 gem 'acts_as_list'
 gem 'haml'
 gem 'bourbon'
+
+# Sphinx full-text search support
+gem 'mysql2', '0.3.13'
+gem 'thinking-sphinx', '3.0.6'
 
 group :development do
   gem 'annotate'

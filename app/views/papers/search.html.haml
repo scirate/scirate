@@ -11,11 +11,11 @@
           %td Comma-separated author names
         %tr
           %td= label_tag :title, "Title"
-          %td= text_field_tag :title, @search.field_terms[:title], class: 'form-control'
+          %td= text_field_tag :title, @search.conditions[:title], class: 'form-control'
           %td Contents of paper title
         %tr
           %td= label_tag :abstract, "Abstract"
-          %td= text_field_tag :abstract, @search.field_terms[:abstract], class: 'form-control'
+          %td= text_field_tag :abstract, @search.conditions[:abstract], class: 'form-control'
           %td Contents of paper abstract
         %tr
           %td= label_tag :feed, "Category"
