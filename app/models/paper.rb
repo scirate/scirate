@@ -27,7 +27,6 @@ class Paper < ActiveRecord::Base
   has_many  :cross_listed_feeds, -> { order("name ASC") }, through: :cross_lists, \
                 source: :feed
   has_many :authorships, -> { order(:position) }
-  has_many :authors, -> { order('authorships.position') }, :through => :authorships
 
   validates :title, presence: true
   validates :abstract, presence: true
@@ -62,22 +61,18 @@ class Paper < ActiveRecord::Base
     Feed.arxiv_import(feednames, opts)
     feeds_by_name = Feed.map_names
 
-    ### Second pass: Add new Authors.
-    author_models = models.map(&:authors).flatten.uniq
-    Author.arxiv_import(author_models, opts)
-
-    ### Third pass: Add new papers and handle updates.
+    ### Second pass: Add new papers and handle updates.
     
     # Need to find and update existing papers, then bulk import new ones
     identifiers = models.map(&:id)
     existing_papers = Paper.where(identifier: identifiers)
     existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
 
-    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date, :author_str]
+    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date]
     values = []
     updated_papers = []
+
     models.each do |model|
-      author_str = model.authors.map { |au| Author.make_fullname(au) }.join(',')
       if (paper = existing_by_ident[model.id])
         next if paper.updated_date >= (model.updated || model.created) # No new content
 
@@ -89,8 +84,6 @@ class Paper < ActiveRecord::Base
         paper.abstract = model.abstract
         paper.pubdate = model.created
         paper.updated_date = model.updated || model.created
-        paper.author_str = author_str
-
 
         paper.save!
         updated_papers.push(paper)
@@ -103,8 +96,7 @@ class Paper < ActiveRecord::Base
           model.title,
           model.abstract,
           model.created,
-          model.updated || model.created,
-          author_str
+          model.updated || model.created
         ]
       end
     end
@@ -116,35 +108,37 @@ class Paper < ActiveRecord::Base
     end
 
     #return if values.empty? && updated_papers.empty? # Skip the rest if no new data
-
-    relevant_papers = Paper.where(identifier: identifiers)
     
-
-    ### Fourth pass: Add any new authorships.
-    authors = Author.where(uniqid: author_models.map { |model| Author.make_uniqid(model) })
-    authors_by_uniqid = Hash[authors.map { |author| [author.uniqid, author] }]
+    ### Third pass: Add authorships, deleting any existing ones first.
+    
+    relevant_idents = updated_papers.map(&:id)+values.map { |val| val[0] }
+    relevant_papers = Paper.where(identifier: relevant_idents)
     papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
     paper_ids = papers_by_ident.values.map(&:id)
-    
-    existing_authorships = Hash.new { |h,k| h[k] = [] }
-    Authorship.where(paper_id: paper_ids).each do |au|
-      existing_authorships[au.paper_id].push(au.author_id)
-    end
 
-    columns = [:paper_id, :author_id, :position]
-    values = []
+    Authorship.where(paper_id: paper_ids).delete_all
+
+    author_columns = [:paper_id, :affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm]
+    author_values = []
+
     models.each do |model|
-      next unless papers_by_ident.has_key?(model.id)
-      paper_id = papers_by_ident[model.id].id
-      model.authors.each_with_index do |author, i|
-        author_id = authors_by_uniqid[Author.make_uniqid(author)].id
-        next if existing_authorships[paper_id].include?(author_id)
-        values << [paper_id, author_id, i]
+      next unless papers_by_ident[model.id]
+
+      model.authors.each do |author|
+        author_values << [
+          papers_by_ident[model.id],
+          author.affiliation,
+          author.forenames,
+          author.keyname,
+          author.suffix,
+          Authorship.make_fullname(author),
+          Authorship.make_searchterm(author)
+        ] 
       end
     end
 
-    puts "Importing #{values.length} authorships" unless values.empty?
-    result = Authorship.import(columns, values, opts)
+    puts "Importing #{author_values.length} authorships" unless author_values.empty?
+    result = Authorship.import(author_columns, author_values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
     end
@@ -252,14 +246,14 @@ class Paper::Search
 
     @feed = nil
     @authors = []
+    @arxivstyle_authors = []
 
     qsplit(query).each do |term|
       if term.start_with?('au:')
-        @authors << tstrip(term)
-        if @conditions[:author_str]
-          @conditions[:author_str] = @conditions[:author_str] + " & #{tstrip(term)}"
+        if term.include?('_')
+          @arxivstyle_authors << tstrip(term)
         else
-          @conditions[:author_str] = tstrip(term)
+          @authors << tstrip(term)
         end
       elsif term.start_with?('ti:')
         @conditions[:title] = tstrip(term)
@@ -278,6 +272,18 @@ class Paper::Search
   end
 
   def run
+    # Sphinx doesn't directly do arxiv-style author search terms
+    # So we look them up in advance and then feed the full names
+    # into the final query
+    if @arxivstyle_authors.length > 0
+      @arxivstyle_authors.each do |author|
+
+      end
+      @authors += Author.where(searchterm: @arxivstyle_authors).pluck(:fullname)
+    end
+
+    @conditions[:author_str] = @authors.uniq.join(" & ") unless @authors.empty?
+
     params = { conditions: @conditions }
     params[:with] = { feed_ids: @feed.id } unless @feed.nil?
     @results = Paper.search(@general_term, params)

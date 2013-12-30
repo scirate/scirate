@@ -45,7 +45,6 @@ CREATE TABLE authors (
     fullname text
 );
 
-
 --
 -- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
@@ -109,7 +108,6 @@ CREATE TABLE comment_reports (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
-
 
 --
 -- Name: comment_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
