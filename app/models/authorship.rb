@@ -3,7 +3,7 @@
 #
 # NOTE (Mispy):
 #
-# I've decided not to normalize authors into a paper-independent 
+# I've decided not to normalize authors into a paper-independent
 # table after all. We currently cannot do so with any kind of
 # accuracy: no author property or combination of author properties
 # is guaranteed to correspond to a unique individual.
@@ -17,36 +17,7 @@ class Authorship < ActiveRecord::Base
   belongs_to :paper
   acts_as_list :scope => :paper
 
-  def self.arxiv_import(models, opts={})
-    uniqids = models.map { |model| Author.make_uniqid(model) }
-    existing_uniqids = Author.where(uniqid: uniqids).map(&:uniqid)
-
-    columns = [:affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm]
-    values = []
-
-    models.each_with_index do |model, i|
-      uniqid = uniqids[i]
-      next if existing_uniqids.include?(uniqid)
-      values << [
-        uniqid,
-        model.affiliation,
-        model.forenames,
-        model.keyname,
-        model.suffix,
-        Author.make_fullname(model),
-        Author.make_searchterm(model)
-      ]
-    end
-
-    result = Author.import(columns, values, opts)
-    unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing authors: #{result.failed_instances.inspect}")
-    end
-
-    puts "Read #{models.length} authors: #{values.length} new [#{models[0].keyname} to #{models[-1].keyname}]"
-  end
-
-  # Makes a searchterm of the form e.g. 
+  # Makes a searchterm of the form e.g.
   # "Biagini_M" from "Maria Enrica Biagini"
   def self.make_searchterm(model)
     if model.forenames

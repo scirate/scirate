@@ -26,7 +26,7 @@ class Paper < ActiveRecord::Base
   has_many  :cross_lists, dependent: :destroy
   has_many  :cross_listed_feeds, -> { order("name ASC") }, through: :cross_lists, \
                 source: :feed
-  has_many :authorships, -> { order(:position) }
+  has_many :authors, -> { order(:position) }, class_name: "Authorship"
 
   validates :title, presence: true
   validates :abstract, presence: true
@@ -62,7 +62,7 @@ class Paper < ActiveRecord::Base
     feeds_by_name = Feed.map_names
 
     ### Second pass: Add new papers and handle updates.
-    
+
     # Need to find and update existing papers, then bulk import new ones
     identifiers = models.map(&:id)
     existing_papers = Paper.where(identifier: identifiers)
@@ -108,9 +108,9 @@ class Paper < ActiveRecord::Base
     end
 
     #return if values.empty? && updated_papers.empty? # Skip the rest if no new data
-    
+
     ### Third pass: Add authorships, deleting any existing ones first.
-    
+
     relevant_idents = updated_papers.map(&:id)+values.map { |val| val[0] }
     relevant_papers = Paper.where(identifier: relevant_idents)
     papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
@@ -133,7 +133,7 @@ class Paper < ActiveRecord::Base
           author.suffix,
           Authorship.make_fullname(author),
           Authorship.make_searchterm(author)
-        ] 
+        ]
       end
     end
 
@@ -145,7 +145,7 @@ class Paper < ActiveRecord::Base
 
     ### Finally: crosslists!
     existing_crosslists = CrossList.where(paper_id: paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
-    
+
     columns = [:paper_id, :feed_id, :cross_list_date]
     values = []
     models.each do |model|
@@ -251,9 +251,11 @@ class Paper::Search
     qsplit(query).each do |term|
       if term.start_with?('au:')
         if term.include?('_')
-          @arxivstyle_authors << tstrip(term)
+          @conditions[:authors_searchterm] ||= []
+          @conditions[:authors_searchterm] << tstrip(term)
         else
-          @authors << tstrip(term)
+          @conditions[:authors_fullname] ||= []
+          @conditions[:authors_fullname] << tstrip(term)
         end
       elsif term.start_with?('ti:')
         @conditions[:title] = tstrip(term)
@@ -272,18 +274,6 @@ class Paper::Search
   end
 
   def run
-    # Sphinx doesn't directly do arxiv-style author search terms
-    # So we look them up in advance and then feed the full names
-    # into the final query
-    if @arxivstyle_authors.length > 0
-      @arxivstyle_authors.each do |author|
-
-      end
-      @authors += Author.where(searchterm: @arxivstyle_authors).pluck(:fullname)
-    end
-
-    @conditions[:author_str] = @authors.uniq.join(" & ") unless @authors.empty?
-
     params = { conditions: @conditions }
     params[:with] = { feed_ids: @feed.id } unless @feed.nil?
     @results = Paper.search(@general_term, params)
