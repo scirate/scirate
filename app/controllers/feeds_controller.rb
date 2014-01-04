@@ -55,7 +55,7 @@ class FeedsController < ApplicationController
     if @range == :since_last
       # If we're not signed in, there's no sense
       # in which we can do "since last"
-      @range = 1 
+      @range = 1
     end
 
     @backdate = @date - @range.days
