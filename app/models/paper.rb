@@ -111,7 +111,7 @@ class Paper < ActiveRecord::Base
 
     ### Third pass: Add authorships, deleting any existing ones first.
 
-    relevant_idents = updated_papers.map(&:id)+values.map { |val| val[0] }
+    relevant_idents = updated_papers.map(&:identifier)+values.map { |val| val[0] }
     relevant_papers = Paper.where(identifier: relevant_idents)
     papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
     paper_ids = papers_by_ident.values.map(&:id)
