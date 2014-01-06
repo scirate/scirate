@@ -45,6 +45,7 @@ CREATE TABLE authors (
     fullname text
 );
 
+
 --
 -- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
@@ -74,7 +75,13 @@ CREATE TABLE authorships (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     id integer NOT NULL,
-    "position" integer
+    "position" integer,
+    keyname text,
+    forenames text,
+    affiliation text,
+    suffix text,
+    searchterm text,
+    fullname text
 );
 
 
@@ -108,6 +115,7 @@ CREATE TABLE comment_reports (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
+
 
 --
 -- Name: comment_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
@@ -358,7 +366,8 @@ CREATE TABLE papers (
     comments_count integer DEFAULT 0,
     feed_id integer,
     pdf_url character varying(255),
-    author_str text
+    author_str text,
+    abstract_index_col tsvector
 );
 
 
@@ -1127,41 +1136,6 @@ CREATE INDEX paper_id_idx ON authorships USING btree (paper_id);
 
 
 --
--- Name: papers_to_tsvector_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX papers_to_tsvector_idx ON papers USING gin (to_tsvector('english'::regconfig, title));
-
-
---
--- Name: papers_to_tsvector_idx1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX papers_to_tsvector_idx1 ON papers USING gin (to_tsvector('english'::regconfig, authors));
-
-
---
--- Name: papers_to_tsvector_idx2; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX papers_to_tsvector_idx2 ON papers USING gin (to_tsvector('english'::regconfig, title));
-
-
---
--- Name: papers_to_tsvector_idx3; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX papers_to_tsvector_idx3 ON papers USING gin (to_tsvector('english'::regconfig, abstract));
-
-
---
--- Name: papers_to_tsvector_idx4; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX papers_to_tsvector_idx4 ON papers USING gin (to_tsvector('english'::regconfig, author_str));
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1315,3 +1289,7 @@ INSERT INTO schema_migrations (version) VALUES ('20131217083040');
 INSERT INTO schema_migrations (version) VALUES ('20131217134749');
 
 INSERT INTO schema_migrations (version) VALUES ('20131217150844');
+
+INSERT INTO schema_migrations (version) VALUES ('20131230114024');
+
+INSERT INTO schema_migrations (version) VALUES ('20140106001148');

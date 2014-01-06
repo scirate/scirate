@@ -1,4 +1,4 @@
-<% @scited = (signed_in? && @scited_papers.include?(paper)) %>
+<% @scited = (signed_in? && @scited_ids.include?(paper.id)) %>
 
 <div class="scite-toggle <%= @scited ? 'active' : '' %>" data-paper-id="<%= paper.id %>" >
   <div class="scited">
