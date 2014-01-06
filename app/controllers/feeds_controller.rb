@@ -36,7 +36,7 @@ class FeedsController < ApplicationController
     @recent_comments = Comment.includes(:paper, :user)
                               .where(:paper => { :feed_id => feed_ids })
                               .order("comments.created_at DESC")
-    @scited_papers = Set.new(current_user.scited_papers)
+    @scited_ids = current_user.scited_papers.pluck(:id)
 
     @papers = _range_query(feed_ids, @backdate, @date)
 
@@ -90,7 +90,8 @@ class FeedsController < ApplicationController
     @recent_comments = Comment.includes(:paper, :user)
                               .where(:paper => { :feed_id => feed_ids })
                               .order("comments.created_at DESC")
-    @scited_papers = Set.new(current_user.scited_papers)
+
+    @scited_ids = current_user.scited_papers.pluck(:id)
 
     @papers = _range_query(feed_ids, @backdate, @date)
   end

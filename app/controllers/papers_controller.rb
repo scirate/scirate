@@ -4,7 +4,7 @@ class PapersController < ApplicationController
   def show
     @paper = Paper.find_by_identifier!(params[:id])
 
-    @scited_papers = Set.new(current_user.scited_papers) if signed_in?
+    @scited = current_user.scited_papers.where(id: @paper.id).exists?
 
     # Less naive statistical comment sorting as per
     # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
