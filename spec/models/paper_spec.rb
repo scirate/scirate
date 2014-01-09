@@ -100,21 +100,8 @@ describe Paper do
   end
 
   describe "authors" do
-    let (:author1) { FactoryGirl.create(:author) }
-    let (:author2) { FactoryGirl.create(:author) }
-
-    before {
-      author1.save
-      author2.save
-    }
-
-    let!(:authorship1) do
-      FactoryGirl.create(:authorship, author: author1, paper: @paper, position: 0)
-    end
-
-    let!(:authorship2) do
-      FactoryGirl.create(:authorship, author: author2, paper: @paper, position: 1)
-    end
+    let (:author1) { FactoryGirl.create(:authorship, paper: @paper, position: 0) }
+    let (:author2) { FactoryGirl.create(:authorship, paper: @paper, position: 1) }
 
     it "should have the authors in the right order" do
       @paper.authors.should == [author1, author2]

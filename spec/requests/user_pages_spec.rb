@@ -215,7 +215,6 @@ describe "User pages" do
       describe "fields" do
         it { should have_field "Name", with: user.name }
         it { should have_field "Email", with: user.email }
-        it { should have_field "Always expand abstracts" }
       end
     end
 

@@ -8,7 +8,7 @@ describe "password resets" do
     let(:user) { FactoryGirl.create(:user) }
 
     before do
-      visit signin_path
+      visit login_path
       click_link "password"
       fill_in "Email", :with => user.email
       click_button "Reset password"
@@ -27,7 +27,7 @@ describe "password resets" do
     let(:user) { FactoryGirl.create(:user) }
 
     before do
-      visit signin_path
+      visit login_path
       click_link "password"
       fill_in "Email", :with => "bogus@bogus.bogus"
       click_button "Reset password"

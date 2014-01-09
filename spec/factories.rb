@@ -18,16 +18,12 @@ FactoryGirl.define do
     sequence(:feed_id) { |n| Feed.default.id }
   end
 
-  factory :author do
+  factory :authorship do
+    paper
     sequence(:keyname) { |n| "Mongfish" }
     sequence(:forenames) { |n| "Lucrezia" }
     sequence(:fullname) { |n| "Lucrezia Mongfish" }
     sequence(:searchterm) { |n| "Mongfish_L" }
-  end
-
-  factory :authorship do
-    author
-    paper
   end
 
   factory :comment do

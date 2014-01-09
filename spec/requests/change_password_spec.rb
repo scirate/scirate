@@ -17,7 +17,7 @@ describe "Change Password" do
       click_button "Save changes"
     end
 
-    it { should have_selector('.alert-error') }
+    it { should have_error_message }
     specify { user.reload.authenticate('iamsleethacker').should be_false }
   end
 
