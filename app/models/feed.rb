@@ -39,15 +39,16 @@ class Feed < ActiveRecord::Base
   def self.arxiv_import(feednames, opts={})
     existing = Feed.all.map(&:name)
 
-    columns = [:name, :url, :feed_type]
+    columns = [:name, :url, :feed_type, :updated_date]
     values = []
     
     (feednames - existing).map do |feedname|
-      puts "Discovered new feed: #{feedname}"
+      logger.info "Discovered new feed: #{feedname}"
       values << [
         feedname,
         "http://export.arxiv.org/rss/#{feedname}",
-        "arxiv"
+        "arxiv",
+        Time.now.utc.to_date
       ]
     end
 
