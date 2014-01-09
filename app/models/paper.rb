@@ -101,7 +101,7 @@ class Paper < ActiveRecord::Base
       end
     end
 
-    puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
+    logger.info "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(columns, values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
@@ -118,12 +118,14 @@ class Paper < ActiveRecord::Base
 
     Authorship.where(paper_id: paper_ids).delete_all
 
-    author_columns = [:paper_id, :affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm]
+    author_columns = [:paper_id, :affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm, :position]
     author_values = []
+
 
     models.each do |model|
       next unless papers_by_ident[model.id]
 
+      position = 0
       model.authors.each do |author|
         author_values << [
           papers_by_ident[model.id],
@@ -132,12 +134,14 @@ class Paper < ActiveRecord::Base
           author.keyname,
           author.suffix,
           Authorship.make_fullname(author),
-          Authorship.make_searchterm(author)
+          Authorship.make_searchterm(author),
+          position
         ]
+        position += 1
       end
     end
 
-    puts "Importing #{author_values.length} authorships" unless author_values.empty?
+    logger.info "Importing #{author_values.length} authorships" unless author_values.empty?
     result = Authorship.import(author_columns, author_values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
@@ -158,7 +162,7 @@ class Paper < ActiveRecord::Base
       end
     end
 
-    puts "Importing #{values.length} crosslists" unless values.empty?
+    logger.info "Importing #{values.length} crosslists" unless values.empty?
     result = CrossList.import(columns, values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
@@ -168,6 +172,9 @@ class Paper < ActiveRecord::Base
     feednames.each do |feedname|
       feeds_by_name[feedname].update_last_paper_date
     end
+
+    # Return the papers we imported/updated
+    relevant_papers
   end
 
   def self.arxiv_import(models, opts={})
