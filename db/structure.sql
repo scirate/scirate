@@ -29,48 +29,10 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: authors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE authors (
-    id integer NOT NULL,
-    keyname character varying(255),
-    forenames text,
-    affiliation text,
-    suffix character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    uniqid character varying(255),
-    searchterm character varying(255),
-    fullname text
-);
-
-
---
--- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE authors_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE authors_id_seq OWNED BY authors.id;
-
-
---
 -- Name: authorships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE authorships (
-    author_id integer,
     paper_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -612,13 +574,6 @@ ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY authors ALTER COLUMN id SET DEFAULT nextval('authors_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY authorships ALTER COLUMN id SET DEFAULT nextval('authorships_id_seq'::regclass);
 
 
@@ -718,14 +673,6 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY votes ALTER COLUMN id SET DEFAULT nextval('votes_id_seq'::regclass);
-
-
---
--- Name: authors_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY authors
-    ADD CONSTRAINT authors_pkey PRIMARY KEY (id);
 
 
 --
@@ -849,66 +796,10 @@ ALTER TABLE ONLY votes
 
 
 --
--- Name: author_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX author_id_idx ON authorships USING btree (author_id);
-
-
---
--- Name: authors_to_tsvector_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX authors_to_tsvector_idx ON authors USING gin (to_tsvector('english'::regconfig, fullname));
-
-
---
--- Name: authors_to_tsvector_idx1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX authors_to_tsvector_idx1 ON authors USING gin (to_tsvector('english'::regconfig, (searchterm)::text));
-
-
---
--- Name: index_authors_on_fullname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authors_on_fullname ON authors USING btree (fullname);
-
-
---
--- Name: index_authors_on_searchterm; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authors_on_searchterm ON authors USING btree (searchterm);
-
-
---
--- Name: index_authors_on_uniqid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authors_on_uniqid ON authors USING btree (uniqid);
-
-
---
--- Name: index_authorships_on_author_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authorships_on_author_id ON authorships USING btree (author_id);
-
-
---
 -- Name: index_authorships_on_paper_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_authorships_on_paper_id ON authorships USING btree (paper_id);
-
-
---
--- Name: index_authorships_on_paper_id_and_author_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_authorships_on_paper_id_and_author_id ON authorships USING btree (paper_id, author_id);
 
 
 --
@@ -1293,3 +1184,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131217150844');
 INSERT INTO schema_migrations (version) VALUES ('20131230114024');
 
 INSERT INTO schema_migrations (version) VALUES ('20140106001148');
+
+INSERT INTO schema_migrations (version) VALUES ('20140109042617');
