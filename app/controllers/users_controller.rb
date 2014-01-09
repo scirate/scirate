@@ -9,13 +9,14 @@ class UsersController < ApplicationController
 
     if params[:scite_order] == 'published'
       @scite_order = :published
-      @scited_papers = @user.scited_papers.order("pubdate DESC")
+      scited_papers = @user.scited_papers.order("pubdate DESC")
     else
       @scite_order = :scited
-      @scited_papers = @user.scited_papers.order("scites.created_at DESC")
+      scited_papers = @user.scited_papers.order("scites.created_at DESC")
     end
     
-    @scited_papers = @scited_papers.paginate(page: params[:scite_page], per_page: 10)
+    @scited_ids = @user.scited_papers.pluck(:id)
+    @scited_papers = scited_papers.paginate(page: params[:scite_page], per_page: 10)
     @comments = @user.comments.paginate(page: params[:comment_page], per_page: 20)
   end
 

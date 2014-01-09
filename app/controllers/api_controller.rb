@@ -6,7 +6,7 @@ class ApiController < ApplicationController
     current_user.scite!(@paper)
 
     if request.xhr?
-      @scited_papers = [@paper]
+      @scited_ids = [@paper.id]
       render partial: 'scites/toggle', object: @paper, as: :paper
     else
       redirect_to @paper
@@ -18,7 +18,7 @@ class ApiController < ApplicationController
     current_user.unscite!(@paper)
 
     if request.xhr?
-      @scited_papers = []
+      @scited_ids = []
       render partial: 'scites/toggle', object: @paper, as: :paper
     else
       redirect_to @paper
