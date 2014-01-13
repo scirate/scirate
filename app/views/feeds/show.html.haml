@@ -70,6 +70,7 @@
                   - @papers.each do |paper|
                     = cache paper do
                       = render partial: "papers/paper", object: paper
+                = will_paginate @range_query
 
         .col-md-2.feed-rightbar
           = render :partial => 'feeds/next_prev_links'

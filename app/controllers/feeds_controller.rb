@@ -6,12 +6,14 @@ class FeedsController < ApplicationController
     render('papers/landing', :layout => nil)
   end
 
-  def _range_query(feed_ids, backdate, date)
-    paper_ids = Paper.joins(:cross_lists)
-                     .where("cross_lists.feed_id IN (?) AND cross_lists.cross_list_date >= ? AND cross_lists.cross_list_date <= ?", feed_ids, backdate, date)
-                     .order("scites_count DESC, comments_count DESC, pubdate DESC")
-                     .limit(30)
-                     .pluck(:id)
+  def _range_query(feed_ids, backdate, date, page)
+    @range_query = 
+      Paper.joins(:cross_lists)
+        .where("cross_lists.feed_id IN (?) AND cross_lists.cross_list_date >= ? AND cross_lists.cross_list_date <= ?", feed_ids, backdate, date)
+        .order("scites_count DESC, comments_count DESC, pubdate DESC")
+        .paginate(per_page: 30, page: page)
+    
+    paper_ids = @range_query.pluck(:id)
     Paper.includes(:feed, :authors, :cross_lists => :feed).where(id: paper_ids).index_by(&:id).slice(*paper_ids).values
   end
 
@@ -35,6 +37,7 @@ class FeedsController < ApplicationController
     end
 
     @backdate = @date - @range.days
+    # Remember what time range they selected
     preferences.pref_update!(@range)
 
     @recent_comments = Comment.includes(:paper, :user)
@@ -42,7 +45,7 @@ class FeedsController < ApplicationController
                               .order("comments.created_at DESC")
     @scited_ids = current_user.scited_papers.pluck(:id)
 
-    @papers = _range_query(feed_ids, @backdate, @date)
+    @papers = _range_query(feed_ids, @backdate, @date, @page)
 
     render 'feeds/show'
   end
@@ -68,7 +71,7 @@ class FeedsController < ApplicationController
                               .where(:paper => { :feed_id => feed_ids })
                               .order("comments.created_at DESC")
 
-    @papers = _range_query(feed_ids, @backdate, @date)
+    @papers = _range_query(feed_ids, @backdate, @date, @page)
   end
 
   def show
@@ -97,7 +100,7 @@ class FeedsController < ApplicationController
 
     @scited_ids = current_user.scited_papers.pluck(:id)
 
-    @papers = _range_query(feed_ids, @backdate, @date)
+    @papers = _range_query(feed_ids, @backdate, @date, @page)
   end
 
   protected
