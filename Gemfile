@@ -28,6 +28,7 @@ group :development do
   gem 'taps'
   gem 'pry-rails'
   gem 'quiet_assets'
+  gem 'rspec-rerun'
 
   # Rails application preloader
   # Speeds up rake/rspec startup
@@ -51,6 +52,8 @@ group :test do
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'launchy'
+
+  gem 'rspec-rerun'
 
   # Capybara for integration tests
   gem 'capybara'
