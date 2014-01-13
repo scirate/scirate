@@ -20,7 +20,7 @@ gem 'bourbon'
 
 # Sphinx full-text search support
 gem 'mysql2', '0.3.13'
-gem 'thinking-sphinx', '3.0.6'
+gem 'thinking-sphinx', '3.1.0'
 
 group :development do
   gem 'annotate'

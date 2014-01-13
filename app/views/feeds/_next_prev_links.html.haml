@@ -1,10 +1,10 @@
 %nav.timelinks
-  = link_to("<<", url_for(params.merge(date: @date-1.days)))
+  = link_to("<<", url_for(params.merge(date: @date+1.days)))
   %strong= @date.to_formatted_s(:rfc822)
   to
   %div
     %strong= @backdate.to_formatted_s(:rfc822)
-    = link_to(">>", url_for(params.merge(date: @date+1.days)))
+    = link_to(">>", url_for(params.merge(date: @date-1.days)))
   %div-group
     - if signed_in?
       %li.last-visited{ class: @since_last && 'active' }

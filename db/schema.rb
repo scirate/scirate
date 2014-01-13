@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140109042617) do
+ActiveRecord::Schema.define(version: 20140113154723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,18 +120,20 @@ ActiveRecord::Schema.define(version: 20140109042617) do
     t.text     "abstract"
     t.string   "identifier"
     t.string   "url"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.date     "pubdate"
     t.date     "updated_date"
-    t.integer  "scites_count",       default: 0
-    t.integer  "comments_count",     default: 0
+    t.integer  "scites_count",   default: 0
+    t.integer  "comments_count", default: 0
     t.integer  "feed_id"
     t.string   "pdf_url"
     t.text     "author_str"
+    t.boolean  "delta",          default: true, null: false
   end
 
   add_index "papers", ["comments_count"], name: "index_papers_on_comments_count", order: {"comments_count"=>:desc}, using: :btree
+  add_index "papers", ["delta"], name: "index_papers_on_delta", using: :btree
   add_index "papers", ["feed_id"], name: "index_papers_on_feed_id", using: :btree
   add_index "papers", ["identifier"], name: "index_papers_on_identifier", unique: true, using: :btree
   add_index "papers", ["pubdate"], name: "index_papers_on_date", using: :btree

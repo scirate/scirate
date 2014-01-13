@@ -101,7 +101,7 @@ class Paper < ActiveRecord::Base
       end
     end
 
-    logger.info "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
+    puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(columns, values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
@@ -141,7 +141,7 @@ class Paper < ActiveRecord::Base
       end
     end
 
-    logger.info "Importing #{author_values.length} authorships" unless author_values.empty?
+    puts "Importing #{author_values.length} authorships" unless author_values.empty?
     result = Authorship.import(author_columns, author_values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
@@ -162,7 +162,7 @@ class Paper < ActiveRecord::Base
       end
     end
 
-    logger.info "Importing #{values.length} crosslists" unless values.empty?
+    puts "Importing #{values.length} crosslists" unless values.empty?
     result = CrossList.import(columns, values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
