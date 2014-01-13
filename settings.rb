@@ -5,8 +5,7 @@ module Settings
   # settings (some of which are sensitive) from general Rails 
   # configuration.
   
-
-  # An ordered list of the top-level arxiv categories which may or may not be parents 
+  # An ordered list of the top-level arxiv categories which may be parents 
   # to other categories. Used for the sidebar, search etc
   ARXIV_FOLDERS = ['astro-ph', 'cond-mat', 'gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nlin', 'nucl-ex', 'nucl-th', 'physics', 'quant-ph', 'math', 'cs', 'q-bio', 'q-fin', 'stat']
 
@@ -16,7 +15,6 @@ module Settings
   # Whether to use Mathjax rendering for tex
   ENABLE_MATHJAX = true
 
-
   #####
   # Sensitive development settings
   # Define in local_settings.rb
@@ -25,7 +23,6 @@ module Settings
   # Gmail auth details used in development to test UserMailer mail
   GMAIL_SMTP_USER = ''
   GMAIL_SMTP_PASSWORD = ''
-
 
   #####
   # Sensitive production settings
@@ -41,7 +38,6 @@ module Settings
     SECRET_TOKEN = '4b4d948fe0bdde9d1f66af4bcbe15cec68339f7445038032f5313e2f00c36eacb2c8b780fe40e5e9106c9ecbc175893a579f9d138942195eb3fe76e51a767ebe'
   end
 
-
   # Sendgrid auth details used in production to send UserMailer mail
   SENDGRID_USERNAME = ''
   SENDGRID_PASSWORD = ''
@@ -49,7 +45,6 @@ module Settings
   # New Relic app monitoring auth details
   # NEW_RELIC_LICENSE_KEY = ''
   # NEW_RELIC_APP_NAME = ''
-
 
   def self.override(key, val)
     Settings.send(:remove_const, key) if Settings.const_defined?(key, false)

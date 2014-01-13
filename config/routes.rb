@@ -55,16 +55,8 @@ SciRate3::Application.routes.draw do
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
 
-  Feed.arxiv_folders.each do |feed|
-    feed.children.each do |child|
-      get "/arxiv/#{child.name}", to: 'feeds#show', feed: child.name
-    end
-    get "/arxiv/#{feed.name}", to: 'feeds#show', feed: feed.name
-  end
-  get '/arxiv/:id', to: 'papers#show', id: /.+/, as: "paper"
-
-  # This route never gets activated, but it defines feed_path for us
-  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: "feed"
+  get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+/, as: "paper"
+  get "/arxiv/:feed", to: 'feeds#show', feed: /.+/, as: "feed"
 
 
   # The priority is based upon order of creation:
