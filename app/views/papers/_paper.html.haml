@@ -21,12 +21,10 @@
     .col-md-2
       = render 'scites/toggle', paper: paper
       %div.links.hidden
-        %a.btn.btn-abspdf{ href: paper.url } 
-          %i.icon-file-text
+        %a.abspdf{ href: paper.url } 
           ABS
         - unless paper.pdf_url.nil?
-          %a.btn.btn-abspdf{ href: paper.pdf_url } 
-            %i.icon-download-alt
+          %a.abspdf{ href: paper.pdf_url } 
             PDF
 
   %div{ class: "abstract#{showabs ? '' : ' hideable hidden'}" }= sanitize(paper.abstract)

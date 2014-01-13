@@ -152,3 +152,11 @@ $ ->
   # Search page specific
   $('#search_page').each ->
     new View.Search(el: this)
+
+  # Show links on hover
+  $('li.paper').on 'mouseover', (ev) ->
+    $(this).find('.links').removeClass('hidden')
+
+  $('li.paper').on 'mouseout', (ev) ->
+    $(this).find('.links').addClass('hidden')
+

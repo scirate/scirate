@@ -49,17 +49,16 @@ a:link, a:visited {
   color: #3c63af;
 }
 
-.btn-abspdf {
-  background-color: #52ccd9;
-  color: white !important;
-  border: none;
+.abspdf {
+  color: #999 !important;
   border-radius: 2px;
-  padding: 2px 8px;
-  font-size: 10px;
+  padding: 2px 11px;
+  font-size: 12px;
 }
 
-.btn-abspdf:hover {
-  background-color: #586576;
+.abspdf:hover {
+  color: #3c63af !important;
+  text-decoration: none;
 }
 
 
@@ -299,7 +298,6 @@ div.paper {
     }
 
     .scite-toggle {
-      margin-top: 7px;
       line-height: 40px;
     }
   }
@@ -701,6 +699,11 @@ div.feed-rightbar
 
   .scite-toggle .btn {
     padding: 4px 8px; 
+  }
+
+  .abspdf {
+    font-size: 10px;
+    padding: 4px 7px;
   }
 }
 
