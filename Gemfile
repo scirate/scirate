@@ -54,10 +54,6 @@ group :test do
 
   # Capybara for integration tests
   gem 'capybara'
-
-  # Minitest integration
-  gem 'minitest-rails'
-  gem 'minitest-rails-capybara'
 end
 
 group :production do
