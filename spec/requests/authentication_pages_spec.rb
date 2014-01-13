@@ -25,11 +25,10 @@ describe "Authentication" do
 
       describe "followed by signout" do
         before { signout }
-        it { should have_link('Sign in', href: login_path) }
+        it { should have_link('sign in', href: login_path) }
         it { should_not have_link('Sign out', href: logout_path) }
         it { should_not have_link('Profile', href: user_path(user)) }
         it { should_not have_link('Settings', href: edit_user_path(user)) }
-        it { should_not have_link('Subscriptions', href: subscriptions_user_path(user)) }
       end
     end
   end

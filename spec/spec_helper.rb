@@ -42,5 +42,6 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.start
+    load "#{Rails.root}/db/seeds.rb" 
   end
 end

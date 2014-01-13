@@ -19,8 +19,8 @@ describe "User pages" do
   describe "signup page" do
     before { visit signup_path }
 
-    it { should have_heading 'Sign up' }
-    it { should have_title 'Sign up' }
+    it { should have_heading 'Join SciRate' }
+    it { should have_title 'Join SciRate' }
   end
 
   describe "signup" do
@@ -36,10 +36,8 @@ describe "User pages" do
     describe "error messages" do
       before { signup }
 
-      let(:error) { 'errors prohibited this user from being saved' }
-
-      it { should have_title 'Sign up' }
-      it { should have_content(error) }
+      it { should have_title 'Join SciRate' }
+      it { should have_error_message }
     end
 
     describe "with valid information" do
