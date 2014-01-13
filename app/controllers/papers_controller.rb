@@ -80,6 +80,11 @@ class PapersController < ApplicationController
     render :search
   end
 
+  # Show the users who scited this paper
+  def scites
+    @paper = Paper.find_by_identifier!(params[:id])
+  end
+
   def next
     date = parse_date params
     feed = parse_feed params

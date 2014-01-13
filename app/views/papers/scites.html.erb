@@ -1,0 +1,22 @@
+<% provide :title, "Scites for #{@paper.title}" %>
+
+<div class="container paper-scites">
+  <h1 class="title"><%= @paper.title %></a></h1>
+  <a href="<%= url_for(@paper) %>"><%= URI.join(root_url, url_for(@paper)) %></a>
+  <h2><%= pluralize(@paper.scites_count, "Scite") %></h2>
+
+  <div class="row">
+    <div class="col-md-4">
+      <table class="table usertable">
+        <tbody>
+          <% @paper.sciters.each do |user| %>
+            <tr>
+              <td><%= gravatar_for user, size: 50 %></td>
+              <td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

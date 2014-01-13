@@ -4,7 +4,7 @@
   <div class="scited">
     <button class="btn unscite btn-success">Scited</button>
     <div class="scites-count">
-      <button class="btn count"><%= paper.scites_count + (scited ? 0 : 1)%></button>
+      <a href="<%= paper_scites_path(paper) %>"><button class="btn count"><%= paper.scites_count + (scited ? 0 : 1)%></button></a>
     </div>
   </div>
 

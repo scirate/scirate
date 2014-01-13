@@ -55,6 +55,7 @@ SciRate3::Application.routes.draw do
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
 
+  get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+/, as: "paper_scites"
   get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+/, as: "paper"
   get "/arxiv/:feed", to: 'feeds#show', feed: /.+/, as: "feed"
 

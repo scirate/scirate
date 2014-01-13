@@ -294,7 +294,7 @@ div.paper {
     h1 {
       margin-top: 0;
       margin-bottom: 4px;
-      font-size: 2em;
+      font-size: 28px;
     }
 
     .scite-toggle {
@@ -321,6 +321,10 @@ div.paper {
     margin-top: 20px;
     margin-bottom: 20px;
   }
+}
+
+.paper-scites h1 {
+  font-size: 28px;
 }
 
 // Paper page commenting interface
@@ -724,4 +728,12 @@ div.feed-rightbar
   width: 750px;
   font-size: 15px;
   line-height: 1.7;
+}
+
+// Table for displaying a list of users
+
+.usertable {
+  > tbody > tr > td {
+    vertical-align: middle;
+  }
 }
