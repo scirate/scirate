@@ -43,6 +43,15 @@ rake arxiv:oai_update
 
 When run for the first time, this will download paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
 
+## Enabling search
+
+Due to the size of the arxiv database, we use a separate specialized search server. You'll need to install [Sphinx 2.1.4+](http://sphinxsearch.com/downloads/release/). Then run the rake tasks to build the initial search index and start the server:
+
+```shell
+rake ts:index
+rake ts:start
+```
+
 ## Testing
 
 There is a fairly comprehensive series of unit and integration tests in `spec`. Running `rspec` in the top-level directory will attempt all of them.
