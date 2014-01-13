@@ -1,17 +1,17 @@
-<% @scited = @scited.nil? ? (signed_in? && @scited_ids.include?(paper.id)) : @scited %>
+<% scited = @scited.nil? ? (signed_in? && @scited_ids.include?(paper.id)) : @scited %>
 
-<div class="scite-toggle <%= @scited ? 'active' : '' %>" data-paper-id="<%= paper.id %>" >
+<div class="scite-toggle <%= scited ? 'active' : '' %>" data-paper-id="<%= paper.id %>" >
   <div class="scited">
     <button class="btn unscite btn-success">Scited</button>
     <div class="scites-count">
-      <button class="btn count"><%= paper.scites_count + (@scited ? 0 : 1)%></button>
+      <button class="btn count"><%= paper.scites_count + (scited ? 0 : 1)%></button>
     </div>
   </div>
 
   <div class="unscited">
     <button class="btn scite">Scite!</button>
     <div class="scites-count">
-      <button class="btn count"><%= paper.scites_count - (@scited ? 1 : 0) %></button>
+      <button class="btn count"><%= paper.scites_count - (scited ? 1 : 0) %></button>
     </div>
   </div>
 </div>

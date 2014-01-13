@@ -15,7 +15,7 @@
                   %li.leaf
                     = link_to(feed.fullname, feed)
 
-        = cache (@feed && @feed.id) do
+        = cache (@feed.nil? ? 'index' : @feed.id) do
           %li.source-heading arXiv.org
           - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
             %li.feed-folder{ class: @feed == feed ? 'active' : '' }
