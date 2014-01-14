@@ -14,10 +14,14 @@ class UsersController < ApplicationController
       @scite_order = :scited
       scited_papers = @user.scited_papers.order("scites.created_at DESC")
     end
-    
+
     @scited_ids = @user.scited_papers.pluck(:id)
-    @scited_papers = scited_papers.paginate(page: params[:scite_page], per_page: 10)
-    @comments = @user.comments.paginate(page: params[:comment_page], per_page: 20)
+    @scited_papers = scited_papers
+      .includes(:feed, :authors, :cross_lists => :feed)
+      .paginate(page: params[:scite_page], per_page: 10)
+    @comments = @user.comments
+      .includes(:user, :paper)
+      .paginate(page: params[:comment_page], per_page: 20)
   end
 
   def new
