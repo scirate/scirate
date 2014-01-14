@@ -33,7 +33,7 @@ class Feed < ActiveRecord::Base
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders
-    Feed.where(name: Settings::ARXIV_FOLDERS)
+    @@arxiv_folders ||= Feed.where(name: Settings::ARXIV_FOLDERS).includes(:children)
   end
 
   def self.arxiv_import(feednames, opts={})
@@ -56,6 +56,11 @@ class Feed < ActiveRecord::Base
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing feeds: #{result.failed_instances.inspect}")
     end
+  end
+
+  def self.find_by_name(name)
+    @@name_map ||= Feed.map_names
+    @@name_map[name]
   end
 
   def self.get_or_create(name)
