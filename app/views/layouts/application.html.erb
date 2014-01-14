@@ -48,7 +48,7 @@
           </ul>
         </nav>
       </div>
-    </header> 
+    </header>
 
     <header class="second"></header>
 
@@ -57,13 +57,12 @@
 
       <% if signed_in? && !current_user.active? %>
         <div class="welcome-banner">
-          Welcome to SciRate! A confirmation message was sent to <b><%= current_user.email %></b>.
-
           <div class="pull-right">
             <button id="resend-confirm-email" class="btn">
               Resend Confirmation
             </button>
           </div>
+          Welcome to SciRate! A confirmation message was sent to <b><%= current_user.email %></b>.
         </div>
       <% end %>
     </div>
