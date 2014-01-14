@@ -13,7 +13,7 @@
           </ul>
         </div>
       <% end %>
-      <%= form_for(@user) do |f| %>
+      <%= form_for(@user, url: signup_path(@user)) do |f| %>
         <div class="form-group">
           <%= f.label :name %>
           <%= f.text_field :name, class: 'form-control' %>

@@ -28,7 +28,7 @@ describe "Authentication" do
         it { should have_link('sign in', href: login_path) }
         it { should_not have_link('Sign out', href: logout_path) }
         it { should_not have_link('Profile', href: user_path(user)) }
-        it { should_not have_link('Settings', href: edit_user_path(user)) }
+        it { should_not have_link('Settings', href: settings_path) }
       end
     end
   end
@@ -46,7 +46,7 @@ describe "Authentication" do
         end
 
         describe "submitting to the update action" do
-          before { put user_path(user) }
+          before { post edit_user_path(user) }
           specify { response.should redirect_to(login_path) }
         end
       end
@@ -63,9 +63,9 @@ describe "Authentication" do
         it { should have_title '' }
       end
 
-      describe "submitting a PUT request to the Users#update action" do
+      describe "submitting a POST request to the Users#update action" do
         before do
-          put user_path(wrong_user)
+          post edit_user_path(wrong_user)
         end
 
         specify { response.should redirect_to(root_path) }
@@ -78,7 +78,7 @@ describe "Authentication" do
 
       describe "submitting a GET request to the Users#new action" do
         before do
-          get new_user_path
+          get signup_path
         end
 
         specify { response.should redirect_to(root_path) }
@@ -86,7 +86,7 @@ describe "Authentication" do
 
       describe "submitting a POST request to the Users#create action" do
         before do
-          post users_path
+          post signup_path
         end
 
         specify { response.should redirect_to(root_path) }

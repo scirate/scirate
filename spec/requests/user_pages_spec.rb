@@ -172,34 +172,6 @@ describe "User pages" do
     end
   end
 
-  describe "scited_papers" do
-    let(:user)   { FactoryGirl.create(:user) }
-    let(:paper1) { FactoryGirl.create(:paper) }
-    let(:paper2) { FactoryGirl.create(:paper) }
-
-    before do
-      user.scite!(paper1)
-      visit scites_user_path(user)
-    end
-
-    it { should have_title "Scites for #{user.name}" }
-    it { should have_heading "#{user.name}'s scited papers" }
-
-    describe "displays scited papers" do
-      it "displays identifiers" do
-        should have_content paper1.identifier
-      end
-
-      it "displays titles" do
-        should have_content paper1.title
-      end
-    end
-
-    describe "does not display non-scited papers" do
-      it { should_not have_content paper2.identifier }
-    end
-  end
-
   describe "settings" do
     let(:user) { FactoryGirl.create(:user) }
     before do

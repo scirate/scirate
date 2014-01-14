@@ -26,7 +26,8 @@ SciRate3::Application.routes.draw do
   end
   get '/comments', to: 'comments#index'
 
-  get '/signup',   to: 'users#new'
+  get '/signup',   to: 'users#new', as: 'signup'
+  post '/signup',  to: 'users#create'
   get '/login',    to: 'sessions#new'
   get '/logout',   to: 'sessions#destroy'
   get '/about',    to: 'static_pages#about'
@@ -49,7 +50,7 @@ SciRate3::Application.routes.draw do
 
 
   resources :sessions, only: [:new, :create, :destroy]
-  resources :users, only: [:show, :new, :create, :edit, :update, :destroy, :admin]
+  #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
   get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'
   get '/users/:id/comments', to: 'users#comments', as: 'comments_user'
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: 'subscriptions_user'
@@ -59,7 +60,9 @@ SciRate3::Application.routes.draw do
   get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+/, as: 'paper'
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
 
-  get '/:username', to: 'users#profile', as: 'profile'
+  get '/admin/users/:username', to: 'users#edit', as: 'edit_user'
+  post '/admin/users/:username', to: 'users#update'
+  get '/:username', to: 'users#show', as: 'user'
 
 
   # The priority is based upon order of creation:

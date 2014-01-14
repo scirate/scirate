@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def profile
+  def show
     @user = User.find_by_username(params[:username])
 
     if params[:scite_order] == 'published'
@@ -181,7 +181,7 @@ class UsersController < ApplicationController
   private
     def correct_user
       # Ensure current user has permission to edit this user
-      @user = User.find(params[:id])
+      @user = User.find_by_username(params[:username])
       unless current_user?(@user) || current_user.is_admin?
         redirect_to(root_path)
       end

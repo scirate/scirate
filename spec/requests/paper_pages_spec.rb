@@ -13,7 +13,7 @@ describe "Paper pages" do
 
     it { should have_content paper.title }
     it { should have_content paper.identifier }
-    it { should have_title paper.identifier }
+    it { should have_title paper.title }
     it { should have_content paper.authors[0] }
     it { should have_content paper.authors[1] }
     it { should have_content paper.abstract }

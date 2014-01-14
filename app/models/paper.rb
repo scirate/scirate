@@ -178,13 +178,17 @@ class Paper < ActiveRecord::Base
   end
 
   def self.arxiv_import(models, opts={})
+    papers = []
+
     # Pause sphinx delta updates so we can do it all
     # in one batch after the import
     ThinkingSphinx::Deltas.suspend :paper do
       transaction do
-        self._arxiv_import(models, opts)
+        papers = self._arxiv_import(models, opts)
       end
     end
+
+    papers
   end
 
   def to_param
