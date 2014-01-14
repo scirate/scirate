@@ -103,7 +103,7 @@ a:link, a:visited {
       line-height: 40px;
       position: relative;
       display: inline-block;
-      input { 
+      input {
         margin: 0;
         width: 490px;
         height: 32px;
@@ -119,7 +119,7 @@ a:link, a:visited {
     color: #afafaf;
     background: #333333;
   }
-  
+
   .container {
     width: 100%;
     min-width: 940px;
@@ -131,8 +131,8 @@ a:link, a:visited {
   .landing-nav {
     margin-bottom: 0;
 
-    li { 
-      list-style: none; 
+    li {
+      list-style: none;
       display: inline-block;
     }
 
@@ -151,7 +151,7 @@ a:link, a:visited {
       color: white;
       text-decoration: none;
     }
-    
+
     .signup a {
       color: white;
       background: #1e95f9;
@@ -189,7 +189,7 @@ header.navbar {
   width: 100%;
   border: none;
   border-radius: 0;
-  
+
   background: #202226;
   color: white;
 
@@ -305,9 +305,9 @@ div.paper {
   ul.authors {
     margin-bottom: 2px;
 
-    li { 
-      list-style: none; 
-      display: inline-block; 
+    li {
+      list-style: none;
+      display: inline-block;
       padding-right: 3px;
 
       font-size: medium;
@@ -457,7 +457,7 @@ div.abbr_comment {
     margin-bottom: 5px;
     border-bottom: 1px solid #aaa;
   }
-  
+
   // The individual non-aggregated feeds
 
   .leaf {
@@ -587,6 +587,11 @@ li.paper {
     cursor: pointer;
     line-height: 10px;
   }
+
+  .expand-authors {
+    cursor: pointer;
+    color: #3c63af;
+  }
 }
 
 li.paper:hover {
@@ -702,7 +707,7 @@ div.feed-rightbar
   }
 
   .scite-toggle .btn {
-    padding: 4px 8px; 
+    padding: 4px 8px;
   }
 
   .abspdf {

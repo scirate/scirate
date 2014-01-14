@@ -1,0 +1,50 @@
+<% showabs = (showabs.nil? ? paper.scites_count > 0 : showabs) %>
+
+<li class="paper tex2jax">
+  <div class="row">
+    <div class="col-md-10">
+      <div class="title">
+        <a href="<%= url_for(paper) %>"><%= sanitize(paper.title) %></a>
+      </div>
+      <div class="authors">
+        <% paper.authors[0..19].each do |author| %>
+          <%= author_link_to(author) + (author != paper.authors[-1] ? "," : ' ') %>
+        <% end %>
+        <% if paper.authors.length > 20 %>
+          <a class="expand-authors">et al (<%= paper.authors.length - 20 %>)</a>
+          <span class="more-authors hidden">
+            <% paper.authors[20..-1].each do |author| %>
+              <%= author_link_to(author) + (author != paper.authors[-1] ? "," : ' ') %>
+            <% end %>
+          </span>
+        <% end %>
+      </div>
+      <span class="identifier">
+        <%= paper.pubdate.strftime("%b %d %Y") %>
+        [<%= link_to paper.feed.name, paper.feed %>]
+      </span>
+      <% if paper.cross_lists.length > 1 %>
+        <div class="crosslist">
+          cross-listed to:
+          <% for crosslist in paper.cross_lists %>
+            <% if crosslist.feed_id != paper.feed_id %>
+              <%= link_to crosslist.feed.name, crosslist.feed %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-2">
+      <%= render 'scites/toggle', paper: paper %>
+      <div class="links hidden">
+        <a class="abspdf" href="<%= paper.url %>">ABS</a>
+        <% unless paper.pdf_url.nil? %>
+          <a class="abspdf" href="<%= paper.pdf_url %>">PDF</a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="abstract#{showabs ? '' : ' hideable hidden'}">
+    <%= sanitize(paper.abstract) %>
+  </div>
+</li>

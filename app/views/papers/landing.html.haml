@@ -38,8 +38,8 @@
             - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
               %li
                 = link_to(feed.fullname, feed)
-          = landing_column(@feeds['physics'])
           = landing_column(@feeds['astro-ph'])
+          = landing_column(@feeds['physics'])
         .col-md-3
           = landing_column(@feeds['math'])
           = landing_column(@feeds['stat'])

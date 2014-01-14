@@ -33,7 +33,7 @@ class Feed < ActiveRecord::Base
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders
-    @@arxiv_folders ||= Feed.where(name: Settings::ARXIV_FOLDERS).includes(:children)
+    @@arxiv_folders ||= Feed.where(name: Settings::ARXIV_FOLDERS).includes(:children).to_a
   end
 
   def self.arxiv_import(feednames, opts={})
@@ -41,7 +41,7 @@ class Feed < ActiveRecord::Base
 
     columns = [:name, :url, :feed_type, :updated_date]
     values = []
-    
+
     (feednames - existing).map do |feedname|
       logger.info "Discovered new feed: #{feedname}"
       values << [
