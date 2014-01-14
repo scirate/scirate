@@ -64,6 +64,10 @@ class User < ActiveRecord::Base
     username
   end
 
+  def self.find_by_username(username)
+    User.where("lower(username) = ?", username.downcase).first
+  end
+
   def scited?(paper)
     scites.find_by_paper_id(paper.id)
   end
