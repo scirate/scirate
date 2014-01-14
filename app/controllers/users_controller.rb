@@ -1,11 +1,11 @@
 class UsersController < ApplicationController
   before_filter :signed_in_user,
-           only: [:show, :edit, :update, :destroy, :settings, :settings_password]
+           only: [:edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def show
-    @user = User.find(params[:id])
+  def profile
+    @user = User.find_by_username(params[:username])
 
     if params[:scite_order] == 'published'
       @scite_order = :published
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      @user = User.new(params.required(:user).permit(:name, :email, :password, :password_confirmation))
+      @user = User.new(params.required(:user).permit(:name, :username, :email, :password, :password_confirmation))
       if @user.save
         @user.send_signup_confirmation
         flash[:success] = "Welcome to SciRate!  Confirmation mail sent to: #{@user.email}"

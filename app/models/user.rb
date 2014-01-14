@@ -3,16 +3,17 @@
 # Table name: users
 #
 #  id                     :integer         primary key
-#  name                   :string(255)
-#  email                  :string(255)
-#  remember_token         :string(255)
+#  name                   :string
+#  username               :string
+#  email                  :string
+#  remember_token         :string
 #  created_at             :timestamp       not null
 #  updated_at             :timestamp       not null
-#  password_digest        :string(255)
+#  password_digest        :string
 #  scites_count           :integer         default(0)
-#  password_reset_token   :string(255)
+#  password_reset_token   :string
 #  password_reset_sent_at :timestamp
-#  confirmation_token     :string(255)
+#  confirmation_token     :string
 #  active                 :boolean         default(FALSE)
 #  comments_count         :integer         default(0)
 #  confirmation_sent_at   :timestamp
@@ -43,8 +44,11 @@ class User < ActiveRecord::Base
   validates :email, presence: true, format: { with: valid_email_regex },
                     uniqueness: { case_sensitive: false }
 
-  validates :password, length: { minimum: 6 }, on: :create
+  valid_username_regex = /\A[a-zA-Z0-9_\.]+\z/i 
+  validates :username, presence: true, format: { with: valid_username_regex },
+                    uniqueness: { case_sensitive: false }
 
+  validates :password, length: { minimum: 6 }, on: :create
 
   acts_as_voter
 
@@ -52,6 +56,12 @@ class User < ActiveRecord::Base
     if new_record? || password_digest_changed? || email_changed?
       generate_token(:remember_token)
     end
+  end
+
+  # Tell Rails routes to use our username
+  # instead of id in generating urls
+  def to_param
+    username
   end
 
   def scited?(paper)
