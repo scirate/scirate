@@ -2,15 +2,20 @@
 #
 # Table name: comments
 #
-#  id         :integer         primary key
-#  content    :text
-#  user_id    :integer
-#  paper_id   :integer
-#  parent_id  :integer
-#  ancestor_id   :integer
-#  created_at :timestamp       not null
-#  updated_at :timestamp       not null
-#  hidden     :boolean
+#  id                :integer          not null, primary key
+#  content           :text
+#  user_id           :integer
+#  paper_id          :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  score             :integer
+#  cached_votes_up   :integer          default(0)
+#  cached_votes_down :integer          default(0)
+#  parent_id         :integer
+#  hidden            :boolean          default(FALSE)
+#  reply_id          :integer
+#  ancestor_id       :integer
+#
 
 class Comment < ActiveRecord::Base
   belongs_to :user, counter_cache: true

@@ -2,12 +2,12 @@
 #
 # Table name: cross_lists
 #
-#  id              :integer         primary key
+#  id              :integer          not null, primary key
 #  paper_id        :integer
 #  feed_id         :integer
 #  cross_list_date :date
-#  created_at      :timestamp       not null
-#  updated_at      :timestamp       not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 require 'spec_helper'

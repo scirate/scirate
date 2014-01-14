@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: authorships
+#
+#  id          :integer          not null, primary key
+#  paper_id    :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  position    :integer
+#  keyname     :text
+#  forenames   :text
+#  affiliation :text
+#  suffix      :text
+#  searchterm  :text
+#  fullname    :text
+#
+
 # An Authorship represents an element in an ordered
 # list of paper authors.
 #

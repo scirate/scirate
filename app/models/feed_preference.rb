@@ -2,12 +2,15 @@
 #
 # Table name: feed_preferences
 #
-#  id                     :integer         primary key
-#  user_id                :integer
-#  feed_id                :integer
-#  last_visited           :timestamp
-#  previous_last_visited  :timestamp
-#  selected_range         :integer
+#  id                    :integer          not null, primary key
+#  user_id               :integer
+#  feed_id               :integer
+#  last_visited          :datetime
+#  previous_last_visited :datetime
+#  selected_range        :integer
+#  created_at            :datetime
+#  updated_at            :datetime
+#
 
 class FeedPreference < ActiveRecord::Base
   before_create :set_defaults
