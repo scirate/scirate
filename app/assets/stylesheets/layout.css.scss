@@ -648,16 +648,12 @@ div.feed-rightbar
 // Scites
 
 .scite-toggle:not(.active) {
-  opacity: 0.5;
-
   .scited {
     display: none;
   }
 }
 
 .scite-toggle.active {
-  opacity: 1;
-
   .unscited {
     display: none;
   }
