@@ -12,6 +12,7 @@ gem 'acts_as_votable'
 gem 'activerecord-import'
 gem 'squeel'
 gem 'thin'
+gem 'nokogiri', "= 1.5.9"
 gem 'arxivsync', ">= 0.0.3"
 gem 'exception_notification', :git => 'git://github.com/sunkencity/exception_notification'
 gem 'acts_as_list'
