@@ -9,3 +9,6 @@ script:
 before_script:
   - cp config/database.yml.travis config/database.yml
   - psql -c 'create database scirate_test;' -U postgres
+notifications:
+  email:
+    - scirate@mispy.me
