@@ -1,4 +1,5 @@
 $(function() {
+  // Expand author lists with >20 authors
   $('li.paper .expand-authors').click(function() {
     $paper = $(this).closest('li.paper');
 

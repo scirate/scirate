@@ -159,4 +159,3 @@ $ ->
 
   $('li.paper').on 'mouseout', (ev) ->
     $(this).find('.links').addClass('hidden')
-

@@ -81,7 +81,6 @@ group :test do
   # before each test suite is run
   gem 'database_cleaner'
 
-
   # OS X specific?
   gem 'rb-fsevent', :require => false
   gem 'rb-readline'
