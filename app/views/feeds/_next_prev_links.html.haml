@@ -1,4 +1,4 @@
-%nav.timenav{style: "text-align: center;"}
+%nav.timenav
   %h3 Date Published
   %p #{@backdate.to_formatted_s(:rfc822)} &mdash; #{@date.to_formatted_s(:rfc822)}
   %table{style: "width: 100%; text-align: center; border-collapse: separate;", cellspacing: 0}
@@ -27,24 +27,3 @@
       %td.btn-default.bottom{colspan: 2, class: @range == 364 && !params["date"] && params["range"] != "since_last" && 'btn-primary'}
         %a{href: url_for({range: 365})} 1 Year ago
 
--#%div
-  -#= link_to("<<", url_for(params.merge(date: @date+1.days)))
-  -#%strong= @date.to_formatted_s(:rfc822)
-  -#to
-  -#%div
-    -#%strong= @backdate.to_formatted_s(:rfc822)
-    -#= link_to(">>", url_for(params.merge(date: @date-1.days)))
-  -#%div-group
-    -#- if signed_in?
-      -#%li.last-visited{ class: @since_last && 'active' }
-        -#= link_to("Since Last Visited", url_for(params.merge(range: 'since_last')))
-    -#%li{ class: @range == 1 && 'active' }
-      -#= link_to("2d", url_for( params.merge( range: 2 )))
-    -#%li{ class: @range == 2 && 'active' }
-      -#= link_to("3d", url_for( params.merge( range: 3 )))
-    -#%li{ class: @range == 6 && 'active' }
-      -#= link_to("1w", url_for( params.merge( range: 7 )))
-    -#%li{ class: @range == 30 && 'active' }
-      -#= link_to("1m", url_for( params.merge( range: 31 )))
-    -#%li{ class: @range == 364 && 'active' }
-      -#= link_to("1y", url_for( params.merge( range: 365 )))
