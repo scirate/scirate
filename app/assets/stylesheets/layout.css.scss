@@ -566,6 +566,7 @@ li.paper {
   padding: 10px 0;
 
   .title {
+    font-weight: bold;
     font-size: 1.2em;
 
     a {
@@ -575,6 +576,13 @@ li.paper {
     a:hover {
       color: #3c63af;
       text-decoration: none;
+    }
+  }
+
+  .identifier, .crosslist {
+    color: #aaa;
+    a {
+      color: #717F9B;
     }
   }
 

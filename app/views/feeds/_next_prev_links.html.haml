@@ -1,6 +1,6 @@
 %nav.timenav
   %h3 Date Published
-  %p #{@backdate.to_formatted_s(:rfc822)} &mdash; #{@date.to_formatted_s(:rfc822)}
+  %p{style: "text-align: center;"} #{@backdate.to_formatted_s(:rfc822)} &mdash; #{@date.to_formatted_s(:rfc822)}
   %table{style: "width: 100%; text-align: center; border-collapse: separate;", cellspacing: 0}
     %tr
       %td.btn-default.half.top.left= link_to("Prev #{@range} days", url_for(params.merge(date: @date - @range.days)))
