@@ -26,17 +26,17 @@
 #
 
 class Paper < ActiveRecord::Base
-  has_many  :versions, -> { order("position ASC") }, dependent: :destroy,
+  has_many  :versions, -> { order("position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
-  has_many  :categories, -> { order("position ASC") }, dependent: :destroy,
+  has_many  :categories, -> { order("position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
-  has_many  :authors, -> { order("position ASC") }, dependent: :destroy,
+  has_many  :authors, -> { order("position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
             
 
-  has_many  :scites, dependent: :destroy
+  has_many  :scites, dependent: :delete_all
   has_many  :sciters, -> { order("fullname ASC") }, through: :scites, source: :user
-  has_many  :comments, -> { order("created_at ASC") }, dependent: :destroy
+  has_many  :comments, -> { order("created_at ASC") }, dependent: :delete_all
   has_many  :feeds, -> { order("categories.position ASC") }, through: :categories
 
   validates :uid, presence: true, uniqueness: true
