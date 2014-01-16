@@ -52,7 +52,7 @@ class FeedsController < ApplicationController
 
   # Showing a feed while we aren't signed in
   def show_nouser
-    @feed = Feed.find_by_name(params[:feed])
+    @feed = Feed.find_by_name!(params[:feed])
     feed_ids = [@feed.id] + @feed.children.pluck(:id)
 
     @date = parse_date(params) || @feed.last_paper_date || Date.today
