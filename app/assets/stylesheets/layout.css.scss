@@ -179,7 +179,7 @@ a:link, a:visited {
   }
 
   li.feed {
-    line-height: 16px;
+    line-height: 19px;
   }
 }
 
@@ -278,6 +278,7 @@ header.second {
   border-color: #d6e9c6;
   color: #468847;
   line-height: 35px;
+  margin: 10px 0;
 
   .btn {
     position: relative;
@@ -356,6 +357,10 @@ div.comments {
 }
 
 #comment_form, #comment_editor, #comment_reply {
+  #wmd-button-bar {
+    margin: 5px 0;
+  }
+
   textarea, .wmd-preview {
     max-width: 600px;
     width: 100%;
@@ -491,9 +496,8 @@ div.abbr_comment {
     font-size: 2.4em;
   }
 
-  padding-bottom: 5px;
-
-  min-height: 80px;
+  padding-bottom: 30px;
+  margin-bottom: 10px;
 
   // Abstract toggle appears on hover
   .abstract-toggle {
@@ -517,7 +521,8 @@ div.abbr_comment {
   }
 }
 
-.feed-header:hover {
+.feed-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   .abstract-toggle {
     display: inline !important;
   }
@@ -557,12 +562,11 @@ ul.papers {
 }
 
 li.paper {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-
   list-style-type: none;
   padding: 10px 0;
 
   .title {
+    font-weight: bold;
     font-size: 1.2em;
 
     a {
@@ -572,6 +576,13 @@ li.paper {
     a:hover {
       color: #3c63af;
       text-decoration: none;
+    }
+  }
+
+  .identifier, .crosslist {
+    color: #aaa;
+    a {
+      color: #717F9B;
     }
   }
 
@@ -609,30 +620,8 @@ li.paper:hover {
 div.feed-rightbar
 {
 
-  h2 {
-    color: #A3A3A2;
-    text-transform: uppercase;
-    margin-top: 0;
-    font-size: 1em;
-  }
-
-  .timelinks {
+  h3 {
     text-align: center;
-
-    li.last-visited {
-      display: block;
-    }
-
-    li {
-      list-style-type: none;
-      display: inline-block;
-    }
-
-    li.active {
-      font-weight: bold;
-    }
-
-    margin-bottom: 10px;
   }
 
   .abbr-comment {
@@ -642,21 +631,65 @@ div.feed-rightbar
   blockquote p {
     font-size: inherit;
   }
+
+  .timenav {
+    table {
+      td {
+        a {
+          display: block;
+          width: 100%;
+          height: 100%;
+          padding: 10px 0;
+          text-decoration: none;
+          color: inherit;
+        }
+
+        font-size: 13px;
+        cursor: pointer;
+
+        &.half {
+          width: 50%;
+        }
+
+        border: 1px solid #ccc;
+        border-top: none;
+
+        &.top {
+          border-top: 1px solid #ccc;
+          &.left {
+            border-top-left-radius: 5px;
+            border-right: none;
+          }
+
+          &.right {
+            border-top-right-radius: 5px;
+          }
+        }
+
+        &.bottom {
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+
+        &.underline {
+          border: none;
+          background-color: #1e95f9;
+          height: 5px;
+        }
+      }
+    }
+  }
 }
 
 // Scites
 
 .scite-toggle:not(.active) {
-  opacity: 0.5;
-
   .scited {
     display: none;
   }
 }
 
 .scite-toggle.active {
-  opacity: 1;
-
   .unscited {
     display: none;
   }
@@ -741,4 +774,8 @@ div.feed-rightbar
   > tbody > tr > td {
     vertical-align: middle;
   }
+}
+
+.abstract-toggle {
+  margin: 10px 0;
 }

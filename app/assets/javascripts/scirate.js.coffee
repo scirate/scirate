@@ -95,10 +95,10 @@ class View.AbstractToggle extends View
   render: ->
     if @expand
       $('.abstract.hideable').removeClass('hidden')
-      @$el.html('hide unscited abstracts')
+      @$el.html('Hide unscited abstracts')
     else
       $('.abstract.hideable').addClass('hidden')
-      @$el.html('show all abstracts')
+      @$el.html('Show all abstracts')
 
   toggle: ->
     if @expand
@@ -144,7 +144,7 @@ $ ->
       $('#resend-confirm-email').popover(
         content: "Sent"
       )
-    
+
   # Landing page specific
   $('#landing').each ->
     $('.searchbox input').focus()

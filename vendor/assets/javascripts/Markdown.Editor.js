@@ -1333,7 +1333,7 @@
 
             var makeButton = function (id, title, icon, textOp, group) {
                 var button = document.createElement("button");
-                button.className = "btn";
+                button.className = "btn btn-default";
                 var buttonImage = document.createElement("i");
                 buttonImage.className = icon;
                 button.id = id + postfix;

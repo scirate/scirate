@@ -36,22 +36,16 @@
     .col-md-10.feed-center
       %header.feed-header
         .row
-          .col-md-10
-            .row
-              - if @feed
-                .col-md-10
-                  %h1= @feed.fullname
-                .col-md-2
-                  = render 'feeds/subscribe', :feed => @feed
-              - else
-                .col-md-10
-                  %h1= "All subscribed feeds"
-            .row
-              .col-md-10
-                %a.abstract-toggle.pseudolink
-
+          - if @feed
+            .col-md-10
+              %h1= @feed.fullname
+            .col-md-2
+              = render 'feeds/subscribe', :feed => @feed
+          - else
+            .col-md-10
+              %h1= "All subscribed feeds"
       .row
-        .col-md-10
+        .col-md-9
           -#
             %p
               Found #{@papers.count} papers from #{describe_range(@date, @range)}
@@ -71,9 +65,11 @@
                     = render partial: "papers/paper", object: paper
                 = will_paginate @range_query
 
-        .col-md-2.feed-rightbar
+        .col-md-3.feed-rightbar
+          %a.btn.btn-block.btn-default.abstract-toggle.pseudolink
+
           = render :partial => 'feeds/next_prev_links'
           - unless @recent_comments.empty?
-            %h2 Recent comments
+            %h3 Recent comments
             = render :partial => "comments/abbr_comment", :collection => @recent_comments[0..9]
 
