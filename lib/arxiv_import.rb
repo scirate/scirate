@@ -19,6 +19,7 @@ module Arxiv::Import
     ### First pass: Add new Feeds.
     feed_uids = models.map { |m| m.categories }.flatten.uniq
     Feed.arxiv_import(feed_uids, opts)
+    feeds_by_uid = Feed.map_uids
 
     ### Second pass: Add new papers and handle updates.
 
@@ -36,7 +37,7 @@ module Arxiv::Import
     author_columns = [:paper_uid, :position, :fullname, :searchterm]
     author_values = []
 
-    category_columns = [:paper_uid, :position, :feed_uid]
+    category_columns = [:paper_uid, :position, :feed_uid, :crosslist_date]
     category_values = []
 
     new_uids = []
@@ -96,12 +97,19 @@ module Arxiv::Import
         category_values << [
           model.id,
           j,
-          feed_uid
+          feed_uid,
+          model.versions[0].date
         ]
+
+        feed = feeds_by_uid[feed_uid]
+        if model.versions[0].date > feed.last_paper_date
+          feed.last_paper_date = model.versions[0].date
+          feed.save
+        end
       end
     end
 
-    Paper.where(uid: updated_uids).delete_all
+    Paper.where(uid: updated_uids).delete_all unless updated_uids.empty?
 
     puts "Read #{models.length} items: #{new_uids.length} new, #{updated_uids.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(paper_columns, paper_values, opts)
@@ -127,12 +135,7 @@ module Arxiv::Import
       SciRate3.notify_error("Error importing categories: #{result.failed_instances.inspect}")
     end
 
-    # Update last paper date for involved feeds
-    Feed.where(uid: feed_uids).all.each do |feed|
-      feed.update_last_paper_date
-    end
-
     # Return uids of the papers we imported/updated
     new_uids+updated_uids
   end
-end  
+end
