@@ -18,8 +18,8 @@
         .categories
           Subjects:
           %strong= @paper.feeds[0].uid
-          - @paper.categories.each do |c|
-            = c.feed_uid
+          - @paper.feeds[1..-1].each do |feed|
+            = feed.uid
       .dates
         Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} in
         %strong= @paper.feeds[0].fullname

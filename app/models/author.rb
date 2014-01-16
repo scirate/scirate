@@ -39,7 +39,7 @@ class Author < ActiveRecord::Base
     if spl.length == 0
       term = spl[0]
     else
-      term = "#{spl[-1]}_#{spl[0]}"
+      term = "#{spl[-1]}_#{spl[0][0]}"
     end
 
     term.mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').to_s
