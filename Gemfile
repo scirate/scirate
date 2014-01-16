@@ -6,7 +6,8 @@ gem 'rails', "~> 4.0.0"
 gem 'bcrypt-ruby'
 
 # Sends us emails when stuff breaks in production
-gem 'exception_notification'
+gem 'exception_notification',
+    :git => 'git://github.com/sunkencity/exception_notification'
 
 # Database stuff
 gem 'pg' # Postgres support
