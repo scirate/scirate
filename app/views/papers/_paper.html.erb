@@ -2,7 +2,7 @@
 
 <li class="paper tex2jax">
   <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-9">
       <div class="title">
         <a href="<%= url_for(paper) %>"><%= sanitize(paper.title) %></a>
       </div>
@@ -34,13 +34,15 @@
         </div>
       <% end %>
     </div>
-    <div class="col-md-2">
-      <%= render 'scites/toggle', paper: paper %>
-      <div class="links hidden">
-        <a class="abspdf" href="<%= paper.url %>">ABS</a>
-        <% unless paper.pdf_url.nil? %>
-          <a class="abspdf" href="<%= paper.pdf_url %>">PDF</a>
-        <% end %>
+    <div class="col-md-3">
+      <div class="pull-right">
+        <%= render 'scites/toggle', paper: paper %>
+        <div class="links hidden">
+          <a class="abspdf" href="<%= paper.url %>">ABS</a>
+          <% unless paper.pdf_url.nil? %>
+            <a class="abspdf" href="<%= paper.pdf_url %>">PDF</a>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
