@@ -357,6 +357,10 @@ div.comments {
 }
 
 #comment_form, #comment_editor, #comment_reply {
+  #wmd-button-bar {
+    margin: 5px 0;
+  }
+
   textarea, .wmd-preview {
     max-width: 600px;
     width: 100%;
