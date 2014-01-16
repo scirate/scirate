@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20140116201616) do
     t.integer  "position",                                       null: false
     t.text     "feed_uid",                                       null: false
     t.text     "paper_uid"
-    t.datetime "crosslist_date", default: '2014-01-16 20:06:20', null: false
+    t.datetime "crosslist_date", default: '2014-01-16 20:23:11', null: false
   end
 
   add_index "categories", ["crosslist_date"], name: "index_categories_on_crosslist_date", using: :btree
