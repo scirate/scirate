@@ -33,7 +33,7 @@
               %select.hidden{ id: "feed_#{folder.id}", class: 'feed form-control', name: 'feed', disabled: true }
                 %option{ value: folder.name } (all)
                 - folder.children.each do |feed|
-                  %option{ value: feed.name, selected: feed == @search.feed }= feed.fullname
+                  %option{ value: feed.uid, selected: feed == @search.feed }= feed.fullname
           %td Search a subcategory
         %tr
           %td= label_tag :general, "General"

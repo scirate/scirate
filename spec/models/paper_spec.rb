@@ -3,21 +3,26 @@
 # Table name: papers
 #
 #  id             :integer          not null, primary key
-#  title          :text
-#  authors        :text
-#  abstract       :text
-#  identifier     :string(255)
-#  url            :string(255)
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  submit_date        :date
-#  update_date   :date
-#  scites_count   :integer          default(0)
-#  comments_count :integer          default(0)
-#  feed_id        :integer
-#  pdf_url        :string(255)
-#  author_str     :text
+#  uid            :string(255)      not null
+#  submitter      :string(255)      not null
+#  title          :string(255)      not null
+#  abstract       :text             not null
+#  comments       :text
+#  msc_class      :string(255)
+#  report_no      :string(255)
+#  journal_ref    :string(255)
+#  doi            :string(255)
+#  proxy          :string(255)
+#  license        :string(255)
+#  submit_date    :datetime         not null
+#  update_date    :datetime         not null
+#  abs_url        :string(255)      not null
+#  pdf_url        :string(255)      not null
 #  delta          :boolean          default(TRUE), not null
+#  created_at     :datetime
+#  updated_at     :datetime
+#  scites_count   :integer          default(0), not null
+#  comments_count :integer          default(0), not null
 #
 
 require 'spec_helper'
@@ -25,10 +30,7 @@ require 'spec_helper'
 describe Paper do
   before do
     @feed = FactoryGirl.create(:feed)
-    @paper = @feed.papers.build(title: "On NPT Bound Entanglement and the ERH", \
-                               abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
-                               identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
-                               submit_date: Time.now, update_date: Time.now)
+    @paper = FactoryGirl.create(:paper)
   end
 
   subject { @paper }
@@ -36,61 +38,26 @@ describe Paper do
   it { should respond_to(:title) }
   it { should respond_to(:authors) }
   it { should respond_to(:abstract) }
-  it { should respond_to(:identifier) }
-  it { should respond_to(:url) }
+  it { should respond_to(:uid) }
+  it { should respond_to(:abs_url) }
+  it { should respond_to(:pdf_url) }
   it { should respond_to(:submit_date) }
   it { should respond_to(:update_date) }
   it { should respond_to(:scites) }
   it { should respond_to(:sciters) }
   it { should respond_to(:comments) }
-  it { should respond_to(:feed) }
-  it { should respond_to(:cross_lists) }
-  it { should respond_to(:cross_listed_feeds) }
+  it { should respond_to(:categories) }
 
   it { should be_valid }
-
-  describe "when title is not present" do
-    before { @paper.title = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when abstract is not present" do
-    before { @paper.abstract = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when identifier is not present" do
-    before { @paper.identifier = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when url is not present" do
-    before { @paper.url = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when submit_date is not present" do
-    before { @paper.submit_date = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when update_date is not present" do
-    before { @paper.update_date = " " }
-    it { should_not be_valid }
-  end
 
   describe "when update_date is older than submit_date" do
     before { @paper.update_date = @paper.submit_date - 1.day }
     it { should_not be_valid }
   end
 
-  describe "when identifier is already taken" do
-    before do
-      paper_with_same_identifier = @paper.dup
-      paper_with_same_identifier.save
-    end
-
-    it { should_not be_valid }
+  it "should check uid uniqueness" do
+    paper_with_same_uid = @paper.dup
+    paper_with_same_uid.should_not be_valid
   end
 
   describe "sciting" do
@@ -104,8 +71,8 @@ describe Paper do
   end
 
   describe "authors" do
-    let (:author1) { FactoryGirl.create(:authorship, paper: @paper, position: 0) }
-    let (:author2) { FactoryGirl.create(:authorship, paper: @paper, position: 1) }
+    let (:author1) { FactoryGirl.create(:author, paper: @paper, position: 0) }
+    let (:author2) { FactoryGirl.create(:author, paper: @paper, position: 1) }
 
     it "should have the authors in the right order" do
       @paper.authors.should == [author1, author2]

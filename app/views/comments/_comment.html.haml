@@ -9,9 +9,9 @@
     %span
       - if @user
         %div= link_to comment.paper.title, comment.paper
-      = link_to comment.user.name, comment.user
+      = link_to comment.user.fullname, comment.user
       - if comment.parent
-        in reply to #{link_to comment.parent.user.name, comment.parent.user}
+        in reply to #{link_to comment.parent.user.fullname, comment.parent.user}
       %span.timeago
         = time_ago_in_words(comment.created_at)
         ago

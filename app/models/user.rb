@@ -3,7 +3,7 @@
 # Table name: users
 #
 #  id                     :integer          not null, primary key
-#  name                   :string(255)
+#  fullname               :string(255)
 #  email                  :string(255)
 #  remember_token         :string(255)
 #  created_at             :datetime         not null
@@ -31,20 +31,20 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  has_many :scites, foreign_key: 'sciter_id', dependent: :destroy
+  has_many :scites, dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :feeds, through: :subscriptions
   has_many :feed_preferences
 
-  validates :name, presence: true, length: { maximum: 50 }
+  validates :fullname, presence: true, length: { maximum: 50 }
 
   valid_email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: valid_email_regex },
                     uniqueness: { case_sensitive: false }
 
-  valid_username_regex = /\A[a-zA-Z0-9_\.]+\z/i 
+  valid_username_regex = /\A[a-zA-Z0-9_\.]+\z/i
   validates :username, presence: true, format: { with: valid_username_regex },
                     uniqueness: { case_sensitive: false }
 
@@ -179,8 +179,8 @@ class User < ActiveRecord::Base
 
   # Data sent to the browser for JS interaction
   def to_js
-    { 
-      name: self.name,
+    {
+      fullname: self.fullname,
       email: self.email,
       expand_abstracts: self.expand_abstracts
     }.to_json

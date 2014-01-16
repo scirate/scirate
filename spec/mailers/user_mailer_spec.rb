@@ -25,7 +25,7 @@ describe UserMailer do
     end
 
     it 'assigns @name' do
-      mail.body.encoded.should match(user.name)
+      mail.body.encoded.should match(user.fullname)
     end
 
     it 'includes the right url' do
@@ -55,7 +55,7 @@ describe UserMailer do
     end
 
     it 'assigns @name' do
-      mail.body.encoded.should match(user.name)
+      mail.body.encoded.should match(user.fullname)
     end
 
     it 'assigns the right url' do
@@ -87,7 +87,7 @@ describe UserMailer do
     end
 
     it 'assigns @name' do
-      mail.body.encoded.should match(user.name)
+      mail.body.encoded.should match(user.fullname)
     end
 
     it 'contains the right place to complain to' do

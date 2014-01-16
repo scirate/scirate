@@ -11,62 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140116142259) do
+ActiveRecord::Schema.define(version: 20140116192805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "arxiv_authors", force: true do |t|
-    t.integer "arxiv_paper_id", null: false
-    t.integer "position",       null: false
-    t.string  "fullname",       null: false
-    t.string  "searchterm",     null: false
+  create_table "authors", force: true do |t|
+    t.integer "position",   null: false
+    t.text    "fullname",   null: false
+    t.text    "searchterm", null: false
+    t.text    "paper_uid"
   end
 
-  add_index "arxiv_authors", ["arxiv_paper_id"], name: "index_arxiv_authors_on_arxiv_paper_id", using: :btree
-  add_index "arxiv_authors", ["searchterm"], name: "index_arxiv_authors_on_searchterm", using: :btree
+  add_index "authors", ["paper_uid"], name: "index_authors_on_paper_uid", using: :btree
+  add_index "authors", ["searchterm"], name: "index_authors_on_searchterm", using: :btree
 
-  create_table "arxiv_categories", force: true do |t|
-    t.integer "arxiv_paper_id", null: false
-    t.integer "position",       null: false
-    t.string  "category",       null: false
+  create_table "categories", force: true do |t|
+    t.integer "position",  null: false
+    t.text    "feed_uid",  null: false
+    t.text    "paper_uid"
   end
 
-  add_index "arxiv_categories", ["arxiv_paper_id"], name: "index_arxiv_categories_on_arxiv_paper_id", using: :btree
-  add_index "arxiv_categories", ["category"], name: "index_arxiv_categories_on_category", using: :btree
-
-  create_table "arxiv_papers", force: true do |t|
-    t.string   "identifier",                 null: false
-    t.string   "submitter",                  null: false
-    t.string   "title",                      null: false
-    t.text     "abstract",                   null: false
-    t.text     "comments"
-    t.string   "msc_class"
-    t.string   "report_no"
-    t.string   "journal_ref"
-    t.string   "doi"
-    t.string   "proxy"
-    t.string   "license"
-    t.datetime "submit_date",                null: false
-    t.datetime "update_date",                null: false
-    t.string   "abs_url",                    null: false
-    t.string   "pdf_url",                    null: false
-    t.boolean  "delta",       default: true, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "arxiv_papers", ["delta"], name: "index_arxiv_papers_on_delta", using: :btree
-  add_index "arxiv_papers", ["identifier"], name: "index_arxiv_papers_on_identifier", using: :btree
-
-  create_table "arxiv_versions", force: true do |t|
-    t.integer  "arxiv_paper_id", null: false
-    t.integer  "position",       null: false
-    t.datetime "date",           null: false
-    t.datetime "size",           null: false
-  end
-
-  add_index "arxiv_versions", ["arxiv_paper_id"], name: "index_arxiv_versions_on_arxiv_paper_id", using: :btree
+  add_index "categories", ["feed_uid"], name: "index_categories_on_feed_uid", using: :btree
+  add_index "categories", ["paper_uid"], name: "index_categories_on_paper_uid", using: :btree
 
   create_table "comment_reports", force: true do |t|
     t.integer  "user_id"
@@ -77,7 +44,6 @@ ActiveRecord::Schema.define(version: 20140116142259) do
 
   create_table "comments", force: true do |t|
     t.integer  "paper_id",                          null: false
-    t.string   "paper_type",                        null: false
     t.integer  "user_id",                           null: false
     t.integer  "score",             default: 0,     null: false
     t.integer  "cached_votes_up",   default: 0,     null: false
@@ -87,10 +53,11 @@ ActiveRecord::Schema.define(version: 20140116142259) do
     t.integer  "ancestor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "content",                           null: false
   end
 
   add_index "comments", ["ancestor_id"], name: "index_comments_on_ancestor_id", using: :btree
-  add_index "comments", ["paper_id", "paper_type"], name: "index_comments_on_paper_id_and_paper_type", using: :btree
+  add_index "comments", ["paper_id"], name: "index_comments_on_paper_id", using: :btree
   add_index "comments", ["parent_id"], name: "index_comments_on_parent_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
@@ -119,26 +86,53 @@ ActiveRecord::Schema.define(version: 20140116142259) do
   end
 
   create_table "feeds", force: true do |t|
-    t.string   "identifier",                      null: false
-    t.string   "source",                          null: false
-    t.string   "name",                            null: false
+    t.text     "uid",                             null: false
+    t.text     "source",                          null: false
+    t.text     "fullname",                        null: false
     t.integer  "parent_id"
     t.integer  "position",            default: 0, null: false
     t.integer  "subscriptions_count", default: 0, null: false
     t.datetime "last_paper_date"
   end
 
-  add_index "feeds", ["identifier"], name: "index_feeds_on_identifier", using: :btree
   add_index "feeds", ["parent_id"], name: "index_feeds_on_parent_id", using: :btree
   add_index "feeds", ["source"], name: "index_feeds_on_source", using: :btree
+  add_index "feeds", ["uid"], name: "index_feeds_on_uid", using: :btree
 
-  create_table "scites", force: true do |t|
-    t.integer "paper_id",   null: false
-    t.string  "paper_type", null: false
-    t.integer "user_id",    null: false
+  create_table "papers", force: true do |t|
+    t.text     "uid",                            null: false
+    t.text     "submitter"
+    t.text     "title",                          null: false
+    t.text     "abstract",                       null: false
+    t.text     "author_comments"
+    t.text     "msc_class"
+    t.text     "report_no"
+    t.text     "journal_ref"
+    t.text     "doi"
+    t.text     "proxy"
+    t.text     "license"
+    t.datetime "submit_date",                    null: false
+    t.datetime "update_date",                    null: false
+    t.text     "abs_url",                        null: false
+    t.text     "pdf_url",                        null: false
+    t.boolean  "delta",           default: true, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "scites_count",    default: 0,    null: false
+    t.integer  "comments_count",  default: 0,    null: false
   end
 
-  add_index "scites", ["paper_id", "paper_type"], name: "index_scites_on_paper_id_and_paper_type", using: :btree
+  add_index "papers", ["delta"], name: "index_papers_on_delta", using: :btree
+  add_index "papers", ["uid"], name: "index_papers_on_uid", using: :btree
+
+  create_table "scites", force: true do |t|
+    t.integer  "paper_id",   null: false
+    t.integer  "user_id",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "scites", ["paper_id"], name: "index_scites_on_paper_id", using: :btree
   add_index "scites", ["user_id"], name: "index_scites_on_user_id", using: :btree
 
   create_table "subscriptions", force: true do |t|
@@ -167,22 +161,22 @@ ActiveRecord::Schema.define(version: 20140116142259) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "remember_token"
+    t.text     "fullname"
+    t.text     "email"
+    t.text     "remember_token"
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
-    t.string   "password_digest"
+    t.text     "password_digest"
     t.integer  "scites_count",           default: 0
-    t.string   "password_reset_token"
+    t.text     "password_reset_token"
     t.datetime "password_reset_sent_at"
-    t.string   "confirmation_token"
+    t.text     "confirmation_token"
     t.boolean  "active",                 default: false
     t.integer  "comments_count",         default: 0
     t.datetime "confirmation_sent_at"
     t.integer  "subscriptions_count",    default: 0
     t.boolean  "expand_abstracts",       default: false
-    t.string   "account_status",         default: "user"
+    t.text     "account_status",         default: "user"
     t.text     "username"
   end
 
@@ -190,13 +184,20 @@ ActiveRecord::Schema.define(version: 20140116142259) do
   add_index "users", ["password_reset_token"], name: "index_users_on_password_reset_token", using: :btree
   add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
 
+  create_table "versions", force: true do |t|
+    t.integer  "position",  null: false
+    t.datetime "date",      null: false
+    t.text     "size"
+    t.text     "paper_uid", null: false
+  end
+
   create_table "votes", force: true do |t|
     t.integer  "votable_id"
-    t.string   "votable_type"
+    t.text     "votable_type"
     t.integer  "voter_id"
-    t.string   "voter_type"
+    t.text     "voter_type"
     t.boolean  "vote_flag"
-    t.string   "vote_scope"
+    t.text     "vote_scope"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.integer  "vote_weight"

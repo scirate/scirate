@@ -14,7 +14,6 @@ gem 'pg' # Postgres support
 gem 'squeel' # XXX (Mispy): Can we remove this?
 gem 'activerecord-import' # For bulk importing papers
 gem 'acts_as_votable' # Comment votes (not scites)
-gem 'acts_as_list' # Ordered author lists on papers
 
 # Frontend stuff
 gem 'will_paginate' # Displaying pages of results
@@ -25,7 +24,7 @@ gem 'chronic' # Natural language date parsing
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
 gem 'oai', :git => 'git://github.com/code4lib/ruby-oai'
-gem 'arxivsync', ">= 0.0.5"
+gem 'arxivsync', :git => 'git://github.com/mispy/arxivsync'
 gem 'nokogiri', "= 1.5.9"
 
 # Sphinx full-text search support

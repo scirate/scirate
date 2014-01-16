@@ -1,20 +1,24 @@
 class FeedsController < ApplicationController
-  before_filter :find_feed, :only => [:subscribe, :unsubscribe]
-
   def landing
-    @feeds = Feed.map_names
+    @feeds = Feed.map_uids
     render('papers/landing', :layout => nil)
   end
 
-  def _range_query(feed_ids, backdate, date, page)
+  def _recent_comments(feed_uids)
+    @recent_comments = Comment.joins(:paper, paper: :categories)
+                              .where(paper: { categories: { feed_uid: feed_uids } })
+                              .order("comments.created_at DESC")
+  end
+
+  def _range_query(feed_uids, backdate, date, page)
     @range_query =
-      Paper.joins(:cross_lists)
-        .where("cross_lists.feed_id IN (?) AND cross_lists.cross_list_date >= ? AND cross_lists.cross_list_date <= ?", feed_ids, backdate, date)
+      Paper.joins(:categories)
+        .where("categories.feed_uid IN (?) AND papers.submit_date >= ? AND papers.submit_date <= ?", feed_uids, backdate, date)
         .order("scites_count DESC, comments_count DESC, submit_date DESC")
         .paginate(per_page: 30, page: page)
 
     paper_ids = @range_query.pluck(:id)
-    Paper.includes(:feed, :authors, :cross_lists => :feed).where(id: paper_ids).index_by(&:id).slice(*paper_ids).values
+    Paper.includes(:authors, :feeds).where(id: paper_ids).index_by(&:id).slice(*paper_ids).values
   end
 
   # Aggregated feed
@@ -22,12 +26,12 @@ class FeedsController < ApplicationController
     return landing unless signed_in?
 
     feeds = current_user.feeds.includes(:children)
-    feed_ids = feeds.map(&:id) + feeds.map(&:children).flatten.map(&:id)
+    feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
 
     preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
     @preferences = preferences
 
-    @date = parse_date(params) || Feed.default.last_paper_date
+    @date = parse_date(params) || Date.today
     @range = parse_range(params) || preferences.range
     @page = params[:page]
 
@@ -40,22 +44,21 @@ class FeedsController < ApplicationController
     # Remember what time range they selected
     preferences.pref_update!(@range)
 
-    @recent_comments = Comment.includes(:paper, :user)
-                              .where(:paper => { :feed_id => feed_ids })
-                              .order("comments.created_at DESC")
+    @recent_comments = _recent_comments(feed_uids)
+
     @scited_ids = current_user.scited_papers.pluck(:id)
 
-    @papers = _range_query(feed_ids, @backdate, @date, @page)
+    @papers = _range_query(feed_uids, @backdate, @date, @page)
 
     render 'feeds/show'
   end
 
   # Showing a feed while we aren't signed in
   def show_nouser
-    @feed = Feed.find_by_name!(params[:feed])
-    feed_ids = [@feed.id] + @feed.children.pluck(:id)
+    @feed = Feed.find_by_uid!(params[:feed])
+    feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
 
-    @date = parse_date(params) || @feed.last_paper_date || Date.today
+    @date = parse_date(params) || @feed.last_paper_date.to_date || Date.today
     @range = parse_range(params) || 0
     @page = params[:page]
 
@@ -67,21 +70,19 @@ class FeedsController < ApplicationController
 
     @backdate = @date - @range.days
 
-    @recent_comments = Comment.includes(:paper, :user)
-                              .where(:paper => { :feed_id => feed_ids })
-                              .order("comments.created_at DESC")
+    @recent_comments = _recent_comments(feed_uids)
 
-    @papers = _range_query(feed_ids, @backdate, @date, @page)
+    @papers = _range_query(feed_uids, @backdate, @date, @page)
   end
 
   def show
     return show_nouser unless signed_in?
 
-    @feed = Feed.find_by_name(params[:feed])
-    feed_ids = [@feed.id] + @feed.children.pluck(:id)
+    @feed = Feed.find_by_uid!(params[:feed])
+    feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
     preferences = current_user.feed_preferences.where(feed_id: @feed.id).first_or_create
 
-    @date = parse_date(params) || @feed.last_paper_date || Date.today
+    @date = parse_date(params) || @feed.last_paper_date.to_date || Date.today
     @range = parse_range(params) || preferences.range
     @page = params[:page]
 
@@ -94,17 +95,10 @@ class FeedsController < ApplicationController
 
     @backdate = @date - @range.days
 
-    @recent_comments = Comment.includes(:paper, :user)
-                              .where(:paper => { :feed_id => feed_ids })
-                              .order("comments.created_at DESC")
+    @recent_comments = _recent_comments(feed_uids)
 
     @scited_ids = current_user.scited_papers.pluck(:id)
 
-    @papers = _range_query(feed_ids, @backdate, @date, @page)
+    @papers = _range_query(feed_uids, @backdate, @date, @page)
   end
-
-  protected
-    def find_feed
-      @feed = Feed.find(params[:id])
-    end
 end

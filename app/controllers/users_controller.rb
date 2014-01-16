@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
     @scited_ids = @user.scited_papers.pluck(:id)
     @scited_papers = scited_papers
-      .includes(:feed, :authors, :cross_lists => :feed)
+      .includes(:feeds, :authors)
       .paginate(page: params[:scite_page], per_page: 10)
     @comments = @user.comments
       .includes(:user, :paper)
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      @user = User.new(params.required(:user).permit(:name, :username, :email, :password, :password_confirmation))
+      @user = User.new(params.required(:user).permit(:fullname, :username, :email, :password, :password_confirmation))
       if @user.save
         @user.send_signup_confirmation
         flash[:success] = "Welcome to SciRate!  Confirmation mail sent to: #{@user.email}"
@@ -75,7 +75,7 @@ class UsersController < ApplicationController
     old_email = @user.email
 
     user_params = params.required(:user)
-                        .permit(:name, :email, :password, :password_confirmation, :expand_abstracts)
+                        .permit(:fullname, :email, :password, :password_confirmation, :expand_abstracts)
 
     if @user.update_attributes(user_params)
       if old_email != @user.email
@@ -148,7 +148,7 @@ class UsersController < ApplicationController
     old_email = @user.email
 
     user_params = params.required(:user)
-                        .permit(:name, :email, :username, :expand_abstracts)
+                        .permit(:fullname, :email, :username, :expand_abstracts)
 
     if @user.update_attributes(user_params)
       if old_email != @user.email

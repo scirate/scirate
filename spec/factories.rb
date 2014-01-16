@@ -1,42 +1,46 @@
 FactoryGirl.define do
+  factory :feed do
+    sequence(:uid)        { |n| "feed-#{n}" }
+    sequence(:fullname)       { |n| "Feed #{n}" }
+    sequence(:source)     { |n| "arxiv" }
+    last_paper_date       Date.today
+  end
+
   factory :user do
-    sequence(:name)  { |n| "Person #{n}" }
+    sequence(:fullname) { |n| "Person #{n}" }
     sequence(:username) { |n| "person_#{n}" }
-    sequence(:email) { |n| "person_#{n}@example.com"}
+    sequence(:email)    { |n| "person_#{n}@example.com"}
+    sequence(:active)   { |n| true }
     password "foobar"
     password_confirmation "foobar"
-    sequence(:active){ |n| true }
+  end
+
+  factory :category do
+    feed
+    sequence(:position) { |n| n}
   end
 
   factory :paper do |p|
     sequence(:title)       { |n| "On Hilbert's #{n}th Problem" }
-    #sequence(:authors)     { |n| ["Some Author #{n}a", "Some Author #{n}b"] }
     sequence(:abstract)    { |n| "We solve Hilbert's #{n}th problem." }
-    sequence(:identifier)  { |n| "#{1000+n}.#{1000+n}" }
-    sequence(:url)         { |n| "http://arxiv.org/abs/#{1000+n}.#{1000+n}" }
-    sequence(:submit_date)     { |n| Date.today }
+    sequence(:submitter)   { |n| "Hilbert N. Grande" }
+    sequence(:uid)  { |n| "#{1000+n}.#{1000+n}" }
+    sequence(:submit_date) { |n| Date.today }
     sequence(:update_date) { |n| Date.today }
-    sequence(:feed_id) { |n| Feed.default.id }
+    sequence(:abs_url)     { |n| "http://arxiv.org/abs/#{1000+n}.#{1000+n}" }
+    sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}.#{1000+n}" }
   end
 
-  factory :authorship do
+  factory :author do
     paper
-    sequence(:keyname) { |n| "Mongfish" }
-    sequence(:forenames) { |n| "Lucrezia" }
-    sequence(:fullname) { |n| "Lucrezia Mongfish" }
+    sequence(:position)   { |n| n }
+    sequence(:fullname)   { |n| "Lucrezia Mongfish" }
     sequence(:searchterm) { |n| "Mongfish_L" }
   end
 
   factory :comment do
-    sequence(:content)     { |n| "This is test comment #{n}!" }
     user
     paper
-  end
-
-  factory :feed do
-    sequence(:name)      { |n| "feed-#{n}" }
-    sequence(:url)       { |n| "http://intractable.ca/feed/#{n}" }
-    sequence(:feed_type) { |n| "arxiv" }
-    last_paper_date Date.today
+    sequence(:content)  { |n| "This is test comment #{n}!" }
   end
 end

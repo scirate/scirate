@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ApiController do
 
   let(:user)  { FactoryGirl.create(:user) }
-  let(:feed) { Feed.default }
+  let(:feed) { FactoryGirl.create(:feed) }
   let(:paper) { FactoryGirl.create(:paper) }
 
   before { sign_in user }

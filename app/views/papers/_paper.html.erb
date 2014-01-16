@@ -19,17 +19,15 @@
           </span>
         <% end %>
       </div>
-      <span class="identifier">
+      <span class="uid">
         <%= paper.submit_date.strftime("%b %d %Y") %>
-        [<%= link_to paper.feed.name, paper.feed %>]
+        [<%= link_to paper.feeds[0].uid, paper.feeds[0] %>]
       </span>
-      <% if paper.cross_lists.length > 1 %>
+      <% if paper.feeds.length > 2 %>
         <div class="crosslist">
           cross-listed to:
-          <% for crosslist in paper.cross_lists %>
-            <% if crosslist.feed_id != paper.feed_id %>
-              <%= link_to crosslist.feed.name, crosslist.feed %>
-            <% end %>
+          <% for feed in paper.feeds[1..-1] %>
+            <%= link_to feed.uid, feed %>
           <% end %>
         </div>
       <% end %>
@@ -38,7 +36,7 @@
       <div class="pull-right">
         <%= render 'scites/toggle', paper: paper %>
         <div class="links hidden">
-          <a class="abspdf" href="<%= paper.url %>">ABS</a>
+          <a class="abspdf" href="<%= paper.abs_url %>">ABS</a>
           <% unless paper.pdf_url.nil? %>
             <a class="abspdf" href="<%= paper.pdf_url %>">PDF</a>
           <% end %>

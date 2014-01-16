@@ -2,7 +2,7 @@ class ArxivRaw < ActiveRecord::Migration
   def change
     drop_table :papers, {}
 
-    create_table :arxiv_papers do |t|
+    create_table :papers do |t|
       t.string :identifier, null: false
       t.string :submitter, null: false
       t.string :title, null: false
@@ -24,13 +24,11 @@ class ArxivRaw < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :arxiv_papers, :identifier
-    add_index :arxiv_papers, :delta
+    add_index :papers, :identifier
+    add_index :papers, :delta
 
-    drop_table :arxiv_versions, {}
-
-    create_table :arxiv_versions do |t|
-      t.references :arxiv_paper, null: false, index: true
+    create_table :versions do |t|
+      t.references :paper, null: false, index: true
       t.integer :position, null: false
       t.datetime :date, null: false
       t.datetime :size, null: false
@@ -38,8 +36,8 @@ class ArxivRaw < ActiveRecord::Migration
 
     drop_table :authorships, {}
 
-    create_table :arxiv_authors do |t|
-      t.references :arxiv_paper, null: false, index: true
+    create_table :authors do |t|
+      t.references :paper, null: false, index: true
       t.integer :position, null: false
       t.string :fullname, null: false
       t.string :searchterm, null: false
@@ -47,14 +45,14 @@ class ArxivRaw < ActiveRecord::Migration
 
     drop_table :cross_lists, {}
 
-    add_index :arxiv_authors, :searchterm
+    add_index :authors, :searchterm
 
-    create_table :arxiv_categories do |t|
-      t.references :arxiv_paper, null: false, index: true
+    create_table :categories do |t|
+      t.references :paper, null: false, index: true
       t.integer :position, null: false
       t.string :category, null: false
     end
 
-    add_index :arxiv_categories, :category
+    add_index :categories, :category
   end
 end

@@ -1,52 +1,48 @@
 # == Schema Information
 #
-# Table ident: feeds
+# Table name: feeds
 #
 #  id                  :integer          not null, primary key
-#  ident                :string(255)
-#  url                 :string(255)
-#  source           :string(255)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  update_date        :date
-#  subscriptions_count :integer          default(0)
-#  last_paper_date     :date
-#  fullident            :text
+#  uid                 :string(255)      not null
+#  source              :string(255)      not null
+#  fullname            :string(255)      not null
 #  parent_id           :integer
-#  position            :integer
+#  position            :integer          default(0), not null
+#  subscriptions_count :integer          default(0), not null
+#  last_paper_date     :datetime
 #
 
 class Feed < ActiveRecord::Base
   belongs_to :parent, class_name: "Feed"
-  has_many :papers, validate: false
   has_many :subscriptions, dependent: :destroy
   has_many :users, through: :subscriptions
-  has_many :cross_lists, dependent: :destroy
-  has_many :cross_listed_papers, through: :cross_lists, source: :paper
+  has_many :categories, dependent: :destroy,
+           foreign_key: :feed_uid, primary_key: :uid
+  has_many :papers, through: :categories, source: :paper
   has_many :children, foreign_key: 'parent_id', class_name: 'Feed'
 
-  validates :identifier, presence: true, uniqueness: true
-  validates :name, presence: true
+  validates :uid, presence: true, uniqueness: true
+  validates :fullname, presence: true
   validates :source, presence: true
 
   default_scope { order(:position) }
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders
-    @@arxiv_folders ||= Feed.where(identifier: Settings::ARXIV_FOLDERS).includes(:children).to_a
+    @@arxiv_folders ||= Feed.where(uid: Settings::ARXIV_FOLDERS).includes(:children).to_a
   end
 
-  def self.arxiv_import(idents, opts={})
-    existing = Feed.all.map(&:identifier)
+  def self.arxiv_import(uids, opts={})
+    existing = Feed.all.map(&:uid)
 
-    columns = [:identifier, :name, :source]
+    columns = [:uid, :fullname, :source]
     values = []
 
-    (idents - existing).map do |ident|
-      logger.info "Discovered new feed: #{ident}"
+    (uids - existing).map do |uid|
+      logger.info "Discovered new feed: #{uid}"
       values << [
-        ident,
-        ident.to_s,
+        uid,
+        uid.to_s,
         "arxiv"
       ]
     end
@@ -57,39 +53,34 @@ class Feed < ActiveRecord::Base
     end
   end
 
-  def self.find_by_identifier(ident)
-    @@ident_map ||= Feed.map_idents
-    @@ident_map[ident]
+  def self.find_by_uid(uid)
+    @@uid_map ||= Feed.map_uids
+    @@uid_map[uid]
   end
 
-  def self.get_or_create(ident)
-    feed = Feed.find_by_identifier(ident)
+  def self.get_or_create(uid)
+    feed = Feed.find_by_uid(uid)
     return feed unless feed.nil?
     feed = Feed.new
-    feed.identifier = ident
-    feed.name = ident.to_s
+    feed.uid = uid
+    feed.fullname = uid.to_s
     feed.source = 'arxiv'
     feed.save!
     feed
   end
 
-  def self.map_idents
+  def self.map_uids
     mapping = {}
-    Feed.all.each { |feed| mapping[feed.identifier] = feed }
+    Feed.all.each { |feed| mapping[feed.uid] = feed }
     mapping
   end
 
   def to_param
-    identifier
-  end
-
-  def aggregated_papers
-    feed_ids = [self.id] + self.children.map(&:id)
-    Paper.joins(:cross_lists).where(cross_lists: { feed_id: feed_ids })
+    uid
   end
 
   def update_last_paper_date
-    paper = self.aggregated_papers.order("submit_date asc").last
+    paper = self.papers.order("submit_date ASC").last
     unless paper.nil?
       self.last_paper_date = paper.submit_date
       self.save!

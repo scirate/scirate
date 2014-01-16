@@ -5,7 +5,7 @@
   - else
     = link_to abbr_comment.paper.title, abbr_comment.paper
     %br
-  %span.username= link_to abbr_comment.user.name, abbr_comment.user
+  %span.username= link_to abbr_comment.user.fullname, abbr_comment.user
   %span.timeago
     = time_ago_in_words(abbr_comment.created_at)
     ago

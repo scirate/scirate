@@ -1,9 +1,9 @@
-class PolymorphicPapers < ActiveRecord::Migration
+class CommentSciteCleanup < ActiveRecord::Migration
   def change
     drop_table :comments, {}
 
     create_table :comments do |t|
-      t.references :paper, polymorphic: true, null: false, index: true
+      t.references :paper, null: false, index: true
       t.references :user, null: false, index: true
 
       t.integer :score, null: false, default: 0
@@ -23,7 +23,7 @@ class PolymorphicPapers < ActiveRecord::Migration
     drop_table :scites, {}
 
     create_table :scites do |t|
-      t.references :paper, polymorphic: true, null: false, index: true
+      t.references :paper, null: false, index: true
       t.references :user, null: false, index: true
     end
     

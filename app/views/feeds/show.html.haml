@@ -17,13 +17,13 @@
 
         = cache (@feed.nil? ? 'index' : @feed.id) do
           %li.source-heading arXiv.org
-          - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+          - Feed.where(uid: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
             %li.feed-folder{ class: @feed == feed ? 'active' : '' }
               %label.nav-header
                 %i.icon-chevron-right.transparent
                 = link_to feed.fullname, feed
 
-          - Feed.where(name: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).includes(:children).each do |parent|
+          - Feed.where(uid: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).includes(:children).each do |parent|
             %li.feed-folder{ class: @feed == parent ? 'active' : '' }
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               %label.nav-header
@@ -49,8 +49,8 @@
           -#
             %p
               Found #{@papers.count} papers from #{describe_range(@date, @range)}
-              %span.feed-identifier
-                [#{@feed.identifier}]
+              %span.feed-uid
+                [#{@feed.uid}]
 
           .paperlist
             %ul.papers

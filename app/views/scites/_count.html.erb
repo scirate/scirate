@@ -3,7 +3,7 @@
   <% if paper.scites_count > 0 %>
     <div class="sciters-dropdown">
       <% paper.sciters.each do |user| %>
-        <%= link_to user.name, user %>
+        <%= link_to user.fullname, user %>
       <% end %>
     </div>
   <% end %>

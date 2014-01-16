@@ -1,15 +1,25 @@
+# == Schema Information
+#
+# Table name: authors
+#
+#  id         :integer          not null, primary key
+#  position   :integer          not null
+#  fullname   :string(255)      not null
+#  searchterm :string(255)      not null
+#  paper_uid  :string(255)
+#
+
 require 'spec_helper'
 
-describe Authorship do
+describe Author do
   before do
-    @author = Authorship.create(fullname: "Lucrezia Mongfish", keyname: "Mongfish", forenames: "Lucrezia")
+    @author = FactoryGirl.create(:author)
   end
 
   subject { @author }
 
   it { should respond_to(:fullname) }
-  it { should respond_to(:keyname) }
-  it { should respond_to(:forenames) }
-  
+  it { should respond_to(:searchterm) }
+
   it { should be_valid }
 end

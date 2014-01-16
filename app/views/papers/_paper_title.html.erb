@@ -2,9 +2,9 @@
   <span class="title">
     <%= link_to sanitize(paper.title), paper %>
   </span>
-  <span class="identifier"><br>
-    <%= "arXiv:#{paper.identifier}" %>
-    [<%= link_to paper.feed.name, paper.feed %>]
+  <span class="uid"><br>
+    <%= "arXiv:#{paper.uid}" %>
+    [<%= link_to paper.feed.uid, paper.feed %>]
   </span>
   <span class="links">
     <%= link_to "(abs)", paper.url %>
@@ -15,7 +15,7 @@
       cross-listed to:
         <% for crosslist in paper.cross_lists %>
           <% if crosslist.feed_id != paper.feed_id %>
-            <%= link_to crosslist.feed.name, crosslist.feed %>
+            <%= link_to crosslist.feed.uid, crosslist.feed %>
           <% end %>
         <% end %>
     </div>

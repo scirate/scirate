@@ -12,8 +12,8 @@ describe "User pages" do
       visit user_path(user)
     end
 
-    it { should have_heading user.name }
-    it { should have_title user.name }
+    it { should have_heading user.fullname }
+    it { should have_title user.fullname }
   end
 
   describe "signup page" do
@@ -183,7 +183,7 @@ describe "User pages" do
       it { should have_link('change', href: 'http://gravatar.com/emails') }
 
       describe "fields" do
-        it { should have_field "Name", with: user.name }
+        it { should have_field "Name", with: user.fullname }
         it { should have_field "Email", with: user.email }
       end
     end
@@ -200,7 +200,7 @@ describe "User pages" do
       end
 
       it { should have_selector('.alert-success') }
-      specify { user.reload.name.should  == new_name }
+      specify { user.reload.fullname.should  == new_name }
       specify { user.reload.email.should == new_email }
     end
 

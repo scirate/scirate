@@ -42,7 +42,7 @@ end
 #custom matcher to determine if a list of papers includes the given one
 RSpec::Matchers.define :have_paper do |paper|
   match do |page|
-    page.should have_content paper.identifier
+    page.should have_content paper.uid
     page.should have_link paper.title
   end
 end
@@ -53,18 +53,18 @@ RSpec::Matchers.define :have_comment do |comment|
   match do |page|
     page.should have_content comment.content[0..499]
     page.should have_link comment.paper.title
-    page.should have_link comment.user.name
+    page.should have_link comment.user.fullname
     page.should have_content comment.created_at.to_date.to_formatted_s(format = :short)
   end
 end
 
 def valid_signup(params = {})
-  params[:name]  ||= "Example User"
+  params[:fullname]  ||= "Example User"
   params[:username] ||= "example"
   params[:email] ||= "user@example.com"
   params[:password] ||= "foobar"
 
-  fill_in "Name",                  with: params[:name]
+  fill_in "Name",                  with: params[:fullname]
   fill_in "Email",                 with: params[:email]
   fill_in "Username",              with: params[:username]
   fill_in "user_password",              with: params[:password]

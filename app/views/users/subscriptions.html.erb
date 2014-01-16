@@ -1,4 +1,4 @@
-<% provide :title, "Subscriptions for #{@user.name}" %>
+<% provide :title, "Subscriptions for #{@user.fullname}" %>
 
 <div class="user-subscriptions">
   <h1>
@@ -9,7 +9,7 @@
   <% @user.subscriptions.each do |sub| %>
     <li class="subscription">
       <div class="feedlink">
-        <%= link_to sub.feed.name, sub.feed %>
+        <%= link_to sub.feed.uid, sub.feed %>
       </div>
       <%= render 'feeds/subscribe', :feed => sub.feed %>
     </li>

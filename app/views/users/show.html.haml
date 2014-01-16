@@ -1,4 +1,4 @@
-- provide :title, @user.name
+- provide :title, @user.fullname
 
 .container#profile-page
   %table.table
@@ -6,7 +6,7 @@
       %td
         %h1
           = gravatar_for @user, size: 100
-          = @user.name
+          = @user.fullname
 
   .row
     .col-md-6

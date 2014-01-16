@@ -14,25 +14,25 @@
               = sanitize(author.fullname) + (author != @paper.authors[-1] ? ',' : '')
       .abstract
         = sanitize(@paper.abstract)
-      - if @categories.length > 0
+      - if @paper.categories.length > 0
         .categories
           Subjects:
-          %strong= @paper.feed.name
-          - @categories.each do |c|
-            = c.name
+          %strong= @paper.feeds[0].uid
+          - @paper.categories.each do |c|
+            = c.feed_uid
       .dates
-        Published #{@paper.submit_date.to_formatted_s(:rfc822)} in
-        %strong= @paper.feed.fullname
-        [#{link_to @paper.feed.identifier, @paper.feed}]
+        Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} in
+        %strong= @paper.feeds[0].fullname
+        [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
         %br/
         - if @paper.updated?
           Updated #{@paper.update_date.to_formatted_s(:rfc822)}
           %br/
-        = link_to @paper.url, @paper.url
+        = link_to @paper.abs_url, @paper.abs_url
         %br
         = link_to @paper.pdf_url, @paper.pdf_url
       .comments
-        %a{:name => "comments"}
+        %a{:fullname => "comments"}
         %h4= pluralize(@comments.size, "comments")
         - if flash[:comment]
           %div{:class => "alert alert-#{flash[:comment][:status]}"}

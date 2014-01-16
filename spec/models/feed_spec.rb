@@ -3,17 +3,13 @@
 # Table name: feeds
 #
 #  id                  :integer          not null, primary key
-#  name                :string(255)
-#  url                 :string(255)
-#  feed_type           :string(255)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  update_date        :date
-#  subscriptions_count :integer          default(0)
-#  last_paper_date     :date
-#  fullname            :text
+#  uid                 :string(255)      not null
+#  source              :string(255)      not null
+#  fullname            :string(255)      not null
 #  parent_id           :integer
-#  position            :integer
+#  position            :integer          default(0), not null
+#  subscriptions_count :integer          default(0), not null
+#  last_paper_date     :datetime
 #
 
 require 'spec_helper'
@@ -21,83 +17,22 @@ require 'spec_helper'
 describe Feed do
 
   before do
-    @feed = Feed.new(name: "test-feed",
-                     url: "http://scirate.com/feed",
-                     feed_type: "arxiv",
+    @feed = Feed.new(uid: "test-feed",
+                     fullname: "Test Feed",
+                     source: "arxiv",
                      last_paper_date: Date.today)
   end
 
   subject { @feed }
 
-  it { should respond_to(:name) }
-  it { should respond_to(:url) }
-  it { should respond_to(:feed_type) }
-  it { should respond_to(:is_default?) }
+  it { should respond_to(:uid) }
+  it { should respond_to(:fullname) }
+  it { should respond_to(:source) }
   it { should respond_to(:subscriptions) }
   it { should respond_to(:users) }
-  it { should respond_to(:cross_lists) }
-  it { should respond_to(:cross_listed_papers) }
+  it { should respond_to(:categories) }
 
   it { should be_valid }
-
-  it "should not be the default feed" do
-    @feed.is_default?.should be_false
-  end
-
-  describe "when name is not present" do
-    before { @feed.name = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when name is not unique" do
-    before do
-      feed_same_name = @feed.dup
-      feed_same_name.url += 'delta'
-      feed_same_name.save!
-    end
-
-    it { should_not be_valid }
-  end
-
-  describe "when feed_type is not present" do
-    before { @feed.feed_type = " " }
-    it { should_not be_valid }
-  end
-
-  describe "default feed" do
-    before { @feed = Feed.default }
-
-    it "should be quant-ph" do
-      @feed.name.should == "quant-ph"
-    end
-
-    it "should be the default" do
-      @feed.is_default?.should be_true
-    end
-  end
-
-  describe "paper association" do
-    before do
-      @feed.save
-      @paper = @feed.papers.create()
-    end
-
-    its "feed should be correct" do
-      @paper.feed.should == @feed
-    end
-
-    it "should have the paper in the paper list" do
-      @feed.papers.should include @paper
-    end
-
-    describe "default feed" do
-      before { @feed = Feed.default }
-
-      it "should not be quant-ph" do
-        @feed.name.should == "quant-ph"
-      end
-    end
-  end
 
   describe "user subscribing to a feed" do
     let (:user) { FactoryGirl.create(:user) }

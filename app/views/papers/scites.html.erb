@@ -12,7 +12,7 @@
           <% @paper.sciters.each do |user| %>
             <tr>
               <td><%= gravatar_for user, size: 50 %></td>
-              <td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
+              <td><a href="<%= url_for(user) %>"><%= user.fullname %></a></td>
             </tr>
           <% end %>
         </tbody>

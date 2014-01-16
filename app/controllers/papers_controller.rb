@@ -2,7 +2,7 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.find_by_identifier!(params[:id])
+    @paper = Paper.find_by_uid!(params[:id])
 
     @scited = current_user && current_user.scited_papers.where(id: @paper.id).exists?
 
@@ -25,8 +25,6 @@ class PapersController < ApplicationController
       @comments << c
       @comments += @comment_tree[c.id]||[]
     end
-
-    @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
   end
 
   def __quote(val)
@@ -82,7 +80,7 @@ class PapersController < ApplicationController
 
   # Show the users who scited this paper
   def scites
-    @paper = Paper.find_by_identifier!(params[:id])
+    @paper = Paper.find_by_uid!(params[:id])
   end
 
   def next

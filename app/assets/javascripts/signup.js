@@ -3,7 +3,7 @@ $(function() {
   // If the user manually enters a username, stop doing that
   var manualInput = false;
 
-  $('#signup #user_name').on('keydown', function() {
+  $('#signup #user_fullname').on('keydown', function() {
     if (manualInput) return;
 
     var $name = $(this);

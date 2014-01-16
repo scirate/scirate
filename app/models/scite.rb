@@ -2,11 +2,9 @@
 #
 # Table name: scites
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer
-#  paper_id   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id       :integer          not null, primary key
+#  paper_id :integer          not null
+#  user_id  :integer          not null
 #
 
 class Scite < ActiveRecord::Base
