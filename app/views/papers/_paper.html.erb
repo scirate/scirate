@@ -23,7 +23,7 @@
         <%= paper.submit_date.strftime("%b %d %Y") %>
         [<%= link_to paper.feeds[0].uid, paper.feeds[0] %>]
       </span>
-      <% if paper.feeds.length > 2 %>
+      <% if paper.feeds.length > 1 %>
         <div class="crosslist">
           cross-listed to:
           <% for feed in paper.feeds[1..-1] %>

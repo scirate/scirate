@@ -109,7 +109,12 @@ module Arxiv::Import
       end
     end
 
-    Paper.where(uid: updated_uids).delete_all unless updated_uids.empty?
+    unless updated_uids.empty?
+      Version.where(paper: { uid: updated_uids }).delete_all
+      Author.where(paper: { uid: updated_uids }).delete_all
+      Category.where(paper: { uid: updated_uids }).delete_All
+      Paper.where(uid: updated_uids).delete_all
+    end
 
     puts "Read #{models.length} items: #{new_uids.length} new, #{updated_uids.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(paper_columns, paper_values, opts)
