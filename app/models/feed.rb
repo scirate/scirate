@@ -1,17 +1,17 @@
 # == Schema Information
 #
-# Table name: feeds
+# Table ident: feeds
 #
 #  id                  :integer          not null, primary key
-#  name                :string(255)
+#  ident                :string(255)
 #  url                 :string(255)
-#  feed_type           :string(255)
+#  source           :string(255)
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  update_date        :date
 #  subscriptions_count :integer          default(0)
 #  last_paper_date     :date
-#  fullname            :text
+#  fullident            :text
 #  parent_id           :integer
 #  position            :integer
 #
@@ -25,27 +25,28 @@ class Feed < ActiveRecord::Base
   has_many :cross_listed_papers, through: :cross_lists, source: :paper
   has_many :children, foreign_key: 'parent_id', class_name: 'Feed'
 
-  validates :name, presence: true, uniqueness: true
-  validates :feed_type, presence: true
+  validates :identifier, presence: true, uniqueness: true
+  validates :name, presence: true
+  validates :source, presence: true
 
   default_scope { order(:position) }
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders
-    @@arxiv_folders ||= Feed.where(name: Settings::ARXIV_FOLDERS).includes(:children).to_a
+    @@arxiv_folders ||= Feed.where(identifier: Settings::ARXIV_FOLDERS).includes(:children).to_a
   end
 
-  def self.arxiv_import(feednames, opts={})
-    existing = Feed.all.map(&:name)
+  def self.arxiv_import(idents, opts={})
+    existing = Feed.all.map(&:identifier)
 
-    columns = [:name, :url, :feed_type]
+    columns = [:identifier, :name, :source]
     values = []
 
-    (feednames - existing).map do |feedname|
-      logger.info "Discovered new feed: #{feedname}"
+    (idents - existing).map do |ident|
+      logger.info "Discovered new feed: #{ident}"
       values << [
-        feedname,
-        "http://export.arxiv.org/rss/#{feedname}",
+        ident,
+        ident.to_s,
         "arxiv"
       ]
     end
@@ -56,45 +57,30 @@ class Feed < ActiveRecord::Base
     end
   end
 
-  def self.find_by_name(name)
-    @@name_map ||= Feed.map_names
-    @@name_map[name]
+  def self.find_by_identifier(ident)
+    @@ident_map ||= Feed.map_idents
+    @@ident_map[ident]
   end
 
-  def self.get_or_create(name)
-    feed = Feed.find_by_name(name)
+  def self.get_or_create(ident)
+    feed = Feed.find_by_identifier(ident)
     return feed unless feed.nil?
     feed = Feed.new
-    feed.name = name
-    feed.url = "http://export.arxiv.org/rss/#{name}"
-    feed.feed_type = 'arxiv'
+    feed.identifier = ident
+    feed.name = ident.to_s
+    feed.source = 'arxiv'
     feed.save!
     feed
   end
 
-  def self.map_names
+  def self.map_idents
     mapping = {}
-    Feed.all.each { |feed| mapping[feed.name] = feed }
+    Feed.all.each { |feed| mapping[feed.identifier] = feed }
     mapping
   end
 
   def to_param
-    name
-  end
-
-  def self.default
-    Feed.find_by_name("quant-ph") || Feed.create_default
-  end
-
-  def is_default?
-    self == Feed.default
-  end
-
-  def self.create_default
-    Feed.create(name: "quant-ph",
-                url: "http://export.arxiv.org/rss/quant-ph",
-                feed_type: "arxiv",
-                last_paper_date: Time.now.utc.to_date)
+    identifier
   end
 
   def aggregated_papers
@@ -110,9 +96,5 @@ class Feed < ActiveRecord::Base
     end
 
     self.parent.update_last_paper_date unless self.parent.nil?
-  end
-
-  def identifier
-    "#{self.feed_type}/#{self.name}"
   end
 end

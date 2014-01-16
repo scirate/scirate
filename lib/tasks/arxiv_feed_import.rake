@@ -1,16 +1,16 @@
 require 'nokogiri'
 require 'open-uri'
 
-def make_feed(name, fullname, parent=nil)
-  feed = Feed.find_or_create_by_name(name)
-  feed.feed_type = 'arxiv'
+def make_feed(identifier, name, parent=nil)
+  feed = Feed.find_or_create_by_identifier(identifier)
+  feed.source = 'arxiv'
 
   if name == "cs" # HACK (Mispy)
-    feed.fullname = "Computer Science"
+    feed.name = "Computer Science"
   elsif name == "physics"
-    feed.fullname = "Other Physics"
+    feed.name = "Other Physics"
   else
-    feed.fullname = fullname
+    feed.name = name
   end
 
   feed.parent = parent
@@ -19,32 +19,32 @@ end
 
 namespace :arxiv do
   desc "Scrapes category information from arxiv.org homepage into delicious Feeds"
-  task scrape_categories: :environment do
+  task feed_import: :environment do
     doc = Nokogiri::HTML(open("http://arxiv.org"))
 
     feeds = []
 
     doc.css('li').each do |li|
       break if li.text.include?("See our help pages")
-      fullname = li.css('a')[0].text
-      name = li.css('a')[1].attr('href').split('/')[2]
-      parent = make_feed(name, fullname)
+      name = li.css('a')[0].text
+      identifier = li.css('a')[1].attr('href').split('/')[2]
+      parent = make_feed(identifier, name)
       feeds << parent
 
       li.css('a')[4..-1].each do |a|
         split = a.attr('href').split('/')
         if split[-1] == 'recent'
-          name = split[2]
-          fullname = a.text
+          identifier = split[2]
+          name = a.text
 
-          feeds << make_feed(name, fullname, parent)
+          feeds << make_feed(identifier, name, parent)
         end
       end
     end
 
     feeds.each do |feed|
       puts unless feed.parent
-      puts "#{feed.parent ? '  ' : ''}#{feed.fullname} [#{feed.name}]"
+      puts "#{feed.parent ? '  ' : ''}#{feed.name} [#{feed.identifier}]"
     end
 
     puts

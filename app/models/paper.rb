@@ -71,104 +71,112 @@ class Paper < ActiveRecord::Base
     existing_papers = Paper.where(identifier: identifiers)
     existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
 
-    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :submit_date, :update_date]
-    values = []
-    updated_papers = []
+    updated_ids = []
+
+    paper_columns = [:identifier, :submitter, :title, :abstract, :comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :abs_url, :pdf_url]
+    paper_values = []
+
+    relevant_models = []
 
     models.each do |model|
-      if (paper = existing_by_ident[model.id])
-        next if paper.update_date >= (model.updated || model.created) # No new content
+      existing = existing_by_ident[model.id]
 
-        paper.identifier = model.id
-        paper.feed_id = feeds_by_name[model.primary_category].id
-        paper.url = "http://arxiv.org/abs/#{model.id}"
-        paper.pdf_url = "http://arxiv.org/pdf/#{model.id}.pdf"
-        paper.title = model.title
-        paper.abstract = model.abstract
-        paper.submit_date = model.created
-        paper.update_date = model.updated || model.created
-
-        paper.save!
-        updated_papers.push(paper)
-      else
-        values << [
-          model.id,
-          feeds_by_name[model.primary_category].id,
-          "http://arxiv.org/abs/#{model.id}",
-          "http://arxiv.org/pdf/#{model.id}.pdf",
-          model.title,
-          model.abstract,
-          model.created,
-          model.updated || model.created
-        ]
+      if existing
+        if existing.update_date >= model.versions[-1].date
+          next # Already up to date
+        else
+          updated_ids << existing.id
+        end
       end
+
+      paper_values << [
+        model.id,
+        model.submitter,
+        model.title,
+        model.abstract,
+        model.comments,
+        model.msc_class,
+        model.report_no,
+        model.journal_ref,
+        model.doi,
+        model.proxy,
+        model.license,
+
+        model.versions[0].date,
+        model.versions[-1].date,
+        "http://arxiv.org/abs/#{model.id}",
+        "http://arxiv.org/pdf/#{model.id}.pdf",
+      ]
+
+      relevant_models << model
     end
 
-    puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
-    result = Paper.import(columns, values, opts)
+    Arxiv::Paper.where(id: updated_ids).delete_all
+
+    puts "Read #{models.length} items: #{paper_values.length-updated_ids.length} new, #{updated_ids.length} updated [#{models[0].id} to #{models[-1].id}]"
+    result = Arxiv::Paper.import(paper_columns, paper_values, opts)
     unless result.failed_instances.empty?
       SciRate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
     end
 
-    #return if values.empty? && updated_papers.empty? # Skip the rest if no new data
+    relevant_idents = paper_values.map { |val| val[0] }
+    relevant_ids = Paper.where(identifier: relevant_idents).pluck(:id).sort
 
-    ### Third pass: Add authorships, deleting any existing ones first.
+    version_columns = [:paper_id, :position, :date, :size]
+    version_values = []
 
-    relevant_idents = updated_papers.map(&:identifier)+values.map { |val| val[0] }
-    relevant_papers = Paper.where(identifier: relevant_idents)
-    papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
-    paper_ids = papers_by_ident.values.map(&:id)
-
-    Authorship.where(paper_id: paper_ids).delete_all
-
-    author_columns = [:paper_id, :affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm, :position]
+    author_columns = [:paper_id, :position, :fullname, :searchterm]
     author_values = []
 
+    category_columns = [:paper_id, :position, :category]
+    category_values = []
 
-    models.each do |model|
-      next unless papers_by_ident[model.id]
+    relevant_models.each_with_index do |model, i|
+      paper_id = paper_ids[i]
 
-      position = 0
-      model.authors.each do |author|
-        author_values << [
-          papers_by_ident[model.id],
-          author.affiliation,
-          author.forenames,
-          author.keyname,
-          author.suffix,
-          Authorship.make_fullname(author),
-          Authorship.make_searchterm(author),
-          position
+      model.versions.each_with_index do |version, j|
+        version_values << [
+          paper_id,
+          j,
+          version.date,
+          version.size
         ]
-        position += 1
+      end
+
+      model.authors.each_with_index do |author, j|
+        author_values << [
+          paper_id,
+          j,
+          author,
+          Author.make_searchterm(author)
+        ]
+      end
+
+      model.categories.each_with_index do |category, j|
+        category_values << [
+          paper_id,
+          j,
+          category
+        ]
       end
     end
 
-    puts "Importing #{author_values.length} authorships" unless author_values.empty?
-    result = Authorship.import(author_columns, author_values, opts)
+    puts "Importing #{version_values.length} versions" unless version_values.empty?
+    result = Arxiv::Version.import(version_columns, version_values, opts)
     unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
+      SciRate3.notify_error("Error importing versions #{result.failed_instances.inspect}")
     end
 
-    ### Finally: crosslists!
-    existing_crosslists = CrossList.where(paper_id: paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
-
-    columns = [:paper_id, :feed_id, :cross_list_date]
-    values = []
-    models.each do |model|
-      next unless papers_by_ident.has_key?(model.id)
-      paper_id = papers_by_ident[model.id].id
-      model.categories.each do |feedname|
-        feed_id = feeds_by_name[feedname].id
-        next if existing_crosslists.include?([paper_id, feed_id])
-        values << [paper_id, feed_id, model.created]
-      end
+    puts "Importing #{author_values.length} authors" unless author_values.empty?
+    result = Arxiv::Author.import(author_columns, author_values, opts)
+    unless result.failed_instances.empty?
+      SciRate3.notify_error("Error importing authors: #{result.failed_instances.inspect}")
     end
 
-    puts "Importing #{values.length} crosslists" unless values.empty?
-    result = CrossList.import(columns, values, opts)
+    puts "Importing #{category_values.length} categories" unless category_values.empty?
+    result = Arxiv::Category.import(category_columns, category_values, opts)
     unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
+      SciRate3.notify_error("Error importing categories: #{result.failed_instances.inspect}")
     end
 
     # Update last paper date for involved feeds

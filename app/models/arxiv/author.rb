@@ -15,7 +15,7 @@
 #  fullname    :text
 #
 
-# An Authorship represents an element in an ordered
+# An Author represents an element in an ordered
 # list of paper authors.
 #
 # NOTE (Mispy):
@@ -30,7 +30,7 @@
 # makes queries and sphinx indexing faster, as we only have to go
 # through a single association to get most of the data.
 #
-class Authorship < ActiveRecord::Base
+class Arxiv::Author < ActiveRecord::Base
   belongs_to :paper
   acts_as_list :scope => :paper
 
