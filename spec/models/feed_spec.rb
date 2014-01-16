@@ -8,7 +8,7 @@
 #  feed_type           :string(255)
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  updated_date        :date
+#  update_date        :date
 #  subscriptions_count :integer          default(0)
 #  last_paper_date     :date
 #  fullname            :text
@@ -24,7 +24,7 @@ describe Feed do
     @feed = Feed.new(name: "test-feed",
                      url: "http://scirate.com/feed",
                      feed_type: "arxiv",
-                     updated_date: Date.today)
+                     last_paper_date: Date.today)
   end
 
   subject { @feed }
@@ -35,7 +35,6 @@ describe Feed do
   it { should respond_to(:is_default?) }
   it { should respond_to(:subscriptions) }
   it { should respond_to(:users) }
-  it { should respond_to(:updated_date) }
   it { should respond_to(:cross_lists) }
   it { should respond_to(:cross_listed_papers) }
 
@@ -62,11 +61,6 @@ describe Feed do
 
   describe "when feed_type is not present" do
     before { @feed.feed_type = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when updated_date is not present" do
-    before { @feed.updated_date = nil }
     it { should_not be_valid }
   end
 

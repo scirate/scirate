@@ -20,7 +20,7 @@
         <% end %>
       </div>
       <span class="identifier">
-        <%= paper.pubdate.strftime("%b %d %Y") %>
+        <%= paper.submit_date.strftime("%b %d %Y") %>
         [<%= link_to paper.feed.name, paper.feed %>]
       </span>
       <% if paper.cross_lists.length > 1 %>

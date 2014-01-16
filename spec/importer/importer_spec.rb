@@ -9,8 +9,8 @@
 #  url            :string(255)
 #  created_at     :timestamp       not null
 #  updated_at     :timestamp       not null
-#  pubdate        :date
-#  updated_date   :date
+#  submit_date        :date
+#  update_date   :date
 #  scites_count   :integer         default(0)
 #  comments_count :integer         default(0)
 #  feed_id        :integer
@@ -39,8 +39,8 @@ describe "arxiv importer" do
       paper.authors[2].fullname.should == "David P. Woodruff"
       paper.authors[2].position.should == 2
       paper.feed.name.should == "cs.DS"
-      paper.pubdate.to_s.should == "2008-11-21"
-      paper.updated_date.to_s.should == "2009-04-08"
+      paper.submit_date.to_s.should == "2008-11-21"
+      paper.update_date.to_s.should == "2009-04-08"
       paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
     end
   end

@@ -14,8 +14,8 @@ FactoryGirl.define do
     sequence(:abstract)    { |n| "We solve Hilbert's #{n}th problem." }
     sequence(:identifier)  { |n| "#{1000+n}.#{1000+n}" }
     sequence(:url)         { |n| "http://arxiv.org/abs/#{1000+n}.#{1000+n}" }
-    sequence(:pubdate)     { |n| Date.today }
-    sequence(:updated_date){ |n| Date.today }
+    sequence(:submit_date)     { |n| Date.today }
+    sequence(:update_date) { |n| Date.today }
     sequence(:feed_id) { |n| Feed.default.id }
   end
 
@@ -37,7 +37,6 @@ FactoryGirl.define do
     sequence(:name)      { |n| "feed-#{n}" }
     sequence(:url)       { |n| "http://intractable.ca/feed/#{n}" }
     sequence(:feed_type) { |n| "arxiv" }
-    updated_date Date.today
     last_paper_date Date.today
   end
 end

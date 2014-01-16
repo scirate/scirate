@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 
     if params[:scite_order] == 'published'
       @scite_order = :published
-      scited_papers = @user.scited_papers.order("pubdate DESC")
+      scited_papers = @user.scited_papers.order("submit_date DESC")
     else
       @scite_order = :scited
       scited_papers = @user.scited_papers.order("scites.created_at DESC")

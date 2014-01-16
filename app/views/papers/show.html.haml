@@ -3,10 +3,10 @@
   .paper.tex2jax.row
     .col-md-10
       .row.title-row
-        .col-md-10 
+        .col-md-10
           %h1.title= sanitize(@paper.title)
         .col-md-2= render(partial: 'scites/toggle', object: @paper, as: :paper)
-        
+
       %ul.authors
         - @paper.authors.each do |author|
           %li
@@ -21,12 +21,12 @@
           - @categories.each do |c|
             = c.name
       .dates
-        Published #{@paper.pubdate.to_formatted_s(:rfc822)} in
+        Published #{@paper.submit_date.to_formatted_s(:rfc822)} in
         %strong= @paper.feed.fullname
         [#{link_to @paper.feed.identifier, @paper.feed}]
         %br/
         - if @paper.updated?
-          Updated #{@paper.updated_date.to_formatted_s(:rfc822)}
+          Updated #{@paper.update_date.to_formatted_s(:rfc822)}
           %br/
         = link_to @paper.url, @paper.url
         %br

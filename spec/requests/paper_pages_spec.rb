@@ -18,12 +18,12 @@ describe "Paper pages" do
     it { should have_content paper.authors[1] }
     it { should have_content paper.abstract }
     it { should have_link paper.url }
-    it { should have_content paper.pubdate.to_formatted_s(:rfc822) }
+    it { should have_content paper.submit_date.to_formatted_s(:rfc822) }
   end
 
   describe "index" do
     let(:feed) { Feed.default }
-    let(:paper) { FactoryGirl.create(:paper, pubdate: Date.today, feed: feed) }
+    let(:paper) { FactoryGirl.create(:paper, submit_date: Date.today, feed: feed) }
     let(:user) { FactoryGirl.create(:user) }
     let(:other_user) { FactoryGirl.create(:user) }
 

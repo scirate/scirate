@@ -68,6 +68,9 @@ group :development do
   # You need to use the binstubs in scirate/bin
   gem 'spring'
   gem 'spring-commands-rspec'
+
+  # For dumping feeds to seeds.rb to test with
+  gem 'seed_dump'
 end
 
 group :test do

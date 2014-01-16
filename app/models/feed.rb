@@ -8,7 +8,7 @@
 #  feed_type           :string(255)
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  updated_date        :date
+#  update_date        :date
 #  subscriptions_count :integer          default(0)
 #  last_paper_date     :date
 #  fullname            :text
@@ -27,7 +27,6 @@ class Feed < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :feed_type, presence: true
-  validates :updated_date, presence: true
 
   default_scope { order(:position) }
 
@@ -39,7 +38,7 @@ class Feed < ActiveRecord::Base
   def self.arxiv_import(feednames, opts={})
     existing = Feed.all.map(&:name)
 
-    columns = [:name, :url, :feed_type, :updated_date]
+    columns = [:name, :url, :feed_type]
     values = []
 
     (feednames - existing).map do |feedname|
@@ -47,8 +46,7 @@ class Feed < ActiveRecord::Base
       values << [
         feedname,
         "http://export.arxiv.org/rss/#{feedname}",
-        "arxiv",
-        Time.now.utc.to_date
+        "arxiv"
       ]
     end
 
@@ -70,7 +68,6 @@ class Feed < ActiveRecord::Base
     feed.name = name
     feed.url = "http://export.arxiv.org/rss/#{name}"
     feed.feed_type = 'arxiv'
-    feed.updated_date = Time.now.utc.to_date - 1.day
     feed.save!
     feed
   end
@@ -97,7 +94,6 @@ class Feed < ActiveRecord::Base
     Feed.create(name: "quant-ph",
                 url: "http://export.arxiv.org/rss/quant-ph",
                 feed_type: "arxiv",
-                updated_date: Time.now.utc.to_date,
                 last_paper_date: Time.now.utc.to_date)
   end
 
@@ -107,10 +103,9 @@ class Feed < ActiveRecord::Base
   end
 
   def update_last_paper_date
-    paper = self.aggregated_papers.order("pubdate asc").last
+    paper = self.aggregated_papers.order("submit_date asc").last
     unless paper.nil?
-      self.last_paper_date = paper.pubdate
-      self.updated_date = paper.updated_date
+      self.last_paper_date = paper.submit_date
       self.save!
     end
 

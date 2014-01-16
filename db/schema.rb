@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140114015506) do
+ActiveRecord::Schema.define(version: 20140116081843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,13 @@ ActiveRecord::Schema.define(version: 20140114015506) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "downvotes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "feed_preferences", force: true do |t|
     t.integer  "user_id"
     t.integer  "feed_id"
@@ -96,7 +103,6 @@ ActiveRecord::Schema.define(version: 20140114015506) do
     t.string   "feed_type"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.date     "updated_date"
     t.integer  "subscriptions_count", default: 0
     t.date     "last_paper_date"
     t.text     "fullname"
@@ -115,8 +121,8 @@ ActiveRecord::Schema.define(version: 20140114015506) do
     t.string   "url"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-    t.date     "pubdate"
-    t.date     "updated_date"
+    t.date     "submit_date"
+    t.date     "update_date"
     t.integer  "scites_count",   default: 0
     t.integer  "comments_count", default: 0
     t.integer  "feed_id"
@@ -129,10 +135,10 @@ ActiveRecord::Schema.define(version: 20140114015506) do
   add_index "papers", ["delta"], name: "index_papers_on_delta", using: :btree
   add_index "papers", ["feed_id"], name: "index_papers_on_feed_id", using: :btree
   add_index "papers", ["identifier"], name: "index_papers_on_identifier", unique: true, using: :btree
-  add_index "papers", ["pubdate"], name: "index_papers_on_date", using: :btree
-  add_index "papers", ["pubdate"], name: "index_papers_on_pubdate", using: :btree
   add_index "papers", ["scites_count", "comments_count"], name: "index_papers_on_scites_count_and_comments_count", order: {"scites_count"=>:desc, "comments_count"=>:desc}, using: :btree
   add_index "papers", ["scites_count"], name: "index_papers_on_scites_count", order: {"scites_count"=>:desc}, using: :btree
+  add_index "papers", ["submit_date"], name: "index_papers_on_date", using: :btree
+  add_index "papers", ["submit_date"], name: "index_papers_on_submit_date", using: :btree
 
   create_table "scites", force: true do |t|
     t.integer  "sciter_id"

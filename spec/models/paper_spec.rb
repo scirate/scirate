@@ -10,8 +10,8 @@
 #  url            :string(255)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  pubdate        :date
-#  updated_date   :date
+#  submit_date        :date
+#  update_date   :date
 #  scites_count   :integer          default(0)
 #  comments_count :integer          default(0)
 #  feed_id        :integer
@@ -28,7 +28,7 @@ describe Paper do
     @paper = @feed.papers.build(title: "On NPT Bound Entanglement and the ERH", \
                                abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
                                identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
-                               pubdate: Time.now, updated_date: Time.now)
+                               submit_date: Time.now, update_date: Time.now)
   end
 
   subject { @paper }
@@ -38,8 +38,8 @@ describe Paper do
   it { should respond_to(:abstract) }
   it { should respond_to(:identifier) }
   it { should respond_to(:url) }
-  it { should respond_to(:pubdate) }
-  it { should respond_to(:updated_date) }
+  it { should respond_to(:submit_date) }
+  it { should respond_to(:update_date) }
   it { should respond_to(:scites) }
   it { should respond_to(:sciters) }
   it { should respond_to(:comments) }
@@ -69,18 +69,18 @@ describe Paper do
     it { should_not be_valid }
   end
 
-  describe "when pubdate is not present" do
-    before { @paper.pubdate = " " }
+  describe "when submit_date is not present" do
+    before { @paper.submit_date = " " }
     it { should_not be_valid }
   end
 
-  describe "when updated_date is not present" do
-    before { @paper.updated_date = " " }
+  describe "when update_date is not present" do
+    before { @paper.update_date = " " }
     it { should_not be_valid }
   end
 
-  describe "when updated_date is older than pubdate" do
-    before { @paper.updated_date = @paper.pubdate - 1.day }
+  describe "when update_date is older than submit_date" do
+    before { @paper.update_date = @paper.submit_date - 1.day }
     it { should_not be_valid }
   end
 

@@ -10,8 +10,8 @@
 #  url            :string(255)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  pubdate        :date
-#  updated_date   :date
+#  submit_date        :date
+#  update_date   :date
 #  scites_count   :integer          default(0)
 #  comments_count :integer          default(0)
 #  feed_id        :integer
@@ -35,11 +35,11 @@ class Paper < ActiveRecord::Base
   validates :abstract, presence: true
   validates :identifier, presence: true, uniqueness: true
   validates :url, presence: true
-  validates :pubdate, presence: true
-  validates :updated_date, presence: true
+  validates :submit_date, presence: true
+  validates :update_date, presence: true
   validates :feed_id, presence: true
 
-  validate  :updated_date_is_after_pubdate
+  validate  :update_date_is_after_submit_date
 
   after_create { cross_list_primary_feed }
 
@@ -52,7 +52,7 @@ class Paper < ActiveRecord::Base
   # an optional page index
   def self.range_query(papers, date, range=0, page=nil)
     papers = papers.includes(:feed, :authors, :cross_lists => :feed)
-    papers = papers.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
+    papers = papers.where("submit_date >= ? AND submit_date <= ?", date - range.days, date)
     papers = papers.order("scites_count DESC, comments_count DESC, identifier ASC")
     papers = papers.limit(30)
     papers
@@ -71,13 +71,13 @@ class Paper < ActiveRecord::Base
     existing_papers = Paper.where(identifier: identifiers)
     existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
 
-    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date]
+    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :submit_date, :update_date]
     values = []
     updated_papers = []
 
     models.each do |model|
       if (paper = existing_by_ident[model.id])
-        next if paper.updated_date >= (model.updated || model.created) # No new content
+        next if paper.update_date >= (model.updated || model.created) # No new content
 
         paper.identifier = model.id
         paper.feed_id = feeds_by_name[model.primary_category].id
@@ -85,8 +85,8 @@ class Paper < ActiveRecord::Base
         paper.pdf_url = "http://arxiv.org/pdf/#{model.id}.pdf"
         paper.title = model.title
         paper.abstract = model.abstract
-        paper.pubdate = model.created
-        paper.updated_date = model.updated || model.created
+        paper.submit_date = model.created
+        paper.update_date = model.updated || model.created
 
         paper.save!
         updated_papers.push(paper)
@@ -199,21 +199,21 @@ class Paper < ActiveRecord::Base
   end
 
   def updated?
-    updated_date > pubdate
+    update_date > submit_date
   end
 
   private
 
     def cross_list_primary_feed
       self.cross_lists.create(feed_id: self.feed.id, \
-                              cross_list_date: self.pubdate)
+                              cross_list_date: self.submit_date)
     end
 
-    def updated_date_is_after_pubdate
-      return unless pubdate and updated_date
+    def update_date_is_after_submit_date
+      return unless submit_date and update_date
 
-      if updated_date < pubdate
-        errors.add(:updated_date, "must not be earlier than pubdate")
+      if update_date < submit_date
+        errors.add(:update_date, "must not be earlier than submit_date")
       end
     end
 

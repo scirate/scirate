@@ -14,7 +14,6 @@ def make_feed(name, fullname, parent=nil)
   end
 
   feed.parent = parent
-  feed.updated_date ||= Date.yesterday
   feed
 end
 
