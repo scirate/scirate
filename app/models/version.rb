@@ -14,4 +14,6 @@ class Version < ActiveRecord::Base
   validates :position, presence: true
   validates :date, presence: true
   validates :size, presence: true
+
+  belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid
 end

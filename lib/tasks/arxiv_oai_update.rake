@@ -18,8 +18,8 @@ namespace :arxiv do
       date = last_paper.update_date
     end
 
-    ArxivSync.get_metadata(from: date) do |resp, papers|
-      Paper.arxiv_import(papers)
+    ArxivSync.get_metadata(from: date.to_date) do |resp, papers|
+      Arxiv::Import.papers(papers)
     end
   end
 end
