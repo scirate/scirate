@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_filter :signed_in_user,
-           only: [:feeds, :edit, :update, :destroy, :settings, :settings_password]
+           only: [:edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
@@ -38,7 +38,7 @@ class UsersController < ApplicationController
       @user = User.new(params.required(:user).permit(:fullname, :username, :email, :password, :password_confirmation))
       if @user.save
         @user.send_signup_confirmation
-        flash[:success] = "Welcome to SciRate!  Confirmation mail sent to: #{@user.email}"
+        sign_in @user
         redirect_to feeds_path
       else
         render 'new'
