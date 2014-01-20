@@ -18,8 +18,15 @@ namespace :arxiv do
       date = last_paper.update_date
     end
 
+    syncdate = nil
+    if last_paper.pubdate > Date.today-1.days
+      # We're in a daily sync cycle and can timestamp without estimating
+      syncdate = Time.now.utc.change(hour: 1)
+    end
+
+
     ArxivSync.get_metadata(from: date.to_date) do |resp, papers|
-      Arxiv::Import.papers(papers)
+      Arxiv::Import.papers(papers, syncdate: syncdate)
     end
   end
 end

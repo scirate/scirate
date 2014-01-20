@@ -4,9 +4,9 @@
 #
 #  id         :integer          not null, primary key
 #  position   :integer          not null
-#  fullname   :string(255)      not null
-#  searchterm :string(255)      not null
-#  paper_uid  :string(255)
+#  fullname   :text             not null
+#  searchterm :text             not null
+#  paper_uid  :text
 #
 
 # An Author represents an element in an ordered

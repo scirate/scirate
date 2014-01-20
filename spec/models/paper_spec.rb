@@ -2,27 +2,28 @@
 #
 # Table name: papers
 #
-#  id             :integer          not null, primary key
-#  uid            :string(255)      not null
-#  submitter      :string(255)      not null
-#  title          :string(255)      not null
-#  abstract       :text             not null
-#  comments       :text
-#  msc_class      :string(255)
-#  report_no      :string(255)
-#  journal_ref    :string(255)
-#  doi            :string(255)
-#  proxy          :string(255)
-#  license        :string(255)
-#  submit_date    :datetime         not null
-#  update_date    :datetime         not null
-#  abs_url        :string(255)      not null
-#  pdf_url        :string(255)      not null
-#  delta          :boolean          default(TRUE), not null
-#  created_at     :datetime
-#  updated_at     :datetime
-#  scites_count   :integer          default(0), not null
-#  comments_count :integer          default(0), not null
+#  id              :integer          not null, primary key
+#  uid             :text             not null
+#  submitter       :text
+#  title           :text             not null
+#  abstract        :text             not null
+#  author_comments :text
+#  msc_class       :text
+#  report_no       :text
+#  journal_ref     :text
+#  doi             :text
+#  proxy           :text
+#  license         :text
+#  submit_date     :datetime         not null
+#  update_date     :datetime         not null
+#  abs_url         :text             not null
+#  pdf_url         :text             not null
+#  delta           :boolean          default(TRUE), not null
+#  created_at      :datetime
+#  updated_at      :datetime
+#  scites_count    :integer          default(0), not null
+#  comments_count  :integer          default(0), not null
+#  pubdate         :datetime
 #
 
 require 'spec_helper'

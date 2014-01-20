@@ -3,9 +3,9 @@
 # Table name: feeds
 #
 #  id                  :integer          not null, primary key
-#  uid                 :string(255)      not null
-#  source              :string(255)      not null
-#  fullname            :string(255)      not null
+#  uid                 :text             not null
+#  source              :text             not null
+#  fullname            :text             not null
 #  parent_id           :integer
 #  position            :integer          default(0), not null
 #  subscriptions_count :integer          default(0), not null

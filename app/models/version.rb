@@ -5,8 +5,8 @@
 #  id        :integer          not null, primary key
 #  position  :integer          not null
 #  date      :datetime         not null
-#  size      :string(255)
-#  paper_uid :string(255)      not null
+#  size      :text
+#  paper_uid :text             not null
 #
 
 class Version < ActiveRecord::Base

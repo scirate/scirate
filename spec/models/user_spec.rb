@@ -3,22 +3,22 @@
 # Table name: users
 #
 #  id                     :integer          not null, primary key
-#  fullname               :string(255)
-#  email                  :string(255)
-#  remember_token         :string(255)
+#  fullname               :text
+#  email                  :text
+#  remember_token         :text
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  password_digest        :string(255)
+#  password_digest        :text
 #  scites_count           :integer          default(0)
-#  password_reset_token   :string(255)
+#  password_reset_token   :text
 #  password_reset_sent_at :datetime
-#  confirmation_token     :string(255)
+#  confirmation_token     :text
 #  active                 :boolean          default(FALSE)
 #  comments_count         :integer          default(0)
 #  confirmation_sent_at   :datetime
 #  subscriptions_count    :integer          default(0)
 #  expand_abstracts       :boolean          default(FALSE)
-#  account_status         :string(255)      default("user")
+#  account_status         :text             default("user")
 #  username               :text
 #
 

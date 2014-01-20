@@ -16,6 +16,8 @@ module Arxiv::Import
   end
 
   def self._import_papers(models, opts)
+    syncdate = opts.delete(:syncdate) # For dating papers
+
     ### First pass: Add new Feeds.
     feed_uids = models.map { |m| m.categories }.flatten.uniq
     Feed.arxiv_import(feed_uids, opts)
@@ -57,8 +59,8 @@ module Arxiv::Import
       end
 
       # Since the arXiv doesn't give us date of publication, only
-      # date of submission, we have to estimate it ourselves
-      pubdate = Paper.estimate_pubdate(model.versions[0].date.utc)
+      # date of submission, we may have to estimate it ourselves
+      pubdate = syncdate || Paper.estimate_pubdate(model.versions[0].date.utc)
 
       paper_values << [
         model.id,
