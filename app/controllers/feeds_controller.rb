@@ -58,7 +58,7 @@ class FeedsController < ApplicationController
     @feed = Feed.find_by_uid!(params[:feed])
     feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
 
-    @date = parse_date(params) || @feed.last_paper_date.to_date || Date.today
+    @date = (parse_date(params) || @feed.last_paper_date || Date.today).to_date
     @range = parse_range(params) || 0
     @page = params[:page]
 
@@ -82,7 +82,7 @@ class FeedsController < ApplicationController
     feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
     preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
 
-    @date = parse_date(params) || @feed.last_paper_date.to_date || Date.today
+    @date = (parse_date(params) || @feed.last_paper_date || Date.today).to_date
     @range = parse_range(params) || preferences.range
     @page = params[:page]
 
