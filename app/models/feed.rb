@@ -80,12 +80,11 @@ class Feed < ActiveRecord::Base
   end
 
   def update_last_paper_date
-    paper = self.papers.order("submit_date ASC").last
-    unless paper.nil?
-      self.last_paper_date = paper.submit_date
+    uids = [self.uid] + self.children.pluck(:uid)
+    category = Category.where(feed_uid: uids).order("crosslist_date ASC").last
+    unless category.nil?
+      self.last_paper_date = category.crosslist_date
       self.save!
     end
-
-    self.parent.update_last_paper_date unless self.parent.nil?
   end
 end

@@ -109,8 +109,8 @@ module Arxiv::Import
         ]
 
         feed = feeds_by_uid[feed_uid]
-        if feed.last_paper_date && model.versions[0].date > feed.last_paper_date
-          feed.last_paper_date = model.versions[0].date
+        if feed.last_paper_date && pubdate > feed.last_paper_date
+          feed.last_paper_date = pubdate
           feed.save
         end
       end
