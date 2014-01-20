@@ -5,15 +5,19 @@
     All Feeds
   </h1>
 
+  <% if @user.subscriptions_count == 0 %>
+    Please choose one or more feeds to subscribe to. Papers from subscribed feeds will appear on your <a href="/">home timeline</a>.
+  <% end %>
+
   <% Feed.arxiv_folders.each do |feed| %>
     <div class="feed-card">
       <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
-      <%= render 'feeds/subscribe', :feed => feed %>
+      <%= render 'feeds/subscribe', feed: feed %>
     </div>
     <% feed.children.each do |feed| %>
       <div class="feed-card">
         <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
-        <%= render 'feeds/subscribe', :feed => feed %>
+        <%= render 'feeds/subscribe', feed: feed %>
       </div>
     <% end %>
   <% end %>

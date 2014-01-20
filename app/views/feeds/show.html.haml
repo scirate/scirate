@@ -56,7 +56,7 @@
             %ul.papers
               - if @papers.length == 0
                 - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
-                  %p You haven't subscribed to any feeds yet! Papers from subscribed feeds will appear here.
+                  %p Papers from subscribed feeds will appear here. You can manage your subscriptions from the <a href="#{feeds_path}">feeds page</a>.
                 - else
                   %p No papers found!
               - else

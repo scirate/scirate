@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_filter :signed_in_user,
-           only: [:edit, :update, :destroy, :settings, :settings_password]
+           only: [:feeds, :edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       if @user.save
         @user.send_signup_confirmation
         flash[:success] = "Welcome to SciRate!  Confirmation mail sent to: #{@user.email}"
-        redirect_to root_path
+        redirect_to feeds_path
       else
         render 'new'
       end
