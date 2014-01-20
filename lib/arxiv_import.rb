@@ -28,7 +28,7 @@ module Arxiv::Import
     existing_papers = Paper.where(uid: uids)
     existing_by_uid = Hash[existing_papers.map { |paper| [paper.uid, paper] }]
 
-    paper_columns = [:uid, :submitter, :title, :abstract, :author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :abs_url, :pdf_url]
+    paper_columns = [:uid, :submitter, :title, :abstract, :author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :pubdate, :abs_url, :pdf_url]
     paper_values = []
 
     version_columns = [:paper_uid, :position, :date, :size]
@@ -56,6 +56,10 @@ module Arxiv::Import
         new_uids << model.id
       end
 
+      # Since the arXiv doesn't give us date of publication, only
+      # date of submission, we have to estimate it ourselves
+      pubdate = Paper.estimate_pubdate(model.versions[0].date.utc)
+
       paper_values << [
         model.id,
         model.submitter,
@@ -71,6 +75,7 @@ module Arxiv::Import
 
         model.versions[0].date,
         model.versions[-1].date,
+        pubdate,
         "http://arxiv.org/abs/#{model.id}",
         "http://arxiv.org/pdf/#{model.id}.pdf",
       ]
@@ -98,7 +103,7 @@ module Arxiv::Import
           model.id,
           j,
           feed_uid,
-          model.versions[0].date
+          pubdate
         ]
 
         feed = feeds_by_uid[feed_uid]

@@ -20,7 +20,7 @@
         <% end %>
       </div>
       <span class="uid">
-        <%= paper.submit_date.strftime("%b %d %Y") %>
+        <%= paper.pubdate.strftime("%b %d %Y") %>
         [<%= link_to paper.feeds[0].uid, paper.feeds[0] %>]
       </span>
       <% if paper.feeds.length > 1 %>

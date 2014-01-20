@@ -63,6 +63,31 @@ class Paper < ActiveRecord::Base
     papers
   end
 
+  # Given when a paper was submitted, estimate the
+  # time at which the arXiv was likely to have published it
+  def self.estimate_pubdate(submit_date)
+    pubdate = submit_date.dup.change(hour: 1)
+
+    # Weekend submissions => Tuesday
+    if [6,0].include?(submit_date.wday)
+      pubdate += 2.days if submit_date.wday == 0
+      pubdate += 3.days if submit_date.wday == 6
+    else
+      if submit_date.wday == 5
+        pubdate += 3.days # Friday submissions => Monday
+      else
+        pubdate += 1.day # Otherwise => next day
+      end
+
+      if submit_date.hour >= 21 # Past submission deadline
+        pubdate += 1.day
+      end
+    end
+
+    pubdate
+  end
+
+
   def to_param
     uid
   end

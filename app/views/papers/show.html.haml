@@ -21,7 +21,7 @@
           - @paper.feeds[1..-1].each do |feed|
             = feed.uid
       .dates
-        Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} in
+        Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} to
         %strong= @paper.feeds[0].fullname
         [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
         %br/
