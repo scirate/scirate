@@ -11,8 +11,6 @@ SciRate3::Application.routes.draw do
 
   post '/api/resend_confirm', to: 'api#resend_confirm', as: :resend_confirm
 
-  put '/subscriptions', to: 'subscriptions#update'
-
   resources :comments do
     member do
       post :edit
@@ -55,6 +53,8 @@ SciRate3::Application.routes.draw do
   get '/users/:id/comments', to: 'users#comments', as: 'comments_user'
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: 'subscriptions_user'
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: 'activate_user'
+  get '/feeds', to: 'users#feeds'
+
 
   get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+/, as: 'paper_scites'
   get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+/, as: 'paper'

@@ -503,10 +503,10 @@ div.abbr_comment {
   .abstract-toggle {
     display: none;
   }
-}
 
-.subscribe-toggle {
-  line-height: 40px;
+  .subscribe-toggle {
+    line-height: 40px;
+  }
 }
 
 .subscribe-toggle:not(.active) {
@@ -778,4 +778,15 @@ div.feed-rightbar
 
 .abstract-toggle {
   margin: 10px 0;
+}
+
+// Subscriptions page
+
+#subscriptions {
+  .feed-card {
+    display: inline-block;
+    width: 550px;
+    padding: 15px;
+    line-height: 34px;
+  }
 }

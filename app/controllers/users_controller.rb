@@ -122,6 +122,11 @@ class UsersController < ApplicationController
     end
   end
 
+  # Big feed subscriptions page
+  def feeds
+    @user = current_user
+  end
+
   def scited_papers
     @user = User.find(params[:id])
     @papers = @user.scited_papers.paginate(page: params[:page]).includes(:feed)
@@ -129,16 +134,6 @@ class UsersController < ApplicationController
 
   def comments
     @user = User.includes(comments: :paper).find(params[:id])
-  end
-
-  def subscriptions
-    @user = User.find(params[:id])
-    @feeds = Feed.order("name")
-
-    # This is to avoid loading each subscription individually.  There is
-    # presumably some way to do this with eager loading, but I cannot make
-    # rails use the eager-loaded data for feeds the user is not subscribed to.
-    @subscriptions = Set.new( @user.subscriptions.map { |s| s.feed_id } )
   end
 
   def settings

@@ -1,0 +1,21 @@
+<% provide :title, "All Feeds" %>
+
+<div id="subscriptions" class="container">
+  <h1>
+    All Feeds
+  </h1>
+
+  <% Feed.arxiv_folders.each do |feed| %>
+    <div class="feed-card">
+      <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
+      <%= render 'feeds/subscribe', :feed => feed %>
+    </div>
+    <% feed.children.each do |feed| %>
+      <div class="feed-card">
+        <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
+        <%= render 'feeds/subscribe', :feed => feed %>
+      </div>
+    <% end %>
+  <% end %>
+  </ul>
+</div>
