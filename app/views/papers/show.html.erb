@@ -1,5 +1,5 @@
 
-<% provide :title, @paper.title %>
+<% provide :title, sanitize(@paper.title) %>
 
 <div class="container">
   <div class="paper tex2jax row">
