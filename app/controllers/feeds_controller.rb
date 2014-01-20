@@ -14,7 +14,7 @@ class FeedsController < ApplicationController
     @range_query =
       Paper.joins(:categories)
         .where("categories.feed_uid IN (?) AND categories.crosslist_date >= ? AND categories.crosslist_date <= ?", feed_uids, backdate, date)
-        .order("scites_count DESC, comments_count DESC, submit_date DESC")
+        .order("scites_count DESC, comments_count DESC, pubdate DESC")
         .paginate(per_page: 30, page: page)
 
     paper_ids = @range_query.pluck(:id)
