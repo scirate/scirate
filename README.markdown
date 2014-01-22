@@ -14,7 +14,7 @@ We encourage contributions!
 
 * You can talk about scirate on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate) and about scirate development on the [development mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate-dev).
 
-## Setting up for development
+## Dependencies
 
 Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
@@ -22,20 +22,33 @@ Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrai
 sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libmysqlclient-dev
 ```
 
-You will also need to download and install [sphinxsearch 2.1.4](http://sphinxsearch.com/downloads/release/). Otherwise, development should be platform agnostic.
+You will also need to download and install [sphinxsearch 2.1.4](http://sphinxsearch.com/downloads/release/). Bundler should take care of the rest.
 
 ```shell
 git clone git@github.com:draftable/scirate3
 cd scirate3
 bundle install
+```
+
+## Setting up the database
+
+If you've just installed postgres, you'll need a new database user:
+
+```shell
+sudo -u postgres createuser --superuser --pwprompt scirate
+```
+
+Note that the 'ident' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
+
+```
 cp config/database.yml.example config/database.yml
 ```
 
-Edit config/database.yml and enter your auth details for the development database. Then initialize the database and sphinx, and download the basic feed layout:
+Edit this file and enter your auth details for the development database. Then initialize the database and sphinx, and download the basic feed layout:
 
 ```shell
 rake db:setup
-rake ts:generate
+rake ts:index
 rake arxiv:feed_import
 rails server
 ```
@@ -48,7 +61,7 @@ You should now have a working local copy of SciRate! However, you'll also want s
 rake arxiv:oai_update
 ```
 
-When run for the first time, this will download paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
+When run for the first time, this will download and index paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
 
 ## Testing
 
