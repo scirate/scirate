@@ -53,17 +53,6 @@ class Paper < ActiveRecord::Base
   scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
   scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
-  # Returns a paginated selection of papers based on
-  # a date, a number of days into the past to look, and
-  # an optional page index
-  def self.range_query(papers, date, range=0, page=nil)
-    papers = papers.includes(:feed, :authors, :cross_lists => :feed)
-    papers = papers.where("submit_date >= ? AND submit_date <= ?", date - range.days, date)
-    papers = papers.order("scites_count DESC, comments_count DESC, uid ASC")
-    papers = papers.limit(30)
-    papers
-  end
-
   # Given when a paper was submitted, estimate the
   # time at which the arXiv was likely to have published it
   def self.estimate_pubdate(submit_date)

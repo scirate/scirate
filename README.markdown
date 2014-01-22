@@ -38,7 +38,7 @@ If you've just installed postgres, you'll need a new database user:
 sudo -u postgres createuser --superuser --pwprompt scirate
 ```
 
-Note that the 'ident' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
+Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
 
 ```
 cp config/database.yml.example config/database.yml

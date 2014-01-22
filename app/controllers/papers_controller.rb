@@ -60,7 +60,7 @@ class PapersController < ApplicationController
     if !@query.empty?
       paper_ids = @search.run(page: params[:page], per_page: 20, order: 'scites_count DESC')
 
-      @papers = Paper.where(id: paper_ids).includes(:feed, :authors, :cross_lists, :cross_lists => :feed).order('scites_count DESC')
+      @papers = Paper.where(id: paper_ids).includes(:authors, :feeds).order('scites_count DESC')
 
       # Pass the Sphinx pagination values through to will_paginate
       # A little hacky
