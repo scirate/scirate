@@ -1,0 +1,46 @@
+<% provide :title, @user.fullname %>
+
+<div class="container" id="profile-page">
+  <table class="table">
+    <tr>
+      <td>
+        <h1>
+          <%= gravatar_for @user, size: 100 %>
+          <%= @user.fullname %>
+        </h1>
+          <% if current_user.is_moderator? %>
+            <%= status_warning %>
+            <a href="<%= admin_user_edit_path(@user) %>">edit user</a>
+          <% end %>
+      </td>
+    </tr>
+  </table>
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Scites (<%= @user.scites_count %>)</h3>
+      <% if @user.scites_count == 0 %>
+        <p>No papers scited.</p>
+      <% else %>
+        <ul class="nav nav-tabs">
+          <li class="<%= @scite_order == :scited ? 'active' : '' %>">
+            <%= link_to "Sort by Scite Date", url_for(params.merge(scite_order: :scited)) %>
+          </li>
+          <li class="<%= @scite_order == :published ? 'active' : '' %>">
+            <%= link_to "Sort by Publication Date", url_for(params.merge(scite_order: :published)) %>
+          </li>
+        </ul>
+        <%= render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false } %>
+        <%= will_paginate @scited_papers, param_name: 'scite_page' %>
+      <% end %>
+    </div>
+    <div class="col-md-6">
+      <h3>Comments (<%= @user.comments_count %>)</h3>
+      <% if @user.comments_count == 0 %>
+        <p>No comments posted.</p>
+      <% else %>
+        <%= render @comments %>
+        <%= will_paginate @comments, param_name: 'comment_page' %>
+      <% end %>
+    </div>
+  </div>
+</div>

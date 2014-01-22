@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    if @comment.user_id == current_user.id
+    if @comment.user_id == current_user.id || current_user.is_moderator?
       @comment.content = params[:content]
       @comment.save
       render :text => 'success'
@@ -32,7 +32,7 @@ class CommentsController < ApplicationController
 
   def delete
     paper = @comment.paper
-    if @comment.user_id == current_user.id
+    if @comment.user_id == current_user.id || current_user.is_moderator?
       @comment.destroy
       flash[:comment] = { status: 'success', content: "Comment deleted." }
       redirect_to request.referer || paper

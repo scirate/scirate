@@ -25,4 +25,8 @@ module ApplicationHelper
   def landing_column(parent)
     render partial: 'feeds/landing_column', locals: { parent: parent, feeds: parent.children }
   end
+
+  def status_warning
+    raw "<span class=\"warning\">#{current_user.account_status}:</span>"
+  end
 end

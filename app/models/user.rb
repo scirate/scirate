@@ -53,8 +53,18 @@ class User < ActiveRecord::Base
   acts_as_voter
 
   before_save do
+    # Reset the user session if vital information changes
     if new_record? || password_digest_changed? || email_changed?
       generate_token(:remember_token)
+    end
+
+    # Switching to/from spam needs propagation to comments
+    if account_status_changed?
+      if account_status == STATUS_SPAM
+        self.comments.update_all(hidden: true)
+      else
+        self.comments.update_all(hidden: false)
+      end
     end
   end
 
@@ -154,20 +164,6 @@ class User < ActiveRecord::Base
 
   def is_spammer?
     account_status == STATUS_SPAM
-  end
-
-  def change_status(status)
-    transaction do
-
-      # Switching to/from spam needs propagation to comments
-      if status == STATUS_SPAM
-        self.comments.update_all(hidden: true)
-      elsif account_status == STATUS_SPAM
-        self.comments.update_all(hidden: false)
-      end
-      self.account_status = status
-      self.save
-    end
   end
 
   def change_password!(new_password)

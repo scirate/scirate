@@ -30,6 +30,7 @@
     <% if @paper && current_user %>
       <div class="actions">
         <a class="reply">reply</a>
+
         <% if current_user.id == comment.user_id %>
           | <a class="edit">edit</a>
           | <%= link_to 'delete', delete_comment_path(comment), method: :post %>
@@ -41,6 +42,16 @@
             <a class="report">report</a>
           <% end %>
         <% end %>
+
+        <% if current_user.is_moderator? %>
+          <div class="moderate">
+            <%= status_warning %>
+            <a class="edit">edit</a>
+            | <%= link_to 'delete', delete_comment_path(comment), method: :post %>
+          </div>
+        <% end %>
+
+
       </div>
 
     <% end %>

@@ -352,6 +352,18 @@ div.comments {
   }
 }
 
+#error_explanation {
+  margin-top: 10px;
+
+  ul {
+    padding: 0px 10px;
+  }
+}
+
+.warning {
+  color: rgb(255, 56, 56);
+}
+
 #comment_reply {
   margin-top: 10px;
 }

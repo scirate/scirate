@@ -52,43 +52,6 @@ class UsersController < ApplicationController
   def edit
   end
 
-  def update
-    if !current_user.is_admin? && !@user.authenticate(params[:user][:old_password])
-      flash[:error] = "Old password is incorrect!"
-      render 'edit'
-      return
-    end
-
-    if params[:user][:account_status]
-      unless current_user.is_admin?
-        flash[:error] = "Admin status required"
-        render 'edit'
-        return
-      end
-
-      unless @user.change_status(params[:user][:account_status])
-        render 'edit'
-        return
-      end
-    end
-
-    old_email = @user.email
-
-    user_params = params.required(:user)
-                        .permit(:fullname, :email, :password, :password_confirmation, :expand_abstracts)
-
-    if @user.update_attributes(user_params)
-      if old_email != @user.email
-        @user.send_email_change_confirmation(old_email)
-      end
-
-      sign_in @user if current_user.id == @user.id
-      flash[:success] = "Profile updated"
-    end
-
-    render 'edit'
-  end
-
   def destroy
     user = User.find_by_id(params[:id])
 
@@ -175,9 +138,8 @@ class UsersController < ApplicationController
 
   private
     def correct_user
-      # Ensure current user has permission to edit this user
       @user = User.find_by_username(params[:username])
-      unless current_user?(@user) || current_user.is_admin?
+      unless current_user?(@user)
         redirect_to(root_path)
       end
     end
