@@ -1,0 +1,25 @@
+<div class="abbr-comment">
+  <% if abbr_comment.paper.title.length > 75 %>
+    <a href="<%= url_for(abbr_comment.paper) %>"><%= sanitize(abbr_comment.paper.title[0..72]) %>...</a>
+  <% else %>
+    <a href="<%= url_for(abbr_comment.paper) %>"><%= sanitize(abbr_comment.paper.title) %></a>
+  <% end %>
+  <br>
+
+  <span class="username">
+    <a href="<%= url_for(abbr_comment.user) %>"><%= abbr_comment.user.fullname %></a>
+  </span>
+
+  <span class="timeago">
+    <%= time_ago_in_words(abbr_comment.created_at) %> ago
+  </span>
+
+  <blockquote style="margin-top: 5px;">
+    <%= strip_tags(abbr_comment.content[0..299]) %>
+    <% if abbr_comment.content.length > 300 %>
+      <a href="<%= url_for(abbr_comment.paper) %>">
+        ...(continued)
+      </a>
+    <% end %>
+  </blockquote>
+</div>

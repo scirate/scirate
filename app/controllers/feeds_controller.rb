@@ -7,7 +7,8 @@ class FeedsController < ApplicationController
   def _recent_comments(feed_uids)
     @recent_comments = Comment.joins(:paper, paper: :categories)
                               .where(paper: { categories: { feed_uid: feed_uids } })
-                              .order("comments.created_at DESC")
+                              .group('comments.id')
+                              .order("comments.created_at DESC").limit(10)
   end
 
   def _range_query(feed_uids, backdate, date, page)
