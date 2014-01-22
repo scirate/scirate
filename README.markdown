@@ -19,10 +19,10 @@ We encourage contributions!
 Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
 ```shell
-sudo apt-get install postgresql libpq-dev libmysqlclient-dev libxml2-dev libxslt-dev nodejs
+sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libmysqlclient-dev
 ```
 
-Otherwise, development should be platform agnostic.
+You will also need to download and install [sphinxsearch 2.1.4](http://sphinxsearch.com/downloads/release/). Otherwise, development should be platform agnostic.
 
 ```shell
 git clone git@github.com:draftable/scirate3
@@ -31,10 +31,11 @@ bundle install
 cp config/database.yml.example config/database.yml
 ```
 
-Edit config/database.yml and enter your auth details for the development database.
+Edit config/database.yml and enter your auth details for the development database. Then initialize the database and sphinx, and download the basic feed layout:
 
 ```shell
 rake db:setup
+rake ts:generate
 rake arxiv:feed_import
 rails server
 ```
@@ -48,15 +49,6 @@ rake arxiv:oai_update
 ```
 
 When run for the first time, this will download paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
-
-## Enabling search
-
-Due to the size of the arxiv database, we use a separate specialized search server. You'll need to install [Sphinx 2.1.4+](http://sphinxsearch.com/downloads/release/). Then run the rake tasks to build the initial search index and start the server:
-
-```shell
-rake ts:index
-rake ts:start
-```
 
 ## Testing
 
