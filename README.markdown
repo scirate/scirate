@@ -16,7 +16,13 @@ We encourage contributions!
 
 ## Setting up for development
 
-You will need [Ruby 2.1.0+](http://rvm.io/) and a UNIX environment of some kind. Familiarity with [Rails 4](http://rubyonrails.org/) is recommended.
+Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
+
+```shell
+sudo apt-get install postgresql libpq-dev libmysqlclient-dev libxml2-dev libxslt-dev
+```
+
+Otherwise, development should be platform agnostic.
 
 ```shell
 git clone git@github.com:draftable/scirate3
