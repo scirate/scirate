@@ -65,7 +65,7 @@
                     = render partial: "papers/paper", object: paper
                 = will_paginate @range_query
 
-        .col-md-3.feed-rightbar
+        .col-md-3.feed-rightbar.tex2jax
           %a.btn.btn-block.btn-default.abstract-toggle.pseudolink
 
           = render :partial => 'feeds/next_prev_links'
