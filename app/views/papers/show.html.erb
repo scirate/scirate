@@ -65,7 +65,7 @@
         <a name="comments">
         <h4><%= pluralize(@comments.size, "comments") %></h4>
         <% if flash[:comment] %>
-          <div class="alert alert-#{flash[:comments][:status]}">
+          <div class="alert alert-<%= flash[:comment][:status] %>">
             <button class="close" data-dismiss="alert" type="button">&times;</button>
            <%= flash[:comment][:content] %>
          </div>

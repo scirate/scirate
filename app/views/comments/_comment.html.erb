@@ -32,7 +32,7 @@
         <a class="reply">reply</a>
         <% if current_user.id == comment.user_id %>
           | <a class="edit">edit</a>
-          | <%= link_to 'delete', comment_delete_path(comment), method: :post %>
+          | <%= link_to 'delete', delete_comment_path(comment), method: :post %>
         <% else %>
           |
           <% if comment.reports.exists?(user_id: current_user.id) %>

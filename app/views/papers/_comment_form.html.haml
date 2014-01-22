@@ -19,7 +19,7 @@
   %div= hidden_field_tag :paper_id
   .wmd-panel
     #wmd-button-bar-edit
-    %textarea#wmd-input-edit.wmd-input{:fullname => "content"}
+    %textarea#wmd-input-edit.wmd-input{:name => "content"}
   #wmd-preview-edit.wmd-panel.wmd-preview.well.hidden
   %input.save.btn.btn-success{:type => "submit", :value => "Save Changes", :class => "leave-comment"}/
 
@@ -27,7 +27,7 @@
   %div= hidden_field_tag :paper_id
   .wmd-panel
     #wmd-button-bar-reply
-    %textarea#wmd-input-reply.wmd-input{:fullname => "content"}
+    %textarea#wmd-input-reply.wmd-input{:name => "content"}
   #wmd-preview-reply.wmd-panel.wmd-preview.well.hidden
   %input.save.btn.btn-primary{:type => "submit", :value => "Leave Reply", :class => "leave-comment"}/
 
