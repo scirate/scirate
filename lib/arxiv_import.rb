@@ -6,6 +6,7 @@ module Arxiv::Import
 
     # Pause sphinx delta updates so we can do it all
     # in one batch after the import
+
     ThinkingSphinx::Deltas.suspend :paper do
       ActiveRecord::Base.transaction do
         paper_uids = self._import_papers(models, opts)
