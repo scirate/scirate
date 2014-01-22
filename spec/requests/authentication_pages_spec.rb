@@ -41,12 +41,12 @@ describe "Authentication" do
       describe "in the Users controller" do
 
         describe "visiting the edit page" do
-          before { visit admin_user_edit_path(user) }
+          before { visit admin_edit_user_path(user) }
           it { should have_title 'Sign in' }
         end
 
         describe "submitting to the update action" do
-          before { post admin_user_edit_path(user) }
+          before { post admin_edit_user_path(user) }
           specify { response.should redirect_to(login_path) }
         end
       end
@@ -58,14 +58,14 @@ describe "Authentication" do
       before { sign_in user }
 
       describe "visiting Users#edit page" do
-        before { visit admin_user_edit_path(wrong_user) }
+        before { visit admin_edit_user_path(wrong_user) }
 
         it { should have_title '' }
       end
 
       describe "submitting a POST request to the Users#update action" do
         before do
-          post admin_user_edit_path(wrong_user)
+          post admin_edit_user_path(wrong_user)
         end
 
         specify { response.should redirect_to(root_path) }
@@ -100,7 +100,7 @@ describe "Authentication" do
 
       describe "when attempting to visit a protected page" do
         before do
-          visit admin_user_edit_path(user)
+          visit admin_edit_user_path(user)
           fill_in "Email",    with: user.email
           fill_in "Password", with: user.password
           click_button "Sign in"
