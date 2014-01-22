@@ -10,7 +10,7 @@
         </h1>
           <% if current_user.is_moderator? %>
             <%= status_warning %>
-            <a href="<%= admin_user_edit_path(@user) %>">edit user</a>
+            <a href="<%= admin_edit_user_path(@user) %>">edit user</a>
           <% end %>
       </td>
     </tr>

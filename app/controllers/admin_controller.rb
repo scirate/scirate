@@ -1,11 +1,11 @@
 class AdminController < ApplicationController
   before_filter :signed_in_user, :require_admin
 
-  def user_edit
+  def edit_user
     @user = User.find_by_username!(params[:username])
   end
 
-  def user_update
+  def update_user
     @user = User.find_by_username!(params[:username])
 
     old = @user.attributes.dup
@@ -16,13 +16,13 @@ class AdminController < ApplicationController
 
     if @user.update_attributes(user_params)
       if old['email'] != @user.email
-        @user.send_email_change_confirmation(old_email)
+        @user.send_email_change_confirmation(old['email'])
       end
       
       flash[:success] = "User updated"
     end
 
-    render 'user_edit'
+    render 'edit_user'
   end
 
   private

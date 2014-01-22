@@ -9,7 +9,7 @@
   </p>
 
 
-  <%= form_for(@user, url: admin_user_update_path(@user), method: :post) do |f| %>
+  <%= form_for(@user, url: admin_update_user_path(@user), method: :post) do |f| %>
     <%= render 'shared/error_messages', object: f.object %>
     <table class="table table-striped table-form">
       <tr>

@@ -11,6 +11,7 @@ FactoryGirl.define do
     sequence(:username) { |n| "person_#{n}" }
     sequence(:email)    { |n| "person_#{n}@example.com"}
     sequence(:active)   { |n| true }
+    account_status User::STATUS_USER
     password "foobar"
     password_confirmation "foobar"
   end
@@ -29,6 +30,10 @@ FactoryGirl.define do
     sequence(:update_date) { |n| Date.today }
     sequence(:abs_url)     { |n| "http://arxiv.org/abs/#{1000+n}.#{1000+n}" }
     sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}.#{1000+n}" }
+
+    after(:create) do |paper, evaluator|
+      create(:category, feed: Feed.first, paper: paper)
+    end
   end
 
   factory :author do
