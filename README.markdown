@@ -19,7 +19,7 @@ We encourage contributions!
 Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
 ```shell
-sudo apt-get install postgresql libpq-dev libmysqlclient-dev libxml2-dev libxslt-dev
+sudo apt-get install postgresql libpq-dev libmysqlclient-dev libxml2-dev libxslt-dev nodejs
 ```
 
 Otherwise, development should be platform agnostic.
@@ -35,7 +35,7 @@ Edit config/database.yml and enter your auth details for the development databas
 
 ```shell
 rake db:setup
-rake arxiv:scrape_categories
+rake arxiv:feed_import
 rails server
 ```
 
