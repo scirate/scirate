@@ -14,6 +14,7 @@ SciRate3::Application.routes.draw do
   resources :comments do
     member do
       post :edit
+      post :delete
       post :upvote
       post :downvote
       post :unvote
