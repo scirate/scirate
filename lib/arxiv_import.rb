@@ -61,7 +61,11 @@ module Arxiv::Import
 
       # Since the arXiv doesn't give us date of publication, only
       # date of submission, we may have to estimate it ourselves
-      pubdate = syncdate || Paper.estimate_pubdate(model.versions[0].date.utc)
+      pubdate = if syncdate && !existing
+        syncdate
+      else
+        Paper.estimate_pubdate(model.versions[0].date.utc)
+      end
 
       paper_values << [
         model.id,
