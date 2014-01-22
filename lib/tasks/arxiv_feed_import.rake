@@ -8,7 +8,7 @@ def make_feed(uid, fullname, parent=nil)
   if uid == "cs" # HACK (Mispy)
     feed.fullname = "Computer Science"
   elsif uid == "physics"
-    feed.fullname = "Other Physics"
+    feed.fullname = "More Physics"
   else
     feed.fullname = fullname
   end
