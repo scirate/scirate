@@ -65,7 +65,7 @@
     <% end %>
   </div>
   <% if @papers %>
-    <h3>Results for <%= @query %></h3>
+    <h3><%= @search.results.count %> results for <%= @query %></h3>
     <div class="paperlist">
       <ul class="papers">
         <% if @papers.empty? %>
