@@ -22,4 +22,12 @@ describe Author do
   it { should respond_to(:searchterm) }
 
   it { should be_valid }
+
+  it "Should generate searchterms correctly" do
+    term = Author.make_searchterm("Ben Toner (CWI)")
+    term.should == "Toner_B"
+
+    term = Author.make_searchterm("Ben Toner [CWI]")
+    term.should == "Toner_B"
+  end
 end

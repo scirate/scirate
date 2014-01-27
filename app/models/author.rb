@@ -35,7 +35,11 @@ class Author < ActiveRecord::Base
   # Makes a searchterm of the form e.g.
   # "Biagini_M" from "Maria Enrica Biagini"
   def self.make_searchterm(name)
-    spl = name.split(/\s+/)
+    spl = name.gsub(/ ?\([^\)]+\)?| ?\[[^\]]+\]?/, '').split(/\s+/)
+    if spl.empty?
+      return '' # Rare edge case with non-valid author name
+    end
+
     if spl.length == 0
       term = spl[0]
     else

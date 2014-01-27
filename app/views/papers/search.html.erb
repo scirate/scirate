@@ -14,7 +14,7 @@
         </tr>
         <tr>
           <td><%= label_tag :title, "Title" %></td>
-          <td><%= text_field_tag :authors, @search.authors.join(','), class: 'form-control' %></td>
+          <td><%= text_field_tag :titles, @search.conditions[:title], class: 'form-control' %></td>
           <td>Contents of paper title</td>
         </tr>
         <tr>

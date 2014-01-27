@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   end
 
   def parse_feed params
-    feed = Feed.find_by_name(params[:feed])
+    feed = Feed.find_by_uid(params[:feed])
 
     return feed
   end

@@ -16,7 +16,7 @@
       <ul class="authors">
         <% @paper.authors.each do |author| %>
           <li>
-            <a href="/search?q=au:#{author.searchterm}">
+          <a href="/search?q=au:<%= author.searchterm %>">
               <%= sanitize(author.fullname) + (author != @paper.authors[-1] ? ',' : '') %>
             </a>
           </li>

@@ -41,7 +41,7 @@ class PapersController < ApplicationController
       case key
       when 'authors'
         authors = val.split(/,\s*/)
-        @query += authors.map { |au| "au:#{__quote(au)}" }.join(' ')
+        @query += ' ' + authors.map { |au| "au:#{__quote(au)}" }.join(' ')
       when 'title'
         @query += " ti:#{__quote(val)}"
       when 'abstract'

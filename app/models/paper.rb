@@ -142,14 +142,15 @@ class Paper::Search
 
     @feed = nil
     @authors = []
-    @arxivstyle_authors = []
 
     qsplit(query).each do |term|
       if term.start_with?('au:')
         if term.include?('_')
+          @authors << tstrip(term)
           @conditions[:authors_searchterm] ||= []
           @conditions[:authors_searchterm] << tstrip(term)
         else
+          @authors << tstrip(term)
           @conditions[:authors_fullname] ||= []
           @conditions[:authors_fullname] << tstrip(term)
         end
@@ -158,7 +159,7 @@ class Paper::Search
       elsif term.start_with?('abs:')
         @conditions[:abstract] = tstrip(term)
       elsif term.start_with?('feed:')
-        @feed = Feed.find_by_name(tstrip(term))
+        @feed = Feed.find_by_uid(tstrip(term))
       else
         if @general_term
           @general_term += ' ' + term

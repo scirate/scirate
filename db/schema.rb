@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140122194016) do
+ActiveRecord::Schema.define(version: 20140127045258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20140122194016) do
     t.integer  "position",                                       null: false
     t.text     "feed_uid",                                       null: false
     t.text     "paper_uid"
-    t.datetime "crosslist_date", default: '2014-01-16 20:23:11', null: false
+    t.datetime "crosslist_date", default: '2014-01-16 20:06:20', null: false
   end
 
   add_index "categories", ["crosslist_date"], name: "index_categories_on_crosslist_date", using: :btree
