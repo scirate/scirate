@@ -29,9 +29,10 @@
               <option value="all">(all)</option>
               <optgroup label="arXiv.org">
                 <% Feed.arxiv_folders.each do |folder| %>
-                  <option value="<%= folder.id %>" selected="<%= folder.id == @folder_id %>"><%= folder.fullname %></option>
+                  <option value="<%= folder.id %>"<% if folder.id == @folder_id %> selected<% end %>"><%= folder.fullname %></option>
                 <% end %>
               </optgroup>
+            </select>
           </td>
           <td>Search a particular category feed</td>
         </tr>
