@@ -270,6 +270,54 @@ header.second {
   font-size: 1.2em;
 }
 
+
+footer:before {
+  content: " ";
+  display: table;
+}
+
+footer:after {
+  content: " ";
+  display: table;
+}
+
+
+footer {
+  position: relative;
+  margin-top: 40px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #777;
+  border-top: 1px solid #eee;
+  width: 100%;
+
+  ul {
+    margin: 0;
+    float: left;
+    list-style: none;
+  }
+
+  li {
+    display: inline-block;
+    line-height: 16px;
+  }
+
+  li+li {
+    margin-left: 10px;
+  }
+
+  .pull-right {
+    img {
+      position: relative;
+      top: -1px;
+      height: 22px;
+    }
+  }
+
+}
+
 // Welcome banner displayed on all pages
 // Until user confirms their email address
 .welcome-banner {
@@ -548,7 +596,6 @@ div.abbr_comment {
 
 #feed-page {
   overflow: hidden;
-  min-height: 100%;
 }
 
 .feedbar {

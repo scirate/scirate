@@ -69,6 +69,10 @@
     </div>
     <%= yield %>
 
+    <div class="container">
+      <%= render 'layouts/footer' %>
+    </div>
+
     <% if Settings::ENABLE_MATHJAX %>
       <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script type="text/x-mathjax-config">
