@@ -160,6 +160,7 @@ class Paper::Search
         @conditions[:abstract] = tstrip(term)
       elsif term.start_with?('feed:')
         @feed = Feed.find_by_uid(tstrip(term))
+        @conditions[:feed_uids] = @feed.uid
       else
         if @general_term
           @general_term += ' ' + term
@@ -172,7 +173,6 @@ class Paper::Search
 
   def run(opts={})
     params = { conditions: @conditions }
-    params[:with] = { feed_uids: @feed.uid } unless @feed.nil?
     params = params.merge(opts)
     @results = Paper.search_for_ids(@general_term, params)
   end
