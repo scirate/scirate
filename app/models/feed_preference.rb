@@ -30,10 +30,12 @@ class FeedPreference < ActiveRecord::Base
     else
       self.selected_range = range
     end
+
     if self.last_visited + 1.day < Time.now
       self.previous_last_visited = self.last_visited
       self.last_visited = Time.now
     end
+
     self.save
   end
 end

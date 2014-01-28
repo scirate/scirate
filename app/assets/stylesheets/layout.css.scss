@@ -645,7 +645,15 @@ div.feed-rightbar
   }
 
   .timenav {
+    p {
+      text-align: center;
+    }
+
     table {
+      width: 100%;
+      text-align: center;
+      border-collapse: separate;
+
       td {
         a {
           display: block;

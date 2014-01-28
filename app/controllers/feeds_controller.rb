@@ -11,6 +11,16 @@ class FeedsController < ApplicationController
                               .order("comments.created_at DESC").limit(10)
   end
 
+  # The primary SciRate query. Given a set of feed uids, a pair of dates
+  # to look between, and a page number, find a bunch of papers and order
+  # them by relevance.
+  #
+  # This can be an expensive query, particularly for large date ranges.
+  # We optimize by using the denormalized crosslist_date on categories
+  # to allow index use and prevent scanning two tables at once. This is
+  # functionally identical to pubdate.
+  #
+  # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
     @range_query =
       Paper.joins(:categories)
@@ -29,21 +39,20 @@ class FeedsController < ApplicationController
     feeds = current_user.feeds.includes(:children)
     feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
 
-    preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
-    @preferences = preferences
+    @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
 
     @date = parse_date(params) || Date.today
-    @range = parse_range(params) || preferences.range
+    @range = parse_range(params) || @preferences.range
     @page = params[:page]
 
     if @range == :since_last
-      @range = ((Time.now - preferences.previous_last_visited) / 1.day).round
+      @range = [1, ((Time.now - @preferences.previous_last_visited) / 1.day).round].max
       @since_last = true
     end
 
     @backdate = @date - @range.days
     # Remember what time range they selected
-    preferences.pref_update!(@range)
+    @preferences.pref_update!(@range)
 
     @recent_comments = _recent_comments(feed_uids)
 
@@ -60,7 +69,7 @@ class FeedsController < ApplicationController
     feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
 
     @date = (parse_date(params) || @feed.last_paper_date || Date.today).to_date
-    @range = parse_range(params) || 0
+    @range = parse_range(params) || 1
     @page = params[:page]
 
     if @range == :since_last
@@ -81,16 +90,16 @@ class FeedsController < ApplicationController
 
     @feed = Feed.find_by_uid!(params[:feed])
     feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
-    preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
+    @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
 
     @date = (parse_date(params) || @feed.last_paper_date || Date.today).to_date
-    @range = parse_range(params) || preferences.range
+    @range = parse_range(params) || @preferences.range
     @page = params[:page]
 
-    preferences.pref_update!(@range)
+    @preferences.pref_update!(@range)
 
     if @range == :since_last
-      @range = ((Time.now - preferences.previous_last_visited) / 1.day).round
+      @range = [1, ((Time.now - @preferences.previous_last_visited) / 1.day).round].max
       @since_last = true
     end
 

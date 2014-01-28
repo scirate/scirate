@@ -41,9 +41,6 @@ class ApplicationController < ActionController::Base
 
     range = params[:range].to_i
 
-    # I expect range=2 to show me two days
-    range -= 1
-
     # negative date windows are confusing
     range = 0 if range < 0
 
