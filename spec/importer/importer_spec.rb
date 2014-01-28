@@ -35,6 +35,7 @@ describe "arxiv importer" do
       paper.versions[1].date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 GMT")
       paper.versions[1].size.should == "71kb"
       paper.title.should == "Revisiting Norm Estimation in Data Streams"
+      paper.author_str.should == "Daniel M. Kane, Jelani Nelson, David P. Woodruff"
       paper.authors.map(&:fullname).should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
       paper.feeds.map(&:uid).should == ["cs.DS", "cs.CC"]
       paper.author_comments.should == "added content; modified L_0 algorithm -- ParityLogEstimator in version 1 contained an error, and the new algorithm uses slightly more space"

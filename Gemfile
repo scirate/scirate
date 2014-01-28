@@ -14,6 +14,7 @@ gem 'pg' # Postgres support
 gem 'squeel' # XXX (Mispy): Can we remove this?
 gem 'activerecord-import' # For bulk importing papers
 gem 'acts_as_votable' # Comment votes (not scites)
+gem 'unidecoder', "~> 1.1.2"
 
 # Frontend stuff
 gem 'will_paginate' # Displaying pages of results

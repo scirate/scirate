@@ -9,9 +9,9 @@ GIT
 
 GIT
   remote: git://github.com/mispy/arxivsync
-  revision: 4ec73a80cde6279bc5d44fc5b7c1fd4ad35a5490
+  revision: a37d68395da2ec10f0acaa761e2155f22553fdcf
   specs:
-    arxivsync (0.0.8)
+    arxivsync (0.0.9)
       colorize
       htmlentities (~> 4.3.1)
       latex-decode (~> 0.1.1)
@@ -221,6 +221,7 @@ GEM
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unicode (0.4.4)
+    unidecoder (1.1.2)
     will_paginate (3.0.5)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -263,4 +264,5 @@ DEPENDENCIES
   thin
   thinking-sphinx (= 3.1.0)
   uglifier
+  unidecoder (~> 1.1.2)
   will_paginate

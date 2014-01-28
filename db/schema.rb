@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140128110038) do
+ActiveRecord::Schema.define(version: 20140128122435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,16 @@ ActiveRecord::Schema.define(version: 20140128110038) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "feed_days", force: true do |t|
+    t.date     "pubdate"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "feed_name"
+  end
+
+  add_index "feed_days", ["pubdate", "feed_name"], name: "index_feed_days_on_pubdate_and_feed_name", unique: true, using: :btree
+
   create_table "feed_preferences", force: true do |t|
     t.integer  "user_id"
     t.integer  "feed_id"
@@ -124,6 +134,7 @@ ActiveRecord::Schema.define(version: 20140128110038) do
     t.integer  "scites_count",    default: 0,    null: false
     t.integer  "comments_count",  default: 0,    null: false
     t.datetime "pubdate"
+    t.text     "author_str",                     null: false
   end
 
   add_index "papers", ["comments_count"], name: "index_papers_on_comments_count", using: :btree

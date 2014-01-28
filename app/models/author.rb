@@ -43,9 +43,13 @@ class Author < ActiveRecord::Base
     if spl.length == 0
       term = spl[0]
     else
-      term = "#{spl[-1]}_#{spl[0][0]}"
+      if spl[-1].downcase == "collaboration" # Special case
+        term = "#{spl[-1]}_#{spl[0]}"
+      else
+        term = "#{spl[-1]}_#{spl[0][0]}"
+      end
     end
 
-    term.mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').to_s.gsub('-', '_')
+    term.mb_chars.normalize(:kd).to_ascii.to_s.gsub('-', '_')
   end
 end

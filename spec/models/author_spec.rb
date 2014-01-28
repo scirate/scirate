@@ -29,5 +29,8 @@ describe Author do
 
     term = Author.make_searchterm("Ben Toner [CWI]")
     term.should == "Toner_B"
+
+    term = Author.make_searchterm("BABAR Collaboration")
+    term.should == "Collaboration_BABAR"
   end
 end

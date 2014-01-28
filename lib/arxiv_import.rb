@@ -31,7 +31,7 @@ module Arxiv::Import
     existing_papers = Paper.where(uid: uids)
     existing_by_uid = Hash[existing_papers.map { |paper| [paper.uid, paper] }]
 
-    paper_columns = [:uid, :submitter, :title, :abstract, :author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :pubdate, :abs_url, :pdf_url]
+    paper_columns = [:uid, :submitter, :title, :author_str, :abstract, :author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :pubdate, :abs_url, :pdf_url]
     paper_values = []
 
     version_columns = [:paper_uid, :position, :date, :size]
@@ -71,6 +71,7 @@ module Arxiv::Import
         model.id,
         model.submitter,
         model.title,
+        model.author_str,
         model.abstract,
         model.comments,
         model.msc_class,
