@@ -13,13 +13,15 @@
 #
 
 class Feed < ActiveRecord::Base
-  belongs_to :parent, class_name: "Feed"
+  belongs_to :parent, foreign_key: :parent_uid,
+             primary_key: :uid, class_name: "Feed"
+  has_many :children, foreign_key: :parent_uid, 
+           primary_key: :uid, class_name: 'Feed'
   has_many :subscriptions, dependent: :destroy
   has_many :users, through: :subscriptions
   has_many :categories, dependent: :destroy,
            foreign_key: :feed_uid, primary_key: :uid
   has_many :papers, through: :categories, source: :paper
-  has_many :children, foreign_key: 'parent_id', class_name: 'Feed'
 
   validates :uid, presence: true, uniqueness: true
   validates :fullname, presence: true

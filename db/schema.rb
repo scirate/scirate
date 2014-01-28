@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140127045258) do
+ActiveRecord::Schema.define(version: 20140128110038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,13 +93,12 @@ ActiveRecord::Schema.define(version: 20140127045258) do
     t.text     "uid",                             null: false
     t.text     "source",                          null: false
     t.text     "fullname",                        null: false
-    t.integer  "parent_id"
     t.integer  "position",            default: 0, null: false
     t.integer  "subscriptions_count", default: 0, null: false
     t.datetime "last_paper_date"
+    t.text     "parent_uid"
   end
 
-  add_index "feeds", ["parent_id"], name: "index_feeds_on_parent_id", using: :btree
   add_index "feeds", ["source"], name: "index_feeds_on_source", using: :btree
   add_index "feeds", ["uid"], name: "index_feeds_on_uid", using: :btree
 

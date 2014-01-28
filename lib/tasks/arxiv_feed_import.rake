@@ -13,7 +13,7 @@ def make_feed(uid, fullname, parent=nil)
     feed.fullname = fullname
   end
 
-  feed.parent = parent
+  feed.parent_uid = parent && parent.uid
   feed
 end
 

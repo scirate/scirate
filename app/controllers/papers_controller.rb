@@ -70,7 +70,7 @@ class PapersController < ApplicationController
       @papers.current_page = paper_ids.current_page
 
       # Determine which folder we should have selected
-      @folder_id = @search.feed && (@search.feed.parent_id || @search.feed.id)
+      @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
 
       @scited_ids = current_user.scited_papers.pluck(:id) if current_user
     end
