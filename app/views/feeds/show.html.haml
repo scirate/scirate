@@ -40,7 +40,7 @@
             .col-md-10
               %h1= @feed.fullname
             .col-md-2
-              = render 'feeds/subscribe', feed: @feed, subscribed: feed.subscriptions.exists?(user_id: current_user.id)
+              = render 'feeds/subscribe', feed: @feed, subscribed: current_user && @feed.subscriptions.exists?(user_id: current_user.id)
           - else
             .col-md-10
               %h1= "All subscribed feeds"
