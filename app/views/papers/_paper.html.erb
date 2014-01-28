@@ -35,6 +35,9 @@
     <div class="col-md-3">
       <div class="pull-right">
         <%= render 'scites/toggle', paper: paper %>
+        <% if paper.comments_count > 0 %>
+          <div><a href="<%= url_for(paper) %>"><%= pluralize paper.comments_count, 'comment' %></a></div>
+        <% end %>
         <div class="links hidden">
           <a class="abspdf" href="<%= paper.abs_url %>">ABS</a>
           <% unless paper.pdf_url.nil? %>
