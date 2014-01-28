@@ -21,16 +21,10 @@
       </div>
       <span class="uid">
         <%= paper.pubdate.strftime("%b %d %Y") %>
-        [<%= link_to paper.feeds[0].uid, paper.feeds[0] %>]
+        <% for feed in paper.feeds %>
+          <%= link_to feed.uid, feed %>
+        <% end %>
       </span>
-      <% if paper.feeds.length > 1 %>
-        <div class="crosslist">
-          cross-listed to:
-          <% for feed in paper.feeds[1..-1] %>
-            <%= link_to feed.uid, feed %>
-          <% end %>
-        </div>
-      <% end %>
     </div>
     <div class="col-md-3">
       <div class="pull-right">
