@@ -31,7 +31,8 @@ class FeedPreference < ActiveRecord::Base
       self.selected_range = range
     end
 
-    if self.last_visited + 1.day < Time.now
+    # "since last visited" works on a day resolution
+    if self.last_visited.to_date + 1.day < Time.now
       self.previous_last_visited = self.last_visited
       self.last_visited = Time.now
     end
