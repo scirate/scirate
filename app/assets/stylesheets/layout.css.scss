@@ -558,12 +558,27 @@ div.abbr_comment {
   margin-bottom: 10px;
 
   // Abstract toggle appears on hover
-  .abstract-toggle {
-    display: none;
-  }
+  //.abstract-toggle {
+  //  display: none;
+  //}
 
   .subscribe-toggle {
     line-height: 40px;
+  }
+
+  .view-subs {
+    
+  }
+}
+
+.feed-header.home {
+  padding-bottom: 0px;
+
+  .view-subs {
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 15px;
   }
 }
 

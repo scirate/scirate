@@ -34,7 +34,7 @@
                   %li.leaf{ class: @feed == feed ? 'active' : '', title: feed.uid }= link_to(feed.fullname, feed)
 
     .col-md-10.feed-center
-      %header.feed-header
+      %header.feed-header{ class: @feed ? '' : 'home' }
         .row
           - if @feed
             .col-md-10
@@ -46,6 +46,7 @@
           - else
             .col-md-10
               %h1= "All subscribed feeds"
+              = link_to "edit subscriptions", feeds_path, class: 'view-subs'
       .row
         .col-md-9
           -#
