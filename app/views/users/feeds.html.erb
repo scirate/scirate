@@ -5,9 +5,7 @@
     All Feeds
   </h1>
 
-  <% if @user.subscriptions_count == 0 %>
-    Please choose one or more feeds to subscribe to. Papers from subscribed feeds will appear on your <a href="/">home feed</a>.
-  <% end %>
+  Please choose one or more feeds to subscribe to. Papers from subscribed feeds will appear on your <a href="/">home feed</a>.
 
   <h2>Physics</h2>
   <% Feed.in_order(['astro-ph', 'cond-mat'] + ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed| %>
