@@ -88,6 +88,7 @@ class UsersController < ApplicationController
   # Big feed subscriptions page
   def feeds
     @user = current_user
+    @subscribed_ids = @user.subscriptions.pluck(:feed_id)
   end
 
   def scited_papers

@@ -6,8 +6,7 @@ class ApiController < ApplicationController
     current_user.scite!(@paper)
 
     if request.xhr?
-      @scited_ids = [@paper.id]
-      render partial: 'scites/toggle', object: @paper, as: :paper
+      render json: true
     else
       redirect_to @paper
     end
@@ -18,8 +17,7 @@ class ApiController < ApplicationController
     current_user.unscite!(@paper)
 
     if request.xhr?
-      @scited_ids = []
-      render partial: 'scites/toggle', object: @paper, as: :paper
+      render json: true
     else
       redirect_to @paper
     end
@@ -29,7 +27,7 @@ class ApiController < ApplicationController
     @feed = Feed.find(params[:feed_id])
     @feed.subscriptions.find_or_create_by(user_id: current_user.id)
     if request.xhr?
-      render :partial => 'feeds/subscribe', :locals => { :feed => @feed }
+      render json: true
     else
       redirect_to @feed
     end
@@ -39,7 +37,7 @@ class ApiController < ApplicationController
     @feed = Feed.find(params[:feed_id])
     @feed.subscriptions.where(user_id: current_user.id).destroy_all
     if request.xhr?
-      render :partial => 'feeds/subscribe', :locals => { :feed => @feed }
+      render json: true
     else
       redirect_to @feed
     end

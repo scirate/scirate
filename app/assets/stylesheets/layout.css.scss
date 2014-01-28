@@ -834,9 +834,12 @@ div.feed-rightbar
 // About page
 
 #about {
-  width: 750px;
   font-size: 15px;
   line-height: 1.7;
+  
+  p {
+    max-width: 750px;
+  }
 }
 
 // Table for displaying a list of users

@@ -6,18 +6,20 @@
   </h1>
 
   <% if @user.subscriptions_count == 0 %>
-    Please choose one or more feeds to subscribe to. Papers from subscribed feeds will appear on your <a href="/">home timeline</a>.
+    Please choose one or more feeds to subscribe to. Papers from subscribed feeds will appear on your <a href="/">home feed</a>.
   <% end %>
 
   <% Feed.arxiv_folders.each do |feed| %>
     <div class="feed-card">
       <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
-      <%= render 'feeds/subscribe', feed: feed %>
+      <%= render 'feeds/subscribe', feed: feed,
+                 subscribed: @subscribed_ids.include?(feed.id) %>
     </div>
-    <% feed.children.each do |feed| %>
+    <% feed.children.order(:fullname).each do |feed| %>
       <div class="feed-card">
         <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
-        <%= render 'feeds/subscribe', feed: feed %>
+        <%= render 'feeds/subscribe', feed: feed,
+                   subscribed: @subscribed_ids.include?(feed.id) %>
       </div>
     <% end %>
   <% end %>
