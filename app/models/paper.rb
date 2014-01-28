@@ -172,7 +172,7 @@ class Paper::Search
 
   def run(opts={})
     params = { conditions: @conditions }
-    params[:with] = { feed_ids: @feed.id } unless @feed.nil?
+    params[:with] = { feed_uids: @feed.uid } unless @feed.nil?
     params = params.merge(opts)
     @results = Paper.search_for_ids(@general_term, params)
   end
