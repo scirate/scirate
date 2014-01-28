@@ -41,7 +41,7 @@
           <td>
             <% Feed.arxiv_folders.each do |folder| %>
               <select class="hidden feed form-control" id="<%= "feed_#{folder.id}" %>" name="feed" disabled="true" %>
-                <option value="<%= folder.fullname %>">(all)</option>
+                <option value="<%= folder.uid %>">(all)</option>
                 <% folder.children.each do |feed| %>
                   <option value="<%= feed.uid %>"<% if feed == @search.feed %> selected <% end %>>
                     <%= feed.fullname %>
