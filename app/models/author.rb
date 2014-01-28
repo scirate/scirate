@@ -40,10 +40,10 @@ class Author < ActiveRecord::Base
       return '' # Rare edge case with non-valid author name
     end
 
-    if spl.length == 0
+    if spl.length == 1
       term = spl[0]
     else
-      if spl[-1].downcase == "collaboration" # Special case
+      if name.downcase.include?("collaboration") # Special case
         term = "#{spl[-1]}_#{spl[0]}"
       else
         term = "#{spl[-1]}_#{spl[0][0]}"
