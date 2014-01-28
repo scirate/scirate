@@ -40,7 +40,7 @@ describe ApiController do
 
   describe "subscribing to a feed" do
     before do
-      xhr :post, :subscribe, feed_id: feed.id
+      xhr :post, :subscribe, feed_uid: feed.uid
     end
 
     it "should subscribe" do
@@ -50,8 +50,8 @@ describe ApiController do
 
   describe "unsubscribing from a feed" do
     before do
-      xhr :post, :subscribe, feed_id: feed.id
-      xhr :post, :unsubscribe, feed_id: feed.id
+      xhr :post, :subscribe, feed_uid: feed.uid
+      xhr :post, :unsubscribe, feed_uid: feed.uid
     end
 
     it "should unsubscribe" do
