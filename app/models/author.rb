@@ -46,6 +46,6 @@ class Author < ActiveRecord::Base
       term = "#{spl[-1]}_#{spl[0][0]}"
     end
 
-    term.mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').to_s
+    term.mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').gsub('-', '_').to_s
   end
 end

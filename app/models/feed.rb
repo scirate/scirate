@@ -75,6 +75,11 @@ class Feed < ActiveRecord::Base
     mapping
   end
 
+  # Grab a set of feeds in order by uid
+  def self.in_order(uids)
+    Feed.where(uid: uids).index_by(&:uid).slice(*uids).values
+  end
+
   def to_param
     uid
   end

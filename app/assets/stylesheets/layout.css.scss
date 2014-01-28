@@ -860,7 +860,15 @@ div.feed-rightbar
   .feed-card {
     display: inline-block;
     width: 550px;
-    padding: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 15px;
+    padding-right: 15px;
     line-height: 34px;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 3px 6px;
   }
 }
