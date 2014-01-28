@@ -37,10 +37,10 @@
           %h3 Physics
           - Feed.where(uid: ['astro-ph', 'cond-mat']).each do |feed|
             %li.feed
-              = link_to(feed.fullname, feed)
+              = link_to(feed.fullname, feed, title: feed.uid)
           - Feed.where(uid: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
             %li.feed
-              = link_to(feed.fullname, feed)
+              = link_to(feed.fullname, feed, title: feed.uid)
           = landing_column(@feeds['physics'])
         .col-md-3
           = landing_column(@feeds['math'])
