@@ -38,7 +38,9 @@
         .row
           - if @feed
             .col-md-10
-              %h1= @feed.fullname
+              %h1
+                = @feed.fullname
+                (#{@feed.uid})
             .col-md-2
               = render 'feeds/subscribe', feed: @feed, subscribed: current_user && @feed.subscriptions.exists?(user_id: current_user.id)
           - else
