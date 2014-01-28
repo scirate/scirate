@@ -53,7 +53,8 @@ class View.SciteToggle extends View
 
 class View.SubscribeToggle extends View
   initialize: ->
-    @fid = @$el.attr('data-feedid')
+    @uid = @$el.attr('data-feed-uid')
+    @fullname = @$el.attr('data-feed-fullname')
 
   events:
     'click .subscribe': "subscribe"
@@ -63,11 +64,27 @@ class View.SubscribeToggle extends View
 
   subscribe: ->
     @$el.addClass('active')
-    $.post "/api/subscribe/#{@fid}"
+    $.post "/api/subscribe/#{@uid}"
+
+    # Update "my feeds" list
+    $leaf = $(".my-feeds .leaf:first").clone()
+    $leaf.attr('title', @uid)
+    $leaf.find('a').attr('href', "/arxiv/#{@uid}")
+    $leaf.find('a').text(@fullname)
+    $(".my-feeds .tree").append($leaf)
+
+    $(".my-feeds .leaf").sort((a, b) ->
+      if $(a).find('a').text() > $(b).find('a').text()
+        1
+      else
+        -1
+    ).appendTo(".my-feeds .tree")
+    
 
   unsubscribe: ->
     @$el.removeClass('active')
-    $.post "/api/unsubscribe/#{@fid}"
+    $.post "/api/unsubscribe/#{@uid}"
+    $(".my-feeds [title='#{@uid}']").remove()
 
   rolloverStart: ->
     @$('.unsubscribe')
