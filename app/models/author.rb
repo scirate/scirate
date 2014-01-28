@@ -35,7 +35,7 @@ class Author < ActiveRecord::Base
   # Makes a searchterm of the form e.g.
   # "Biagini_M" from "Maria Enrica Biagini"
   def self.make_searchterm(name)
-    spl = name.gsub(/ ?\([^\)]+\)?| ?\[[^\]]+\]?/, '').split(/\s+/)
+    spl = name.gsub(/ ?\([^\)]+\)?| ?\[[^\]]+\]?/, '').split(/\s+|\./)
     if spl.empty?
       return '' # Rare edge case with non-valid author name
     end
@@ -46,6 +46,6 @@ class Author < ActiveRecord::Base
       term = "#{spl[-1]}_#{spl[0][0]}"
     end
 
-    term.mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').gsub('-', '_').to_s
+    term.mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').to_s.gsub('-', '_')
   end
 end

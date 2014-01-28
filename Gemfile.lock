@@ -9,11 +9,12 @@ GIT
 
 GIT
   remote: git://github.com/mispy/arxivsync
-  revision: bab9ce40b7cd9e0d863f995da0c0c35ba2299668
+  revision: 4ec73a80cde6279bc5d44fc5b7c1fd4ad35a5490
   specs:
-    arxivsync (0.0.7)
+    arxivsync (0.0.8)
       colorize
-      latex-decode
+      htmlentities (~> 4.3.1)
+      latex-decode (~> 0.1.1)
       nokogiri
       oai
       ox (>= 2.0.2)
@@ -98,6 +99,7 @@ GEM
     haml (4.0.5)
       tilt
     hike (1.2.3)
+    htmlentities (4.3.1)
     i18n (0.6.9)
     innertube (1.1.0)
     joiner (0.2.0)
@@ -125,7 +127,7 @@ GEM
     polyamorous (0.6.4)
       activerecord (>= 3.0)
     polyglot (0.3.3)
-    pry (0.9.12.4)
+    pry (0.9.12.5)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)

@@ -6,7 +6,7 @@
     <div class="col-md-12">
       <div class="row title-row">
         <div class="col-md-10">
-          <h1 class="title"><%= sanitize(@paper.title) %></h1>
+          <h1 class="title"><%= @paper.title %></h1>
         </div>
         <div class="col-md-2">
           <%= render(partial: 'scites/toggle', object: @paper, as: :paper) %>
@@ -17,16 +17,15 @@
         <% @paper.authors.each do |author| %>
           <li>
           <a href="/search?q=au:<%= author.searchterm %>">
-              <%= sanitize(author.fullname) + (author != @paper.authors[-1] ? ',' : '') %>
+              <%= author.fullname + (author != @paper.authors[-1] ? ',' : '') %>
             </a>
           </li>
         <% end %>
       </ul>
 
       <div class="abstract">
-        <%= sanitize(@paper.abstract) %>
+        <%= @paper.abstract %>
       </div>
-
 
       <div class="dates">
         Submitted <%= @paper.submit_date.to_date.to_formatted_s(:rfc822) %> to
