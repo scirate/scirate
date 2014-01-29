@@ -81,10 +81,7 @@ class View.SubscribeToggle extends View
     $.post "/api/subscribe/#{@uid}"
 
     # Update "my feeds" list
-    $leaf = $(".my-feeds .leaf:first").clone()
-    $leaf.attr('title', @uid)
-    $leaf.find('a').attr('href', "/arxiv/#{@uid}")
-    $leaf.find('a').text(@fullname)
+    $leaf = $("""<li class="leaf" title="#{@uid}"><a href="/arxiv/#{@uid}">#{@fullname}</a></li>""")
     $(".my-feeds .tree").append($leaf)
 
     $(".my-feeds .leaf").sort((a, b) ->
