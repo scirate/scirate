@@ -2,9 +2,9 @@
 <% provide :title, sanitize(@paper.title) %>
 
 <div class="container">
-  <div class="paper tex2jax row">
+  <div class="paper row">
     <div class="col-md-12">
-      <div class="row title-row">
+      <div class="row title-row tex2jax">
         <div class="col-md-10">
           <h1 class="title"><%= @paper.title %></h1>
         </div>
@@ -23,7 +23,7 @@
         <% end %>
       </ul>
 
-      <div class="abstract">
+      <div class="abstract tex2jax">
         <%= @paper.abstract %>
       </div>
 

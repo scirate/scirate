@@ -161,7 +161,7 @@ class Comment
   renderMarkup: ->
     """Processes markdown and LaTeX in the data-markup attribute for display."""
     @$el.find('.body').html Comment.converter.makeHtml(@$el.attr('data-markup'))
-    MathJax.Hub.Typeset(@$el[0])
+    MathJax.Hub.Typeset(@$el.find('.body')[0])
 
   constructor: (@$el) ->
     @cid = @$el.attr('data-id')
