@@ -47,7 +47,7 @@
         </div>
       <% end %>
 
-      <% [:author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license].each do |field| %>
+      <% [:author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy].each do |field| %>
         <% unless @paper.send(field).nil? %>
           <%= field.to_s.gsub('_', ' ').capitalize %>:
           <%= @paper.send(field) %>
