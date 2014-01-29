@@ -23,18 +23,32 @@ class View.SciteToggle extends View
     'click .collapse': "collapse"
 
   scite: ->
+    return SciRate.login() unless SciRate.current_user
+
     paper_uid = @$el.attr('data-paper-uid')
     @expand()
     @$el.addClass('active')
+    @$el.closest('.paper').find('.abstract').removeClass('hideable')
+
     # We don't wait for the post to come back before updating UI
     # May want error handling here at some stage
     $.post "/api/scite/#{paper_uid}"
+
     return false
 
   unscite: ->
+    return SciRate.login() unless SciRate.current_user
+
+    scites_count = parseInt(@$el.find('.unscited .count').text())
+
     paper_uid = @$el.attr('data-paper-uid')
-    @collapse()
+
+    if scites_count == 0
+      @$el.closest('.paper').find('.abstract').addClass('hideable')
+    @collapse() unless scites_count > 0 || SciRate.current_user.expand_abstracts
+
     @$el.removeClass('active')
+
     $.post "/api/unscite/#{paper_uid}"
     return false
 
@@ -126,11 +140,13 @@ class View.AbstractToggle extends View
   disable: ->
     @expand = false; @render()
     if SciRate.current_user
+      SciRate.current_user.expand_abstracts = false
       $.post '/api/settings', { expand_abstracts: false }
 
   enable: ->
     @expand = true; @render()
     if SciRate.current_user
+      SciRate.current_user.expand_abstracts = true
       $.post '/api/settings', { expand_abstracts: true }
 
 $ ->
