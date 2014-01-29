@@ -45,7 +45,8 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
 
   valid_username_regex = /\A[a-zA-Z0-9\-_\.]+\z/i
-  validates :username, presence: true, format: { with: valid_username_regex },
+  validates :username, presence: true, 
+            format: { with: valid_username_regex, message: "may only contain alphanumeric characters and - or _" },
                     uniqueness: { case_sensitive: false }
 
   validate do |user|

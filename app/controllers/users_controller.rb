@@ -121,7 +121,7 @@ class UsersController < ApplicationController
       sign_in @user
       flash[:success] = "Profile updated"
     else
-      flash[:error] = @user.errors.full_messages
+      flash[:error] = @user.errors.full_messages.join("\n")
     end
   end
 
