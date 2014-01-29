@@ -8,7 +8,7 @@
           <%= gravatar_for @user, size: 100 %>
           <%= @user.fullname %>
         </h1>
-          <% if current_user.is_moderator? %>
+          <% if current_user && current_user.is_moderator? %>
             <%= status_warning %>
             <a href="<%= admin_edit_user_path(@user) %>">edit user</a>
           <% end %>
