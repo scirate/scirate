@@ -15,7 +15,7 @@ class PapersController < ApplicationController
     ])
 
     @comment_tree = {}
-    @paper.comments.where("ancestor_id IS NOT NULL").order("created_at DESC").each do |c|
+    @paper.comments.where("ancestor_id IS NOT NULL").order("created_at ASC").each do |c|
       @comment_tree[c.ancestor_id] ||= []
       @comment_tree[c.ancestor_id] << c
     end

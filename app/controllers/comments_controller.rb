@@ -26,14 +26,21 @@ class CommentsController < ApplicationController
     end
   end
 
-  def index
-    @comments = Comment.paginate(page: params[:page]).includes(:paper, :user).find(:all, order: "created_at DESC")
-  end
-
   def delete
     paper = @comment.paper
     if @comment.user_id == current_user.id || current_user.is_moderator?
-      @comment.destroy
+
+      if @comment.children.length == 0
+        # If this comment has no replies, remove it completely
+        @comment.destroy
+      else
+        # Otherwise, just hide it away
+        @comment.deleted = true
+        @comment.save
+        paper.comments_count -= 1
+        paper.save
+      end
+
       flash[:comment] = { status: 'success', content: "Comment deleted." }
       redirect_to request.referer || paper
     else

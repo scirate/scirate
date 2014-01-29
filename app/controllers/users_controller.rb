@@ -21,6 +21,7 @@ class UsersController < ApplicationController
       .includes(:feeds, :authors)
       .paginate(page: params[:scite_page], per_page: 10)
     @comments = @user.comments
+      .where(hidden: false, deleted: false)
       .includes(:user, :paper)
       .paginate(page: params[:comment_page], per_page: 20)
   end

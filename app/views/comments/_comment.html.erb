@@ -1,61 +1,67 @@
 <% @voted = current_user && current_user.voted_as_when_voted_for(comment) %>
 
-<div class="comment<%= @voted ? ' voted' : '' %><%= comment.parent ? ' reply' : '' %>" data-id="<%= comment.id %>" data-markup="<%= comment.content %>">
-  <div class="votes">
-    <div class="upvote<%= @voted == true ? ' active' : '' %>">
-      <i class="icon-arrow-up"></i>
-    </div>
-    <div class="downvote<%= @voted == false ? ' active' : '' %>">
-      <i class="icon-arrow-down"></i>
-    </div>
-  </div>
-  <div class="nonvotes">
-    <% if @user %>
-      <div><%= link_to comment.paper.title, comment.paper %></div>
-    <% end %>
-    <%= link_to comment.user.fullname, comment.user %>
-    <% if comment.parent %>
-      in reply to <%= link_to comment.parent.user.fullname, comment.parent.user %>
-    <% end %>
-    <span class="timeago">
-      <%= time_ago_in_words(comment.created_at) %> ago
-      <% if comment.cached_votes_up > 0 || comment.cached_votes_down > 0 %>
-        (<span class="score"><%= comment.cached_votes_up-comment.cached_votes_down %></span> points)
-      <% end %>
-    </span>
-
-    <div class="body tex2jax">
-      <%= simple_format(strip_tags(comment.content)) %>
-    </div>
-    <% if @paper && current_user %>
-      <div class="actions">
-        <a class="reply">reply</a>
-
-        <% if current_user.id == comment.user_id %>
-          | <a class="edit">edit</a>
-          | <%= link_to 'delete', delete_comment_path(comment), method: :post %>
-        <% else %>
-          |
-          <% if comment.reports.exists?(user_id: current_user.id) %>
-            <a class="unreport">reported (undo)</a>
-          <% else %>
-            <a class="report">report</a>
-          <% end %>
-        <% end %>
-
-        <% if current_user.is_moderator? %>
-          <div class="moderate">
-            <%= status_warning %>
-            <a class="edit">edit</a>
-            | <%= link_to 'delete', delete_comment_path(comment), method: :post %>
-          </div>
-        <% end %>
-
-
+<div class="comment<% if comment.deleted || comment.hidden %> deleted<% end %><%= @voted ? ' voted' : '' %><%= comment.parent ? ' reply' : '' %>" data-id="<%= comment.id %>" data-markup="<%= comment.content %>">
+  <% if comment.deleted %>
+    (deleted comment)
+  <% elsif comment.hidden %>
+    (hidden comment)
+  <% else %>
+    <div class="votes">
+      <div class="upvote<%= @voted == true ? ' active' : '' %>">
+        <i class="icon-arrow-up"></i>
       </div>
+      <div class="downvote<%= @voted == false ? ' active' : '' %>">
+        <i class="icon-arrow-down"></i>
+      </div>
+    </div>
+    <div class="nonvotes">
+      <% if @user %>
+        <div><%= link_to comment.paper.title, comment.paper %></div>
+      <% end %>
+      <%= link_to comment.user.fullname, comment.user %>
+      <% if comment.parent %>
+        in reply to <%= link_to comment.parent.user.fullname, comment.parent.user %>
+      <% end %>
+      <span class="timeago">
+        <%= time_ago_in_words(comment.created_at) %> ago
+        <% if comment.cached_votes_up > 0 || comment.cached_votes_down > 0 %>
+          (<span class="score"><%= comment.cached_votes_up-comment.cached_votes_down %></span> points)
+        <% end %>
+      </span>
 
-    <% end %>
-  </div>
+      <div class="body tex2jax">
+        <%= simple_format(strip_tags(comment.content)) %>
+      </div>
+      <% if @paper && current_user %>
+        <div class="actions">
+          <a class="reply">reply</a>
+
+          <% if current_user.id == comment.user_id %>
+            | <a class="edit">edit</a>
+            | <%= link_to 'delete', delete_comment_path(comment), method: :post %>
+          <% else %>
+            |
+            <% if comment.reports.exists?(user_id: current_user.id) %>
+              <a class="unreport">reported (undo)</a>
+            <% else %>
+              <a class="report">report</a>
+            <% end %>
+          <% end %>
+
+          <% if current_user.is_moderator? %>
+            <div class="moderate">
+              <%= status_warning %>
+              <a class="edit">edit</a>
+              | <%= link_to 'delete', delete_comment_path(comment), method: :post %>
+            </div>
+          <% end %>
+
+
+        </div>
+
+      <% end %>
+    </div>
+  <% end %>
 
   <div style="clear: both;"></div>
 </div>

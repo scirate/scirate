@@ -30,5 +30,11 @@ class Comment < ActiveRecord::Base
   has_many :reports, class_name: "CommentReport"
   has_many :children, foreign_key: 'parent_id', class_name: 'Comment'
 
+  before_destroy do
+    if parent && parent.deleted
+      parent.destroy
+    end
+  end
+
   acts_as_votable
 end
