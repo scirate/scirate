@@ -113,6 +113,7 @@ class UsersController < ApplicationController
     if @user.update_attributes(user_params)
       if old_email != @user.email
         @user.send_email_change_confirmation(old_email)
+        sign_in @user
       end
 
       sign_in @user
@@ -129,6 +130,7 @@ class UsersController < ApplicationController
     if @user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
         @user.change_password!(params[:new_password])
+        sign_in @user
         flash[:success] = "Password changed successfully"
       else
         flash[:error] = "New password confirmation does not match"
