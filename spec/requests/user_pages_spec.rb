@@ -6,14 +6,20 @@ describe "User pages" do
 
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
 
-    before do
-      sign_in(user)
+    it "should display profile if you're logged in" do
+      sign_in(other_user)
       visit user_path(user)
+      page.should have_heading user.fullname
+      page.should have_title user.fullname
     end
 
-    it { should have_heading user.fullname }
-    it { should have_title user.fullname }
+    it "should display profile if you're logged out" do
+      visit user_path(user)
+      page.should have_heading user.fullname
+      page.should have_title user.fullname
+    end
   end
 
   describe "signup page" do

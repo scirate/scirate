@@ -72,11 +72,16 @@ describe Paper do
   end
 
   describe "authors" do
+    before do
+      @paper.authors = []
+      @paper.save
+    end
+
     let (:author1) { FactoryGirl.create(:author, paper: @paper, position: 0) }
     let (:author2) { FactoryGirl.create(:author, paper: @paper, position: 1) }
 
     it "should have the authors in the right order" do
-      @paper.authors.should == [author1, author2]
+      @paper.reload.authors.should == [author1, author2]
     end
   end
 

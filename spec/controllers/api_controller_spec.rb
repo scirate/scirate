@@ -11,12 +11,12 @@ describe ApiController do
   describe "sciting a paper" do
     it "should increment the Scite count" do
       expect do
-        xhr :post, :scite, paper_id: paper.id
+        xhr :post, :scite, paper_uid: paper.uid
       end.to change(Scite, :count).by(1)
     end
 
     it "should respond with success" do
-      xhr :post, :scite, paper_id: paper.id
+      xhr :post, :scite, paper_uid: paper.uid
       response.should be_success
     end
   end
@@ -28,12 +28,12 @@ describe ApiController do
 
     it "should decrement the Scite count" do
       expect do
-        xhr :post, :unscite, paper_id: paper.id
+        xhr :post, :unscite, paper_uid: paper.uid
       end.to change(Scite, :count).by(-1)
     end
 
     it "should respond with success" do
-      xhr :post, :unscite, paper_id: paper.id
+      xhr :post, :unscite, paper_uid: paper.uid
       response.should be_success
     end
   end
