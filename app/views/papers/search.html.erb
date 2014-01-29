@@ -57,6 +57,22 @@
           <td><%= text_field_tag :general, @search.general_term, class: 'form-control' %></td>
           <td>All available paper metadata</td>
         </tr>
+
+        <tr></tr>
+        <tr class="filter-start">
+          <td colspan="3"></td>
+        </tr>
+
+        <tr>
+          <td><%= label_tag :order, "Order By" %></td>
+          <td>
+            <select class="form-control" id="order" name="order">
+              <% [:scites, :comments, :recency, :relevance].each do |order| %>
+                <option value="<%= order %>"<% if @search.order == order %> selected<% end %>><%= order.to_s.capitalize %></option>
+              <% end %>
+            </select>
+          </td>
+          <td>How to sort the results</td>
       </table>
 
       <div class="field">

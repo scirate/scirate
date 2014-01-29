@@ -97,7 +97,7 @@ end
 
 class Paper::Search
   attr_reader :results
-  attr_accessor :conditions, :general_term, :feed, :authors
+  attr_accessor :conditions, :general_term, :feed, :authors, :order, :order_sql
 
   # Split string on spaces which aren't enclosed by quotes
   def qsplit(query)
@@ -114,7 +114,7 @@ class Paper::Search
 
   # Strip field prefix and quotes
   def tstrip(term)
-    ['au:','ti:','abs:','feed:'].each do |prefix|
+    ['au:','ti:','abs:','feed:','order:'].each do |prefix|
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
     term#.gsub("'", "''").gsub('"', "'")
@@ -127,6 +127,7 @@ class Paper::Search
 
     @feed = nil
     @authors = []
+    @order = :scites
 
     qsplit(query).each do |term|
       if term.start_with?('au:')
@@ -146,6 +147,8 @@ class Paper::Search
       elsif term.start_with?('feed:')
         @feed = Feed.find_by_uid(tstrip(term))
         @conditions[:feed_uids] = @feed.uid
+      elsif term.start_with?('order:')
+        @order = tstrip(term).to_sym
       else
         if @general_term
           @general_term += ' ' + term
@@ -154,10 +157,20 @@ class Paper::Search
         end
       end
     end
+
+    @order_sql = case @order
+                 when :scites then "scites_count DESC, pubdate DESC"
+                 when :comments then "comments_count DESC, pubdate DESC"
+                 when :recency then "pubdate DESC"
+                 when :relevancy then nil # Default Sphinx match relevancy
+                 end
   end
 
   def run(opts={})
-    params = { conditions: @conditions }
+    params = {}
+    params[:conditions] = @conditions
+    params[:order] = @order_sql unless @order_sql.nil?
+
     params = params.merge(opts)
     @results = Paper.search_for_ids(@general_term, params)
   end

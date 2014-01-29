@@ -853,6 +853,9 @@ div.feed-rightbar
 // Search page
 
 #advanced_search_form {
+  tr.filter-start td {
+    height: 51px;
+  }
 }
 
 // About page
