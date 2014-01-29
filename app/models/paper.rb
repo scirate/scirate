@@ -99,25 +99,43 @@ class Paper::Search
   attr_reader :results
   attr_accessor :conditions, :general_term, :feed, :authors, :order, :order_sql
 
-  # Split string on spaces which aren't enclosed by quotes
-  def qsplit(query)
-    q = query.dup
-    quoted = false
-    indices = []
-    q.chars.each_with_index do |ch, i|
-      quoted = !quoted if ch == '"'
-      indices << i if ch == ' ' && !quoted
+  # Split query on non-paren enclosed spaces
+  def psplit(query)
+    split = []
+    depth = 0
+    current = ""
+
+    query.chars.each_with_index do |ch, i|
+      if i == query.length-1
+        split << current+ch
+      elsif ch == ' ' && depth == 0
+        split << current
+        current = ""
+      else
+        current << ch
+
+        if ch == '('
+          depth += 1
+        elsif ch == ')'
+          depth -= 1
+        end
+      end
     end
-    indices.each { |i| q[i] = "\x00" }
-    q.split("\x00")
+
+    split
   end
 
-  # Strip field prefix and quotes
+  # Strip field prefix and parens
   def tstrip(term)
     ['au:','ti:','abs:','feed:','order:'].each do |prefix|
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
-    term#.gsub("'", "''").gsub('"', "'")
+
+    if term[0] == '(' && term[-1] == ')'
+      term[1..-2]
+    else
+      term
+    end
   end
 
   def initialize(query)
@@ -129,7 +147,7 @@ class Paper::Search
     @authors = []
     @order = :scites
 
-    qsplit(query).each do |term|
+    psplit(query).each do |term|
       if term.start_with?('au:')
         if term.include?('_')
           @authors << tstrip(term)

@@ -28,8 +28,7 @@ class PapersController < ApplicationController
   end
 
   def __quote(val)
-    val = val.gsub('"', '')
-    val.include?(' ') ? "\"#{val}\"" : val
+    val.include?(' ') ? "(#{val})" : val
   end
 
   def search
