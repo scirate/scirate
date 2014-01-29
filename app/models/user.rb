@@ -44,11 +44,15 @@ class User < ActiveRecord::Base
   validates :email, presence: true, format: { with: valid_email_regex },
                     uniqueness: { case_sensitive: false }
 
-  valid_username_regex = /\A[a-zA-Z0-9_\.]+\z/i
+  valid_username_regex = /\A[a-zA-Z0-9\-_\.]+\z/i
   validates :username, presence: true, format: { with: valid_username_regex },
                     uniqueness: { case_sensitive: false }
 
-  validates :password, length: { minimum: 6 }, on: :create
+  validate do |user|
+    if user.password && user.password.length < 6
+      user.errors.add :password, "must be at least 6 characters"
+    end
+  end
 
   acts_as_voter
 
@@ -166,11 +170,12 @@ class User < ActiveRecord::Base
     account_status == STATUS_SPAM
   end
 
-  def change_password!(new_password)
+  def change_password(new_password)
     self.password = new_password
     self.password_confirmation = new_password
-    UserMailer.password_change(self).deliver
-    self.save!
+    saved = self.save
+    UserMailer.password_change(self).deliver if saved
+    saved
   end
 
   # Data sent to the browser for JS interaction

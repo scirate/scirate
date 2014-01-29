@@ -130,9 +130,12 @@ class UsersController < ApplicationController
 
     if @user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
-        @user.change_password!(params[:new_password])
-        sign_in @user
-        flash[:success] = "Password changed successfully"
+        if @user.change_password(params[:new_password])
+          sign_in @user
+          flash[:success] = "Password changed successfully"
+        else
+          flash[:error] = @user.errors.full_messages.join("\n")
+        end
       else
         flash[:error] = "New password confirmation does not match"
       end
