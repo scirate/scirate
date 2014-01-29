@@ -36,6 +36,8 @@ class Comment
 
   upvote: ->
     """Upvote the comment."""
+    return if @$el.hasClass('mine')
+
     @$el.find('.upvote').addClass('active')
     if @votestate == 'downvote'
       @$el.find('.downvote').removeClass('active')
@@ -48,6 +50,8 @@ class Comment
 
   downvote: ->
     """Downvote the comment."""
+    return if @$el.hasClass('mine')
+
     @$el.find('.downvote').addClass('active')
     if @votestate == 'upvote'
       @$el.find('.upvote').removeClass('active')

@@ -1,6 +1,6 @@
 <% @voted = current_user && current_user.voted_as_when_voted_for(comment) %>
 
-<div class="comment<% if comment.deleted || comment.hidden %> deleted<% end %><%= @voted ? ' voted' : '' %><%= comment.parent ? ' reply' : '' %>" data-id="<%= comment.id %>" data-markup="<%= comment.content %>">
+<div class="comment<% if current_user && current_user.id == comment.user_id %> mine<% end %><% if comment.deleted || comment.hidden %> deleted<% end %><%= @voted ? ' voted' : '' %><%= comment.parent ? ' reply' : '' %>" data-id="<%= comment.id %>" data-markup="<%= comment.content %>">
   <% if comment.deleted %>
     (deleted comment)
   <% elsif comment.hidden %>

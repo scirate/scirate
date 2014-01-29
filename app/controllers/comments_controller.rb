@@ -49,13 +49,21 @@ class CommentsController < ApplicationController
   end
 
   def upvote
-    @comment.upvote_from(current_user)
-    render :text => 'success'
+    if current_user.id != @comment.user_id
+      @comment.upvote_from(current_user)
+      render :text => 'success'
+    else
+      render :text => "can't upvote own comment"
+    end
   end
 
   def downvote
-    @comment.downvote_from(current_user)
-    render :text => 'success'
+    if current_user.id != @comment.user_id
+      @comment.downvote_from(current_user)
+      render :text => 'success'
+    else
+      render :text => "can't downvote own comment"
+    end
   end
 
   def unvote
