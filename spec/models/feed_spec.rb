@@ -6,10 +6,10 @@
 #  uid                 :text             not null
 #  source              :text             not null
 #  fullname            :text             not null
-#  parent_id           :integer
 #  position            :integer          default(0), not null
 #  subscriptions_count :integer          default(0), not null
 #  last_paper_date     :datetime
+#  parent_uid          :text
 #
 
 require 'spec_helper'

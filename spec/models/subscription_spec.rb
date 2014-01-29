@@ -15,7 +15,7 @@ describe Subscription do
   let(:user) { FactoryGirl.create(:user) }
   let(:feed) { FactoryGirl.create(:feed) }
   let(:subscription) do
-    user.subscriptions.build(feed_id: feed.id)
+    user.subscriptions.build(feed_uid: feed.uid)
   end
 
   subject { subscription }

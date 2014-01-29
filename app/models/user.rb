@@ -88,43 +88,35 @@ class User < ActiveRecord::Base
   end
 
   def scited?(paper)
-    scites.find_by_paper_id(paper.id)
+    scites.find_by_paper_uid(paper.uid)
   end
 
   def scite!(paper)
-    unless scites.find_by_paper_id(paper.id)
-      scites.create!(paper_id: paper.id)
+    unless scites.find_by_paper_uid(paper.uid)
+      scites.create!(paper_uid: paper.uid)
       paper.scites_count += 1
     end
   end
 
   def unscite!(paper)
-    scites.find_by_paper_id(paper.id).destroy
+    scites.find_by_paper_uid(paper.uid).destroy
     paper.scites_count -= 1
   end
 
   def subscribed?(feed)
-    subscriptions.find_by_feed_id(feed.id)
+    subscriptions.find_by_feed_uid(feed.uid)
   end
 
   def subscribe!(feed)
-    subscriptions.create!(feed_id: feed.id)
+    subscriptions.create!(feed_uid: feed.uid)
   end
 
   def unsubscribe!(feed)
-    subscriptions.find_by_feed_id(feed.id).destroy
+    subscriptions.find_by_feed_uid(feed.uid).destroy
   end
 
   def has_subscriptions?
     subscriptions.size > 0
-  end
-
-  def feed
-    Paper.from_feeds_subscribed_by_cl(self)
-  end
-
-  def feed_without_cross_lists
-    Paper.from_feeds_subscribed_by(self)
   end
 
   def feed_last_paper_date

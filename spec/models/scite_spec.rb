@@ -3,10 +3,10 @@
 # Table name: scites
 #
 #  id         :integer          not null, primary key
-#  paper_id   :integer          not null
 #  user_id    :integer          not null
 #  created_at :datetime
 #  updated_at :datetime
+#  paper_uid  :text             default(""), not null
 #
 
 require 'spec_helper'
@@ -16,7 +16,7 @@ describe Scite do
   let (:user) { FactoryGirl.create(:user) }
   let (:paper)  { FactoryGirl.create(:paper) }
   let(:scite) do
-    user.scites.build(paper_id: paper.id)
+    user.scites.build(paper_uid: paper.uid)
   end
 
   subject { scite }
@@ -38,7 +38,7 @@ describe Scite do
   end
 
   describe "when follower id is not present" do
-    before { scite.paper_id = nil }
+    before { scite.paper_uid = nil }
     it { should_not be_valid }
   end
 end

@@ -24,6 +24,7 @@
 #  scites_count    :integer          default(0), not null
 #  comments_count  :integer          default(0), not null
 #  pubdate         :datetime
+#  author_str      :text             not null
 #
 
 class Paper < ActiveRecord::Base
@@ -33,12 +34,14 @@ class Paper < ActiveRecord::Base
             foreign_key: :paper_uid, primary_key: :uid
   has_many  :authors, -> { order("position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
-            
 
-  has_many  :scites, dependent: :delete_all
-  has_many  :sciters, -> { order("fullname ASC") }, through: :scites, source: :user
-  has_many  :comments, -> { order("created_at ASC") }, dependent: :delete_all
   has_many  :feeds, -> { order("categories.position ASC") }, through: :categories
+
+  has_many  :scites, dependent: :delete_all,
+            foreign_key: :paper_uid, primary_key: :uid
+  has_many  :sciters, -> { order("fullname ASC") }, through: :scites, source: :user
+  has_many  :comments, -> { order("created_at ASC") }, dependent: :delete_all,
+            foreign_key: :paper_uid, primary_key: :uid
 
   validates :uid, presence: true, uniqueness: true
   validates :title, presence: true
@@ -48,10 +51,6 @@ class Paper < ActiveRecord::Base
   validates :update_date, presence: true
 
   validate  :update_date_is_after_submit_date
-
-  # Returns papers from feeds subscribed to by the given user
-  scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
-  scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
 
   # Given when a paper was submitted, estimate the
   # time at which the arXiv was likely to have published it
@@ -93,20 +92,6 @@ class Paper < ActiveRecord::Base
       if update_date < submit_date
         errors.add(:update_date, "must not be earlier than submit_date")
       end
-    end
-
-    # Returns SQL condition for papers from feeds subscribed
-    # to by the given user.
-    def self.subscribed_by(user)
-      subscribed_ids = %(SELECT feed_id FROM subscriptions
-                         WHERE user_id = ?)
-      where("feed_id IN (#{subscribed_ids})", user.id)
-    end
-
-    def self.subscribed_by_cl(user)
-      subscribed_ids = %(SELECT feed_id FROM subscriptions
-                         WHERE user_id = ?)
-      includes(:cross_lists).where("cross_lists.feed_id IN (#{subscribed_ids})", user.id)
     end
 end
 

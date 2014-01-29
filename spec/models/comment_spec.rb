@@ -3,7 +3,6 @@
 # Table name: comments
 #
 #  id                :integer          not null, primary key
-#  paper_id          :integer          not null
 #  user_id           :integer          not null
 #  score             :integer          default(0), not null
 #  cached_votes_up   :integer          default(0), not null
@@ -14,6 +13,8 @@
 #  created_at        :datetime
 #  updated_at        :datetime
 #  content           :text             not null
+#  deleted           :boolean          default(FALSE), not null
+#  paper_uid         :text             default(""), not null
 #
 
 require 'spec_helper'
@@ -23,14 +24,14 @@ describe Comment do
   let(:paper) { FactoryGirl.create(:paper) }
 
   before do
-    @comment = user.comments.create(paper_id: paper.id, content: "Test comment.")
+    @comment = user.comments.create(paper_uid: paper.uid, content: "Test comment.")
   end
 
   subject { @comment }
 
   it { should respond_to(:content) }
   it { should respond_to(:user_id) }
-  it { should respond_to(:paper_id) }
+  it { should respond_to(:paper_uid) }
   its(:user) { should == user }
   its(:paper){ should == paper }
   
@@ -42,7 +43,7 @@ describe Comment do
   end
 
   describe "when paper id is not present" do
-    before { @comment.paper_id = nil }
+    before { @comment.paper_uid = nil }
     it { should_not be_valid }
   end
 

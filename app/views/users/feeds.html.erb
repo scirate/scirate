@@ -12,7 +12,7 @@
     <div class="feed-card">
       <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
       <%= render 'feeds/subscribe', feed: feed,
-                 subscribed: @subscribed_ids.include?(feed.id) %>
+                 subscribed: @subscribed_ids.include?(feed.uid) %>
     </div>
   <% end %>
 
@@ -21,13 +21,13 @@
     <div class="feed-card">
       <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
       <%= render 'feeds/subscribe', feed: feed,
-                 subscribed: @subscribed_ids.include?(feed.id) %>
+                 subscribed: @subscribed_ids.include?(feed.uid) %>
     </div>
     <% feed.children.order(:fullname).each do |feed| %>
       <div class="feed-card">
         <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
         <%= render 'feeds/subscribe', feed: feed,
-                   subscribed: @subscribed_ids.include?(feed.id) %>
+                   subscribed: @subscribed_ids.include?(feed.uid) %>
       </div>
     <% end %>
   <% end %>

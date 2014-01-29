@@ -3,7 +3,7 @@ class CommentsController < ApplicationController
 
   def create
     @comment = current_user.comments.build(
-      paper_id: params[:comment][:paper_id],
+      paper_uid: params[:comment][:paper_uid],
       content: params[:comment][:content]
     )
     
@@ -75,7 +75,7 @@ class CommentsController < ApplicationController
 
   def reply
     @reply = current_user.comments.build(
-      paper_id: @comment.paper_id,
+      paper_uid: @comment.paper_uid,
       parent_id: @comment.id,
       ancestor_id: @comment.ancestor_id || @comment.id,
       content: params[:content]

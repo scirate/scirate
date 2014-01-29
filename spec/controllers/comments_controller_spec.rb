@@ -11,7 +11,7 @@ describe CommentsController do
   describe "commenting" do
     it "should post a comment" do
       expect do
-        xhr :post, :create, comment: { paper_id: paper.id, content: "fishies" }
+        xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
         response.should be_redirect
         flash[:comment][:status].should == :success
         paper.comments.last.content.should == "fishies"
@@ -43,7 +43,7 @@ describe CommentsController do
 
         reply = comment.children[0]
         reply.content.should == "snuffles"
-        reply.paper_id.should == paper.id
+        reply.paper_uid.should == paper.uid
       end.to change(paper, :comments_count).by(1)
     end
 

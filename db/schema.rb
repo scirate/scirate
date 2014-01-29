@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140129081020) do
+ActiveRecord::Schema.define(version: 20140129103856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(version: 20140129081020) do
   end
 
   create_table "comments", force: true do |t|
-    t.integer  "paper_id",                          null: false
     t.integer  "user_id",                           null: false
     t.integer  "score",             default: 0,     null: false
     t.integer  "cached_votes_up",   default: 0,     null: false
@@ -59,10 +58,11 @@ ActiveRecord::Schema.define(version: 20140129081020) do
     t.datetime "updated_at"
     t.text     "content",                           null: false
     t.boolean  "deleted",           default: false, null: false
+    t.text     "paper_uid",         default: "",    null: false
   end
 
   add_index "comments", ["ancestor_id"], name: "index_comments_on_ancestor_id", using: :btree
-  add_index "comments", ["paper_id"], name: "index_comments_on_paper_id", using: :btree
+  add_index "comments", ["paper_uid"], name: "index_comments_on_paper_uid", using: :btree
   add_index "comments", ["parent_id"], name: "index_comments_on_parent_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
@@ -147,24 +147,23 @@ ActiveRecord::Schema.define(version: 20140129081020) do
   add_index "papers", ["uid"], name: "index_papers_on_uid", using: :btree
 
   create_table "scites", force: true do |t|
-    t.integer  "paper_id",   null: false
-    t.integer  "user_id",    null: false
+    t.integer  "user_id",                 null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "paper_uid",  default: "", null: false
   end
 
-  add_index "scites", ["paper_id"], name: "index_scites_on_paper_id", using: :btree
+  add_index "scites", ["paper_uid"], name: "index_scites_on_paper_uid", using: :btree
   add_index "scites", ["user_id"], name: "index_scites_on_user_id", using: :btree
 
   create_table "subscriptions", force: true do |t|
     t.integer  "user_id"
-    t.integer  "feed_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.text     "feed_uid",   default: "", null: false
   end
 
-  add_index "subscriptions", ["feed_id"], name: "index_subscriptions_on_feed_id", using: :btree
-  add_index "subscriptions", ["user_id", "feed_id"], name: "index_subscriptions_on_user_id_and_feed_id", unique: true, using: :btree
+  add_index "subscriptions", ["feed_uid"], name: "index_subscriptions_on_feed_uid", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
   create_table "up_votes", force: true do |t|

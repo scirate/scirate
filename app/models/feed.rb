@@ -6,10 +6,10 @@
 #  uid                 :text             not null
 #  source              :text             not null
 #  fullname            :text             not null
-#  parent_id           :integer
 #  position            :integer          default(0), not null
 #  subscriptions_count :integer          default(0), not null
 #  last_paper_date     :datetime
+#  parent_uid          :text
 #
 
 class Feed < ActiveRecord::Base
@@ -17,7 +17,8 @@ class Feed < ActiveRecord::Base
              primary_key: :uid, class_name: "Feed"
   has_many :children, foreign_key: :parent_uid, 
            primary_key: :uid, class_name: 'Feed'
-  has_many :subscriptions, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy,
+           foreign_key: :feed_uid, primary_key: :uid
   has_many :users, through: :subscriptions
   has_many :categories, dependent: :destroy,
            foreign_key: :feed_uid, primary_key: :uid
