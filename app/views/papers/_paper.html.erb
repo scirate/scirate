@@ -1,4 +1,4 @@
-<% showabs = (showabs.nil? ? paper.scites_count > 0 : showabs) %>
+<% showabs = (showabs.nil? ? (current_user && current_user.expand_abstracts) || paper.scites_count > 0 : showabs) %>
 
 <li class="paper tex2jax">
   <div class="row">
@@ -41,7 +41,7 @@
       </div>
     </div>
   </div>
-  <div class="abstract<%= showabs ? '' : ' hideable hidden' %>">
+  <div class="abstract<% unless showabs %> hidden<% end %><% if paper.scites_count == 0 %> hideable<% end %>">
     <%= sanitize(paper.abstract) %>
   </div>
 </li>

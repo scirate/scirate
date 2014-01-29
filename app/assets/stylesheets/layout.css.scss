@@ -710,6 +710,11 @@ div.feed-rightbar
     font-size: inherit;
   }
 
+  .abstract-toggle {
+    width: 100%;
+    margin-top: 10px;
+  }
+
   .timenav {
     p {
       text-align: center;
@@ -863,10 +868,6 @@ div.feed-rightbar
   > tbody > tr > td {
     vertical-align: middle;
   }
-}
-
-.abstract-toggle {
-  margin: 10px 0;
 }
 
 // Subscriptions page

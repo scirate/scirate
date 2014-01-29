@@ -66,6 +66,7 @@
   </div>
   <% if @papers %>
     <h3><%= @search.results.count %> results for <%= @query %></h3>
+    <%= render 'papers/abstract_toggle' %>
     <div class="paperlist">
       <ul class="papers">
         <% if @papers.empty? %>
