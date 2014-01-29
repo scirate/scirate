@@ -4,11 +4,13 @@ describe CommentsController do
 
   let(:comment) { FactoryGirl.create(:comment) }
   let(:user)  { comment.user.reload }
+  let(:other_user) { FactoryGirl.create(:user) }
   let(:paper) { comment.paper.reload }
 
-  before { sign_in user }
 
   describe "commenting" do
+    before { sign_in user }
+
     it "should post a comment" do
       expect do
         xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
@@ -46,6 +48,10 @@ describe CommentsController do
         reply.paper_uid.should == paper.uid
       end.to change(paper, :comments_count).by(1)
     end
+  end
+
+  describe "voting" do
+    before { sign_in other_user }
 
     it "should allow a single upvote" do
       expect do 
