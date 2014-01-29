@@ -15,7 +15,8 @@ class UsersController < ApplicationController
       scited_papers = @user.scited_papers.order("scites.created_at DESC")
     end
 
-    @scited_ids = current_user.scited_papers.pluck(:id)
+    @scited_ids = current_user.scited_papers.pluck(:id) if current_user
+
     @scited_papers = scited_papers
       .includes(:feeds, :authors)
       .paginate(page: params[:scite_page], per_page: 10)
