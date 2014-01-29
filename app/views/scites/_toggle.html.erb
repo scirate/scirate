@@ -1,6 +1,6 @@
 <% scited = @scited.nil? ? (signed_in? && @scited_ids.include?(paper.id)) : @scited %>
 
-<div class="scite-toggle <%= scited ? 'active' : '' %>" data-paper-id="<%= paper.id %>" >
+<div class="scite-toggle <%= scited ? 'active' : '' %>" data-paper-uid="<%= paper.uid %>" >
   <div class="scited">
     <button class="btn unscite btn-success">Scited</button>
     <div class="scites-count">

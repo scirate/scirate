@@ -23,19 +23,19 @@ class View.SciteToggle extends View
     'click .collapse': "collapse"
 
   scite: ->
-    paper_id = @$el.attr('data-paper-id')
+    paper_uid = @$el.attr('data-paper-uid')
     @expand()
     @$el.addClass('active')
     # We don't wait for the post to come back before updating UI
     # May want error handling here at some stage
-    $.post "/api/scite/#{paper_id}"
+    $.post "/api/scite/#{paper_uid}"
     return false
 
   unscite: ->
-    paper_id = @$el.attr('data-paper-id')
+    paper_uid = @$el.attr('data-paper-uid')
     @collapse()
     @$el.removeClass('active')
-    $.post "/api/unscite/#{paper_id}"
+    $.post "/api/unscite/#{paper_uid}"
     return false
 
   expand: ->

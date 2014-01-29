@@ -2,7 +2,7 @@ class ApiController < ApplicationController
   before_filter :authorize
 
   def scite
-    @paper = Paper.find(params[:paper_id])
+    @paper = Paper.find_by_uid!(params[:paper_uid])
     current_user.scite!(@paper)
 
     if request.xhr?
@@ -13,7 +13,7 @@ class ApiController < ApplicationController
   end
 
   def unscite
-    @paper = Paper.find(params[:paper_id])
+    @paper = Paper.find_by_uid!(params[:paper_uid])
     current_user.unscite!(@paper)
 
     if request.xhr?
