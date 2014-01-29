@@ -121,7 +121,7 @@ class UsersController < ApplicationController
       sign_in @user
       flash[:success] = "Profile updated"
     else
-      flash[:error] = @user.errors.full_messages.join("\n")
+      flash[:error] = @user.errors.full_messages
     end
   end
 
@@ -135,7 +135,7 @@ class UsersController < ApplicationController
           sign_in @user
           flash[:success] = "Password changed successfully"
         else
-          flash[:error] = @user.errors.full_messages.join("\n")
+          flash[:error] = @user.errors.full_messages
         end
       else
         flash[:error] = "New password confirmation does not match"
