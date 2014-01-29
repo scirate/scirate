@@ -91,7 +91,7 @@ describe UserMailer do
     end
 
     it 'contains the right place to complain to' do
-      mail.body.encoded.should match( 'rosgen@gmail.com' )
+      mail.body.encoded.should match("support@#{Settings::HOST}")
     end
   end
 end

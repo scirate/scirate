@@ -13,7 +13,16 @@ class FeedsController < ApplicationController
 
     @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
 
-    @date = _parse_date(params) || Feed.where(uid: feed_uids).order("last_paper_date DESC").first.last_paper_date.to_date || Date.today
+    @date = _parse_date(params)
+
+    if @date.nil?
+      if feed_uids.empty?
+        @date = Date.today
+      else
+        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").first.last_paper_date.to_date || Date.today
+      end
+    end
+
     @range = _parse_range(params) || :since_last# || @preferences.range
     @page = params[:page]
 
