@@ -53,6 +53,10 @@ class User < ActiveRecord::Base
     if user.password && user.password.length < 6
       user.errors.add :password, "must be at least 6 characters"
     end
+
+    if Settings::RESERVED_USERNAMES.include?(user.username.downcase)
+      user.errors.add :username, "is already taken"
+    end
   end
 
   acts_as_voter

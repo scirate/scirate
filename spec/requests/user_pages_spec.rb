@@ -185,6 +185,13 @@ describe "User pages" do
       visit settings_path
     end
 
+    it "shouldn't allow use of reserved usernames" do
+      fill_in "Username", with: "arxiv"
+      click_button "Save changes"
+
+      page.should have_error_message "Username is already taken"
+    end
+
     describe "page" do
       it { should have_link('change', href: 'http://gravatar.com/emails') }
 
@@ -195,7 +202,6 @@ describe "User pages" do
     end
 
     describe "with valid information" do
-      let(:user)      { FactoryGirl.create(:user) }
       let(:new_name)  { "New Name" }
       let(:new_email) { "new@example.com" }
 
