@@ -1,10 +1,20 @@
-<% showabs = (showabs.nil? ? (current_user && current_user.expand_abstracts) || paper.scites_count > 0 : showabs) %>
+<% cool_paper = paper.scites_count > 0 || (@search && [@search.conditions[:abstract], @search.general_term].find { |t| t && paper.abstract.include?(t) }) %>
+
+<% unless defined?(showabs) %>
+  <% showabs = cool_paper || (current_user && current_user.expand_abstracts) %>
+<% end %>
 
 <li class="paper tex2jax">
   <div class="row">
     <div class="col-md-9">
       <div class="title">
-        <a href="<%= url_for(paper) %>"><%= sanitize(paper.title) %></a>
+        <a href="<%= url_for(paper) %>">
+          <% if @search %>
+            <%= highlight(paper.title, [@search.conditions[:title], @search.general_term].reject { |t| t.nil? }) %>
+          <% else %>
+            <%= paper.title %>
+          <% end %>
+        </a>
       </div>
       <div class="authors">
         <% paper.authors[0..19].each do |author| %>
@@ -41,7 +51,12 @@
       </div>
     </div>
   </div>
-  <div class="abstract<% unless showabs %> hidden<% end %><% if paper.scites_count == 0 %> hideable<% end %>">
-    <%= sanitize(paper.abstract) %>
+  <div class="abstract<% unless showabs %> hidden<% end %><% unless cool_paper %> hideable<% end %>">
+    <% if @search %>
+      <%= highlight(paper.abstract, [@search.conditions[:abstract], @search.general_term].reject(&:nil?)) %>
+    <% else %>
+      <%= paper.abstract %>
+    <% end %>
+
   </div>
 </li>

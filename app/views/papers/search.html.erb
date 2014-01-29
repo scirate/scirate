@@ -88,7 +88,9 @@
         <% if @papers.empty? %>
           No papers found.
         <% else %>
-          <%= render @papers %>
+          <% @papers.each do |paper| %>
+            <%= render 'papers/paper', paper: paper %>
+          <% end %>
         <% end %>
       </ul>
     </div>
