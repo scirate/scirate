@@ -61,7 +61,7 @@
       <%= link_to @paper.pdf_url, @paper.pdf_url %>
 
       <div class="comments">
-        <a name="comments">
+        <a name="comments"></a>
         <h4><%= pluralize(@comments.size, "comments") %></h4>
         <% if flash[:comment] %>
           <div class="alert alert-<%= flash[:comment][:status] %>">
