@@ -21,32 +21,4 @@ class ApplicationController < ActionController::Base
       yield
     end
   end
-
-  def parse_date params
-    date = Chronic.parse(params[:date])
-    date = date.to_date if !date.nil?
-
-    return date
-  end
-
-  def parse_feed params
-    feed = Feed.find_by_name(params[:feed])
-
-    return feed
-  end
-
-  def parse_range params
-    return nil unless params.has_key?(:range)
-    return :since_last if params[:range] == 'since_last'
-
-    range = params[:range].to_i
-
-    # I expect range=2 to show me two days
-    range -= 1
-
-    # negative date windows are confusing
-    range = 0 if range < 0
-
-    return range
-  end
 end

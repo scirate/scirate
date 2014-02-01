@@ -1,17 +1,17 @@
-<div class="scite-toggle <%= (signed_in? && @scited_papers.include?(paper)) ? '' : 'inactive' %>" data-paper-id="<%= paper.id %>" >
-  <% if signed_in? && @scited_papers.include?(paper) %>
+<% scited = @scited.nil? ? (signed_in? && @scited_ids.include?(paper.id)) : @scited %>
+
+<div class="scite-toggle <%= scited ? 'active' : '' %>" data-paper-uid="<%= paper.uid %>" >
+  <div class="scited">
     <button class="btn unscite btn-success">Scited</button>
-  <% else %>
-    <button class="btn scite">Scite!</button> 
-  <% end %>
-  <div class="scites-count">
-    <button class="btn count"><%= paper.scites_count %></button>
-    <% if paper.scites_count > 0 %>
-      <div class="sciters-dropdown">
-        <% paper.sciters.each do |user| %>
-          <%= link_to user.name, user %>
-        <% end %>
-      </div>
-    <% end %>
+    <div class="scites-count">
+      <a href="<%= paper_scites_path(paper) %>"><button class="btn btn-default count"><%= paper.scites_count + (scited ? 0 : 1)%></button></a>
+    </div>
+  </div>
+
+  <div class="unscited">
+    <button class="btn btn-default scite">Scite!</button>
+    <div class="scites-count">
+      <button class="btn btn-default count"><%= paper.scites_count - (scited ? 1 : 0) %></button>
+    </div>
   </div>
 </div>

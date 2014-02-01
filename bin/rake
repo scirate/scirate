@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
-require_relative '../config/boot'
-require 'rake'
-Rake.application.run
+begin
+  load File.expand_path("../spring", __FILE__)
+rescue LoadError
+end
+require 'bundler/setup'
+load Gem.bin_path('rake', 'rake')

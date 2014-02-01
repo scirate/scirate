@@ -2,18 +2,29 @@
 #
 # Table name: papers
 #
-#  id             :integer         primary key
-#  title          :string(255)
-#  abstract       :text
-#  identifier     :string(255)
-#  url            :string(255)
-#  created_at     :timestamp       not null
-#  updated_at     :timestamp       not null
-#  pubdate        :date
-#  updated_date   :date
-#  scites_count   :integer         default(0)
-#  comments_count :integer         default(0)
-#  feed_id        :integer
+#  id              :integer          not null, primary key
+#  uid             :text             not null
+#  submitter       :text
+#  title           :text             not null
+#  abstract        :text             not null
+#  author_comments :text
+#  msc_class       :text
+#  report_no       :text
+#  journal_ref     :text
+#  doi             :text
+#  proxy           :text
+#  license         :text
+#  submit_date     :datetime         not null
+#  update_date     :datetime         not null
+#  abs_url         :text             not null
+#  pdf_url         :text             not null
+#  delta           :boolean          default(TRUE), not null
+#  created_at      :datetime
+#  updated_at      :datetime
+#  scites_count    :integer          default(0), not null
+#  comments_count  :integer          default(0), not null
+#  pubdate         :datetime
+#  author_str      :text             not null
 #
 
 require 'spec_helper'
@@ -21,10 +32,7 @@ require 'spec_helper'
 describe Paper do
   before do
     @feed = FactoryGirl.create(:feed)
-    @paper = @feed.papers.build(title: "On NPT Bound Entanglement and the ERH", \
-                               abstract: "Assuming the ERH, we prove the existence of bound entangled NPT states.", \
-                               identifier: "1108.1052", url: "http://arxiv.org/abs/1108.1052", \
-                               pubdate: Time.now, updated_date: Time.now)
+    @paper = FactoryGirl.create(:paper)
   end
 
   subject { @paper }
@@ -32,61 +40,26 @@ describe Paper do
   it { should respond_to(:title) }
   it { should respond_to(:authors) }
   it { should respond_to(:abstract) }
-  it { should respond_to(:identifier) }
-  it { should respond_to(:url) }
-  it { should respond_to(:pubdate) }
-  it { should respond_to(:updated_date) }
+  it { should respond_to(:uid) }
+  it { should respond_to(:abs_url) }
+  it { should respond_to(:pdf_url) }
+  it { should respond_to(:submit_date) }
+  it { should respond_to(:update_date) }
   it { should respond_to(:scites) }
   it { should respond_to(:sciters) }
   it { should respond_to(:comments) }
-  it { should respond_to(:feed) }
-  it { should respond_to(:cross_lists) }
-  it { should respond_to(:cross_listed_feeds) }
+  it { should respond_to(:categories) }
 
   it { should be_valid }
 
-  describe "when title is not present" do
-    before { @paper.title = " " }
+  describe "when update_date is older than submit_date" do
+    before { @paper.update_date = @paper.submit_date - 1.day }
     it { should_not be_valid }
   end
 
-  describe "when abstract is not present" do
-    before { @paper.abstract = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when identifier is not present" do
-    before { @paper.identifier = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when url is not present" do
-    before { @paper.url = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when pubdate is not present" do
-    before { @paper.pubdate = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when updated_date is not present" do
-    before { @paper.updated_date = " " }
-    it { should_not be_valid }
-  end
-
-  describe "when updated_date is older than pubdate" do
-    before { @paper.updated_date = @paper.pubdate - 1.day }
-    it { should_not be_valid }
-  end
-
-  describe "when identifier is already taken" do
-    before do
-      paper_with_same_identifier = @paper.dup
-      paper_with_same_identifier.save
-    end
-
-    it { should_not be_valid }
+  it "should check uid uniqueness" do
+    paper_with_same_uid = @paper.dup
+    paper_with_same_uid.should_not be_valid
   end
 
   describe "sciting" do
@@ -100,24 +73,16 @@ describe Paper do
   end
 
   describe "authors" do
-    let (:author1) { FactoryGirl.create(:author) }
-    let (:author2) { FactoryGirl.create(:author) }
-
-    before {
-      author1.save
-      author2.save
-    }
-
-    let!(:authorship1) do
-      FactoryGirl.create(:authorship, author: author1, paper: @paper, position: 0)
+    before do
+      @paper.authors = []
+      @paper.save
     end
 
-    let!(:authorship2) do
-      FactoryGirl.create(:authorship, author: author2, paper: @paper, position: 1)
-    end
+    let (:author1) { FactoryGirl.create(:author, paper: @paper, position: 0) }
+    let (:author2) { FactoryGirl.create(:author, paper: @paper, position: 1) }
 
     it "should have the authors in the right order" do
-      @paper.authors.should == [author1, author2]
+      @paper.reload.authors.should == [author1, author2]
     end
   end
 

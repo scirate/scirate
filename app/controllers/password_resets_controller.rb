@@ -31,7 +31,7 @@ class PasswordResetsController < ApplicationController
       flash[:error] = "Password doesn't match confirmation"
       render :confirm
     else
-      @user.change_password!(params[:password])
+      @user.change_password(params[:password])
       @user.clear_password_reset
       sign_in(@user)
       flash[:success] = "Password has been changed!"

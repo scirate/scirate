@@ -2,20 +2,20 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.find_by_identifier!(params[:id])
+    @paper = Paper.find_by_uid!(params[:id])
 
-    @scited_papers = Set.new(current_user.scited_papers) if signed_in?
+    @scited = current_user && current_user.scited_papers.where(id: @paper.id).exists?
 
     # Less naive statistical comment sorting as per
     # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
     @toplevel_comments = Comment.find_by_sql([
-      "SELECT *, COALESCE(((cached_votes_up + 1.9208) / NULLIF(cached_votes_up + cached_votes_down, 0) - 1.96 * SQRT((cached_votes_up * cached_votes_down) / NULLIF(cached_votes_up + cached_votes_down, 0) + 0.9604) / NULLIF(cached_votes_up + cached_votes_down, 0)) / (1 + 3.8416 / NULLIF(cached_votes_up + cached_votes_down, 0)), 0) AS ci_lower_bound FROM comments WHERE paper_id = ? AND ancestor_id IS NULL AND (hidden = FALSE OR user_id = ?) ORDER BY ci_lower_bound DESC;",
-      @paper.id,
+      "SELECT *, COALESCE(((cached_votes_up + 1.9208) / NULLIF(cached_votes_up + cached_votes_down, 0) - 1.96 * SQRT((cached_votes_up * cached_votes_down) / NULLIF(cached_votes_up + cached_votes_down, 0) + 0.9604) / NULLIF(cached_votes_up + cached_votes_down, 0)) / (1 + 3.8416 / NULLIF(cached_votes_up + cached_votes_down, 0)), 0) AS ci_lower_bound FROM comments WHERE paper_uid = ? AND ancestor_id IS NULL AND (hidden = FALSE OR user_id = ?) ORDER BY ci_lower_bound DESC;",
+      @paper.uid,
       current_user ? current_user.id : nil
     ])
 
     @comment_tree = {}
-    @paper.comments.where("ancestor_id IS NOT NULL").order("created_at DESC").each do |c|
+    @paper.comments.where("ancestor_id IS NOT NULL").order("created_at ASC").each do |c|
       @comment_tree[c.ancestor_id] ||= []
       @comment_tree[c.ancestor_id] << c
     end
@@ -25,13 +25,10 @@ class PapersController < ApplicationController
       @comments << c
       @comments += @comment_tree[c.id]||[]
     end
-
-    @categories = @paper.cross_listed_feeds.order("name").select("name").where("name != ?", @paper.feed.name)
   end
 
   def __quote(val)
-    val = val.gsub('"', '')
-    val.include?(' ') ? "\"#{val}\"" : val
+    val.include?(' ') ? "(#{val})" : val
   end
 
   def search
@@ -43,7 +40,7 @@ class PapersController < ApplicationController
       case key
       when 'authors'
         authors = val.split(/,\s*/)
-        @query += authors.map { |au| "au:#{__quote(au)}" }.join(' ')
+        @query += ' ' + authors.map { |au| "au:#{__quote(au)}" }.join(' ')
       when 'title'
         @query += " ti:#{__quote(val)}"
       when 'abstract'
@@ -52,18 +49,39 @@ class PapersController < ApplicationController
         @query += " feed:#{__quote(val)}"
       when 'general'
         @query += " #{val}"
+      when 'order'
+        @query += " order:#{val}" unless val == 'scites'
       end
     end
 
     @query = @query.strip
+
     @search = Paper::Search.new(@query)
 
-    # Determine which folder we should have selected
-    @folder_id = @search.feed && (@search.feed.parent_id || @search.feed.id)
+    if !@query.empty?
+      paper_ids = @search.run(page: params[:page], per_page: 20)
 
-    @papers = @search.results.paginate(page: params[:page])
-    @scited_papers = Set.new(current_user.scited_papers) if current_user
+      @papers = Paper.where(id: paper_ids).includes(:authors, :feeds).order(@search.order_sql)
+
+      # Pass the Sphinx pagination values through to will_paginate
+      # A little hacky
+      @papers = @papers.paginate(page: 1)
+      @papers.total_entries = paper_ids.total_entries
+      @papers.per_page = paper_ids.per_page
+      @papers.current_page = paper_ids.current_page
+
+      # Determine which folder we should have selected
+      @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
+
+      @scited_ids = current_user.scited_papers.pluck(:id) if current_user
+    end
+
     render :search
+  end
+
+  # Show the users who scited this paper
+  def scites
+    @paper = Paper.find_by_uid!(params[:id])
   end
 
   def next

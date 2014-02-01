@@ -1,0 +1,34 @@
+<% provide :title, "Edit user" %> 
+
+<div class="container">
+  <h1><%= status_warning %> editing <%= @user.username %></h1>
+
+  <p>
+    <%= gravatar_for(@user) %>
+    <%= @user.fullname %>
+  </p>
+
+
+  <%= form_for(@user, url: admin_update_user_path(@user), method: :post) do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+    <table class="table table-striped table-form">
+      <tr>
+        <td><%= f.label :fullname, "Name" %></td>
+        <td><%= f.text_field :fullname, class: 'form-control' %></td>
+      </tr>
+      <tr>
+        <td><%= f.label :username, "Username" %></td>
+        <td><%= f.text_field :username, class: 'form-control' %></td>
+      </tr>
+      <tr>
+        <td><%= f.label :email, "Email" %></td>
+        <td><%= f.email_field :email, class: 'form-control' %></td>
+      </tr>
+      <tr>
+        <td><%= f.label :account_status, "Account Status" %></td>
+        <td><%= f.select :account_status, User::ACCOUNT_STATES, class: 'form-control' %></td>
+      </tr>
+    </table>
+    <%= f.submit "Save changes", class: "btn btn-default" %>
+  <% end %>
+</div>

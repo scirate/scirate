@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ApiController do
 
   let(:user)  { FactoryGirl.create(:user) }
-  let(:feed) { Feed.default }
+  let(:feed) { FactoryGirl.create(:feed) }
   let(:paper) { FactoryGirl.create(:paper) }
 
   before { sign_in user }
@@ -11,12 +11,12 @@ describe ApiController do
   describe "sciting a paper" do
     it "should increment the Scite count" do
       expect do
-        xhr :post, :scite, paper_id: paper.id
+        xhr :post, :scite, paper_uid: paper.uid
       end.to change(Scite, :count).by(1)
     end
 
     it "should respond with success" do
-      xhr :post, :scite, paper_id: paper.id
+      xhr :post, :scite, paper_uid: paper.uid
       response.should be_success
     end
   end
@@ -28,19 +28,19 @@ describe ApiController do
 
     it "should decrement the Scite count" do
       expect do
-        xhr :post, :unscite, paper_id: paper.id
+        xhr :post, :unscite, paper_uid: paper.uid
       end.to change(Scite, :count).by(-1)
     end
 
     it "should respond with success" do
-      xhr :post, :unscite, paper_id: paper.id
+      xhr :post, :unscite, paper_uid: paper.uid
       response.should be_success
     end
   end
 
   describe "subscribing to a feed" do
     before do
-      xhr :post, :subscribe, feed_id: feed.id
+      xhr :post, :subscribe, feed_uid: feed.uid
     end
 
     it "should subscribe" do
@@ -50,8 +50,8 @@ describe ApiController do
 
   describe "unsubscribing from a feed" do
     before do
-      xhr :post, :subscribe, feed_id: feed.id
-      xhr :post, :unsubscribe, feed_id: feed.id
+      xhr :post, :subscribe, feed_uid: feed.uid
+      xhr :post, :unsubscribe, feed_uid: feed.uid
     end
 
     it "should unsubscribe" do

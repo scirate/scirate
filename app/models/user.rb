@@ -2,23 +2,25 @@
 #
 # Table name: users
 #
-#  id                     :integer         primary key
-#  name                   :string(255)
-#  email                  :string(255)
-#  remember_token         :string(255)
-#  created_at             :timestamp       not null
-#  updated_at             :timestamp       not null
-#  password_digest        :string(255)
-#  scites_count           :integer         default(0)
-#  password_reset_token   :string(255)
-#  password_reset_sent_at :timestamp
-#  confirmation_token     :string(255)
-#  active                 :boolean         default(FALSE)
-#  comments_count         :integer         default(0)
-#  confirmation_sent_at   :timestamp
-#  subscriptions_count    :integer         default(0)
-#  account_status         :string          default('user')
-#  last_visited           :timestamp       not null
+#  id                     :integer          not null, primary key
+#  fullname               :text
+#  email                  :text
+#  remember_token         :text
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  password_digest        :text
+#  scites_count           :integer          default(0)
+#  password_reset_token   :text
+#  password_reset_sent_at :datetime
+#  confirmation_token     :text
+#  active                 :boolean          default(FALSE)
+#  comments_count         :integer          default(0)
+#  confirmation_sent_at   :datetime
+#  subscriptions_count    :integer          default(0)
+#  expand_abstracts       :boolean          default(FALSE)
+#  account_status         :text             default("user")
+#  username               :text
+#
 
 class User < ActiveRecord::Base
   STATUS_ADMIN = 'admin'
@@ -29,64 +31,92 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  has_many :scites, foreign_key: 'sciter_id', dependent: :destroy
+  has_many :scites, dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :feeds, through: :subscriptions
   has_many :feed_preferences
 
-  before_save { generate_token(:remember_token) }
-
-  validates :name, presence: true, length: { maximum: 50 }
+  validates :fullname, presence: true, length: { maximum: 50 }
 
   valid_email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: valid_email_regex },
                     uniqueness: { case_sensitive: false }
 
-  validates :password, length: { minimum: 6 }, on: :create
+  valid_username_regex = /\A[a-zA-Z0-9\-_\.]+\z/i
+  validates :username, presence: true, 
+            format: { with: valid_username_regex, message: "may only contain alphanumeric characters and - or _" },
+                    uniqueness: { case_sensitive: false }
 
+  validate do |user|
+    if user.password && user.password.length < 6
+      user.errors.add :password, "must be at least 6 characters"
+    end
+
+    if Settings::RESERVED_USERNAMES.include?(user.username.downcase)
+      user.errors.add :username, "is already taken"
+    end
+  end
 
   acts_as_voter
 
+  before_save do
+    # Reset the user session if vital information changes
+    if new_record? || password_digest_changed? || email_changed?
+      generate_token(:remember_token)
+    end
+
+    # Switching to/from spam needs propagation to comments
+    if account_status_changed?
+      if account_status == STATUS_SPAM
+        self.comments.update_all(hidden: true)
+      else
+        self.comments.update_all(hidden: false)
+      end
+    end
+  end
+
+  # Tell Rails routes to use our username
+  # instead of id in generating urls
+  def to_param
+    username
+  end
+
+  def self.find_by_username(username)
+    User.where("lower(username) = ?", username.downcase).first
+  end
+
   def scited?(paper)
-    scites.find_by_paper_id(paper.id)
+    scites.find_by_paper_uid(paper.uid)
   end
 
   def scite!(paper)
-    unless scites.find_by_paper_id(paper.id)
-      scites.create!(paper_id: paper.id)
+    unless scites.find_by_paper_uid(paper.uid)
+      scites.create!(paper_uid: paper.uid)
       paper.scites_count += 1
     end
   end
 
   def unscite!(paper)
-    scites.find_by_paper_id(paper.id).destroy
+    scites.find_by_paper_uid(paper.uid).destroy
     paper.scites_count -= 1
   end
 
   def subscribed?(feed)
-    subscriptions.find_by_feed_id(feed.id)
+    subscriptions.find_by_feed_uid(feed.uid)
   end
 
   def subscribe!(feed)
-    subscriptions.create!(feed_id: feed.id)
+    subscriptions.create!(feed_uid: feed.uid)
   end
 
   def unsubscribe!(feed)
-    subscriptions.find_by_feed_id(feed.id).destroy
+    subscriptions.find_by_feed_uid(feed.uid).destroy
   end
 
   def has_subscriptions?
     subscriptions.size > 0
-  end
-
-  def feed
-    Paper.from_feeds_subscribed_by_cl(self)
-  end
-
-  def feed_without_cross_lists
-    Paper.from_feeds_subscribed_by(self)
   end
 
   def feed_last_paper_date
@@ -137,29 +167,24 @@ class User < ActiveRecord::Base
     account_status == STATUS_SPAM
   end
 
-  def change_status(status)
-    transaction do
-
-      # Switching to/from spam needs propagation to comments
-      if status == STATUS_SPAM
-        self.comments.update_all(hidden: true)
-      elsif account_status == STATUS_SPAM
-        self.comments.update_all(hidden: false)
-      end
-      self.account_status = status
-      self.save
-    end
-  end
-
-  def change_password!(new_password)
+  def change_password(new_password)
     self.password = new_password
     self.password_confirmation = new_password
-    UserMailer.password_change(self).deliver
-    self.save!
+    saved = self.save
+    UserMailer.password_change(self).deliver if saved
+    saved
+  end
+
+  # Data sent to the browser for JS interaction
+  def to_js
+    {
+      fullname: self.fullname,
+      email: self.email,
+      expand_abstracts: self.expand_abstracts
+    }.to_json
   end
 
   private
-
     # Generate a random confirmation token in column
     # Also puts the time in self[ column - '_token' + '_sent_at' ] if it exists
     def generate_token(column)

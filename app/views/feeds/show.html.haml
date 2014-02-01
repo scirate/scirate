@@ -1,75 +1,77 @@
-- provide :title, @title
-
-.split
+- provide :title, @feed ? @feed.fullname : ""
 
 .container#feed-page
-  .row-fluid
-    - cache 'feedbar.left.1' do
-      .span2.feedbar.left
-        %ul.nav.nav-list.tree-sidebar
+  .row
+    .col-md-2.feedbar
+      %ul.nav.nav-list.tree-sidebar
+        = cache current_user do
           - if signed_in?
             %li.feed-folder.my-feeds
               %label.nav-header
                 %i.icon-chevron-down
                 My feeds
               %ul.nav.nav-list.tree
-                - current_user.feeds.each do |feed|
-                  %li.leaf
+                - current_user.feeds.order(:fullname).each do |feed|
+                  %li.leaf{ title: feed.uid }
                     = link_to(feed.fullname, feed)
 
+        = cache (@feed.nil? ? 'index' : @feed.id) do
           %li.source-heading arXiv.org
-          - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
-            %li.feed-folder{ class: @feed == feed ? 'active' : '' }
+          - Feed.where(uid: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+            %li.feed-folder{ class: @feed == feed ? 'active' : '', title: feed.uid }
               %label.nav-header
                 %i.icon-chevron-right.transparent
                 = link_to feed.fullname, feed
 
-          - Feed.where(name: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).includes(:children).each do |parent|
-            %li.feed-folder{ class: @feed == parent ? 'active' : '' }
+          - Feed.where(uid: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).includes(:children).each do |parent|
+            %li.feed-folder{ class: @feed == parent ? 'active' : '', title: parent.uid }
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               %label.nav-header
                 %i{ class: expanded ? 'icon-chevron-down' : 'icon-chevron-right' }
                 = link_to parent.fullname, parent
               %ul.nav.nav-list.tree{ style: expanded ? '' : 'display: none;' }
                 - parent.children.each do |feed|
-                  %li.leaf{ class: @feed == feed ? 'active' : '' }= link_to(feed.fullname, feed)
+                  %li.leaf{ class: @feed == feed ? 'active' : '', title: feed.uid }= link_to(feed.fullname, feed)
 
-    .span10.feed-center
-      %header.feed-header
-        .row-fluid
-          .span10
-            .row-fluid
-              - if @feed
-                .span10
-                  %h1= @feed.fullname
-                .span2
-                  = render 'feeds/subscribe', :feed => @feed
-              - else
-                .span10
-                  %h1= "All subscribed feeds"
-
-      .row-fluid
-        .span10
+    .col-md-10.feed-center
+      %header.feed-header{ class: @feed ? '' : 'home' }
+        .row
+          - if @feed
+            .col-md-10
+              %h1
+                = @feed.fullname
+                (#{@feed.uid})
+            .col-md-2
+              = render 'feeds/subscribe', feed: @feed, subscribed: current_user && @feed.subscriptions.exists?(user_id: current_user.id)
+          - else
+            .col-md-10
+              %h1= "All subscribed feeds"
+              = link_to "edit subscriptions", feeds_path, class: 'view-subs'
+      .row
+        .col-md-9
           -#
             %p
               Found #{@papers.count} papers from #{describe_range(@date, @range)}
-              %span.feed-identifier
-                [#{@feed.identifier}]
+              %span.feed-uid
+                [#{@feed.uid}]
 
           .paperlist
             %ul.papers
               - if @papers.length == 0
                 - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
-                  %p You haven't subscribed to any feeds yet! Papers from subscribed feeds will appear here.
+                  %p Papers from subscribed feeds will appear here. You can manage your subscriptions from the <a href="#{feeds_path}">feeds page</a>.
                 - else
                   %p No papers found!
               - else
                 - @papers.each do |paper|
-                  = render partial: "papers/paper", object: paper
+                  = cache [paper, @scited_ids && @scited_ids.include?(paper.id)] do
+                    = render partial: "papers/paper", object: paper
+                = will_paginate @range_query
 
-        .span2.feed-rightbar
+        .col-md-3.feed-rightbar
+          = render 'papers/abstract_toggle'
           = render :partial => 'feeds/next_prev_links'
           - unless @recent_comments.empty?
-            %h2 Recent comments
-            = render :partial => "comments/abbr_comment", :collection => @recent_comments[0..9]
+            %h3 Recent comments
+            = render :partial => "comments/abbr_comment", :collection => @recent_comments
 

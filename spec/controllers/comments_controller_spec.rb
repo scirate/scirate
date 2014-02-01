@@ -2,13 +2,57 @@ require 'spec_helper'
 
 describe CommentsController do
 
-  let(:user)  { FactoryGirl.create(:user) }
-  let(:paper) { FactoryGirl.create(:paper) }
   let(:comment) { FactoryGirl.create(:comment) }
+  let(:user)  { comment.user.reload }
+  let(:other_user) { FactoryGirl.create(:user) }
+  let(:paper) { comment.paper.reload }
 
-  before { sign_in user }
 
-  describe "upvoting a comment" do
+  describe "commenting" do
+    before { sign_in user }
+
+    it "should post a comment" do
+      expect do
+        xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
+        response.should be_redirect
+        flash[:comment][:status].should == :success
+        paper.comments.last.content.should == "fishies"
+        paper.reload
+      end.to change(paper, :comments_count).by(1)
+    end
+
+    it "should edit a comment" do
+      xhr :post, :edit, id: comment.id, content: "wubbles"
+      response.should be_success
+      comment.reload.content.should == "wubbles"
+    end
+
+    it "should delete a comment" do
+      expect do
+        xhr :post, :delete, id: comment.id
+        response.should be_redirect
+        flash[:comment][:status].should == 'success'
+        paper.reload
+      end.to change(paper, :comments_count).by(-1)
+    end
+
+    it "should reply to a comment" do
+      expect do
+        xhr :post, :reply, id: comment.id, content: "snuffles"
+        response.should be_redirect
+        flash[:comment][:status].should == 'success'
+        paper.reload
+
+        reply = comment.children[0]
+        reply.content.should == "snuffles"
+        reply.paper_uid.should == paper.uid
+      end.to change(paper, :comments_count).by(1)
+    end
+  end
+
+  describe "voting" do
+    before { sign_in other_user }
+
     it "should allow a single upvote" do
       expect do 
         xhr :post, :upvote, id: comment.id

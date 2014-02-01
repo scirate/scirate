@@ -1,8 +1,8 @@
 # SciRate 3
 
-A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon and [Bill Rosgen](http://intractable.ca/bill/).
+A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon, [Bill Rosgen](http://intractable.ca/bill/) and [Aram Harrow](http://www.mit.edu/~aram/). Currently being expanded upon by [Draftable](https://draftable.com/).
 
-Currently deployed [here](https://scirate3.herokuapp.com/), with a testing version at [http://scirate3-dev.herokuapp.com/](http://scirate3-dev.herokuapp.com/).
+The older production site is deployed at [https://scirate3.herokuapp.com/](https://scirate3.herokuapp.com/). A more recent testing version can be found at [http://scirate-dev.draftable.com/](https://scirate-dev.draftable.com/).
 
 ## Contributing
 
@@ -14,22 +14,42 @@ We encourage contributions!
 
 * You can talk about scirate on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate) and about scirate development on the [development mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate-dev).
 
-## Setting up for development
+## Dependencies
 
-You will need [Ruby 2.0](http://www.ruby-lang.org/en/) and a UNIX environment of some kind. Familiarity with [Rails 3](http://rubyonrails.org/) is recommended.
+Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
+
+```shell
+sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libmysqlclient-dev
+```
+
+You will also need to download and install [sphinxsearch 2.1.4](http://sphinxsearch.com/downloads/release/). Bundler should take care of the rest.
 
 ```shell
 git clone git@github.com:draftable/scirate3
 cd scirate3
 bundle install
+```
+
+## Setting up the database
+
+If you've just installed postgres, you'll need a new database user:
+
+```shell
+sudo -u postgres createuser --superuser --pwprompt scirate
+```
+
+Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
+
+```
 cp config/database.yml.example config/database.yml
 ```
 
-Edit config/database.yml and enter your auth details for the development database.
+Edit this file and enter your auth details for the development database. Then initialize the database and sphinx, and download the basic feed layout:
 
 ```shell
 rake db:setup
-rake arxiv:scrape_categories
+rake ts:index
+rake arxiv:feed_import
 rails server
 ```
 
@@ -41,7 +61,7 @@ You should now have a working local copy of SciRate! However, you'll also want s
 rake arxiv:oai_update
 ```
 
-When run for the first time, this will download paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
+When run for the first time, this will download and index paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
 
 ## Testing
 

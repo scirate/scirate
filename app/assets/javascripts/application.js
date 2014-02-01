@@ -14,8 +14,6 @@
 //= require jquery_ujs
 //= require underscore
 //= require bootstrap
-//= require Markdown.Converter
-//= require Markdown.Sanitizer
-//= require Markdown.Editor
+//= require jquery.pagedown-bootstrap.combined.min.js
 //= require backbone
 //= require_tree .

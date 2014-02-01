@@ -2,21 +2,24 @@
 #
 # Table name: users
 #
-#  id                     :integer         primary key
-#  name                   :string(255)
-#  email                  :string(255)
-#  remember_token         :string(255)
-#  created_at             :timestamp       not null
-#  updated_at             :timestamp       not null
-#  password_digest        :string(255)
-#  scites_count           :integer         default(0)
-#  password_reset_token   :string(255)
-#  password_reset_sent_at :timestamp
-#  confirmation_token     :string(255)
-#  active                 :boolean         default(FALSE)
-#  comments_count         :integer         default(0)
-#  confirmation_sent_at   :timestamp
-#  subscriptions_count    :integer         default(0)
+#  id                     :integer          not null, primary key
+#  fullname               :text
+#  email                  :text
+#  remember_token         :text
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  password_digest        :text
+#  scites_count           :integer          default(0)
+#  password_reset_token   :text
+#  password_reset_sent_at :datetime
+#  confirmation_token     :text
+#  active                 :boolean          default(FALSE)
+#  comments_count         :integer          default(0)
+#  confirmation_sent_at   :datetime
+#  subscriptions_count    :integer          default(0)
+#  expand_abstracts       :boolean          default(FALSE)
+#  account_status         :text             default("user")
+#  username               :text
 #
 
 require 'spec_helper'
@@ -24,13 +27,12 @@ require 'spec_helper'
 describe User do
 
   before do
-    @user = User.new(name: "Example User", email: "user@example.com", 
-                     password: "foobar", password_confirmation: "foobar")
+    @user = FactoryGirl.build(:user)
   end
 
   subject { @user }
 
-  it { should respond_to(:name) }
+  it { should respond_to(:fullname) }
   it { should respond_to(:email) }
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
@@ -55,8 +57,8 @@ describe User do
 
   it { should be_valid }
 
-  describe "when name is not present" do
-    before { @user.name = " " }
+  describe "when fullname is not present" do
+    before { @user.fullname = " " }
     it { should_not be_valid }
   end
 
@@ -66,7 +68,7 @@ describe User do
   end
 
   describe "when name is too long" do
-    before { @user.name = "a" * 51 }
+    before { @user.fullname = "a" * 51 }
     it { should_not be_valid }
   end
 
@@ -86,19 +88,9 @@ describe User do
     end
   end
 
-  describe "when email address is already taken" do
+  describe "when email is a duplicate" do
     before do
       user_with_same_email = @user.dup
-      user_with_same_email.save
-    end
-
-    it { should_not be_valid }
-  end
-
-  describe "when email address is already taken" do
-    before do
-      user_with_same_email = @user.dup
-      user_with_same_email.email = @user.email.upcase
       user_with_same_email.save
     end
 
@@ -109,7 +101,7 @@ describe User do
     before { @user.password = @user.password_confirmation = " " }
     it { should_not be_valid }
   end
-  
+
   describe "when password doesn't match confirmation" do
     before { @user.password_confirmation = "mismatch" }
     it { should_not be_valid }
@@ -117,7 +109,7 @@ describe User do
 
   describe "with a password that's too short" do
     before { @user.password = @user.password_confirmation = "a" * 5 }
-    it { should be_invalid }
+    it { should_not be_valid }
   end
 
   describe "return value of authenticate method" do
@@ -159,18 +151,18 @@ describe User do
 
   describe "comments" do
     let (:paper) { FactoryGirl.create(:paper) }
-    
+
     before { @user.save }
     let!(:old_comment) do
-      FactoryGirl.create(:comment, 
+      FactoryGirl.create(:comment,
                          user: @user, paper: paper, created_at: 1.day.ago)
     end
     let!(:new_comment) do
-      FactoryGirl.create(:comment, 
+      FactoryGirl.create(:comment,
                          user: @user, paper: paper, created_at: 1.minute.ago)
     end
     let!(:med_comment) do
-      FactoryGirl.create(:comment, 
+      FactoryGirl.create(:comment,
                          user: @user, paper: paper, created_at: 1.hour.ago)
     end
 

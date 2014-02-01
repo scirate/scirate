@@ -1,12 +1,10 @@
-<span class="subscribe-toggle" data-feedid="<%= feed.id %>">
-  <% if signed_in? && feed.subscriptions.exists?(user_id: current_user.id) %>
-    <button class="unsubscribe btn btn-success">
-      Subscribed
-    </button>
-  <% else %>
-    <button class="subscribe btn">
-      <i class="icon-signin"></i>
-      Subscribe
-    </button>
-  <% end %>
+<span class="subscribe-toggle <%= subscribed ? 'active' : '' %>" data-feed-uid="<%= feed.uid %>" data-feed-fullname="<%= feed.fullname %>">
+  <button class="unsubscribe btn btn-success">
+    Subscribed
+  </button>
+
+  <button class="subscribe btn btn-default">
+    <i class="icon-signin"></i>
+    Subscribe
+  </button>
 </span>

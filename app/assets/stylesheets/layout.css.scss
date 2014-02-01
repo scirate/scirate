@@ -15,16 +15,31 @@ html {
 body {
   width: 100%;
   height: 100%;
-  font: 81.25%/1.385 arial,sans-serif;
 }
 
-.container { width: 1170px; }
+ul {
+  padding-left: 0;
+}
+
 .timeago { color: rgba(0, 0, 0, 0.5); }
 .username { font-weight: bold; }
 .hidden { display: none !important; }
 .transparent { opacity: 0.0 !important; }
 .right { float: right; }
 .left { float: left; }
+.pseudolink {
+  cursor: pointer;
+}
+
+.table-form {
+  > tbody > tr > td {
+    vertical-align: middle;
+    label {
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+  }
+}
 
 .dropdown-menu {
   margin-top: 0;
@@ -34,17 +49,16 @@ a:link, a:visited {
   color: #3c63af;
 }
 
-.btn-abspdf {
-  background-color: #52ccd9;
-  color: white !important;
-  border: none;
+.abspdf {
+  color: #999 !important;
   border-radius: 2px;
-  padding: 2px 8px;
-  font-size: 10px;
+  padding: 2px 11px;
+  font-size: 12px;
 }
 
-.btn-abspdf:hover {
-  background-color: #586576;
+.abspdf:hover {
+  color: #3c63af !important;
+  text-decoration: none;
 }
 
 
@@ -88,11 +102,11 @@ a:link, a:visited {
     .searchbox {
       line-height: 40px;
       position: relative;
-      display: inline;
-      input { 
+      display: inline-block;
+      input {
         margin: 0;
         width: 490px;
-        height: 22px;
+        height: 32px;
       }
     }
   }
@@ -105,7 +119,7 @@ a:link, a:visited {
     color: #afafaf;
     background: #333333;
   }
-  
+
   .container {
     width: 100%;
     min-width: 940px;
@@ -117,8 +131,8 @@ a:link, a:visited {
   .landing-nav {
     margin-bottom: 0;
 
-    li { 
-      list-style: none; 
+    li {
+      list-style: none;
       display: inline-block;
     }
 
@@ -137,7 +151,7 @@ a:link, a:visited {
       color: white;
       text-decoration: none;
     }
-    
+
     .signup a {
       color: white;
       background: #1e95f9;
@@ -154,62 +168,60 @@ a:link, a:visited {
 
   h2 {
     display: inline;
+    font-weight: bold;
   }
 
   h3 {
     font-size: 1.5em;
+    font-weight: bold;
+    line-height: 40px;
     margin-bottom: 0;
   }
 
   li.feed {
-    line-height: 16px;
+    line-height: 19px;
   }
-
 }
 
 // Main header
 
-header.first {
+header.navbar {
   width: 100%;
-
-  height: 60px;
-  line-height: 60px;
+  border: none;
+  border-radius: 0;
 
   background: #202226;
   color: white;
 
-  .scirate-logo {
+  max-height: 50px;
+
+  margin-bottom: 0;
+
+  .navbar-brand {
+    font-size: 28px;
+    line-height: 50px;
+    padding: 0;
+    color: white;
+
+    ::hover {
+      text-decoration: none;
+    }
+
     img {
       position: relative;
       top: -3px;
-      width: 36px;
-    }
-
-    a {
-      font-size: 32px;
-      color: white;
-    }
-
-    a:hover {
-      text-decoration: none;
+      width: 32px;
     }
   }
 
-  nav {
-    float: right;
-
-    li {
-      float: left;
-      list-style: none;
-    }
-
-    li a {
+  .nav {
+    li > a {
       display: block;
       padding: 0 21px;
 
-      line-height: 60px;
+      line-height: 50px;
       color: white;
-      font-size: 1.4em;
+      font-size: 18px;
       font-weight: 400;
     }
 
@@ -234,7 +246,6 @@ header.first {
       border-top: 4px solid black;
     }
 
-
     ul.dropdown-menu li {
       float: none;
       a {
@@ -242,16 +253,10 @@ header.first {
         text-align: center;
       }
     }
+  }
 
-    .searchbox {
-      float: left;
-      margin-left: 20px;
-      margin-bottom: 0;
-      input { 
-        margin-bottom: 0;
-        border-radius: 10px; 
-      }
-    }
+  .searchbox {
+    margin-left: 20px;
   }
 }
 
@@ -265,6 +270,68 @@ header.second {
   font-size: 1.2em;
 }
 
+
+.site-footer:after {
+  clear: both;
+}
+
+.site-footer:before, .site-footer:after {
+  content: " ";
+  display: table;
+}
+
+.site-footer {
+  position: relative;
+  margin-top: 40px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #777;
+  border-top: 1px solid #eee;
+  width: 100%;
+
+  ul {
+    margin: 0;
+    float: left;
+    list-style: none;
+  }
+
+  li {
+    display: inline-block;
+    line-height: 16px;
+  }
+
+  .footer-links li+li {
+    margin-left: 10px;
+  }
+
+  .pull-right {
+    img {
+      position: relative;
+      top: -1px;
+      height: 22px;
+    }
+  }
+
+}
+
+// Welcome banner displayed on all pages
+// Until user confirms their email address
+.welcome-banner {
+  padding: 8px 35px 8px 14px;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #468847;
+  line-height: 35px;
+  margin: 10px 0;
+
+  .btn {
+    position: relative;
+    top: -1px;
+  }
+}
+
 // Individual paper page
 
 div.paper {
@@ -274,22 +341,20 @@ div.paper {
     h1 {
       margin-top: 0;
       margin-bottom: 4px;
-      font-size: 2em;
+      font-size: 28px;
     }
 
     .scite-toggle {
-      margin-top: 7px;
       line-height: 40px;
     }
   }
 
   ul.authors {
-    margin: 0;
     margin-bottom: 2px;
 
-    li { 
-      list-style: none; 
-      display: inline-block; 
+    li {
+      list-style: none;
+      display: inline-block;
       padding-right: 3px;
 
       font-size: medium;
@@ -303,6 +368,14 @@ div.paper {
     margin-top: 20px;
     margin-bottom: 20px;
   }
+
+  div.scites {
+    margin-top: 10px;
+  }
+}
+
+.paper-scites h1 {
+  font-size: 28px;
 }
 
 // Paper page commenting interface
@@ -329,7 +402,27 @@ div.comments {
   }
 }
 
-#comment_form, #comment_editor {
+#error_explanation {
+  margin-top: 10px;
+
+  ul {
+    padding: 0px 10px;
+  }
+}
+
+.warning {
+  color: rgb(255, 56, 56);
+}
+
+#comment_reply {
+  margin-top: 10px;
+}
+
+#comment_form, #comment_editor, #comment_reply {
+  #wmd-button-bar {
+    margin: 5px 0;
+  }
+
   textarea, .wmd-preview {
     max-width: 600px;
     width: 100%;
@@ -340,7 +433,11 @@ div.comments {
   }
 
   .wmd-preview {
-    margin-bottom: 10px;
+    margin-bottom: 0;
+  }
+
+  .btn.leave-comment {
+    margin-top: 10px;
   }
 }
 
@@ -387,16 +484,16 @@ div.abbr_comment {
 // Feed listing sidebar
 
 .feedbar {
+  .my-feeds {
+    margin-bottom: 10px;
+    label {
+      display: block;
+    }
+  }
 
   // Feed folders and headings
 
-  li.feed-folder {
-    position: relative;
-    left: -18px;
-  }
-
-  li.feed-folder label {
-    font-size: 1em;
+  li.feed-folder .nav-header {
     margin-bottom: 0;
     font-weight: normal;
 
@@ -405,6 +502,8 @@ div.abbr_comment {
     i {
       line-height: 1.5em;
       float: left;
+      cursor: pointer;
+      padding-right: 3px;
     }
 
     a {
@@ -419,22 +518,23 @@ div.abbr_comment {
     font-weight: bold;
   }
 
-  .my-feeds {
-    margin-bottom: 10px;
-  }
-
   .source-heading {
     font-size: 1.5em;
     padding-bottom: 5px;
+    margin-bottom: 5px;
     border-bottom: 1px solid #aaa;
   }
-  
+
   // The individual non-aggregated feeds
 
   .leaf {
     font-size: 0.8em;
     line-height: 1.4em;
     padding-left: 5px;
+  }
+
+  .leaf a {
+    padding: 3px 15px;
   }
 
   .leaf.active a {
@@ -451,22 +551,61 @@ div.abbr_comment {
 
 // Feed header
 
-header.feed-header {
+.feed-header {
   h1 {
     margin-top: 0;
     margin-bottom: 0;
     font-size: 2.4em;
   }
 
+  padding-bottom: 30px;
+  margin-bottom: 10px;
+
+  // Abstract toggle appears on hover
+  //.abstract-toggle {
+  //  display: none;
+  //}
+
   .subscribe-toggle {
     line-height: 40px;
   }
 
-  padding-bottom: 5px;
-  margin-bottom: 30px;
+  .view-subs {
+    
+  }
 }
 
-.feed-identifier {
+.feed-header.home {
+  padding-bottom: 0px;
+
+  .view-subs {
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+}
+
+.subscribe-toggle:not(.active) {
+  .unsubscribe {
+    display: none;
+  }
+}
+
+.subscribe-toggle.active {
+  .subscribe {
+    display: none;
+  }
+}
+
+.feed-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  .abstract-toggle {
+    display: inline !important;
+  }
+}
+
+.feed-uid {
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -474,23 +613,6 @@ header.feed-header {
 
 #feed-page {
   overflow: hidden;
-  min-height: 100%;
-}
-
-.feed-center {
-  margin-bottom: -99999px;
-  padding-bottom: 99999px;
-}
-
-.split {
-  z-index: -100;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 50%;
-  min-width: 200px;
-  background: #eeeeee;
 }
 
 .feedbar {
@@ -499,7 +621,6 @@ header.feed-header {
 
 .feed-center {
   padding-top: 20px;
-  padding-left: 33px;
   background: white;
   height: 100%;
 
@@ -513,15 +634,15 @@ header.feed-header {
 
 ul.papers {
   margin-left: 0;
+  padding-left: 0;
 }
 
 li.paper {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-
   list-style-type: none;
   padding: 10px 0;
 
   .title {
+    font-weight: bold;
     font-size: 1.2em;
 
     a {
@@ -534,10 +655,23 @@ li.paper {
     }
   }
 
+  .uid, .crosslist {
+    color: #aaa;
+    a {
+      color: #717F9B;
+    }
+  }
+
   .scites-count:hover {
     .sciters-dropdown {
       display: block;
     }
+  }
+
+  .pull-right {
+    text-align: center;
+    font-size: 12px;
+    min-height: 72px;
   }
 
   .abs-toggle {
@@ -545,6 +679,11 @@ li.paper {
     color: #ccc;
     cursor: pointer;
     line-height: 10px;
+  }
+
+  .expand-authors {
+    cursor: pointer;
+    color: #3c63af;
   }
 }
 
@@ -563,28 +702,8 @@ li.paper:hover {
 div.feed-rightbar
 {
 
-  h2 {
-    color: #A3A3A2;
-    text-transform: uppercase;
-    margin-top: 0;
-    font-size: 1em;
-  }
-
-  .timelinks {
+  h3 {
     text-align: center;
-
-    li.last-visited {
-      display: block;
-    }
-
-    li {
-      list-style-type: none;
-      display: inline-block;
-    }
-
-    li.active {
-      font-weight: bold;
-    }
   }
 
   .abbr-comment {
@@ -594,23 +713,93 @@ div.feed-rightbar
   blockquote p {
     font-size: inherit;
   }
+
+  .abstract-toggle {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .timenav {
+    p {
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      text-align: center;
+      border-collapse: separate;
+
+      td {
+        a {
+          display: block;
+          width: 100%;
+          height: 100%;
+          padding: 10px 0;
+          text-decoration: none;
+          color: inherit;
+        }
+
+        font-size: 13px;
+        cursor: pointer;
+
+        &.half {
+          width: 50%;
+        }
+
+        border: 1px solid #ccc;
+        border-top: none;
+
+        &.top {
+          border-top: 1px solid #ccc;
+          &.left {
+            border-top-left-radius: 5px;
+            border-right: none;
+          }
+
+          &.right {
+            border-top-right-radius: 5px;
+          }
+        }
+
+        &.bottom {
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+
+        &.underline {
+          border: none;
+          background-color: #1e95f9;
+          height: 5px;
+        }
+      }
+    }
+  }
 }
 
 // Scites
 
-.scite-toggle.inactive {
-  opacity: 0.5;
+.scite-toggle:not(.active) {
+  .scited {
+    display: none;
+  }
+}
+
+.scite-toggle.active {
+  .unscited {
+    display: none;
+  }
 }
 
 .scite-toggle {
+  white-space: nowrap;
   .scite, .unscite {
-    @include border-left-radius(5px);
+    @include border-right-radius(0);
     float: left;
   }
 
   .scites-count {
     .btn {
-      @include border-right-radius(5px);
+      @include border-left-radius(0);
       border-left: 0;
       float: left;
     }
@@ -637,16 +826,72 @@ div.feed-rightbar
   }
 
   ul + li.paper {
-    padding-top: 0;
     border-top: none;
+
+  }
+
+  .scite-toggle {
+    float: right;
   }
 
   .scite-toggle .btn {
-    padding: 2px 6px; 
+    padding: 4px 8px;
   }
+
+  .abspdf {
+    font-size: 10px;
+    padding: 4px 7px;
+  }
+}
+
+// Settings pages
+
+#settings-page .gravatar {
+  margin-top: 10px;
 }
 
 // Search page
 
 #advanced_search_form {
+  tr.filter-start td {
+    height: 51px;
+  }
+}
+
+// About page
+
+#about {
+  font-size: 15px;
+  line-height: 1.7;
+  
+  p {
+    max-width: 750px;
+  }
+}
+
+// Table for displaying a list of users
+
+.usertable {
+  > tbody > tr > td {
+    vertical-align: middle;
+  }
+}
+
+// Subscriptions page
+
+#subscriptions {
+  .feed-card {
+    display: inline-block;
+    width: 550px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 15px;
+    padding-right: 15px;
+    line-height: 34px;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 3px 6px;
+  }
 }

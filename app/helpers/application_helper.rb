@@ -10,7 +10,7 @@ module ApplicationHelper
     if page_title.empty?
       base_title
     else
-      sanitize("#{base_title} | #{page_title}")
+      sanitize("#{page_title} | #{base_title}")
     end
   end
 
@@ -24,5 +24,9 @@ module ApplicationHelper
 
   def landing_column(parent)
     render partial: 'feeds/landing_column', locals: { parent: parent, feeds: parent.children }
+  end
+
+  def status_warning
+    raw "<span class=\"warning\">#{current_user.account_status}:</span>"
   end
 end

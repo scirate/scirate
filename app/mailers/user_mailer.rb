@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default :from => "no-reply@scirate.com"
+  default :from => "no-reply@#{Settings::HOST}"
 
   def signup_confirmation(user)
     @user = user

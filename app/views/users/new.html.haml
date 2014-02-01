@@ -1,9 +1,0 @@
-- provide(:title, 'Sign up')
-
-.container
-  %h1 Sign up
-
-  = form_for(@user) do |f|
-    = render 'fields', f: f
-    .actions
-      = f.submit "Sign up"

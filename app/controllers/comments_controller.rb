@@ -1,12 +1,12 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, :only => [:edit, :destroy, :upvote, :downvote, :unvote, :report, :unreport, :reply]
+  before_filter :find_comment, :only => [:edit, :delete, :upvote, :downvote, :unvote, :report, :unreport, :reply]
 
   def create
     @comment = current_user.comments.build(
-      paper_id: params[:comment][:paper_id],
+      paper_uid: params[:comment][:paper_uid],
       content: params[:comment][:content]
     )
-
+    
     if @comment.save
       flash[:comment] = { status: :success, content: "Comment posted." }
     else
@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    if @comment.user_id == current_user.id
+    if @comment.user_id == current_user.id || current_user.is_moderator?
       @comment.content = params[:content]
       @comment.save
       render :text => 'success'
@@ -26,28 +26,44 @@ class CommentsController < ApplicationController
     end
   end
 
-  def index
-    @comments = Comment.paginate(page: params[:page]).includes(:paper, :user).find(:all, order: "created_at DESC")
-  end
+  def delete
+    paper = @comment.paper
+    if @comment.user_id == current_user.id || current_user.is_moderator?
 
-  def destroy
-    if @comment.user_id == current_user.id
-      @comment.destroy
+      if @comment.children.length == 0
+        # If this comment has no replies, remove it completely
+        @comment.destroy
+      else
+        # Otherwise, just hide it away
+        @comment.deleted = true
+        @comment.save
+        paper.comments_count -= 1
+        paper.save
+      end
+
       flash[:comment] = { status: 'success', content: "Comment deleted." }
-      redirect_to request.referer
+      redirect_to request.referer || paper
     else
       render :status => :forbidden
     end
   end
 
   def upvote
-    @comment.upvote_from(current_user)
-    render :text => 'success'
+    if current_user.id != @comment.user_id
+      @comment.upvote_from(current_user)
+      render :text => 'success'
+    else
+      render :text => "can't upvote own comment"
+    end
   end
 
   def downvote
-    @comment.downvote_from(current_user)
-    render :text => 'success'
+    if current_user.id != @comment.user_id
+      @comment.downvote_from(current_user)
+      render :text => 'success'
+    else
+      render :text => "can't downvote own comment"
+    end
   end
 
   def unvote
@@ -67,7 +83,7 @@ class CommentsController < ApplicationController
 
   def reply
     @reply = current_user.comments.build(
-      paper_id: @comment.paper_id,
+      paper_uid: @comment.paper_uid,
       parent_id: @comment.id,
       ancestor_id: @comment.ancestor_id || @comment.id,
       content: params[:content]

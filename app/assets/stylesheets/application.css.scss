@@ -9,7 +9,8 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require flatstrap
- *= require Markdown.Editor
+ *= require bootstrap
+ *= require font-awesome.min
+ *= require jquery.pagedown-bootstrap
  *= require main
 */

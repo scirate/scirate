@@ -1,56 +1,97 @@
-ruby '2.0.0'
+ruby '2.1.0'
 source 'http://rubygems.org'
 
-gem 'rails'
-gem 'bcrypt-ruby', "~> 3.0.0"
-gem 'faker'
-gem 'chronic'
+# Rails
+gem 'rails', "~> 4.0.0"
+gem 'bcrypt-ruby'
+
+# Sends us emails when stuff breaks in production
+gem 'exception_notification',
+    :git => 'git://github.com/sunkencity/exception_notification'
+
+# Database stuff
+gem 'pg' # Postgres support
+gem 'squeel' # XXX (Mispy): Can we remove this?
+gem 'activerecord-import' # For bulk importing papers
+gem 'acts_as_votable' # Comment votes (not scites)
+gem 'unidecoder', "~> 1.1.2" # For making ascii author searchterms
+
+# Frontend stuff
+gem 'will_paginate' # Displaying pages of results
+gem 'chronic' # Natural language date parsing
+
+# For interfacing with the arxiv OAI to
+# download new papers in bulk
+# arxivsync is our custom gem and can be found at:
+# https://github.com/mispy/arxivsync
 gem 'oai', :git => 'git://github.com/code4lib/ruby-oai'
-gem 'pg'
-gem 'will_paginate'
-gem 'textacular', :require => 'textacular/rails'
-gem 'acts_as_votable', :git => 'git://github.com/ryanto/acts_as_votable'
-gem 'activerecord-import'
-gem 'squeel'
-gem 'thin'
-gem 'arxivsync', ">= 0.0.3"
-gem 'exception_notification', :git => 'git://github.com/sunkencity/exception_notification'
-gem 'acts_as_list'
-gem 'haml'
-gem 'bourbon'
+gem 'arxivsync', :git => 'git://github.com/mispy/arxivsync'
+gem 'nokogiri', "= 1.5.9"
 
-group :development do
-  gem 'annotate'
-  gem 'rspec-rails'
-  gem 'guard-rspec'
-  gem 'taps'
-  gem 'pry-rails'
-  gem 'quiet_assets'
-  #gem 'sql-logging'
-end
+# Sphinx full-text search support
+# Requires mysql gem even though we're using postgres
+gem 'mysql2', '0.3.13'
+gem 'thinking-sphinx', '3.1.0'
 
-# assets
+# Asset preprocessors
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
-
-
 gem 'jquery-rails'
+gem 'haml'
 
-# Test gems setup for Macintosh OS X
-group :test do
+# SCSS mixins for CSS3 browser compatibility
+gem 'bourbon'
+
+group :development, :test do
   gem 'rspec-rails'
+  gem 'rspec-rerun'
+end
+
+group :development do
+  # Development webserver
+  gem 'thin'
+
+  # When run, the 'annotate' command will
+  # reflect the database schema into helpful
+  # comments in the model code
+  gem 'annotate'
+
+  # An improved IRB alternative for rails console
+  gem 'pry-rails'
+
+  # Suppresses annoying asset pipeline logs
+  gem 'quiet_assets'
+
+  # Rails application preloader
+  # Speeds up rake/rspec startup
+  # You need to use the binstubs in scirate/bin
+  gem 'spring'
+  gem 'spring-commands-rspec'
+
+  # For dumping feeds to seeds.rb to test with
+  gem 'seed_dump'
+end
+
+group :test do
+  # Factory girl creates valid models
+  # as needed for use in tests
+  gem 'factory_girl_rails'
+
+  # Capybara is used to mimic a simple
+  # browser for integration tests
   gem 'capybara'
+
+  # So we can truncate the database properly
+  # before each test suite is run
+  gem 'database_cleaner'
+
+  # OS X specific?
   gem 'rb-fsevent', :require => false
   gem 'rb-readline'
-  gem 'growl'
-  gem 'guard-spork'
-  gem 'spork'
-  gem 'factory_girl_rails'
-  gem 'database_cleaner'
-  gem 'launchy'
 end
 
 group :production do
+  # XXX (Mispy): Not sure we're using this atm
   gem 'newrelic_rpm'
 end

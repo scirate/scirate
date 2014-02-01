@@ -2,273 +2,171 @@
 #
 # Table name: papers
 #
-#  id             :integer         primary key
-#  title          :text
-#  author_str     :text
-#  abstract       :text
-#  identifier     :string(255)
-#  url            :string(255)
-#  created_at     :timestamp       not null
-#  updated_at     :timestamp       not null
-#  pubdate        :date
-#  updated_date   :date
-#  scites_count   :integer         default(0)
-#  comments_count :integer         default(0)
-#  feed_id        :integer
+#  id              :integer          not null, primary key
+#  uid             :text             not null
+#  submitter       :text
+#  title           :text             not null
+#  abstract        :text             not null
+#  author_comments :text
+#  msc_class       :text
+#  report_no       :text
+#  journal_ref     :text
+#  doi             :text
+#  proxy           :text
+#  license         :text
+#  submit_date     :datetime         not null
+#  update_date     :datetime         not null
+#  abs_url         :text             not null
+#  pdf_url         :text             not null
+#  delta           :boolean          default(TRUE), not null
+#  created_at      :datetime
+#  updated_at      :datetime
+#  scites_count    :integer          default(0), not null
+#  comments_count  :integer          default(0), not null
+#  pubdate         :datetime
+#  author_str      :text             not null
 #
 
-require 'textacular/searchable'
-
 class Paper < ActiveRecord::Base
-  belongs_to :feed
+  has_many  :versions, -> { order("position ASC") }, dependent: :delete_all,
+            foreign_key: :paper_uid, primary_key: :uid
+  has_many  :categories, -> { order("position ASC") }, dependent: :delete_all,
+            foreign_key: :paper_uid, primary_key: :uid
+  has_many  :authors, -> { order("position ASC") }, dependent: :delete_all,
+            foreign_key: :paper_uid, primary_key: :uid
 
-  has_many  :scites, dependent: :destroy
-  has_many  :sciters, -> { order("name ASC") }, through: :scites
-  has_many  :comments, -> { order("created_at ASC") }, dependent: :destroy
-  has_many  :cross_lists, dependent: :destroy
-  has_many  :cross_listed_feeds, -> { order("name ASC") }, through: :cross_lists, \
-                source: :feed
-  has_many :authorships, -> { order(:position) }
-  has_many :authors, -> { order('authorships.position') }, :through => :authorships
+  has_many  :feeds, -> { order("categories.position ASC") }, through: :categories
 
+  has_many  :scites, dependent: :delete_all,
+            foreign_key: :paper_uid, primary_key: :uid
+  has_many  :sciters, -> { order("fullname ASC") }, through: :scites, source: :user
+  has_many  :comments, -> { order("created_at ASC") }, dependent: :delete_all,
+            foreign_key: :paper_uid, primary_key: :uid
+
+  validates :uid, presence: true, uniqueness: true
   validates :title, presence: true
   validates :abstract, presence: true
-  validates :identifier, presence: true, uniqueness: true
-  validates :url, presence: true
-  validates :pubdate, presence: true
-  validates :updated_date, presence: true
-  validates :feed_id, presence: true
+  validates :abs_url, presence: true
+  validates :submit_date, presence: true
+  validates :update_date, presence: true
 
-  validate  :updated_date_is_after_pubdate
+  validate  :update_date_is_after_submit_date
 
-  after_create { cross_list_primary_feed }
+  # Given when a paper was submitted, estimate the
+  # time at which the arXiv was likely to have published it
+  def self.estimate_pubdate(submit_date)
+    pubdate = submit_date.dup.change(hour: 1)
 
-  # Returns papers from feeds subscribed to by the given user
-  scope :from_feeds_subscribed_by, lambda { |user| subscribed_by(user) }
-  scope :from_feeds_subscribed_by_cl, lambda { |user| subscribed_by_cl(user) }
-
-  # Returns a paginated selection of papers based on
-  # a date, a number of days into the past to look, and
-  # an optional page index
-  def self.range_query(papers, date, range=0, page=nil)
-    papers = papers.includes(:feed, :authors, :cross_lists => :feed)
-    papers = papers.where("pubdate >= ? AND pubdate <= ?", date - range.days, date)
-    papers = papers.order("scites_count DESC, comments_count DESC, identifier ASC")
-    papers = papers.limit(30)
-    papers
-  end
-
-  def self._arxiv_import(models, opts={})
-    ### First pass: Add new Feeds.
-    feednames = models.map { |m| m.categories }.flatten.uniq
-    Feed.arxiv_import(feednames, opts)
-    feeds_by_name = Feed.map_names
-
-    ### Second pass: Add new Authors.
-    author_models = models.map(&:authors).flatten.uniq
-    Author.arxiv_import(author_models, opts)
-
-    ### Third pass: Add new papers and handle updates.
-    
-    # Need to find and update existing papers, then bulk import new ones
-    identifiers = models.map(&:id)
-    existing_papers = Paper.where(identifier: identifiers)
-    existing_by_ident = Hash[existing_papers.map { |paper| [paper.identifier, paper] }]
-
-    columns = [:identifier, :feed_id, :url, :pdf_url, :title, :abstract, :pubdate, :updated_date, :author_str]
-    values = []
-    updated_papers = []
-    models.each do |model|
-      author_str = model.authors.map { |au| Author.make_fullname(au) }.join(',')
-      if (paper = existing_by_ident[model.id])
-        next if paper.updated_date >= (model.updated || model.created) # No new content
-
-        paper.identifier = model.id
-        paper.feed_id = feeds_by_name[model.primary_category].id
-        paper.url = "http://arxiv.org/abs/#{model.id}"
-        paper.pdf_url = "http://arxiv.org/pdf/#{model.id}.pdf"
-        paper.title = model.title
-        paper.abstract = model.abstract
-        paper.pubdate = model.created
-        paper.updated_date = model.updated || model.created
-        paper.author_str = author_str
-
-
-        paper.save!
-        updated_papers.push(paper)
+    # Weekend submissions => Tuesday
+    if [6,0].include?(submit_date.wday)
+      pubdate += 2.days if submit_date.wday == 0
+      pubdate += 3.days if submit_date.wday == 6
+    else
+      if submit_date.wday == 5
+        pubdate += 3.days # Friday submissions => Monday
       else
-        values << [
-          model.id,
-          feeds_by_name[model.primary_category].id,
-          "http://arxiv.org/abs/#{model.id}",
-          "http://arxiv.org/pdf/#{model.id}.pdf",
-          model.title,
-          model.abstract,
-          model.created,
-          model.updated || model.created,
-          author_str
-        ]
+        pubdate += 1.day # Otherwise => next day
+      end
+
+      if submit_date.hour >= 21 # Past submission deadline
+        pubdate += 1.day
       end
     end
 
-    puts "Read #{models.length} items: #{values.length} new, #{updated_papers.length} updated [#{models[0].id} to #{models[-1].id}]"
-    result = Paper.import(columns, values, opts)
-    unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
-    end
-
-    #return if values.empty? && updated_papers.empty? # Skip the rest if no new data
-
-    relevant_papers = Paper.where(identifier: identifiers)
-    
-
-    ### Fourth pass: Add any new authorships.
-    authors = Author.where(uniqid: author_models.map { |model| Author.make_uniqid(model) })
-    authors_by_uniqid = Hash[authors.map { |author| [author.uniqid, author] }]
-    papers_by_ident = Hash[relevant_papers.map { |paper| [paper.identifier, paper] }]
-    paper_ids = papers_by_ident.values.map(&:id)
-    
-    existing_authorships = Hash.new { |h,k| h[k] = [] }
-    Authorship.where(paper_id: paper_ids).each do |au|
-      existing_authorships[au.paper_id].push(au.author_id)
-    end
-
-    columns = [:paper_id, :author_id, :position]
-    values = []
-    models.each do |model|
-      next unless papers_by_ident.has_key?(model.id)
-      paper_id = papers_by_ident[model.id].id
-      model.authors.each_with_index do |author, i|
-        author_id = authors_by_uniqid[Author.make_uniqid(author)].id
-        next if existing_authorships[paper_id].include?(author_id)
-        values << [paper_id, author_id, i]
-      end
-    end
-
-    puts "Importing #{values.length} authorships" unless values.empty?
-    result = Authorship.import(columns, values, opts)
-    unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing authorships: #{result.failed_instances.inspect}")
-    end
-
-    ### Finally: crosslists!
-    existing_crosslists = CrossList.where(paper_id: paper_ids).map { |cl| [cl.paper_id, cl.feed_id] }
-    
-    columns = [:paper_id, :feed_id, :cross_list_date]
-    values = []
-    models.each do |model|
-      next unless papers_by_ident.has_key?(model.id)
-      paper_id = papers_by_ident[model.id].id
-      model.categories.each do |feedname|
-        feed_id = feeds_by_name[feedname].id
-        next if existing_crosslists.include?([paper_id, feed_id])
-        values << [paper_id, feed_id, model.created]
-      end
-    end
-
-    puts "Importing #{values.length} crosslists" unless values.empty?
-    result = CrossList.import(columns, values, opts)
-    unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing crosslists: #{result.failed_instances.inspect}")
-    end
-
-    # Update last paper date for involved feeds
-    feednames.each do |feedname|
-      feeds_by_name[feedname].update_last_paper_date
-    end
+    pubdate
   end
 
-  def self.arxiv_import(models, opts={})
-    transaction do
-      self._arxiv_import(models, opts)
-    end
-  end
-
-  extend Searchable(:title, :abstract, :author_str)
 
   def to_param
-    identifier
+    uid
   end
 
   def updated?
-    updated_date > pubdate
+    update_date > submit_date
   end
 
   private
+    def update_date_is_after_submit_date
+      return unless submit_date and update_date
 
-    def cross_list_primary_feed
-      self.cross_lists.create(feed_id: self.feed.id, \
-                              cross_list_date: self.pubdate)
-    end
-
-    def updated_date_is_after_pubdate
-      return unless pubdate and updated_date
-
-      if updated_date < pubdate
-        errors.add(:updated_date, "must not be earlier than pubdate")
+      if update_date < submit_date
+        errors.add(:update_date, "must not be earlier than submit_date")
       end
-    end
-
-    # Returns SQL condition for papers from feeds subscribed
-    # to by the given user.
-    def self.subscribed_by(user)
-      subscribed_ids = %(SELECT feed_id FROM subscriptions
-                         WHERE user_id = ?)
-      where("feed_id IN (#{subscribed_ids})", user.id)
-    end
-
-    def self.subscribed_by_cl(user)
-      subscribed_ids = %(SELECT feed_id FROM subscriptions
-                         WHERE user_id = ?)
-      includes(:cross_lists).where("cross_lists.feed_id IN (#{subscribed_ids})", user.id)
     end
 end
 
 class Paper::Search
   attr_reader :results
-  attr_accessor :field_terms, :general_term, :feed, :authors
+  attr_accessor :conditions, :general_term, :feed, :authors, :order, :order_sql
 
-  # Split string on spaces which aren't enclosed by quotes
-  def qsplit(query)
-    q = query.dup
-    quoted = false
-    indices = []
-    q.chars.each_with_index do |ch, i|
-      quoted = !quoted if ch == '"'
-      indices << i if ch == ' ' && !quoted
+  # Split query on non-paren enclosed spaces
+  def psplit(query)
+    split = []
+    depth = 0
+    current = ""
+
+    query.chars.each_with_index do |ch, i|
+      if i == query.length-1
+        split << current+ch
+      elsif ch == ' ' && depth == 0
+        split << current
+        current = ""
+      else
+        current << ch
+
+        if ch == '('
+          depth += 1
+        elsif ch == ')'
+          depth -= 1
+        end
+      end
     end
-    indices.each { |i| q[i] = "\x00" }
-    q.split("\x00")
+
+    split
   end
 
-  # Strip field prefix and quotes
+  # Strip field prefix and parens
   def tstrip(term)
-    ['au:','ti:','abs:','feed:'].each do |prefix|
+    ['au:','ti:','abs:','feed:','order:'].each do |prefix|
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
-    term#.gsub("'", "''").gsub('"', "'")
+
+    if term[0] == '(' && term[-1] == ')'
+      term[1..-2]
+    else
+      term
+    end
   end
 
   def initialize(query)
     @general_term = nil # Term to apply as OR across all text fields
-    @field_terms = {} # Terms for individual text fields
+
+    @conditions = {}
+
     @feed = nil
     @authors = []
+    @order = :scites
 
-    qsplit(query).each do |term|
+    psplit(query).each do |term|
       if term.start_with?('au:')
-        @authors << tstrip(term)
-        if @field_terms[:author_str]
-          @field_terms[:author_str] = @field_terms[:author_str] + " & #{tstrip(term)}"
+        if term.include?('_')
+          @authors << tstrip(term)
+          @conditions[:authors_searchterm] ||= []
+          @conditions[:authors_searchterm] << tstrip(term)
         else
-          @field_terms[:author_str] = tstrip(term)
+          @authors << tstrip(term)
+          @conditions[:authors_fullname] ||= []
+          @conditions[:authors_fullname] << tstrip(term)
         end
       elsif term.start_with?('ti:')
-        @field_terms[:title] = tstrip(term)
+        @conditions[:title] = tstrip(term)
       elsif term.start_with?('abs:')
-        @field_terms[:abstract] = tstrip(term)
+        @conditions[:abstract] = tstrip(term)
       elsif term.start_with?('feed:')
-        @feed = Feed.find_by_name(tstrip(term))
+        @feed = Feed.find_by_uid(tstrip(term))
+        @conditions[:feed_uids] = @feed.uid
+      elsif term.start_with?('order:')
+        @order = tstrip(term).to_sym
       else
         if @general_term
           @general_term += ' ' + term
@@ -278,24 +176,21 @@ class Paper::Search
       end
     end
 
-    @results = Paper
-
-    # Limit by feed
-    if @feed
-      feed_ids = [@feed.id] + @feed.children.pluck(:id)
-      @results = @results.joins(:cross_lists).where(:cross_lists => { :feed_id => feed_ids })
-    end
-
-    @results = @results.advanced_search(@general_term) if @general_term
-    @results = @results.advanced_search(@field_terms) unless @field_terms.empty?
+    @order_sql = case @order
+                 when :scites then "scites_count DESC, pubdate DESC"
+                 when :comments then "comments_count DESC, pubdate DESC"
+                 when :recency then "pubdate DESC"
+                 when :relevancy then nil # Default Sphinx match relevancy
+                 end
   end
 
-  def field_term(key, term, operator='&')
-    if @field_terms[key]
-      @field_terms[key] += " #{operator} #{term}"
-    else
-      @field_terms[key] = term
-    end
+  def run(opts={})
+    params = {}
+    params[:conditions] = @conditions
+    params[:order] = @order_sql unless @order_sql.nil?
+
+    params = params.merge(opts)
+    @results = Paper.search_for_ids(@general_term, params)
   end
 end
 

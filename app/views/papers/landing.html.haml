@@ -17,36 +17,37 @@
             SciRate
         %p An open access science aggregator
         = form_tag papers_search_path, :method => 'get', class: 'searchbox' do
-          = text_field_tag :q, params[:q], placeholder: 'Search'
+          = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
 
     .container
-      .row-fluid
-        .span3.offset9
+      .row
+        .col-md-3.col-md-offset-9
           %ul.landing-nav
-            %li= link_to "sign in", signin_path
+            %li= link_to "sign in", login_path
             %li.signup= link_to "sign up", signup_path
             %li= link_to "about", about_path
 
     .container
       = render 'sessions/flash'
-      .row-fluid
-        .span3
+      .row
+        .col-md-3
           %h2 arXiv.org
-      .row-fluid
-        .span3
-          %ul.big-feeds
-            - Feed.where(name: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
-              %li
-                = link_to(feed.fullname, feed)
+      .row
+        .col-md-3
+          %h3 Physics
+          - Feed.where(uid: ['astro-ph', 'cond-mat']).each do |feed|
+            %li.feed
+              = link_to(feed.fullname, feed, title: feed.uid)
+          - Feed.where(uid: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+            %li.feed
+              = link_to(feed.fullname, feed, title: feed.uid)
           = landing_column(@feeds['physics'])
-          = landing_column(@feeds['astro-ph'])
-        .span3
+        .col-md-3
           = landing_column(@feeds['math'])
           = landing_column(@feeds['stat'])
-        .span3
+        .col-md-3
           = landing_column(@feeds['cs'])
-        .span3
-          = landing_column(@feeds['cond-mat'])
+        .col-md-3
           = landing_column(@feeds['q-bio'])
           = landing_column(@feeds['q-fin'])
           = landing_column(@feeds['nlin'])

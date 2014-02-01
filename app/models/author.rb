@@ -1,49 +1,55 @@
+# == Schema Information
+#
+# Table name: authors
+#
+#  id         :integer          not null, primary key
+#  position   :integer          not null
+#  fullname   :text             not null
+#  searchterm :text             not null
+#  paper_uid  :text
+#
+
+# An Author represents an element in an ordered
+# list of paper authors.
+#
+# NOTE (Mispy):
+#
+# I've decided not to normalize authors into a paper-independent
+# table after all. We currently cannot do so with any kind of
+# accuracy: no author property or combination of author properties
+# is guaranteed to correspond to a unique individual.
+#
+# Instead, we should choose the assumptions we want to make for
+# unifying different authors at the point of retrieval. This also
+# makes queries and sphinx indexing faster, as we only have to go
+# through a single association to get most of the data.
+#
 class Author < ActiveRecord::Base
-  has_many :authorships
-  has_many :papers, through: :authorships
+  belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid
 
-  def self.make_uniqid(model)
-    Digest::SHA1.hexdigest(model.forenames.inspect+model.keyname.inspect+model.suffix.inspect+model.affiliation.inspect)
-  end
+  validates :paper_uid, presence: true
+  validates :position, presence: true
+  validates :fullname, presence: true
+  validates :searchterm, presence: true
 
-  def self.arxiv_import(models, opts={})
-    uniqids = models.map { |model| Author.make_uniqid(model) }
-    existing_uniqids = Author.where(uniqid: uniqids).map(&:uniqid)
-
-    columns = [:uniqid, :affiliation, :forenames, :keyname, :suffix, :fullname, :searchterm]
-    values = []
-
-    models.each_with_index do |model, i|
-      uniqid = uniqids[i]
-      next if existing_uniqids.include?(uniqid)
-      values << [
-        uniqid,
-        model.affiliation,
-        model.forenames,
-        model.keyname,
-        model.suffix,
-        Author.make_fullname(model),
-        Author.make_searchterm(model)
-      ]
+  # Makes a searchterm of the form e.g.
+  # "Biagini_M" from "Maria Enrica Biagini"
+  def self.make_searchterm(name)
+    spl = name.gsub(/ ?\([^\)]+\)?| ?\[[^\]]+\]?/, '').split(/\s+|\./)
+    if spl.empty?
+      return '' # Rare edge case with non-valid author name
     end
 
-    result = Author.import(columns, values, opts)
-    unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing authors: #{result.failed_instances.inspect}")
+    if spl.length == 1
+      term = spl[0]
+    else
+      if name.downcase.include?("collaboration") # Special case
+        term = "#{spl[-1]}_#{spl[0]}"
+      else
+        term = "#{spl[-1]}_#{spl[0][0]}"
+      end
     end
 
-    puts "Read #{models.length} authors: #{values.length} new [#{models[0].keyname} to #{models[-1].keyname}]"
-  end
-
-  def self.make_searchterm(model)
-    term = "#{model.keyname.tr('-','_').mb_chars.normalize(:kd).gsub(/[^\x00-\x7f]/n, '').to_s}"
-    term += "_#{model.forenames[0][0]}" if model.forenames
-  end
-
-  def self.make_fullname(model)
-    fullname = model.keyname
-    fullname = model.forenames + ' ' + fullname if model.forenames
-    fullname = fullname + ' ' + model.suffix if model.suffix
-    fullname
+    term.mb_chars.normalize(:kd).to_ascii.to_s.gsub('-', '_')
   end
 end

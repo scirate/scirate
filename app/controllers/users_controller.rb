@@ -1,22 +1,29 @@
 class UsersController < ApplicationController
   before_filter :signed_in_user,
-           only: [:show, :edit, :update, :destroy, :settings, :settings_password]
+           only: [:feeds, :edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
   def show
-    @user = User.find(params[:id])
+    @user = User.find_by_username!(params[:username])
 
     if params[:scite_order] == 'published'
       @scite_order = :published
-      @scited_papers = @user.scited_papers.order("pubdate DESC")
+      scited_papers = @user.scited_papers.order("submit_date DESC")
     else
       @scite_order = :scited
-      @scited_papers = @user.scited_papers.order("scites.created_at DESC")
+      scited_papers = @user.scited_papers.order("scites.created_at DESC")
     end
-    
-    @scited_papers = @scited_papers.paginate(page: params[:scite_page], per_page: 10)
-    @comments = @user.comments.paginate(page: params[:comment_page], per_page: 20)
+
+    @scited_ids = current_user.scited_papers.pluck(:id) if current_user
+
+    @scited_papers = scited_papers
+      .includes(:feeds, :authors)
+      .paginate(page: params[:scite_page], per_page: 10)
+    @comments = @user.comments
+      .where(hidden: false, deleted: false)
+      .includes(:user, :paper)
+      .paginate(page: params[:comment_page], per_page: 20)
   end
 
   def new
@@ -30,11 +37,12 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      @user = User.new(params.required(:user).permit(:name, :email, :password, :password_confirmation))
+      default_username = "#{params[:user][:fullname].parameterize}-#{User.count+1}"
+      @user = User.new(params.required(:user).permit(:fullname, :email, :password, :password_confirmation).merge(username: default_username))
       if @user.save
         @user.send_signup_confirmation
-        flash[:success] = "Welcome to SciRate!  Confirmation mail sent to: #{@user.email}"
-        redirect_to root_path
+        sign_in @user
+        redirect_to feeds_path
       else
         render 'new'
       end
@@ -45,43 +53,6 @@ class UsersController < ApplicationController
   end
 
   def edit
-  end
-
-  def update
-    if !current_user.is_admin? && !@user.authenticate(params[:user][:old_password])
-      flash[:error] = "Old password is incorrect!"
-      render 'edit'
-      return
-    end
-
-    if params[:user][:account_status]
-      unless current_user.is_admin?
-        flash[:error] = "Admin status required"
-        render 'edit'
-        return
-      end
-
-      unless @user.change_status(params[:user][:account_status])
-        render 'edit'
-        return
-      end
-    end
-
-    old_email = @user.email
-
-    user_params = params.required(:user)
-                        .permit(:name, :email, :password, :password_confirmation, :expand_abstracts)
-
-    if @user.update_attributes(user_params)
-      if old_email != @user.email
-        @user.send_email_change_confirmation(old_email)
-      end
-
-      sign_in @user if current_user.id == @user.id
-      flash[:success] = "Profile updated"
-    end
-
-    render 'edit'
   end
 
   def destroy
@@ -117,6 +88,12 @@ class UsersController < ApplicationController
     end
   end
 
+  # Big feed subscriptions page
+  def feeds
+    @user = current_user
+    @subscribed_ids = @user.subscriptions.pluck(:feed_uid)
+  end
+
   def scited_papers
     @user = User.find(params[:id])
     @papers = @user.scited_papers.paginate(page: params[:page]).includes(:feed)
@@ -126,16 +103,6 @@ class UsersController < ApplicationController
     @user = User.includes(comments: :paper).find(params[:id])
   end
 
-  def subscriptions
-    @user = User.find(params[:id])
-    @feeds = Feed.order("name")
-
-    # This is to avoid loading each subscription individually.  There is
-    # presumably some way to do this with eager loading, but I cannot make
-    # rails use the eager-loaded data for feeds the user is not subscribed to.
-    @subscriptions = Set.new( @user.subscriptions.map { |s| s.feed_id } )
-  end
-
   def settings
     @user = current_user
     return unless request.post?
@@ -143,11 +110,12 @@ class UsersController < ApplicationController
     old_email = @user.email
 
     user_params = params.required(:user)
-                        .permit(:name, :email, :expand_abstracts)
+                        .permit(:fullname, :email, :username, :expand_abstracts)
 
     if @user.update_attributes(user_params)
       if old_email != @user.email
         @user.send_email_change_confirmation(old_email)
+        sign_in @user
       end
 
       sign_in @user
@@ -163,8 +131,12 @@ class UsersController < ApplicationController
 
     if @user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
-        @user.change_password!(params[:new_password])
-        flash[:success] = "Password changed successfully"
+        if @user.change_password(params[:new_password])
+          sign_in @user
+          flash[:success] = "Password changed successfully"
+        else
+          flash[:error] = @user.errors.full_messages
+        end
       else
         flash[:error] = "New password confirmation does not match"
       end
@@ -175,9 +147,8 @@ class UsersController < ApplicationController
 
   private
     def correct_user
-      # Ensure current user has permission to edit this user
-      @user = User.find(params[:id])
-      unless current_user?(@user) || current_user.is_admin?
+      @user = User.find_by_username(params[:username])
+      unless current_user?(@user)
         redirect_to(root_path)
       end
     end

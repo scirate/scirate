@@ -6,21 +6,27 @@ describe "User pages" do
 
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
 
-    before do
-      sign_in(user)
+    it "should display profile if you're logged in" do
+      sign_in(other_user)
       visit user_path(user)
+      page.should have_heading user.fullname
+      page.should have_title user.fullname
     end
 
-    it { should have_heading user.name }
-    it { should have_title user.name }
+    it "should display profile if you're logged out" do
+      visit user_path(user)
+      page.should have_heading user.fullname
+      page.should have_title user.fullname
+    end
   end
 
   describe "signup page" do
     before { visit signup_path }
 
-    it { should have_heading 'Sign up' }
-    it { should have_title 'Sign up' }
+    it { should have_heading 'Join SciRate' }
+    it { should have_title 'Join SciRate' }
   end
 
   describe "signup" do
@@ -36,10 +42,8 @@ describe "User pages" do
     describe "error messages" do
       before { signup }
 
-      let(:error) { 'errors prohibited this user from being saved' }
-
-      it { should have_title 'Sign up' }
-      it { should have_content(error) }
+      it { should have_title 'Join SciRate' }
+      it { should have_error_message }
     end
 
     describe "with valid information" do
@@ -52,30 +56,12 @@ describe "User pages" do
         let(:user) { User.find_by_email('test-new@example.com') }
 
         it { should have_title "" }
-        it { should have_success_message 'Welcome to SciRate!' }
-        it { should have_success_message user.email }
+        it { should have_content 'Welcome to SciRate!' }
+        it { should have_content user.email }
       end
     end
 
     describe "account confirmation" do
-
-      describe "new signup is inactive" do
-        let(:user) { User.find_by_email('test-new@example.com') }
-
-        before do
-          visit signup_path
-          valid_signup(email: 'new@example.com', password: 'foobar')
-
-          visit signin_path
-          fill_in "Email",    with: 'new@example.com'
-          fill_in "Password", with: 'foobar'
-          click_button "Sign in"
-        end
-
-        it { should have_title "" }
-        it { should have_content "Account is inactive!" }
-      end
-
       describe "emails user on signup" do
         before do
           visit signup_path
@@ -85,7 +71,7 @@ describe "User pages" do
         let(:user) { User.find_by_email('test-new@example.com') }
 
         it { should have_title "" }
-        it { should have_content("Confirmation mail sent to: #{user.email}") }
+        it { should have_content(user.email) }
 
         it "should send the email" do
           last_email.to.should include(user.email)
@@ -192,34 +178,6 @@ describe "User pages" do
     end
   end
 
-  describe "scited_papers" do
-    let(:user)   { FactoryGirl.create(:user) }
-    let(:paper1) { FactoryGirl.create(:paper) }
-    let(:paper2) { FactoryGirl.create(:paper) }
-
-    before do
-      user.scite!(paper1)
-      visit scites_user_path(user)
-    end
-
-    it { should have_title "Scites for #{user.name}" }
-    it { should have_heading "#{user.name}'s scited papers" }
-
-    describe "displays scited papers" do
-      it "displays identifiers" do
-        should have_content paper1.identifier
-      end
-
-      it "displays titles" do
-        should have_content paper1.title
-      end
-    end
-
-    describe "does not display non-scited papers" do
-      it { should_not have_content paper2.identifier }
-    end
-  end
-
   describe "settings" do
     let(:user) { FactoryGirl.create(:user) }
     before do
@@ -227,18 +185,23 @@ describe "User pages" do
       visit settings_path
     end
 
+    it "shouldn't allow use of reserved usernames" do
+      fill_in "Username", with: "arxiv"
+      click_button "Save changes"
+
+      page.should have_error_message "Username is already taken"
+    end
+
     describe "page" do
       it { should have_link('change', href: 'http://gravatar.com/emails') }
 
       describe "fields" do
-        it { should have_field "Name", with: user.name }
+        it { should have_field "Name", with: user.fullname }
         it { should have_field "Email", with: user.email }
-        it { should have_field "Always expand abstracts" }
       end
     end
 
     describe "with valid information" do
-      let(:user)      { FactoryGirl.create(:user) }
       let(:new_name)  { "New Name" }
       let(:new_email) { "new@example.com" }
 
@@ -249,7 +212,7 @@ describe "User pages" do
       end
 
       it { should have_selector('.alert-success') }
-      specify { user.reload.name.should  == new_name }
+      specify { user.reload.fullname.should  == new_name }
       specify { user.reload.email.should == new_email }
     end
 

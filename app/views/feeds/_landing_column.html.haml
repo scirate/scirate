@@ -1,4 +1,4 @@
 %h3= link_to(parent.fullname, parent)
 - feeds.each do |feed|
   %li.feed
-    = link_to(feed.fullname, feed)
+    = link_to(feed.fullname, feed, title: feed.uid)

@@ -3,16 +3,18 @@ SciRate3::Application.routes.draw do
 
   get '/search', to: 'papers#search', as: 'papers_search'
 
-  match '/api/scite/:paper_id', to: 'api#scite', via: [:get, :post], as: :scite
-  match '/api/unscite/:paper_id', to: 'api#unscite', via: [:get, :post], as: :unscite
-  match '/api/subscribe/:feed_id', to: 'api#subscribe', via: [:get, :post], as: :subscribe
-  match '/api/unsubscribe/:feed_id', to: 'api#unsubscribe', via: [:get, :post], as: :unsubscribe
+  match '/api/scite/:paper_uid', to: 'api#scite', via: [:get, :post], as: :scite, paper_uid: /.+/
+  match '/api/unscite/:paper_uid', to: 'api#unscite', via: [:get, :post], as: :unscite, paper_uid: /.+/
+  match '/api/subscribe/:feed_uid', to: 'api#subscribe', via: [:get, :post], as: :subscribe, feed_uid: /.+/
+  match '/api/unsubscribe/:feed_uid', to: 'api#unsubscribe', via: [:get, :post], as: :unsubscribe, feed_uid: /.+/
+  match '/api/settings', to: 'api#settings', via: [:get, :post]
 
-  put '/subscriptions', to: 'subscriptions#update'
+  post '/api/resend_confirm', to: 'api#resend_confirm', as: :resend_confirm
 
   resources :comments do
     member do
       post :edit
+      post :delete
       post :upvote
       post :downvote
       post :unvote
@@ -23,10 +25,14 @@ SciRate3::Application.routes.draw do
   end
   get '/comments', to: 'comments#index'
 
-  get '/signup',   to: 'users#new'
-  get '/signin',   to: 'sessions#new'
-  get '/signout',  to: 'sessions#destroy'
+  get '/signup',   to: 'users#new', as: 'signup'
+  post '/signup',  to: 'users#create'
+  get '/login',    to: 'sessions#new'
+  get '/logout',   to: 'sessions#destroy'
   get '/about',    to: 'static_pages#about'
+
+  get '/signin',   to: redirect('/login')
+  get '/signout',  to: redirect('/logout')
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'
@@ -43,16 +49,22 @@ SciRate3::Application.routes.draw do
 
 
   resources :sessions, only: [:new, :create, :destroy]
-  resources :users, only: [:show, :new, :create, :edit, :update, :destroy, :admin]
-  get '/users/:id/scites', to: 'users#scited_papers', as: "scites_user"
-  get '/users/:id/comments', to: 'users#comments', as: "comments_user"
-  get '/users/:id/subscriptions', to: 'users#subscriptions', as: "subscriptions_user"
-  get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: "activate_user"
+  #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
+  get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'
+  get '/users/:id/comments', to: 'users#comments', as: 'comments_user'
+  get '/users/:id/subscriptions', to: 'users#subscriptions', as: 'subscriptions_user'
+  get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: 'activate_user'
+  get '/feeds', to: 'users#feeds', as: 'feeds'
 
-  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: "feed"
 
-  #custom route to use arXiv identifiers as id's for papers
-  get '/:id', to: 'papers#show', id: /.+/, as: "paper"
+  get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+/, as: 'paper_scites'
+  get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+/, as: 'paper'
+  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
+
+  get '/admin/users/:username', to: 'admin#edit_user', as: 'admin_edit_user'
+  post '/admin/users/:username', to: 'admin#update_user', as: 'admin_update_user'
+  get '/:username', to: 'users#show', username: /.+/, as: 'user'
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
