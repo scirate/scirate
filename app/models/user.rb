@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
       user.errors.add :password, "must be at least 6 characters"
     end
 
-    if Settings::RESERVED_USERNAMES.include?(user.username.downcase)
+    if user.username && Settings::RESERVED_USERNAMES.include?(user.username.downcase)
       user.errors.add :username, "is already taken"
     end
   end
@@ -85,6 +85,10 @@ class User < ActiveRecord::Base
 
   def self.find_by_username(username)
     User.where("lower(username) = ?", username.downcase).first
+  end
+
+  def self.default_username(fullname)
+    "#{fullname.parameterize}"
   end
 
   def scited?(paper)

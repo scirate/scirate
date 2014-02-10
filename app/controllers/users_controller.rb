@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      default_username = "#{params[:user][:fullname].parameterize}-#{User.count+1}"
+      default_username = User.default_username(params[:user][:fullname]) + "-#{User.count}"
       @user = User.new(params.required(:user).permit(:fullname, :email, :password, :password_confirmation).merge(username: default_username))
       if @user.save
         @user.send_signup_confirmation
