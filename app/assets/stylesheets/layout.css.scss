@@ -67,13 +67,10 @@ a:link, a:visited {
   height: 100%;
 
   .landing-header {
-    padding: 10px;
-
     border-bottom: 6px solid #1e95f9;
     background: #202226;
     color: white;
-
-    text-align: center;
+    height: 50px;
 
     h1 {
       margin-top: 0;
@@ -111,13 +108,48 @@ a:link, a:visited {
     }
   }
 
-  #search-header {
-    width: 100%;
-    padding: 35px 0 40px;
+  .header-brand {
+    line-height: 44px;
+  }
+  
+  .landing-login .form-group {
+    height: 44px;
+    line-height: 44px;
+    margin-right: 5px;
+  }
 
-    text-align: center;
-    color: #afafaf;
-    background: #333333;
+  .landing-login input {
+    padding: 4px 8px;
+    height: 30px;
+  }
+
+  .landing-login .btn {
+    margin-top: 1px;
+  }
+
+  .landing-main {
+    margin-top: 30px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  .landing-main p {
+    color: #999;
+    font-size: 18px;
+  }
+
+  .landing-desc ul {
+    margin-left: 15px;
+  }
+
+  .landing-desc li {
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+
+  .landing-signup .form-group input {
+    height: 50px;
   }
 
   .container {
@@ -128,58 +160,8 @@ a:link, a:visited {
     padding-right: 20px;
   }
 
-  .landing-nav {
-    margin-bottom: 0;
-
-    li {
-      list-style: none;
-      display: inline-block;
-    }
-
-    li a {
-      display: block;
-      min-width: 50px;
-      padding: 8px 12px 7px;
-
-      text-align: center;
-
-      @include border-bottom-radius(5px);
-    }
-
-    li a:hover {
-      background: #3c63af;
-      color: white;
-      text-decoration: none;
-    }
-
-    .signup a {
-      color: white;
-      background: #1e95f9;
-    }
-  }
-
-  ul.big-feeds {
-    margin-top: 20px;
-    margin-left: 0;
-    li {
-      list-style: none;
-    }
-  }
-
-  h2 {
-    display: inline;
-    font-weight: bold;
-  }
-
-  h3 {
-    font-size: 1.5em;
-    font-weight: bold;
-    line-height: 40px;
-    margin-bottom: 0;
-  }
-
-  li.feed {
-    line-height: 19px;
+  .votes {
+    display: none;
   }
 }
 
@@ -196,23 +178,6 @@ header.navbar {
   max-height: 50px;
 
   margin-bottom: 0;
-
-  .navbar-brand {
-    font-size: 28px;
-    line-height: 50px;
-    padding: 0;
-    color: white;
-
-    ::hover {
-      text-decoration: none;
-    }
-
-    img {
-      position: relative;
-      top: -3px;
-      width: 32px;
-    }
-  }
 
   .nav {
     li > a {
@@ -259,6 +224,28 @@ header.navbar {
     margin-left: 20px;
   }
 }
+
+a.header-brand {
+  font-size: 28px;
+  padding: 0;
+  color: white;
+  line-height: 50px;
+
+  width: 137px;
+  display: block;
+  float: left;
+
+  ::hover {
+    text-decoration: none;
+  }
+
+  img {
+    position: relative;
+    top: -3px;
+    width: 32px;
+  }
+}
+
 
 header.second {
   height: 6px;

@@ -39,6 +39,7 @@ gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'haml'
+gem 'slim'
 
 # SCSS mixins for CSS3 browser compatibility
 gem 'bourbon'
@@ -58,6 +59,7 @@ group :development do
   gem 'annotate'
 
   # An improved IRB alternative for rails console
+  gem 'pry'
   gem 'pry-rails'
 
   # Suppresses annoying asset pipeline logs

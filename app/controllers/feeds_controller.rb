@@ -1,7 +1,9 @@
 class FeedsController < ApplicationController
   def landing
-    @feeds = Feed.map_uids
-    render('papers/landing', :layout => nil)
+    @top_papers = Paper.order('scites_count DESC, comments_count DESC').limit(3)
+    @top_comments = Comment.order('score DESC').limit(6)
+    @user = User.new
+    render('landing/landing', :layout => nil)
   end
 
   # Aggregated feed

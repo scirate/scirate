@@ -1,0 +1,69 @@
+doctype html
+html
+  head
+    title Welcome to SciRate
+    = render 'layouts/stylesheets'
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    meta http-equiv="content-language" content="en"
+  body#landing
+    header.landing-header role="banner"
+      .container
+        a.header-brand href="/"
+          = image_tag "scirate-icon.png"
+        .landing-login.pull-right
+          = form_tag sessions_path, class: 'form-inline' do
+            .form-group
+              = label_tag :email_or_username, "Email", class: 'sr-only'
+              = text_field_tag :email_or_username, nil, class: 'form-control', placeholder: "Email"
+            .form-group
+              = label_tag :password, "Password", class: 'sr-only'
+              = password_field_tag :password, nil, class: 'form-control', placeholder: "Password"
+            = submit_tag "Sign in", class: 'btn btn-default'
+      
+    .container
+      .row.landing-main
+        .col-md-6.landing-desc
+          h1 Welcome to SciRate
+          p We're a free and open access scientific collaboration network.
+          ul
+            li Follow arXiv.org categories and see the highest ranked new papers.
+            li Comment on and "scite" research to bring it to the attention of others.
+            li Maybe learn the secrets of the universe!
+        .col-md-6.landing-signup
+          h2 Sign up
+          p Discuss the newest and most exciting research.
+          = form_for(@user, url: signup_path(@user)) do |f|
+            .form-group
+              = f.label :fullname, "Full name", class: 'sr-only'
+              = f.text_field :fullname, class: 'form-control', placeholder: "Full name"
+            .form-group
+              = f.label :email, "Email", class: 'sr-only'
+              = f.text_field :email, class: 'form-control', placeholder: "Email"
+            .form-group
+              = f.label :password, "Password", class: 'sr-only'
+              = f.password_field :password, class: 'form-control', placeholder: "Password"
+            = f.submit "Sign up", class: 'btn btn-default'
+
+      .row
+        .col-md-6.top-papers
+          h2 Top Papers
+          ul.papers
+            - @top_papers.each do |paper|
+              = render partial: "papers/paper", object: paper
+
+        .col-md-6.top-comments
+          h2 Best Comments
+          ul.comments
+            - @top_comments.each do |comment|
+              = render partial: "comments/comment", object: comment
+
+
+    .container
+      = render 'layouts/footer'
+
+      /
+          h2 Top Papers
+
+
