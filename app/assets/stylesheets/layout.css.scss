@@ -111,6 +111,10 @@ a:link, a:visited {
   .header-brand {
     line-height: 44px;
   }
+
+  .header-brand:hover {
+    text-decoration: underline;
+  }
   
   .landing-login .form-group {
     height: 44px;
@@ -178,6 +182,16 @@ a:link, a:visited {
 
 // Main header
 
+header.second {
+  height: 6px;
+  line-height: 40px;
+
+  clear: both;
+  background: #1e95f9;
+  color: white;
+  font-size: 1.2em;
+}
+
 header.navbar {
   width: 100%;
   border: none;
@@ -189,6 +203,10 @@ header.navbar {
   max-height: 50px;
 
   margin-bottom: 0;
+
+  .header-brand:hover {
+    text-decoration: none;
+  }
 
   .nav {
     li > a {
@@ -246,28 +264,12 @@ a.header-brand {
   display: block;
   float: left;
 
-  ::hover {
-    text-decoration: none;
-  }
-
   img {
     position: relative;
     top: -3px;
     width: 32px;
   }
 }
-
-
-header.second {
-  height: 6px;
-  line-height: 40px;
-
-  clear: both;
-  background: #1e95f9;
-  color: white;
-  font-size: 1.2em;
-}
-
 
 .site-footer:after {
   clear: both;
