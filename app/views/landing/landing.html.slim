@@ -28,8 +28,9 @@ html
           h1 Welcome to SciRate
           p We're a free and open access scientific collaboration network.
           ul
-            li Follow arXiv.org categories and see the highest ranked new papers.
-            li Comment on and "scite" research to bring it to the attention of others.
+            li Follow arXiv.org categories and see the highest ranked new papers
+            li Comment on and "scite" research to bring it to the attention of others
+            li Find out what people are saying about your work
             li Maybe learn the secrets of the universe!
         .col-md-6.landing-signup
           h2 Sign up
@@ -54,7 +55,7 @@ html
               = render partial: "papers/paper", object: paper
 
         .col-md-6.top-comments
-          h2 Best Comments
+          h2 Top Comments
           ul.comments
             - @top_comments.each do |comment|
               = render partial: "comments/comment", object: comment

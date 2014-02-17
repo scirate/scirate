@@ -139,8 +139,13 @@ a:link, a:visited {
     font-size: 18px;
   }
 
+  .landing-desc p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
   .landing-desc ul {
-    margin-left: 15px;
+    margin-left: 25px;
   }
 
   .landing-desc li {
@@ -149,7 +154,13 @@ a:link, a:visited {
   }
 
   .landing-signup .form-group input {
-    height: 50px;
+    height: 45px;
+    width: 500px;
+  }
+
+  .col-md-6 {
+    padding-left: 25px;
+    padding-right: 25px;
   }
 
   .container {
