@@ -2,7 +2,13 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.find_by_uid!(params[:id])
+    @paper = Paper.find_by_uid(params[:id])
+
+    if @paper.nil?
+      # Might be a versioned link
+      @paper = Paper.find_by_uid!(params[:id].split(/v\d/)[0])
+      redirect_to paper_path(@paper)
+    end
 
     @scited = current_user && current_user.scited_papers.where(id: @paper.id).exists?
 

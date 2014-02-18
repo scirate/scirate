@@ -57,8 +57,8 @@ SciRate3::Application.routes.draw do
   get '/feeds', to: 'users#feeds', as: 'feeds'
 
 
-  get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+/, as: 'paper_scites'
-  get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+/, as: 'paper'
+  get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper_scites'
+  get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
 
   get '/admin/users/:username', to: 'admin#edit_user', as: 'admin_edit_user'
