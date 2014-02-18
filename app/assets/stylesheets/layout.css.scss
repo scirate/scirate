@@ -345,6 +345,7 @@ div.paper {
     }
 
     .scite-toggle {
+      display: inline-block;
       line-height: 40px;
     }
   }
@@ -792,6 +793,8 @@ div.feed-rightbar
 
 .scite-toggle {
   white-space: nowrap;
+  display: inline-block;
+
   .scite, .unscite {
     @include border-right-radius(0);
     float: left;
@@ -818,6 +821,13 @@ div.feed-rightbar
   }
 }
 
+.paper-download.btn {
+  vertical-align: top;
+  color: black;
+  padding: 6px 10px;
+}
+
+
 // User profile page
 
 #profile-page {
@@ -827,14 +837,11 @@ div.feed-rightbar
 
   ul + li.paper {
     border-top: none;
-
   }
 
-  .scite-toggle {
-    float: right;
-  }
+  // Buttons need to be smaller here
 
-  .scite-toggle .btn {
+  .pull-right .btn {
     padding: 4px 8px;
   }
 
