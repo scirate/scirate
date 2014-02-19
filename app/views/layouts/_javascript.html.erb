@@ -1,0 +1,30 @@
+<% if Settings::ENABLE_MATHJAX %>
+  <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true,
+        ignoreClass: 'container',
+        processClass: 'tex2jax',
+      },
+      showMathMenu: false,
+      errorSettings: {
+        style: { color: "black" },
+      },
+      TeX: {
+        noUndefined: {
+          attributes: {
+            mathcolor: 'black',
+          }
+        }
+      }
+    });
+  </script>
+<% end %>
+<%= javascript_include_tag "application" %>
+<script type="text/javascript">
+  SciRate.current_user = <%= raw (current_user ? current_user.to_js : false) %>;
+</script>
