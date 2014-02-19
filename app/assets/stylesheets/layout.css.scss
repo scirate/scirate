@@ -40,7 +40,7 @@ ul {
     }
   }
 }
-
+layout.css
 .dropdown-menu {
   margin-top: 0;
 }
@@ -875,10 +875,31 @@ div.feed-rightbar
 
 // Search page
 
-#advanced_search_form {
-  tr.filter-start td {
-    height: 51px;
+#search_page {
+  .form-group {
+    position: relative;
   }
+
+  input[type=submit] {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    border-radius: 0px 4px 4px 0px;
+  }
+}
+
+#advanced_search {
+  td:first-child {
+    width: 300px;
+  }
+}
+
+#search-preview {
+  margin-top: 5px;
+  padding: 10px;
+  line-height: 30px;
+  min-height: 52px;
 }
 
 // About page

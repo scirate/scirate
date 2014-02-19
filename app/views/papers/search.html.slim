@@ -1,0 +1,23 @@
+- provide :title, "Search results"
+#search_page.container
+  h1 Search SciRate
+  #search_form
+    = form_tag(papers_search_path, method: :get) do |f|
+      .form-group
+        = text_field_tag :q, @search.query, class: 'form-control'
+        = submit_tag "Search", class: 'btn btn-default'
+      = hidden_field_tag :advanced, @search.advanced
+      #advanced_search
+      
+  - if @papers
+    h3
+      #{@search.results.count} results for #{@query}
+    = render 'papers/abstract_toggle'
+    .paperlist
+      ul.papers
+        - if @papers.empty?
+          No papers found.
+        - else
+          - @papers.each do |paper|
+            = render 'papers/paper', paper: paper
+    = will_paginate @papers

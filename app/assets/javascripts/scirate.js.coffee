@@ -1,19 +1,7 @@
 class window.SciRate
   @login: -> redirect("/login")
 
-class View extends Backbone.View
-
-class View.Search extends View
-  initialize: ->
-    @updateFolder()
-
-  events:
-    'change #folder': "updateFolder"
-
-  updateFolder: ->
-    @$('.feed').addClass('hidden').attr('disabled', true)
-    $sel = @$('#feed_' + @$('#folder').val())
-    $sel.removeClass('hidden').attr('disabled', false)
+class window.View extends Backbone.View
 
 class View.SciteToggle extends View
   events:
@@ -178,10 +166,6 @@ $ ->
   # Landing page specific
   $('#landing').each ->
     $('.searchbox input').focus()
-
-  # Search page specific
-  $('#search_page').each ->
-    new View.Search(el: this)
 
   # Show links on hover
   $('li.paper').on 'mouseover', (ev) ->

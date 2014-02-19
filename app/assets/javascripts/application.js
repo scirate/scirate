@@ -15,5 +15,6 @@
 //= require underscore
 //= require bootstrap
 //= require jquery.pagedown-bootstrap.combined.min.js
+//= require Ractive.js
 //= require backbone
 //= require_tree .

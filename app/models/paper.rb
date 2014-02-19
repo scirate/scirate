@@ -97,7 +97,7 @@ end
 
 class Paper::Search
   attr_reader :results
-  attr_accessor :conditions, :general_term, :feed, :authors, :order, :order_sql
+  attr_accessor :conditions, :query, :advanced, :feed, :authors, :order, :order_sql
 
   # Split query on non-paren enclosed spaces
   def psplit(query)
@@ -139,7 +139,7 @@ class Paper::Search
   end
 
   def initialize(query)
-    @general_term = nil # Term to apply as OR across all text fields
+    @query = nil # Term to apply as OR across all text fields
 
     @conditions = {}
 
@@ -168,10 +168,10 @@ class Paper::Search
       elsif term.start_with?('order:')
         @order = tstrip(term).to_sym
       else
-        if @general_term
-          @general_term += ' ' + term
+        if @query
+          @query += ' ' + term
         else
-          @general_term = term
+          @query = term
         end
       end
     end
@@ -190,7 +190,7 @@ class Paper::Search
     params[:order] = @order_sql unless @order_sql.nil?
 
     params = params.merge(opts)
-    @results = Paper.search_for_ids(@general_term, params)
+    @results = Paper.search_for_ids(@query, params)
   end
 end
 
