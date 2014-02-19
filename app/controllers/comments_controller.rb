@@ -1,6 +1,19 @@
 class CommentsController < ApplicationController
   before_filter :find_comment, :only => [:edit, :delete, :upvote, :downvote, :unvote, :report, :unreport, :reply]
 
+  def index
+    if params[:feed]
+      @feed = Feed.find_by_uid!(params[:feed])
+      comments = Comment.find_by_feed_uids([@feed.uid])
+    else
+      feeds = current_user.feeds.includes(:children)
+      feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
+      comments = Comment.find_by_feed_uids(feed_uids)
+    end
+
+    @comments = comments.paginate(page: params[:page]||1)
+  end
+
   def create
     @comment = current_user.comments.build(
       paper_uid: params[:comment][:paper_uid],

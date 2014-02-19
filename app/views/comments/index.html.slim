@@ -1,0 +1,8 @@
+- title = "Recent comments from #{@feed ? @feed.uid : 'subscriptions'}"
+- provide :title, title
+
+.container
+  h1
+    = title
+  = render partial: "comments/abbr_comment", collection: @comments
+  = will_paginate @comments

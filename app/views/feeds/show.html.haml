@@ -72,6 +72,10 @@
           = render 'papers/abstract_toggle'
           = render :partial => 'feeds/next_prev_links'
           - unless @recent_comments.empty?
-            %h3 Recent comments
+            %h3 
+              - if @feed.nil?
+                %a{ href: comments_path } Recent comments
+              - else
+                %a{ href: feed_comments_path(@feed) } Recent comments
             = render :partial => "comments/abbr_comment", :collection => @recent_comments
 

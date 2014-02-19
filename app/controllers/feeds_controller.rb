@@ -117,10 +117,7 @@ class FeedsController < ApplicationController
   end
 
   def _recent_comments(feed_uids)
-    @recent_comments = Comment.joins(:paper, paper: :categories)
-                              .where(deleted: false, hidden: false, paper: { categories: { feed_uid: feed_uids } })
-                              .group('comments.id')
-                              .order("comments.created_at DESC").limit(10)
+    Comment.find_by_feed_uids(feed_uids).limit(10)
   end
 
   # The primary SciRate query. Given a set of feed uids, a pair of dates
