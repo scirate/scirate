@@ -49,6 +49,14 @@ a:link, a:visited {
   color: #3c63af;
 }
 
+a.js {
+  cursor: pointer;
+}
+
+a.js:hover {
+  text-decoration: none;
+}
+
 .abspdf {
   color: #999 !important;
   border-radius: 2px;
@@ -177,6 +185,14 @@ a:link, a:visited {
 
   .votes {
     display: none;
+  }
+
+  .scite-toggle .btn {
+    padding: 6px 8px;
+  }
+
+  .paper-download {
+    padding: 6px 8px;
   }
 }
 
