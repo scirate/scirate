@@ -22,10 +22,38 @@
           </select>
         </td>
         <td>
-          <input class="form-control" name="author" proxy-keydown="keydown">
+          <input class="form-control" name="author" proxy-keydown="changed" proxy-change="changed">
         </td>
         <td>
-          Comma-separated
+          Comma-separated author names
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <select class="form-control">
+            <option>Title</option>
+          </select>
+        </td>
+        <td>
+          <input class="form-control" name="ti" proxy-keydown="changed" proxy-change="changed">
+        </td>
+        <td>
+          Contents of paper title
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <select class="form-control">
+            <option>Abstract</option>
+          </select>
+        </td>
+        <td>
+          <input class="form-control" name="abs" proxy-keydown="changed" proxy-change="changed">
+        </td>
+        <td>
+          Contents of paper title
         </td>
       </tr>
     </tbody>

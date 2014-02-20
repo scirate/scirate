@@ -38,7 +38,7 @@ View.AdvancedSearch = Ractive.extend(
       @set(expand: false)
       window.location.hash = ""
 
-    @on 'keydown', (ev) =>
+    @on 'changed', (ev) =>
       setTimeout => @compile_query()
 
     
