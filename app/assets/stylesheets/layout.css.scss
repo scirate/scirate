@@ -69,6 +69,24 @@ a.js:hover {
   text-decoration: none;
 }
 
+.btn-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 0px 4px 4px 0px;
+}
+
+// Overriding bootstrap form element defaults
+// More google-ish flat design
+
+.form-control {
+  border: 1px solid #cdcdcd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.form-control:focus {
+  @include box-shadow(none);
+}
 
 // Landing page
 #landing {
@@ -164,6 +182,21 @@ a.js:hover {
     margin-bottom: 15px;
     font-size: 16px;
   }
+
+  #landing-search {
+    position: relative;
+    max-width: 510px;
+  }
+
+  #landing-search input {
+    width: calc(100% - 40px);
+  }
+
+  #landing-search .btn {
+    width: 60px;
+  }
+
+  
 
   .landing-signup .form-group input {
     height: 45px;
@@ -727,7 +760,7 @@ div.feed-rightbar
     font-size: 0.8em;
   }
 
-  blockquote p {
+  blockquote {
     font-size: inherit;
   }
 

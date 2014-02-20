@@ -29,6 +29,13 @@
             li Comment on and "scite" research to bring it to the attention of others
             li Find out what people are saying about your work
             li Maybe learn the secrets of the universe!
+          = form_tag papers_search_path, method: :get, id: "landing-search" do |f|
+            = label_tag :general, "Search our database", class: 'sr-only'
+            = text_field_tag :general, nil, class: 'form-control', placeholder: "Search our database"
+            button.btn.btn-primary.btn-right type="submit"
+              i.fa.fa-search.fa-lg
+              
+
         .col-md-6.landing-signup
           h2 Sign up
           p Discuss the newest and most exciting research.
