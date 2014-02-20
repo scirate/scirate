@@ -3,10 +3,10 @@
 - flash.each do |key, val|
   - if [:error, :warning, :success].include?(key)
     - flash.delete(key)
-    %div.alert{ class: "alert-#{@alert_classes[key]}" }
-      %button.close{ type: "button", 'data-dismiss' => "alert" } &times;
+    div class="alert alert-#{@alert_classes[key]}"
+      button.close type="button" data-dismiss="alert" &times;
       - if val.respond_to? :each
         - val.each do |val|
-          %p= val
+          p= val
       - else
         = val

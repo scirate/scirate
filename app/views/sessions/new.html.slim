@@ -4,7 +4,7 @@
   = form_tag sessions_path do
     .row
       .col-md-6
-        %h1 Sign in to SciRate
+        h1 Sign in to SciRate
         .form-group
           = label_tag :email_or_username, "Email"
           = text_field_tag :email_or_username, nil, class: 'form-control'
@@ -15,10 +15,10 @@
       .col-md-6
         = submit_tag "Sign in", class: 'btn btn-default'
         .checkbox
-          %label
+          label
             = check_box_tag :remember_me, 1, params[:remember_me]
-            Remember me
-        %p= link_to "Forgot password?", reset_password_path
+            | Remember me
+        p= link_to "Forgot password?", reset_password_path
 
     .row
       .col-md-6
@@ -27,5 +27,5 @@
         - elsif request.referer
           = hidden_field_tag :return_to, request.referer
 
-        %p
-          New user? #{link_to "Sign up now!", signup_path}
+        p
+          | New user? #{link_to "Sign up now!", signup_path}
