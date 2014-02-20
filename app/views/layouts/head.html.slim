@@ -25,7 +25,7 @@ html lang="en"
     - if content_for?(:image)
       meta property="og:image" content=(yield :image)
     - else
-      meta property="og:image" content=(asset_path 'scirate-logo-white-on-blue.png')
+      meta property="og:image" content=(asset_url 'scirate-logo-white-on-blue.png')
 
     meta property="og:locale" content="en_US"
     meta property="og:description" content=(yield :description)
