@@ -90,7 +90,7 @@ class CommentsController < ApplicationController
   end
 
   def unreport
-    @comment.reports.where(voter_id: current_user.id).destroy_all
+    @comment.reports.where(user_id: current_user.id).destroy_all
     render :text => 'success'
   end
 
