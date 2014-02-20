@@ -1,4 +1,5 @@
 <% provide :title, @user.fullname %>
+<% provide :image, gravatar_url(@user, size: 200) %>
 
 <div class="container" id="profile-page">
   <table class="table">
