@@ -18,7 +18,7 @@ html
     / Open Graph meta tags used by Facebook crawler
     / https://developers.facebook.com/tools/debug/
 
-    meta name="og:url" content=(request.fullpath)
+    meta name="og:url" content=(request.original_url)
     meta name="og:title" content=(yield :title)
 
     / This affects the image preview displayed when you
