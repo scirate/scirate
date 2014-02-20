@@ -9,8 +9,8 @@ $(function() {
 
   // Feed sidebar tree expansion
   $('.feed-folder i').click(function() {
-    $(this).toggleClass('icon-chevron-right');
-    $(this).toggleClass('icon-chevron-down');
+    $(this).toggleClass('fa-chevron-right');
+    $(this).toggleClass('fa-chevron-down');
     $(this).closest('li').children('ul.tree').toggle(300);
   })
 });

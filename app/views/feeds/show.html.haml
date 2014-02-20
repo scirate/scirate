@@ -8,7 +8,7 @@
           - if signed_in?
             %li.feed-folder.my-feeds
               %label.nav-header
-                %i.icon-chevron-down
+                %i.fa.fa-chevron-down
                 My feeds
               %ul.nav.nav-list.tree
                 - current_user.feeds.order(:fullname).each do |feed|
@@ -20,14 +20,14 @@
           - Feed.where(uid: ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
             %li.feed-folder{ class: @feed == feed ? 'active' : '', title: feed.uid }
               %label.nav-header
-                %i.icon-chevron-right.transparent
+                %i.fa.fa-chevron-right.transparent
                 = link_to feed.fullname, feed
 
           - Feed.where(uid: ['astro-ph', 'cond-mat', 'nlin', 'physics', 'math', 'cs', 'q-bio', 'q-fin', 'stat']).includes(:children).each do |parent|
             %li.feed-folder{ class: @feed == parent ? 'active' : '', title: parent.uid }
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               %label.nav-header
-                %i{ class: expanded ? 'icon-chevron-down' : 'icon-chevron-right' }
+                %i{ class: expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right' }
                 = link_to parent.fullname, parent
               %ul.nav.nav-list.tree{ style: expanded ? '' : 'display: none;' }
                 - parent.children.each do |feed|

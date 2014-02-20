@@ -76,8 +76,13 @@ a.js:hover {
   border-radius: 0px 4px 4px 0px;
 }
 
-// Overriding bootstrap form element defaults
-// More google-ish flat design
+// Non-giant blockquotes (mainly comments)
+
+blockquote {
+  font-size: inherit;
+}
+
+// Flatter form elements
 
 .form-control {
   border: 1px solid #cdcdcd;
@@ -758,10 +763,6 @@ div.feed-rightbar
 
   .abbr-comment {
     font-size: 0.8em;
-  }
-
-  blockquote {
-    font-size: inherit;
   }
 
   .abstract-toggle {
