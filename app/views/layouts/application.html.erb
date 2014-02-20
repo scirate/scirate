@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+
+<% image = yield(:image) %>
+<% image = asset_path('scirate-logo-white-on-blue.png') if image.empty? %>
+
 <html lang="en">
   <head>
     <title><%= full_title(yield(:title)) %></title>
@@ -7,7 +11,7 @@
     <%= csrf_meta_tags %>
     <%= favicon_link_tag 'favicon.png' %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="og:image" content="<%= yield(:image) || asset_path('scirate-logo-white-on-blue.png') %>">
+    <meta name="og:image" content="<%= image %>">
     <meta name="description" content="<%= yield(:description) %>">
   </head>
   <body>
