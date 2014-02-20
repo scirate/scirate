@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    title= yield(:title)
+
+    = render 'layouts/stylesheets'
+    = csrf_meta_tags
+    = favicon_link_tag 'favicon.png'
+
+    / General meta tags
+
+    - if content_for?(:description)
+      meta name="description" content=(yield :description)
+
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    meta http-equiv="content-language" content="en"
+
+    / Open Graph meta tags used by Facebook crawler
+    / https://developers.facebook.com/tools/debug/
+
+    meta name="og:url" content=(request.fullpath)
+    meta name="og:title" content=(yield :title)
+
+    / This affects the image preview displayed when you
+    / post a Facebook link to a SciRate page
+    - if content_for?(:image)
+      meta name="og:image" content=(yield :image)
+    - else
+      meta name="og:image" content=(asset_path 'scirate-logo-white-on-blue.png')
+
+    meta name="og:description" content=(yield :description)
+
+  = yield :body
