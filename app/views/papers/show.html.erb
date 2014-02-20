@@ -1,5 +1,6 @@
 
-<% provide :title, sanitize(@paper.title) %>
+<% provide :title, @paper.title %>
+<% provide :description, @paper.abstract %>
 
 <div class="container">
   <div class="paper row">
