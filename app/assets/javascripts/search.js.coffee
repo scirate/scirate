@@ -17,19 +17,36 @@ View.AdvancedSearch = Ractive.extend(
     query: ''
     expand: window.location.hash == "#advanced"
 
-  compile_query: ->
-    query = ""
-    $inputs = $(@el).find('td input')
-    $inputs.each (i, el) =>
-      term = $(el).val()
-      name = $(el).attr('name')
+  escape: (s) ->
+    if s.indexOf(' ') != -1
+      s = '(' + s + ')'
+    s
 
-      if term.length > 0
-        query += name + ':' + term
-    $('input#advanced').val(query)
-    $('#search-preview').text(query)
+  compile_query: ->
+    query = []
+
+    @$el.find('#authors').val().split(/,\s*/).forEach (author) =>
+      return if author.length == 0
+      query.push("au:#{@escape(author)}")
+
+    title = @$el.find('#title').val()
+    query.push("ti:#{@escape(title)}") if title.length > 0
+
+    abstract = @$el.find('#abstract').val()
+    query.push("abs:#{@escape(abstract)}") if abstract.length > 0
+
+    order = @$el.find('#order').val()
+    if order != "scites"
+      query.push("order:#{order}")
+
+
+    query_text = query.join(' & ')
+    $('input#advanced').val(query_text)
+    $('#search-preview').text(query_text)
 
   init: ->
+    @$el = $(@el)
+
     @on 'expand', =>
       @set(expand: true)
       window.location.hash = "#advanced"
@@ -39,7 +56,7 @@ View.AdvancedSearch = Ractive.extend(
       window.location.hash = ""
 
     @on 'changed', (ev) =>
-      setTimeout => @compile_query()
+      setTimeout (=> @compile_query()), 100
 
     
       

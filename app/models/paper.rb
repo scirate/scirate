@@ -97,7 +97,8 @@ end
 
 class Paper::Search
   attr_reader :results
-  attr_accessor :conditions, :query, :advanced, :feed, :authors, :order, :order_sql
+  attr_accessor :query, :basic, :advanced
+  attr_accessor :conditions, :feed, :authors, :order, :order_sql
 
   # Split query on non-paren enclosed spaces
   def psplit(query)

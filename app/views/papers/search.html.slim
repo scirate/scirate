@@ -1,11 +1,15 @@
-- provide :title, "Search results"
+- if @search.query
+  - provide :title, "#{@search.query} - SciRate Search"
+- else
+  - provide :title, "Search SciRate"
+
 #search_page.container
   h1 Search SciRate
   #search_form
     = form_tag(papers_search_path, method: :get) do |f|
       .form-group
         = label_tag :q, "Search query", class: 'sr-only'
-        = text_field_tag :q, @search.query, class: 'form-control'
+        = text_field_tag :q, @search.basic, class: 'form-control'
 
         button.btn.btn-primary.btn-right type="submit"
           i.fa.fa-search.fa-lg
