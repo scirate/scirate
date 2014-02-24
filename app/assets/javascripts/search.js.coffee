@@ -58,9 +58,16 @@ View.AdvancedSearch = Ractive.extend(
     @on 'changed', (ev) =>
       setTimeout (=> @compile_query()), 100
 
-    
-      
+    engine = new Bloodhound(
+      datumTokenizer: ((d) -> Bloodhound.tokenizers.whitespace(d.uid))
+      queryTokenizer: Bloodhound.tokenizers.whitespace
+      local: SciRate.feeds.map((f) -> { uid: f })
+    )
 
+    engine.initialize()
+
+    $('#category').typeahead({ highlight: true },
+      displayKey: 'uid', source: engine.ttAdapter())
 )
 
 $ ->

@@ -48,7 +48,7 @@
       <tr>
         <td>Category</td>
         <td>
-          <input class="form-control" name="category" proxy-keydown="changed" proxy-change="changed">
+          <input type="text" class="form-control typeahead" id="category" name="category" proxy-keydown="changed" proxy-change="changed">
         </td>
         <td>
           Search a particular arXiv category

@@ -1,4 +1,4 @@
-class window.SciRate
+class SciRate
   @login: -> redirect("/login")
 
 class window.View extends Backbone.View

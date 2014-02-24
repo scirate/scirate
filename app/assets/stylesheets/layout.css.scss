@@ -113,6 +113,19 @@ blockquote {
   @include box-shadow(none);
 }
 
+// Typeahead suggestions
+
+.twitter-typeahead {
+  width: 100%;
+}
+
+.tt-suggestions {
+  background: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 // Landing page
 #landing {
   height: 100%;

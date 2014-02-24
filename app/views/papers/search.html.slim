@@ -3,6 +3,9 @@
 - else
   - provide :title, "Search SciRate"
 
+script
+  | SciRate.feeds = #{raw Feed.all.map(&:uid).to_json};
+
 #search_page.container
   h1 Search SciRate
   #search_form
