@@ -40,7 +40,7 @@ ul {
     }
   }
 }
-layout.css
+
 .dropdown-menu {
   margin-top: 0;
 }
@@ -68,6 +68,26 @@ a.js:hover {
   color: #3c63af !important;
   text-decoration: none;
 }
+
+.btn-primary {
+  background: #398bce;
+}
+
+.btn-primary:hover {
+  background: #2d6ea3;
+}
+
+.btn-success {
+  background: #7dc36b;
+}
+
+.btn-success:hover {
+  background: #5eb348;
+}
+
+// Buttons that can squish onto the right side of form elements
+// e.g. google-style search thingy
+// Requires an enclosing element to be position: relative;
 
 .btn-right {
   position: absolute;
@@ -898,12 +918,8 @@ div.feed-rightbar
     position: relative;
   }
 
-  input[type=submit] {
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    border-radius: 0px 4px 4px 0px;
+  .btn-right {
+    width: 60px;
   }
 }
 
