@@ -1,4 +1,4 @@
-<% cool_paper = paper.scites_count > 0 || (@search && [@search.conditions[:abstract], @search.query].find { |t| t && paper.abstract.include?(t) }) %>
+<% cool_paper = paper.scites_count > 0 || @search %>
 
 <% unless defined?(showabs) %>
   <% showabs = cool_paper || (current_user && current_user.expand_abstracts) %>
@@ -9,11 +9,7 @@
     <div class="col-md-9">
       <div class="title">
         <a href="<%= url_for(paper) %>">
-          <% if @search %>
-            <%= highlight(paper.title, [@search.conditions[:title], @search.query].reject { |t| t.nil? }) %>
-          <% else %>
-            <%= paper.title %>
-          <% end %>
+          <%= paper.title %>
         </a>
       </div>
       <div class="authors">
@@ -47,10 +43,6 @@
     </div>
   </div>
   <div class="abstract<% unless showabs %> hidden<% end %><% unless cool_paper %> hideable<% end %>">
-    <% if @search %>
-      <%= highlight(paper.abstract, [@search.conditions[:abstract], @search.query].reject(&:nil?)) %>
-    <% else %>
-      <%= paper.abstract %>
-    <% end %>
+    <%= paper.abstract %>
   </div>
 </li>

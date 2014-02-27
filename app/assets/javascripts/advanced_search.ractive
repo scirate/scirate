@@ -9,6 +9,27 @@
     <i class="fa fa-chevron-down"></i> Advanced
   </a>
 
+  <div id="datepicker" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Custom date range</h4>
+        </div>
+        <div class="modal-body">
+          <label for="dateRangeFrom">From</label>
+          <input type="date" class="form-control" id="dateRangeFrom" proxy-keydown="custom-date-keydown">
+          <br>
+          <label for="dateRangeTo">To</label>
+          <input type="date" class="form-control" id="dateRangeTo" proxy-keydown="custom-date-keydown">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" proxy-click="custom-date-submit">Go</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="search-preview" class="well">
     {{query}}
   </div>
@@ -58,13 +79,18 @@
       <tr>
         <td>Date Published</td>
         <td>
-          <select class="form-control" name="date">
+          <select class="form-control" id="date" name="date" proxy-change="date-changed">
             <option value="any">Any Time</option>
             <option value="week">Past Week</option>
             <option value="month">Past Month</option>
             <option value="year">Past Year</option>
             <option value="custom">Custom Range</option>
           </select>
+          {{#customDateRange}}
+          <button type="button" class="btn btn-default" proxy-click="date-changed">
+            <i class="fa fa-edit"></i>
+          </button>
+          {{/customDateRange}}
         </td>
         <td>
           Search within a given date range
@@ -85,8 +111,6 @@
           How to sort the results
         </td>
       </tr>
-
-
     </tbody>
   </table>
 {{/expand}}

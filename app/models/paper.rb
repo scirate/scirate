@@ -128,7 +128,7 @@ class Paper::Search
 
   # Strip field prefix and parens
   def tstrip(term)
-    ['au:','ti:','abs:','feed:','order:'].each do |prefix|
+    ['au:','ti:','abs:','in:','order:','date:'].each do |prefix|
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
 
@@ -139,16 +139,48 @@ class Paper::Search
     end
   end
 
-  def initialize(query)
-    @query = nil # Term to apply as OR across all text fields
+  def parse_date(term)
+    if term.match(/^\d\d\d\d$/)
+      Chronic.parse(term+'-01-01')
+    elsif term.match(/^\d\d\d\d-\d\d$/)
+      Chronic.parse(term+'-01')
+    else
+      Chronic.parse(term)
+    end
+  end
 
+  def parse_date_range(term)
+    if term.include?('..')
+      first, last = term.split('..').map { |t| parse_date(t) }
+      first ||= 1000.years.ago
+      last ||= Time.now
+      first..last
+    else
+      # Allow implicit ranges like date:2012
+      time = parse_date(term)
+      if term.match(/^\d\d\d\d$/)
+        time.beginning_of_year..time.end_of_year
+      elsif term.match(/^\d\d\d\d-\d\d$/)
+        time.beginning_of_month..time.end_of_month
+      else
+        time.beginning_of_day..time.end_of_day
+      end
+    end
+  end
+
+  def initialize(basic, advanced)
+    @basic = basic
+    @advanced = advanced
+
+    @query = [@basic, @advanced].join(' ').strip
+
+    @general = nil # Term to apply as OR across all text fields
     @conditions = {}
-
-    @feed = nil
     @authors = []
-    @order = :scites
+    @orders = []
+    @date_range = nil
 
-    psplit(query).each do |term|
+    psplit(@query).each do |term|
       if term.start_with?('au:')
         if term.include?('_')
           @authors << tstrip(term)
@@ -160,38 +192,54 @@ class Paper::Search
           @conditions[:authors_fullname] << tstrip(term)
         end
       elsif term.start_with?('ti:')
-        @conditions[:title] = tstrip(term)
+        @conditions[:title] ||= []
+        @conditions[:title] << tstrip(term)
       elsif term.start_with?('abs:')
-        @conditions[:abstract] = tstrip(term)
-      elsif term.start_with?('feed:')
-        @feed = Feed.find_by_uid(tstrip(term))
-        @conditions[:feed_uids] = @feed.uid
+        @conditions[:abstract] ||= []
+        @conditions[:abstract] << tstrip(term)
+      elsif term.start_with?('in:')
+        @conditions[:feed_uids] ||= []
+        @conditions[:feed_uids] << tstrip(term)
       elsif term.start_with?('order:')
-        @order = tstrip(term).to_sym
+        @orders << tstrip(term).to_sym
+      elsif term.start_with?('date:')
+        @date_range = parse_date_range(tstrip(term))
       else
-        if @query
-          @query += ' ' + term
+        if @general
+          @general += ' ' + term
         else
-          @query = term
+          @general = term
         end
       end
     end
 
-    @order_sql = case @order
-                 when :scites then "scites_count DESC, pubdate DESC"
-                 when :comments then "comments_count DESC, pubdate DESC"
-                 when :recency then "pubdate DESC"
-                 when :relevancy then nil # Default Sphinx match relevancy
-                 end
+    @orders = [:scites] if @orders.empty?
+
+    @orders = @orders.map do |order|
+       case order
+       when :scites then "scites_count DESC"
+       when :comments then "comments_count DESC"
+       when :recency then "pubdate DESC"
+       when :relevancy then nil # Default Sphinx match relevancy
+       end
+    end
+
+    @order_sql = @orders.join(', ')
+
+    # Everything is post-sorted by pubdate except :relevancy
+    unless @order_sql.empty?
+      @order_sql += ", pubdate DESC"
+    end
   end
 
   def run(opts={})
     params = {}
     params[:conditions] = @conditions
-    params[:order] = @order_sql unless @order_sql.nil?
+    params[:order] = @order_sql unless @order_sql.empty?
+    params[:with] = { pubdate: @date_range } unless @date_range.nil?
 
     params = params.merge(opts)
-    @results = Paper.search_for_ids(@query, params)
+    @results = Paper.search_for_ids(@general, params)
   end
 end
 

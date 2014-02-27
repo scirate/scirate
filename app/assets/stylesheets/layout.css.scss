@@ -926,7 +926,7 @@ div.feed-rightbar
 
 // Search page
 
-#search_page {
+#searchPage {
   .form-group {
     position: relative;
   }
@@ -934,15 +934,18 @@ div.feed-rightbar
   .btn-right {
     width: 60px;
   }
+
+  #datepicker .modal-content {
+  }
 }
 
-#advanced_search {
+#advancedSearch {
   td:first-child {
     width: 300px;
   }
 }
 
-#search-preview {
+#advancedPreview {
   margin-top: 5px;
   padding: 10px;
   line-height: 30px;
