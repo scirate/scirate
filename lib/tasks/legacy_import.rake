@@ -74,6 +74,15 @@ namespace :db do
             created_at: old_sub.created_at
           )
         end
+
+        # If they're not subscribed to anything
+        # subscribe them to quant-ph
+        if old_user.subscriptions.count == 0
+          user.subscriptions.create!(
+            feed_uid: 'quant-ph',
+            created_at: old_sub.created_at
+          )
+        end
       end
     end
   end
