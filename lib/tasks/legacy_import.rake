@@ -37,7 +37,7 @@ namespace :db do
         p old_user.name
         user = User.create!(
           fullname: old_user.name,
-          username: User.default_username(old_user.name) + "-#{old_user.id}",
+          username: old_user.id.to_s,
           email: old_user.email,
           remember_token: old_user.remember_token,
           password: 'mehmeh',
