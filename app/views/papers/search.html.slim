@@ -1,0 +1,106 @@
+- if @search.query.empty?
+  - provide :title, "Search SciRate"
+- else
+  - provide :title, "#{@search.query} - SciRate Search"
+
+script
+  | window.FromServer = {
+  |   feeds: #{raw Feed.all.map(&:uid).to_json},
+  |   advanced: #{raw @search.advanced.to_json}
+  | }
+
+#searchPage.container
+  h1 Search SciRate
+
+  #datepicker.modal
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close type="button" data-dismiss="modal" &times;
+          h4 class="modal-title" Custom date range
+        .modal-body
+          label for="dateRangeFrom" From
+          input.form-control#dateRangeFrom type="date"
+          br
+          label for="dateRangeTo" To
+          input.form-control#dateRangeTo type="date"
+        .modal-footer
+          button.btn.btn-default#submitCustomDate Go
+
+  #searchForm
+    = form_tag(papers_search_path, method: :get) do |f|
+      .form-group
+        = label_tag :q, "Search query", class: 'sr-only'
+        = text_field_tag :q, @search.basic, class: 'form-control'
+
+        button.btn.btn-primary.btn-right type="submit"
+          i.fa.fa-search.fa-lg
+
+      a.js#toggleAdvanced
+        i.fa.fa-chevron-right Advanced
+        
+      #advancedSearch.hidden
+        = hidden_field_tag :advanced, @search.advanced
+        #advancedPreview.well
+          = @search.advanced
+
+        table.table.table-striped.table-form
+          tbody
+            tr
+              td Author(s)
+              td
+                input.form-control#authors type="text"
+              td Comma-separated author names
+            tr
+              td Title
+              td
+                input.form-control#title type="text"
+              td Contents of paper title
+
+            tr
+              td Abstract
+              td
+                input.form-control#abstract type="text"
+              td Contents of paper abstract
+
+            tr
+              td Category
+              td
+                input.form-control.typeahead#category
+              td Search a particular arXiv category
+
+            tr
+              td Date Published
+              td
+                select.form-control#date
+                  option value="any" Any Time
+                  option value="week" Past Week
+                  option value="month" Past Month
+                  option value="year" Past Year
+                  option value="custom" Custom Range
+                button.btn.btn-default.hidden#editCustomDate
+                  i.fa.fa-edit
+              td Search within a given date range
+
+            tr
+              td Order By
+              td
+                select.form-control#order
+                  option value="scites" Scites (Default)
+                  option value="comments" Comments
+                  option value="recency" Recency
+                  option value="relevance" Relevance
+              td How to sort the results
+      
+  - if @papers
+    h3
+      #{@search.results.count} results for #{@search.query}
+    /= render 'papers/abstract_toggle'
+    .paperlist
+      ul.papers
+        - if @papers.empty?
+          | No papers found.
+        - else
+          - @papers.each do |paper|
+            = render 'papers/paper', paper: paper
+    = will_paginate @papers

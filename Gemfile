@@ -7,7 +7,7 @@ gem 'bcrypt-ruby'
 
 # Sends us emails when stuff breaks in production
 gem 'exception_notification',
-    :git => 'git://github.com/sunkencity/exception_notification'
+    git: 'git://github.com/sunkencity/exception_notification'
 
 # Database stuff
 gem 'pg' # Postgres support
@@ -24,8 +24,8 @@ gem 'chronic' # Natural language date parsing
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
-gem 'oai', :git => 'git://github.com/code4lib/ruby-oai'
-gem 'arxivsync', :git => 'git://github.com/mispy/arxivsync'
+gem 'oai', git: 'git://github.com/code4lib/ruby-oai'
+gem 'arxivsync', git: 'git://github.com/mispy/arxivsync'
 gem 'nokogiri', "= 1.5.9"
 
 # Sphinx full-text search support
@@ -40,6 +40,7 @@ gem 'uglifier'
 gem 'jquery-rails'
 gem 'haml'
 gem 'slim'
+gem 'ractive-rails'
 
 # SCSS mixins for CSS3 browser compatibility
 gem 'bourbon'

@@ -15,5 +15,9 @@
 //= require underscore
 //= require bootstrap
 //= require jquery.pagedown-bootstrap.combined.min.js
+//= require Ractive.js
+//= require moment.min.js
+//= require typeahead.bundle.js
 //= require backbone
+//= require datepicker.js
 //= require_tree .

@@ -38,33 +38,12 @@ class PapersController < ApplicationController
   end
 
   def search
-    @query = params[:q] || ''
+    basic = params[:q]
+    advanced = params[:advanced]
 
-    params.each do |key, val|
-      next if val.empty?
+    @search = Paper::Search.new(basic, advanced)
 
-      case key
-      when 'authors'
-        authors = val.split(/,\s*/)
-        @query += ' ' + authors.map { |au| "au:#{__quote(au)}" }.join(' ')
-      when 'title'
-        @query += " ti:#{__quote(val)}"
-      when 'abstract'
-        @query += " abs:#{__quote(val)}"
-      when 'feed'
-        @query += " feed:#{__quote(val)}"
-      when 'general'
-        @query += " #{val}"
-      when 'order'
-        @query += " order:#{val}" unless val == 'scites'
-      end
-    end
-
-    @query = @query.strip
-
-    @search = Paper::Search.new(@query)
-
-    if !@query.empty?
+    if !@search.query.empty?
       paper_ids = @search.run(page: params[:page], per_page: 20)
 
       @papers = Paper.where(id: paper_ids).includes(:authors, :feeds).order(@search.order_sql)

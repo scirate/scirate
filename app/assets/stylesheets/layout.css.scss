@@ -69,6 +69,26 @@ a.js:hover {
   text-decoration: none;
 }
 
+.btn-primary {
+  background: #398bce;
+}
+
+.btn-primary:hover {
+  background: #2d6ea3;
+}
+
+.btn-success {
+  background: #7dc36b;
+}
+
+.btn-success:hover {
+  background: #5eb348;
+}
+
+// Buttons that can squish onto the right side of form elements
+// e.g. google-style search thingy
+// Requires an enclosing element to be position: relative;
+
 .btn-right {
   position: absolute;
   right: 0;
@@ -92,6 +112,20 @@ blockquote {
 .form-control:focus {
   @include box-shadow(none);
 }
+
+// Typeahead suggestions
+
+.twitter-typeahead {
+  width: 100%;
+}
+
+.tt-suggestions {
+  background: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+>>>>>>> search-ui
 
 // Landing page
 #landing {
@@ -893,10 +927,30 @@ div.feed-rightbar
 
 // Search page
 
-#advanced_search_form {
-  tr.filter-start td {
-    height: 51px;
+#searchPage {
+  .form-group {
+    position: relative;
   }
+
+  .btn-right {
+    width: 60px;
+  }
+
+  #datepicker .modal-content {
+  }
+}
+
+#advancedSearch {
+  td:first-child {
+    width: 300px;
+  }
+}
+
+#advancedPreview {
+  margin-top: 5px;
+  padding: 10px;
+  line-height: 30px;
+  min-height: 52px;
 }
 
 // About page
