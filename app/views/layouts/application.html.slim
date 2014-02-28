@@ -22,7 +22,7 @@
               - if signed_in?
                 li= link_to "Home", root_path
                 li.dropdown
-                  a.dropdown-toggle data-toggle="dropdown" href="#"
+                  a.dropdown-toggle data-toggle="dropdown" 
                     = current_user.fullname
                     b.caret
                   ul.dropdown-menu
