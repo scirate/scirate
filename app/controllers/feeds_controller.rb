@@ -56,7 +56,12 @@ class FeedsController < ApplicationController
 
     @scited_ids = current_user.scited_papers.pluck(:id)
 
-    @papers = _range_query(feed_uids, @backdate, @date, @page)
+    if feed_uids.empty?
+      # No subscriptions
+      @papers = []
+    else
+      @papers = _range_query(feed_uids, @backdate, @date, @page)
+    end
 
     render 'feeds/show'
   end
