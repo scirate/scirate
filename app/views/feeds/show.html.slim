@@ -9,7 +9,7 @@
             li.feed-folder.my-feeds
               label.nav-header
                 i.fa.fa-chevron-down
-                | My feeds
+                = link_to("My feeds", feeds_path)
               ul.nav.nav-list.tree
                 - if current_user.feeds.count == 0
                   li.leaf
