@@ -1,9 +1,29 @@
 class FeedsController < ApplicationController
   def landing
-    @top_papers = Paper.order('scites_count DESC, comments_count DESC').limit(3)
-    @top_comments = Comment.order('score DESC').limit(6)
-    @user = User.new
-    render('landing/landing', :layout => nil)
+    feed_uids = Feed.all.pluck(:uid)
+
+    @date = _parse_date(params)
+
+    if @date.nil?
+      if feed_uids.empty?
+        @date = Date.today
+      else
+        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").first.last_paper_date.to_date || Date.today
+      end
+    end
+
+    @range = _parse_range(params) || 1
+    @page = params[:page]
+
+    @backdate = @date - (@range-1).days
+
+    @recent_comments = _recent_comments(feed_uids)
+
+    @scited_ids = []
+
+    @papers = _range_query(feed_uids, @backdate, @date, @page)
+
+    render 'feeds/show'
   end
 
   # Aggregated feed

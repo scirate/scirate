@@ -46,16 +46,13 @@
               = render 'feeds/subscribe', feed: @feed, subscribed: current_user && @feed.subscriptions.exists?(user_id: current_user.id)
           - else
             .col-md-10
-              h1= "All subscribed feeds"
-              = link_to "edit subscriptions", feeds_path, class: 'view-subs'
+              h1= "Top arXiv papers"
+              - if signed_in?
+                = link_to "edit subscriptions", feeds_path, class: 'view-subs'
+              - else
+                = link_to "sign in to customize", login_path, class: 'view-subs'
       .row
         .col-md-9
-          /
-            p
-              | Found #{@papers.count} papers from #{describe_range(@date, @range)}
-              span.feed-uid
-                | [#{@feed.uid}]
-
           .paperlist
             ul.papers
               - if @papers.length == 0
