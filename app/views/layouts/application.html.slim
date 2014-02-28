@@ -11,7 +11,7 @@
           a.header-brand href="/"
             = image_tag "scirate-logo-32x32-white.png"
             |  SciRate
-            - if Settings::STAGING
+            - if Settings::STAGING || Rails.env == 'development'
               span.staging
                 |  [dev]
         nav.collapse.navbar-collapse role="navigation"
