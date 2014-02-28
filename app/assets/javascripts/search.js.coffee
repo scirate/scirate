@@ -96,14 +96,22 @@ class View.Search extends Backbone.View
     @$('#date').val date if date?
     @$('#order').val order if order?
 
+  showAdvanced: ->
+    @$('#advancedSearch').removeClass('hidden')
+    @$('#advanced').attr('name', 'advanced')
+    @$('#toggleAdvanced i').removeClass('fa-chevron-right').addClass('fa-chevron-down')
+
+  hideAdvanced: ->
+    @$('#advancedSearch').addClass('hidden')
+    @$('#advanced').attr('name', '')
+    @$('#toggleAdvanced i').removeClass('fa-chevron-down').addClass('fa-chevron-right')
+
   toggleAdvanced: ->
     console.log @$('#advancedSearch')
     if @$('#advancedSearch').hasClass('hidden')
-      @$('#advancedSearch').removeClass('hidden')
-      @$('#toggleAdvanced i').removeClass('fa-chevron-right').addClass('fa-chevron-down')
+      @showAdvanced()
     else
-      @$('#advancedSearch').addClass('hidden')
-      @$('#toggleAdvanced i').removeClass('fa-chevron-down').addClass('fa-chevron-right')
+      @hideAdvanced()
 
   changeDate: ->
     if @$('#date').val() == 'custom'

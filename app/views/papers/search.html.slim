@@ -40,7 +40,8 @@ script
         i.fa.fa-chevron-right Advanced
         
       #advancedSearch.hidden
-        = hidden_field_tag :advanced, @search.advanced
+        input.hidden id='advanced' value=(@search.advanced)
+
         #advancedPreview.well
           = @search.advanced
 
