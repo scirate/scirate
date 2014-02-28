@@ -65,8 +65,6 @@ SciRate3::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  config.assets.precompile += [ "blueprint/*.css" ]
-
   # we redirect to https in ApplicationController, so as to set the host first
   config.force_ssl = false
 
