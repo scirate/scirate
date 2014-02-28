@@ -146,9 +146,8 @@ class FeedsController < ApplicationController
   #
   # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
-    quoted = feed_uids.map { |uid| "\"#{uid}\"" }
-
-    papers = Paper.search("@feed_uids (#{quoted.join(' | ')})",
+    query = feed_uids && "@feed_uids (#{feed_uids.map { |uid| "\"#{uid}\"" }.join(' | ')})"
+    papers = Paper.search(query,
       with: {
         pubdate: backdate..(date+1.day),
       },
