@@ -11,9 +11,13 @@
                 i.fa.fa-chevron-down
                 | My feeds
               ul.nav.nav-list.tree
-                - current_user.feeds.order(:fullname).each do |feed|
-                  li.leaf title=(feed.uid)
-                    = link_to(feed.fullname, feed)
+                - if current_user.feeds.count == 0
+                  li.leaf
+                    = link_to("Add feeds", feeds_path)
+                - else
+                  - current_user.feeds.order(:fullname).each do |feed|
+                    li.leaf title=(feed.uid)
+                      = link_to(feed.fullname, feed)
 
         = cache (@feed.nil? ? 'index' : @feed.uid) do
           li.source-heading arXiv.org
@@ -46,10 +50,11 @@
               = render 'feeds/subscribe', feed: @feed, subscribed: signed_in? && @feed.subscriptions.exists?(user_id: current_user.id)
           - else
             .col-md-10
-              h1= "Top arXiv papers"
               - if signed_in?
+                h1= "Home feed"
                 = link_to "edit subscriptions", feeds_path, class: 'view-subs'
               - else
+                h1= "Top arXiv papers"
                 = link_to "sign in to customize", login_path, class: 'view-subs'
       .row
         .col-md-9
@@ -57,7 +62,7 @@
             ul.papers
               - if @papers.length == 0
                 - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
-                  p Papers from subscribed feeds will appear here. You can manage your subscriptions from the <a href="#{feeds_path}">feeds page</a>.
+                  p.description New papers from all your subscribed feeds will appear here. You can find feeds to subscribe to using the links on the left, or by visiting the <a href="#{feeds_path}">my feeds</a> page.
                 - else
                   p No papers found!
               - else
