@@ -146,16 +146,16 @@ class FeedsController < ApplicationController
   #
   # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
-    query = if feed_uids && !feed_uids.empty?
-      "@feed_uids (#{feed_uids.map { |uid| "\"#{uid}\"" }.join(' | ')})"
-    else
-      nil
+    with = {
+      pubdate: backdate..(date+1.day),
+    }
+
+    if feed_uids && !feed_uids.empty?
+      with['feed_uids_filter'] = feed_uids.map { |uid| Zlib.crc32(uid) }
     end
 
-    papers = Paper.search(query,
-      with: {
-        pubdate: backdate..(date+1.day),
-      },
+    papers = Paper.search(
+      with: with,
       order: "scites_count DESC, comments_count DESC, pubdate DESC",
       page: page,
       per_page: 20,
