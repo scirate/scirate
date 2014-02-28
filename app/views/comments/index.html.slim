@@ -1,8 +1,12 @@
-- title = "Recent comments from #{@feed ? @feed.uid : 'home feed'}"
-- provide :title, title
+
+- if @feed
+  - @title = "Recent comments from #{@feed.uid}"
+- else
+  - @title = "Recent comments from #{signed_in? ? 'home feed' : 'SciRate'}"
+- provide :title, @title
 
 .container
   h1
-    = title
+    = @title
   = render partial: "comments/abbr_comment", collection: @comments
   = will_paginate @comments

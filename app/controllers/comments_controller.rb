@@ -5,10 +5,12 @@ class CommentsController < ApplicationController
     if params[:feed]
       @feed = Feed.find_by_uid!(params[:feed])
       comments = Comment.find_by_feed_uids([@feed.uid])
-    else
+    elsif signed_in?
       feeds = current_user.feeds.includes(:children)
       feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
       comments = Comment.find_by_feed_uids(feed_uids)
+    else
+      comments = Comment.all
     end
 
     @comments = comments.paginate(page: params[:page]||1)
