@@ -30,6 +30,7 @@ SciRate3::Application.routes.draw do
   get '/login',    to: 'sessions#new'
   get '/logout',   to: 'sessions#destroy'
   get '/about',    to: 'static_pages#about'
+  get '/legal',    to: 'static_pages#legal'
 
   get '/signin',   to: redirect('/login')
   get '/signout',  to: redirect('/logout')
