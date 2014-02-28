@@ -16,7 +16,7 @@ SciRate3::Application.configure do
 
   config.assets.js_compressor = :uglifier
 
-  # Don't fallback to assets pipeline if a precompiled asset is missed
+  # Fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = true
 
   # Generate digests for assets URLs

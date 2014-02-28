@@ -31,3 +31,6 @@ doc/
 .project
 .DS_Store
 backup/*.dump
+
+# This is deployment-specific
+public/robots.txt

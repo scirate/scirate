@@ -12,7 +12,7 @@
             = image_tag "scirate-logo-32x32-white.png"
             |  SciRate
             - if Settings::STAGING || Rails.env == 'development'
-              span.staging
+              span.staging title="This site is used to test new SciRate features. If you want to use SciRate, please head to https://scirate.com/ instead. Data preservation here is not guaranteed."
                 |  [dev]
         nav.collapse.navbar-collapse role="navigation"
           = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
