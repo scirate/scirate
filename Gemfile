@@ -30,8 +30,8 @@ gem 'nokogiri', "= 1.5.9"
 
 # Sphinx full-text search support
 # Requires mysql gem even though we're using postgres
-gem 'mysql2', '0.3.13'
-gem 'thinking-sphinx', '3.1.0'
+gem 'mysql2'
+gem 'thinking-sphinx'
 
 # Asset preprocessors
 gem 'sass-rails'
