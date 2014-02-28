@@ -85,7 +85,9 @@ class View.Search extends Backbone.View
             when @ranges.week then 'week'
             when @ranges.month then 'month'
             when @ranges.year then 'year'
-            else 'custom'
+            else
+              @ranges.custom = content
+              'custom'
         when 'order'
           order = content
 
