@@ -14,14 +14,6 @@ class View.Search extends Backbone.View
       @toggleAdvanced()
       @readQuery(FromServer.advanced)
 
-    @on 'custom-date-keydown', (ev) =>
-      if ev.original.keyCode == 13
-        ev.original.preventDefault()
-        customDateSubmit()
-
-    @on 'custom-date-submit', (ev) =>
-      customDateSubmit()
-
     engine = new Bloodhound(
       datumTokenizer: ((d) -> Bloodhound.tokenizers.whitespace(d.uid))
       queryTokenizer: Bloodhound.tokenizers.whitespace
@@ -44,6 +36,10 @@ class View.Search extends Backbone.View
     'change #order': 'compileQuery'
     'click #submitCustomDate': 'changeCustomDate'
 
+  # XXX (Mispy): This is a bit messy and redundant
+  # with the server-side code. Perhaps refactor so
+  # we can just pass through the results of server-side
+  # query parsing.
   psplit: (query) ->
     split = []
     depth = 0
@@ -141,7 +137,6 @@ class View.Search extends Backbone.View
       range += '..'
       if finish.isValid() then range += finish.format('YYYY-MM-DD')
       range
-
 
   compileQuery: ->
     query = []
