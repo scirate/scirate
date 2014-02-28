@@ -2,7 +2,4 @@
 
 require ::File.expand_path('../config/environment',  __FILE__)
 
-# Gzip responses
-use Rack::Deflater
-
 run SciRate3::Application
