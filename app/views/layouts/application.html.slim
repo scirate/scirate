@@ -11,8 +11,6 @@
           a.header-brand href="/"
             = image_tag "scirate-icon.png"
             |  SciRate
-          script
-            | window.SciRate = {}
         nav.collapse.navbar-collapse role="navigation"
           = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
             = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'

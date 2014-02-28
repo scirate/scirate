@@ -34,4 +34,7 @@ html lang="en"
     = csrf_meta_tags
     = favicon_link_tag 'favicon.png'
 
+    script
+      | window.SciRate = {}
+
   = yield :body
