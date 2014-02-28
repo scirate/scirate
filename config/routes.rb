@@ -28,6 +28,7 @@ SciRate3::Application.routes.draw do
   get '/signup',   to: 'users#new', as: 'signup'
   post '/signup',  to: 'users#create'
   get '/login',    to: 'sessions#new'
+  post '/login',   to: 'sessions#create'
   get '/logout',   to: 'sessions#destroy'
   get '/about',    to: 'static_pages#about'
   get '/legal',    to: 'static_pages#legal'
@@ -49,7 +50,6 @@ SciRate3::Application.routes.draw do
 
 
 
-  resources :sessions, only: [:new, :create, :destroy]
   #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
   get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'
   get '/users/:id/comments', to: 'users#comments', as: 'comments_user'

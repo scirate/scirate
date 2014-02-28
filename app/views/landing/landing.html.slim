@@ -9,7 +9,7 @@
         a.header-brand href="/"
           = image_tag "scirate-logo-32x32-white.png"
         .landing-login.pull-right
-          = form_tag sessions_path, class: 'form-inline' do
+          = form_tag login_path, class: 'form-inline' do
             .form-group
               = label_tag :email_or_username, "Email", class: 'sr-only'
               = text_field_tag :email_or_username, nil, class: 'form-control', placeholder: "Email"
