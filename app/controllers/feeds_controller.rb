@@ -146,7 +146,12 @@ class FeedsController < ApplicationController
   #
   # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
-    query = feed_uids && "@feed_uids (#{feed_uids.map { |uid| "\"#{uid}\"" }.join(' | ')})"
+    query = if feed_uids && !feed_uids.empty?
+      "@feed_uids (#{feed_uids.map { |uid| "\"#{uid}\"" }.join(' | ')})"
+    else
+      nil
+    end
+
     papers = Paper.search(query,
       with: {
         pubdate: backdate..(date+1.day),

@@ -61,9 +61,10 @@
         .col-md-9
           .paperlist
             ul.papers
-              - if @papers.length == 0
+              - if @papers.count == 0
                 - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
-                  p.description New papers from all your subscribed feeds will appear here. You can find feeds to subscribe to using the links on the left, or by visiting the <a href="#{feeds_path}">my feeds</a> page.
+                  p.description 
+                    | New papers from all your subscribed feeds will appear here. You can find feeds to subscribe to using the links on the left, or by visiting the <a href="#{feeds_path}">my feeds</a> page.
                 - else
                   p No papers found!
               - else
