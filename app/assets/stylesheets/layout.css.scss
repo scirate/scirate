@@ -146,8 +146,14 @@ header.second {
 
 header.navbar {
   width: 100%;
-  border: none;
+
   border-radius: 0;
+  border-bottom: 6px solid #1e95f9;
+  padding-bottom: 50px; // ???
+
+  .container {
+    margin-bottom: 6px;
+  }
 
   background: #202226;
   color: white;
@@ -160,44 +166,42 @@ header.navbar {
     text-decoration: none;
   }
 
-  .nav {
-    li > a {
-      display: block;
-      padding: 0 21px;
+  .nav li > a {
+    display: block;
+    padding: 0 21px;
 
-      line-height: 50px;
-      color: white;
-      font-size: 18px;
-      font-weight: 400;
-    }
+    line-height: 50px;
+    color: white;
+    font-size: 18px;
+    font-weight: 400;
+  }
 
-    li a:hover {
-      background: #ddeffe;
-      text-decoration: none;
+  .nav li a:hover {
+    background: #ddeffe;
+    text-decoration: none;
+    color: black;
+  }
+
+  .nav li.dropdown a {
+    text-decoration: none;
+  }
+
+  .nav li.dropdown .caret {
+    position: relative;
+    top: -4px;
+    vertical-align: middle;
+    border-top: 4px solid white;
+  }
+
+  .nav li.dropdown a:hover .caret {
+    border-top: 4px solid black;
+  }
+
+  .nav ul.dropdown-menu li {
+    float: none;
+    a {
       color: black;
-    }
-
-    li.dropdown a {
-      text-decoration: none;
-    }
-
-    li.dropdown .caret {
-      position: relative;
-      top: -4px;
-      vertical-align: middle;
-      border-top: 4px solid white;
-    }
-
-    li.dropdown a:hover .caret {
-      border-top: 4px solid black;
-    }
-
-    ul.dropdown-menu li {
-      float: none;
-      a {
-        color: black;
-        text-align: center;
-      }
+      text-align: center;
     }
   }
 
@@ -212,7 +216,6 @@ a.header-brand {
   color: white;
   line-height: 50px;
 
-  width: 137px;
   display: block;
   float: left;
 
