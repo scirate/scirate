@@ -430,6 +430,11 @@ div.abbr_comment {
   .actions a {
     cursor: pointer;
     opacity: 0.8;
+    margin-right: 8px;
+  }
+
+  .actions .moderate a {
+    margin-right: 0;
   }
 
   textarea {

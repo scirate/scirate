@@ -4,7 +4,8 @@ class CommentsController < ApplicationController
   def index
     if params[:feed]
       @feed = Feed.find_by_uid!(params[:feed])
-      comments = Comment.find_by_feed_uids([@feed.uid])
+      feed_uids = [@feed.uid] + @feed.children.map(&:uid)
+      comments = Comment.find_by_feed_uids(feed_uids)
     elsif signed_in?
       feeds = current_user.feeds.includes(:children)
       feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
