@@ -239,7 +239,7 @@ class Paper::Search
     params[:with] = { pubdate: @date_range } unless @date_range.nil?
 
     params = params.merge(opts)
-    @results = Paper.search_for_ids(@general, params)
+    @results = Paper.search(@general, params)
   end
 end
 

@@ -1,14 +1,9 @@
 class FeedsController < ApplicationController
   def landing
-    feed_uids = Feed.all.pluck(:uid)
-
     @date = _parse_date(params)
 
     if @date.nil?
-      unless feed_uids.empty?
-        feed = Feed.where(uid: feed_uids).order("last_paper_date DESC").first
-      end
-
+      feed = Feed.order("last_paper_date DESC").first
       @date = (feed && feed.last_paper_date) ? feed.last_paper_date.to_date : Date.today
     end
 
@@ -17,11 +12,11 @@ class FeedsController < ApplicationController
 
     @backdate = @date - (@range-1).days
 
-    @recent_comments = _recent_comments(feed_uids)
+    @recent_comments = Comment.order("created_at DESC").limit(10)
 
     @scited_ids = []
 
-    @papers = _range_query(feed_uids, @backdate, @date, @page)
+    @papers = _range_query(nil, @backdate, @date, @page)
 
     render 'feeds/show'
   end
@@ -151,20 +146,19 @@ class FeedsController < ApplicationController
   #
   # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
-    @range_query =
-      Paper.joins(:categories)
-        .where("categories.feed_uid IN (?) AND categories.crosslist_date >= ? AND categories.crosslist_date < ?", feed_uids, backdate, date+1.day)
-        .order("scites_count DESC, comments_count DESC, pubdate DESC")
-        .paginate(per_page: 30, page: page)
+    quoted = feed_uids.map { |uid| "\"#{uid}\"" }
 
-    paper_ids = @range_query.pluck(:id)
-
-    papers = Paper.includes(:authors, :feeds)
-                  .where(id: paper_ids)
-                  .index_by(&:id)
-                  .slice(*paper_ids)
-                  .values
-
+    papers = Paper.search("@feed_uids (#{quoted.join(' | ')})",
+      with: {
+        pubdate: backdate..(date+1.day),
+      },
+      order: "scites_count DESC, comments_count DESC, pubdate DESC",
+      page: page,
+      per_page: 20,
+      sql: {
+        include: [:authors, :feeds]
+      }
+    )
     return papers
   end
 end

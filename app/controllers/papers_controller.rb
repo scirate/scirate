@@ -44,16 +44,8 @@ class PapersController < ApplicationController
     @search = Paper::Search.new(basic, advanced)
 
     if !@search.query.empty?
-      paper_ids = @search.run(page: params[:page], per_page: 20)
-
-      @papers = Paper.where(id: paper_ids).includes(:authors, :feeds).order(@search.order_sql)
-
-      # Pass the Sphinx pagination values through to will_paginate
-      # A little hacky
-      @papers = @papers.paginate(page: 1)
-      @papers.total_entries = paper_ids.total_entries
-      @papers.per_page = paper_ids.per_page
-      @papers.current_page = paper_ids.current_page
+      @papers = @search.run(page: params[:page], per_page: 20,
+                            include: [:authors, :feeds])
 
       # Determine which folder we should have selected
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
