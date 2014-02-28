@@ -1,4 +1,4 @@
-- @voted = signed_in? && current_user.voted_as_when_voted_for(comment)
+- @voted = signed_in? ? current_user.voted_as_when_voted_for(comment) : nil
 
 div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) class=('deleted' if comment.deleted || comment.hidden) class=('voted' if @voted) class=('reply' if comment.parent) data-id=(comment.id) data-markup=(comment.content unless comment.deleted || comment.hidden)
   a name=(comment.id)
