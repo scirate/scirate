@@ -5,11 +5,11 @@ class FeedsController < ApplicationController
     @date = _parse_date(params)
 
     if @date.nil?
-      if feed_uids.empty?
-        @date = Date.today
-      else
-        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").first.last_paper_date.to_date || Date.today
+      unless feed_uids.empty?
+        feed = Feed.where(uid: feed_uids).order("last_paper_date DESC").first
       end
+
+      @date = (feed && feed.last_paper_date) ? feed.last_paper_date.to_date : Date.today
     end
 
     @range = _parse_range(params) || 1

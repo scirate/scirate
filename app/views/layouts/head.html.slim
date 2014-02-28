@@ -1,7 +1,10 @@
 doctype html
 html lang="en"
   head
-    title= yield(:title)
+    - if title = yield(:title)
+      title= title + " | SciRate"
+    - else
+      title SciRate
 
     / General meta tags
 

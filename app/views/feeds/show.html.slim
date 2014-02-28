@@ -1,4 +1,9 @@
-- provide :title, @feed ? @feed.fullname : ""
+- if @feed
+  - title = @feed.fullname
+- else
+  - title = signed_in? ? "Home feed" : "Top arXiv papers"
+
+- provide :title, title
 
 .container#feed-page
   .row
@@ -50,11 +55,10 @@
               = render 'feeds/subscribe', feed: @feed, subscribed: signed_in? && @feed.subscriptions.exists?(user_id: current_user.id)
           - else
             .col-md-10
+              h1= title
               - if signed_in?
-                h1= "Home feed"
                 = link_to "edit subscriptions", feeds_path, class: 'view-subs'
               - else
-                h1= "Top arXiv papers"
                 = link_to "sign in to customize", login_path, class: 'view-subs'
       .row
         .col-md-9

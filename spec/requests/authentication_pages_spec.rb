@@ -25,7 +25,7 @@ describe "Authentication" do
 
       describe "followed by signout" do
         before { signout }
-        it { should have_title('Welcome to SciRate') }
+        it { should have_title('Top arXiv papers') }
         it { should_not have_link('Sign out', href: logout_path) }
         it { should_not have_link('Profile', href: user_path(user)) }
         it { should_not have_link('Settings', href: settings_path) }
