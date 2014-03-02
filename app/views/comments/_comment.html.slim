@@ -17,7 +17,8 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
         div= link_to comment.paper.title, comment.paper
       = link_to comment.user.fullname, comment.user
       - if comment.parent
-        |  in reply to #{link_to comment.parent.user.fullname, comment.parent.user}
+        |  in reply to 
+        a href="##{comment.parent.id}" = comment.parent.user.fullname
       span.timeago
         = " #{time_ago_in_words(comment.created_at)} ago"
         - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
