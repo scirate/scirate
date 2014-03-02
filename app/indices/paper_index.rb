@@ -1,4 +1,4 @@
-ThinkingSphinx::Index.define :paper, with: :active_record, delta: true do
+ThinkingSphinx::Index.define :paper, with: :active_record, delta: ThinkingSphinx::Deltas::DelayedDelta do
   indexes uid, sortable: true
   indexes title, sortable: true
   indexes abstract

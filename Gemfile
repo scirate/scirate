@@ -33,6 +33,12 @@ gem 'nokogiri', "= 1.5.9"
 gem 'mysql2'
 gem 'thinking-sphinx'
 
+# Without delayed deltas, we'd have to pause to reindex
+# recent papers every time someone scites something
+gem 'daemons'
+gem 'delayed_job_active_record'
+gem 'ts-delayed-delta', '~> 2.0.0'
+
 # Asset preprocessors
 gem 'sass-rails'
 gem 'coffee-rails'

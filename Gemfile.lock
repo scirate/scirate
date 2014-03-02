@@ -85,6 +85,11 @@ GEM
     colorize (0.6.0)
     daemons (1.1.9)
     database_cleaner (1.2.0)
+    delayed_job (4.0.0)
+      activesupport (>= 3.0, < 4.1)
+    delayed_job_active_record (4.0.0)
+      activerecord (>= 3.0, < 4.1)
+      delayed_job (>= 3.0, < 4.1)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -226,6 +231,9 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
+    ts-delayed-delta (2.0.0)
+      delayed_job
+      thinking-sphinx
     tzinfo (0.3.38)
     uglifier (2.4.0)
       execjs (>= 0.3.0)
@@ -249,7 +257,9 @@ DEPENDENCIES
   capybara
   chronic
   coffee-rails
+  daemons
   database_cleaner
+  delayed_job_active_record
   exception_notification!
   factory_girl_rails
   haml
@@ -276,6 +286,7 @@ DEPENDENCIES
   squeel
   thin
   thinking-sphinx
+  ts-delayed-delta (~> 2.0.0)
   uglifier
   unidecoder (~> 1.1.2)
   will_paginate
