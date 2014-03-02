@@ -19,7 +19,7 @@
 
 class Comment < ActiveRecord::Base
   belongs_to :user, counter_cache: true
-  belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, counter_cache: true
+  belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, counter_cache: true, touch: true
 
   belongs_to :parent, class_name: "Comment" # Immediate reply ancestor
   belongs_to :ancestor, class_name: "Comment" # Highest-level reply ancestor
