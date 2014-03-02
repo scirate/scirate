@@ -12,7 +12,7 @@ class FeedsController < ApplicationController
 
     @backdate = @date - (@range-1).days
 
-    @recent_comments = Comment.order("created_at DESC").limit(10)
+    @recent_comments = Comment.where(deleted: false, hidden: false).order("created_at DESC").limit(10)
 
     @scited_ids = []
 
