@@ -1,18 +1,32 @@
+<% 
+  @next_date = @date + @range.days 
+  @prev_date = @date - @range.days
+
+  if @range == 1
+    @next_date += 2.days if @next_date.wday == 6
+    @next_date += 1.day if @next_date.wday == 0
+    @prev_date -= 2.days if @prev_date.wday == 0
+    @prev_date -= 1.day if @prev_date.wday == 6
+  end
+%>
+
 <nav class="timenav">
   <h3>Date Published</h3>
   <p style="text-align: center;">
     <% if @range > 1 %>
       <%= @backdate.to_formatted_s(:rfc822) %> &mdash; 
+      <%= @date.to_formatted_s(:rfc822) %>
+    <% else %>
+      <%= @date.strftime("%a %e %b %Y") %>
     <% end %>
-    <%= @date.to_formatted_s(:rfc822) %>
   </p>
   <table cellspacing="0">
     <tr>
       <td class="btn-default half top left">
-        <%= link_to "Prev #{@range == 1 ? 'day' : @range.to_s + ' days'}", url_for(params.merge(date: @date - @range.days)) %>
+        <%= link_to "Prev #{@range == 1 ? 'day' : @range.to_s + ' days'}", url_for(params.merge(date: @prev_date)) %>
       </td>
       <td class="btn-default half top right">
-        <%= link_to("Next #{@range == 1 ? 'day' : @range.to_s + ' days'}", url_for(params.merge(date: @date + @range.days))) %>
+        <%= link_to("Next #{@range == 1 ? 'day' : @range.to_s + ' days'}", url_for(params.merge(date: @next_date))) %>
       </td>
     </tr>
     <tr><td class="underline"></tr>
