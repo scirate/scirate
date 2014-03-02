@@ -796,9 +796,12 @@ div.feed-rightbar {
     padding: 4px 8px;
   }
 
-  .abspdf {
-    font-size: 10px;
-    padding: 4px 7px;
+  li.paper .col-md-9 {
+    width: 70%;
+  }
+
+  li.paper .col-md-3 {
+    width: 30%;
   }
 }
 
