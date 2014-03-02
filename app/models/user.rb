@@ -99,12 +99,14 @@ class User < ActiveRecord::Base
     unless scites.find_by_paper_uid(paper.uid)
       scites.create!(paper_uid: paper.uid)
       paper.scites_count += 1
+      paper.save
     end
   end
 
   def unscite!(paper)
     scites.find_by_paper_uid(paper.uid).destroy
     paper.scites_count -= 1
+    paper.save
   end
 
   def subscribed?(feed)

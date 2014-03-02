@@ -1,7 +1,7 @@
 development:
-  quiet_deltas: true
+  quiet_deltas: false
 test:
   mysql41: 9307
   quiet_deltas: true
 production:
-  quiet_deltas: true
+  quiet_deltas: false
