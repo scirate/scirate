@@ -16,7 +16,7 @@
     </div>
   <% end %>
 
-  <% Feed.in_order(['physics', 'math', 'stat', 'cs', 'q-bio', 'q-fin', 'nlin']).each do |feed| %>
+  <% Feed.in_order(['physics', 'cond-mat', 'math', 'stat', 'cs', 'q-bio', 'q-fin', 'nlin']).each do |feed| %>
     <h2><%= feed.fullname %></h2>
     <div class="feed-card">
       <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
