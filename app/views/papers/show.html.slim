@@ -44,7 +44,7 @@
             - @paper.sciters.each_with_index do |user, i|
               = link_to user.fullname, user
               - if i != @paper.scites_count-1
-                | ,
+                | , 
         .comments
           a name="comments"
           h4= pluralize(@comments.size, "comment")
