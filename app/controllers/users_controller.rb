@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def show
+  def profile
     @user = User.find_by_username!(params[:username])
 
     if params[:scite_order] == 'published'

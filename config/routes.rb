@@ -64,7 +64,7 @@ SciRate3::Application.routes.draw do
 
   get '/admin/users/:username', to: 'admin#edit_user', as: 'admin_edit_user'
   post '/admin/users/:username', to: 'admin#update_user', as: 'admin_update_user'
-  get '/:username', to: 'users#show', username: /.+/, as: 'user'
+  get '/:username', to: 'users#profile', username: /.+/, as: 'user'
 
 
   # The priority is based upon order of creation:
