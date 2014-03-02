@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
       feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
       comments = Comment.find_by_feed_uids(feed_uids)
     else
-      comments = Comment.all
+      comments = Comment.where(deleted: false, hidden: false)
     end
 
     @comments = comments.order("created_at DESC").paginate(page: params[:page]||1)
