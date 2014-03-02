@@ -44,7 +44,7 @@ class FeedsController < ApplicationController
     @page = params[:page] || 1
 
     if @range == :since_last
-      @range = [1, (@date - @preferences.previous_last_visited.to_date).to_i].max
+      @range = [1, (Date.today - @preferences.previous_last_visited.to_date).to_i].max
       @since_last = true
     end
 
