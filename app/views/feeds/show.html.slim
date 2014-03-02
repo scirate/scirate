@@ -70,9 +70,9 @@
                 = will_paginate @pagination
 
         .col-md-3.feed-rightbar
-          - cache (signed_in? && current_user.expand_abstracts)
+          - cache (current_user && current_user.expand_abstracts)
             = render 'papers/abstract_toggle'
-          - cache [@date, @range, @backdate, @since_last]
+          - cache [current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
           - unless @recent_comments.empty?
             h3 
