@@ -27,7 +27,7 @@ namespace :db do
       author_columns = [:paper_uid, :position, :fullname, :searchterm]
       author_values = []
 
-      papers = Paper.limit(10000).offset(i).pluck(:uid, :author_str)
+      papers = Paper.limit(10000).offset(i*10000).pluck(:uid, :author_str)
       break if papers.empty?
       
       papers.each do |uid, author_str|
