@@ -50,26 +50,10 @@ class Paper < ActiveRecord::Base
   validates :submit_date, presence: true
   validates :update_date, presence: true
 
-  validate  :update_date_is_after_submit_date
+  validate :update_date_is_after_submit_date
 
-  searchkick
-
-  scope :search_import, -> { includes(:authors, :categories) }
-
-  def search_data
-    {
-      uid: uid,
-      title: title,
-      abstract: abstract,
-      authors_fullname: authors.map(&:fullname),
-      authors_searchterm: authors.map(&:searchterm),
-      feed_uids: categories.map(&:feed_uid),
-      scites_count: scites_count,
-      comments_count: comments_count,
-      submit_date: submit_date,
-      update_date: update_date,
-      pubdate: pubdate
-    }
+  after_save do
+    ::Search.index_paper(self)
   end
 
   # Given when a paper was submitted, estimate the

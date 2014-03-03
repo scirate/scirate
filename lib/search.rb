@@ -1,7 +1,27 @@
 module Search
-  def self.index_papers
-    es = Stretcher::Server.new('http://localhost:9200')
+  def self.setup
+    @es = Stretcher::Server.new('http://localhost:9200')
+  end
 
+  def self.index_paper(paper)
+    doc = {
+      'uid' => paper.uid,
+      'title' => paper.title,
+      'abstract' => paper.abstract,
+      'authors_fullname' => paper.authors.map(&:fullname),
+      'authors_searchterm' => paper.authors.map(&:searchterm),
+      'feed_uids' => paper.categories.map(&:feed_uid),
+      'scites_count' => paper.scites_count,
+      'comments_count' => paper.comments_count,
+      'submit_date' => paper.submit_date,
+      'update_date' => paper.update_date,
+      'pubdate' => paper.pubdate
+    }
+
+    @es.index(:scirate).type(:paper).put(paper.id, doc)
+  end
+
+  def self.full_index_papers
     first_id = nil
     prev_id = 0
     loop do
@@ -52,7 +72,7 @@ module Search
       end
 
       p Benchmark.measure {
-        es.index(:scirate).bulk_index(papers)
+        @es.index(:scirate).bulk_index(papers)
       }
 
       p prev_id.to_i-first_id.to_i

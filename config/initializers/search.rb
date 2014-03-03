@@ -1,1 +1,2 @@
 require 'search'
+Search.setup
