@@ -1,4 +1,8 @@
 module Search
+  class << self
+    attr_reader :es
+  end
+
   def self.setup
     @es = Stretcher::Server.new('http://localhost:9200')
   end
@@ -44,18 +48,18 @@ module Search
           prev_id = row['id']
           paper = {
             '_type' => 'paper',
-            '_id' => row['id'],
+            '_id' => row['id'].to_i,
             'uid' => row['uid'],
             'title' => row['title'],
             'abstract' => row['abstract'],
             'authors_fullname' => [],
             'authors_searchterm' => [],
             'feed_uids' => [],
-            'scites_count' => row['scites_count'],
-            'comments_count' => row['comments_count'],
-            'submit_date' => row['submit_date'],
-            'update_date' => row['update_date'],
-            'pubdate' => row['pubdate']
+            'scites_count' => row['scites_count'].to_i,
+            'comments_count' => row['comments_count'].to_i,
+            'submit_date' => Time.parse(row['submit_date'] + " UTC"),
+            'update_date' => Time.parse(row['update_date'] + " UTC"),
+            'pubdate' => Time.parse(row['pubdate'] + " UTC")
           }
         end
 
@@ -71,9 +75,8 @@ module Search
         end
       end
 
-      p Benchmark.measure {
-        @es.index(:scirate).bulk_index(papers)
-      }
+      result = @es.index(:scirate).bulk_index(papers)
+      raise result if result.errors
 
       p prev_id.to_i-first_id.to_i
     end

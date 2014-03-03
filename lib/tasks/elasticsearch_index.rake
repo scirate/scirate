@@ -1,6 +1,6 @@
 namespace :es do
   desc "Reindex papers"
   task index: :environment do
-    Search.index_papers
+    Search.full_index_papers
   end
 end

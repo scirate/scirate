@@ -181,8 +181,8 @@ class Paper::Search
     @general = nil # Term to apply as OR across all text fields
     @conditions = {}
     @authors = []
-    @orders = []
     @date_range = nil
+    @orders = []
 
     psplit(@query).each do |term|
       if term.start_with?('au:')
@@ -217,33 +217,45 @@ class Paper::Search
       end
     end
 
+    @sort = []
+
     @orders = [:scites] if @orders.empty?
 
-    @orders = @orders.map do |order|
-       case order
-       when :scites then "scites_count DESC"
-       when :comments then "comments_count DESC"
-       when :recency then "pubdate DESC"
-       when :relevancy then nil # Default Sphinx match relevancy
-       end
+    @orders.each do |order|
+      case order
+      when :scites then @sort << { scites_count: 'desc' }
+      when :comments then @sort << { comments_count: 'desc' }
+      when :recency then @sort << { pubdate: 'desc' }
+      when :relevancy then nil # Standard text match sort
+      end
     end
 
-    @order_sql = @orders.join(', ')
-
     # Everything is post-sorted by pubdate except :relevancy
-    unless @order_sql.empty?
-      @order_sql += ", pubdate DESC"
+    unless @sort.empty? || @orders.include?(:recency)
+      @sort << { pubdate: 'desc' }
     end
   end
 
   def run(opts={})
     params = {}
     params[:conditions] = @conditions
-    params[:order] = @order_sql unless @order_sql.empty?
     params[:with] = { pubdate: @date_range } unless @date_range.nil?
-
     params = params.merge(opts)
-    @results = Paper.search(@general, params)
+
+    res = ::Search.es.index(:scirate).search(
+      size: 10,
+      query: {
+        filtered: {
+          query: {
+            query_string: {
+              query: @general
+            }
+          }
+        }
+      }
+    )
+
+    @results = Paper.where(uid: res.documents.map(&:uid)).paginate(page: 1)
   end
 end
 
