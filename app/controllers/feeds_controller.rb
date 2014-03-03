@@ -151,23 +151,29 @@ class FeedsController < ApplicationController
   #
   # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
-    with = {
-      pubdate: backdate..(date+1.day),
-    }
+    p backdate, date+1.day
 
-    if feed_uids && !feed_uids.empty?
-      with['feed_uids_filter'] = feed_uids.map { |uid| Zlib.crc32(uid) }
+    if feed_uids.nil?
+      @range_query = 
+        Paper.where("pubdate >= ? AND pubdate < ?", backdate, date+1.day)
+    else
+      @range_query =
+        Paper.joins(:categories)
+          .where("categories.feed_uid IN (?) AND categories.crosslist_date >= ? AND categories.crosslist_date < ?", feed_uids, backdate, date+1.day)
     end
 
-    papers = Paper.search(
-      with: with,
-      order: "scites_count DESC, comments_count DESC, pubdate DESC",
-      page: page,
-      per_page: 20,
-      sql: {
-        include: [:authors, :feeds]
-      }
-    )
+    @range_query = @range_query
+        .order("scites_count DESC, comments_count DESC, pubdate DESC")
+        .paginate(per_page: 30, page: page)
+
+    paper_ids = @range_query.pluck(:id)
+
+    papers = Paper.includes(:authors, :feeds)
+                  .where(id: paper_ids)
+                  .index_by(&:id)
+                  .slice(*paper_ids)
+                  .values
+
     return papers
   end
 end
