@@ -32,10 +32,10 @@ namespace :db do
       
       papers.each do |uid, author_str|
         fullnames = parse_fullnames(author_str)
-        fullnames.each do |fullname, j|
+        fullnames.each_with_index do |fullname, j|
           author_values << [
             uid,
-            i,
+            j,
             fullname,
             Author.make_searchterm(fullname)
           ]
