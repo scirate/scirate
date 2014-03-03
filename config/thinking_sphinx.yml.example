@@ -1,7 +1,9 @@
 development:
+  mysql41: 9308
   quiet_deltas: false
 test:
-  mysql41: 9307
+  mysql41: 9309
   quiet_deltas: true
 production:
+  mysql41: 9310
   quiet_deltas: false
