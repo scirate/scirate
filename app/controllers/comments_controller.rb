@@ -1,6 +1,22 @@
 class CommentsController < ApplicationController
   before_filter :find_comment, :only => [:edit, :delete, :upvote, :downvote, :unvote, :report, :unreport, :reply]
 
+  def index
+    if params[:feed]
+      @feed = Feed.find_by_uid!(params[:feed])
+      feed_uids = [@feed.uid] + @feed.children.map(&:uid)
+      comments = Comment.find_by_feed_uids(feed_uids)
+    elsif signed_in?
+      feeds = current_user.feeds.includes(:children)
+      feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
+      comments = Comment.find_by_feed_uids(feed_uids)
+    else
+      comments = Comment.all
+    end
+
+    @comments = comments.order("created_at DESC").paginate(page: params[:page]||1)
+  end
+
   def create
     @comment = current_user.comments.build(
       paper_uid: params[:comment][:paper_uid],
@@ -77,7 +93,7 @@ class CommentsController < ApplicationController
   end
 
   def unreport
-    @comment.reports.where(voter_id: current_user.id).destroy_all
+    @comment.reports.where(user_id: current_user.id).destroy_all
     render :text => 'success'
   end
 

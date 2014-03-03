@@ -4,9 +4,9 @@
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer
-#  feed_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  feed_uid   :text             default(""), not null
 #
 
 require 'spec_helper'

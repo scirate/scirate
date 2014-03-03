@@ -80,7 +80,7 @@ describe "password resets" do
     before do
       visit reset_password_confirm_path(user.password_reset_token)
       fill_in "password", :with => "foobar"
-      fill_in "Password confirmation", :with => "foobar"
+      #fill_in "Password confirmation", :with => "foobar"
       click_button "Update Password"
     end
 

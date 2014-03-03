@@ -1,5 +1,6 @@
 
-<% provide :title, sanitize(@paper.title) %>
+<% provide :title, @paper.title %>
+<% provide :description, @paper.abstract %>
 
 <div class="container">
   <div class="paper row">
@@ -10,6 +11,7 @@
         </div>
         <div class="col-md-2">
           <%= render(partial: 'scites/toggle', object: @paper, as: :paper) %>
+          <a class="paper-download btn btn-default" title="Download PDF" href="<%= @paper.pdf_url %>"><i class="fa fa-download"></i></a>
         </div>
       </div>
 

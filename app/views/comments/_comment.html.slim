@@ -1,0 +1,43 @@
+- @voted = signed_in? ? current_user.voted_as_when_voted_for(comment) : nil
+
+div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) class=('deleted' if comment.deleted || comment.hidden) class=('voted' if @voted) class=('reply' if comment.parent) data-id=(comment.id) data-markup=(comment.content unless comment.deleted || comment.hidden)
+  a name=(comment.id)
+  - if comment.deleted
+    | (deleted comment)
+  - elsif comment.hidden
+    | (hidden comment)
+  - else
+    .votes
+      div.upvote class=('active' if @voted == true)
+        i.fa.fa-arrow-up
+      div.downvote class=('active' if @voted == false)
+        i.fa.fa-arrow-down
+    .nonvotes
+      - if @user
+        div= link_to comment.paper.title, comment.paper
+      = link_to comment.user.fullname, comment.user
+      - if comment.parent
+        | in reply to #{link_to comment.parent.user.fullname, comment.parent.user}
+      span.timeago
+        = " #{time_ago_in_words(comment.created_at)} ago"
+        - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
+          | (<span class="score">#{comment.cached_votes_up-comment.cached_votes_down}</span> points)
+      .body.tex2jax
+        = simple_format(strip_tags(comment.content))
+      - if @paper && current_user
+        .actions
+          a.permalink href="##{comment.id}" permalink
+          - if current_user.id == comment.user_id
+            a.edit edit
+            = link_to 'delete', delete_comment_path(comment), method: :post
+          - else
+            - if comment.reports.exists?(user_id: current_user.id)
+                a.unreport reported (undo)
+            - else
+              a.report report
+          a.reply reply
+          - if current_user.is_moderator?
+            .moderate
+              | #{status_warning} <a class="edit">edit</a> 
+              = link_to 'delete', delete_comment_path(comment), method: :post
+  div style="clear: both;"

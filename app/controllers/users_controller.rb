@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def show
+  def profile
     @user = User.find_by_username!(params[:username])
 
     if params[:scite_order] == 'published'
@@ -37,12 +37,12 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      default_username = "#{params[:user][:fullname].parameterize}-#{User.count+1}"
-      @user = User.new(params.required(:user).permit(:fullname, :email, :password, :password_confirmation).merge(username: default_username))
+      default_username = User.default_username(params[:user][:fullname]) + "-#{User.count}"
+      @user = User.new(params.required(:user).permit(:fullname, :email, :password).merge(username: default_username, password_confirmation: params[:user][:password]))
       if @user.save
         @user.send_signup_confirmation
         sign_in @user
-        redirect_to feeds_path
+        redirect_to root_path
       else
         render 'new'
       end

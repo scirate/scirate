@@ -19,7 +19,7 @@
 
 class Comment < ActiveRecord::Base
   belongs_to :user, counter_cache: true
-  belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, counter_cache: true
+  belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, counter_cache: true, touch: true
 
   belongs_to :parent, class_name: "Comment" # Immediate reply ancestor
   belongs_to :ancestor, class_name: "Comment" # Highest-level reply ancestor
@@ -38,4 +38,12 @@ class Comment < ActiveRecord::Base
   end
 
   acts_as_votable
+
+  def self.find_by_feed_uids(feed_uids)
+    Comment.joins(:paper, paper: :categories)
+           .where(deleted: false, hidden: false, 
+                  paper: { categories: { feed_uid: feed_uids } })
+           .group('comments.id')
+           .order("comments.created_at DESC")
+  end
 end

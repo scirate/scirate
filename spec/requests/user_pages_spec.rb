@@ -70,8 +70,9 @@ describe "User pages" do
 
         let(:user) { User.find_by_email('test-new@example.com') }
 
-        it { should have_title "" }
+        it { should have_title "Home feed" }
         it { should have_content(user.email) }
+        it { should have_content "You can find feeds to subscribe to" }
 
         it "should send the email" do
           last_email.to.should include(user.email)

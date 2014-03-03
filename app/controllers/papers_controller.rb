@@ -2,7 +2,13 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.find_by_uid!(params[:id])
+    @paper = Paper.find_by_uid(params[:id])
+
+    if @paper.nil?
+      # Might be a versioned link
+      @paper = Paper.find_by_uid!(params[:id].split(/v\d/)[0])
+      redirect_to paper_path(@paper)
+    end
 
     @scited = current_user && current_user.scited_papers.where(id: @paper.id).exists?
 
@@ -32,43 +38,14 @@ class PapersController < ApplicationController
   end
 
   def search
-    @query = params[:q] || ''
+    basic = params[:q]
+    advanced = params[:advanced]
 
-    params.each do |key, val|
-      next if val.empty?
+    @search = Paper::Search.new(basic, advanced)
 
-      case key
-      when 'authors'
-        authors = val.split(/,\s*/)
-        @query += ' ' + authors.map { |au| "au:#{__quote(au)}" }.join(' ')
-      when 'title'
-        @query += " ti:#{__quote(val)}"
-      when 'abstract'
-        @query += " abs:#{__quote(val)}"
-      when 'feed'
-        @query += " feed:#{__quote(val)}"
-      when 'general'
-        @query += " #{val}"
-      when 'order'
-        @query += " order:#{val}" unless val == 'scites'
-      end
-    end
-
-    @query = @query.strip
-
-    @search = Paper::Search.new(@query)
-
-    if !@query.empty?
-      paper_ids = @search.run(page: params[:page], per_page: 20)
-
-      @papers = Paper.where(id: paper_ids).includes(:authors, :feeds).order(@search.order_sql)
-
-      # Pass the Sphinx pagination values through to will_paginate
-      # A little hacky
-      @papers = @papers.paginate(page: 1)
-      @papers.total_entries = paper_ids.total_entries
-      @papers.per_page = paper_ids.per_page
-      @papers.current_page = paper_ids.current_page
+    if !@search.query.empty?
+      @papers = @search.run(page: params[:page], per_page: 20,
+                            include: [:authors, :feeds])
 
       # Determine which folder we should have selected
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)

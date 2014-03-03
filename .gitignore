@@ -19,7 +19,8 @@
 
 # Ignore local config files
 config/database.yml
-config/development.sphinx.conf
+config/thinking_sphinx.yml
+config/*.sphinx.conf
 local_settings.rb
 
 # extra ignores
@@ -31,3 +32,6 @@ doc/
 .project
 .DS_Store
 backup/*.dump
+
+# This is deployment-specific
+public/robots.txt

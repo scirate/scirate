@@ -1,7 +1,24 @@
 class FeedsController < ApplicationController
   def landing
-    @feeds = Feed.map_uids
-    render('papers/landing', :layout => nil)
+    @date = _parse_date(params)
+
+    if @date.nil?
+      feed = Feed.order("last_paper_date DESC").first
+      @date = (feed && feed.last_paper_date) ? feed.last_paper_date.to_date : Date.today
+    end
+
+    @range = _parse_range(params) || 1
+    @page = params[:page]
+
+    @backdate = @date - (@range-1).days
+
+    @recent_comments = Comment.order("created_at DESC").limit(10)
+
+    @scited_ids = []
+
+    @papers = _range_query(nil, @backdate, @date, @page)
+
+    render 'feeds/show'
   end
 
   # Aggregated feed
@@ -39,7 +56,12 @@ class FeedsController < ApplicationController
 
     @scited_ids = current_user.scited_papers.pluck(:id)
 
-    @papers = _range_query(feed_uids, @backdate, @date, @page)
+    if feed_uids.empty?
+      # No subscriptions
+      @papers = []
+    else
+      @papers = _range_query(feed_uids, @backdate, @date, @page)
+    end
 
     render 'feeds/show'
   end
@@ -115,10 +137,7 @@ class FeedsController < ApplicationController
   end
 
   def _recent_comments(feed_uids)
-    @recent_comments = Comment.joins(:paper, paper: :categories)
-                              .where(deleted: false, hidden: false, paper: { categories: { feed_uid: feed_uids } })
-                              .group('comments.id')
-                              .order("comments.created_at DESC").limit(10)
+    Comment.find_by_feed_uids(feed_uids).limit(10)
   end
 
   # The primary SciRate query. Given a set of feed uids, a pair of dates
@@ -132,20 +151,23 @@ class FeedsController < ApplicationController
   #
   # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
-    @range_query =
-      Paper.joins(:categories)
-        .where("categories.feed_uid IN (?) AND categories.crosslist_date >= ? AND categories.crosslist_date < ?", feed_uids, backdate, date+1.day)
-        .order("scites_count DESC, comments_count DESC, pubdate DESC")
-        .paginate(per_page: 30, page: page)
+    with = {
+      pubdate: backdate..(date+1.day),
+    }
 
-    paper_ids = @range_query.pluck(:id)
+    if feed_uids && !feed_uids.empty?
+      with['feed_uids_filter'] = feed_uids.map { |uid| Zlib.crc32(uid) }
+    end
 
-    papers = Paper.includes(:authors, :feeds)
-                  .where(id: paper_ids)
-                  .index_by(&:id)
-                  .slice(*paper_ids)
-                  .values
-
+    papers = Paper.search(
+      with: with,
+      order: "scites_count DESC, comments_count DESC, pubdate DESC",
+      page: page,
+      per_page: 20,
+      sql: {
+        include: [:authors, :feeds]
+      }
+    )
     return papers
   end
 end

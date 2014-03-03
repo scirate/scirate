@@ -80,7 +80,7 @@ class Feed < ActiveRecord::Base
 
   # Grab a set of feeds in order by uid
   def self.in_order(uids)
-    Feed.where(uid: uids).index_by(&:uid).slice(*uids).values
+    Feed.where(uid: uids).includes(:children).index_by(&:uid).slice(*uids).values
   end
 
   def to_param

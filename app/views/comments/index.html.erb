@@ -1,5 +1,0 @@
-<% provide :title, "Comments on all papers" %>
-
-<h1>Recent comments</h1>
-<%= render :partial => "comments/abbr_comment", :collection => @comments %>
-<%= will_paginate @comments %>

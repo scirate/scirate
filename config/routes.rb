@@ -28,8 +28,10 @@ SciRate3::Application.routes.draw do
   get '/signup',   to: 'users#new', as: 'signup'
   post '/signup',  to: 'users#create'
   get '/login',    to: 'sessions#new'
+  post '/login',   to: 'sessions#create'
   get '/logout',   to: 'sessions#destroy'
   get '/about',    to: 'static_pages#about'
+  get '/legal',    to: 'static_pages#legal'
 
   get '/signin',   to: redirect('/login')
   get '/signout',  to: redirect('/logout')
@@ -48,7 +50,6 @@ SciRate3::Application.routes.draw do
 
 
 
-  resources :sessions, only: [:new, :create, :destroy]
   #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
   get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'
   get '/users/:id/comments', to: 'users#comments', as: 'comments_user'
@@ -56,14 +57,14 @@ SciRate3::Application.routes.draw do
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: 'activate_user'
   get '/feeds', to: 'users#feeds', as: 'feeds'
 
-
-  get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+/, as: 'paper_scites'
-  get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+/, as: 'paper'
+  get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper_scites'
+  get '/arxiv/:feed/comments', to: 'comments#index', feed: /.+/, as: 'feed_comments'
+  get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
 
   get '/admin/users/:username', to: 'admin#edit_user', as: 'admin_edit_user'
   post '/admin/users/:username', to: 'admin#update_user', as: 'admin_update_user'
-  get '/:username', to: 'users#show', username: /.+/, as: 'user'
+  get '/:username', to: 'users#profile', username: /.+/, as: 'user'
 
 
   # The priority is based upon order of creation:

@@ -66,7 +66,6 @@ def valid_signup(params = {})
   fill_in "Name",                  with: params[:fullname]
   fill_in "Email",                 with: params[:email]
   fill_in "user_password",              with: params[:password]
-  fill_in "user_password_confirmation", with: params[:password]
   click_button "Sign up"
 end
 
