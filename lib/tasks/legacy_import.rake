@@ -80,7 +80,7 @@ namespace :db do
         if old_user.subscriptions.count == 0
           user.subscriptions.create!(
             feed_uid: 'quant-ph',
-            created_at: old_sub.created_at
+            created_at: old_user.created_at
           )
         end
       end

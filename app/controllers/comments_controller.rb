@@ -14,7 +14,7 @@ class CommentsController < ApplicationController
       comments = Comment.all
     end
 
-    @comments = comments.paginate(page: params[:page]||1)
+    @comments = comments.order("created_at DESC").paginate(page: params[:page]||1)
   end
 
   def create
