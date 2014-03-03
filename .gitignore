@@ -20,7 +20,7 @@
 # Ignore local config files
 config/database.yml
 config/thinking_sphinx.yml
-config/development.sphinx.conf
+config/*.sphinx.conf
 local_settings.rb
 
 # extra ignores

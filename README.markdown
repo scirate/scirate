@@ -54,6 +54,13 @@ rake arxiv:feed_import
 rails server
 ```
 
+And start the server and delayed_job instance which updates the search index.
+
+```shell
+./bin/delayed_job start
+rails server
+```
+
 You should now have a working local copy of SciRate! However, you'll also want some papers to fiddle with.
 
 ## Populating the database
