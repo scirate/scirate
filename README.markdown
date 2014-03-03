@@ -2,7 +2,7 @@
 
 A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon, [Bill Rosgen](http://intractable.ca/bill/) and [Aram Harrow](http://www.mit.edu/~aram/). Currently being expanded upon by [Draftable](https://draftable.com/).
 
-The older production site is deployed at [https://scirate3.herokuapp.com/](https://scirate3.herokuapp.com/). A more recent testing version can be found at [http://scirate-dev.draftable.com/](https://scirate-dev.draftable.com/).
+The production site is deployed at [https://scirate.com/](https://scirate.com/). A staging instance which copies the live database every day can be found at [http://scirate-dev.draftable.com/](https://scirate-dev.draftable.com/).
 
 ## Contributing
 
