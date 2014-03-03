@@ -28,16 +28,8 @@ gem 'oai', git: 'git://github.com/code4lib/ruby-oai'
 gem 'arxivsync', git: 'git://github.com/mispy/arxivsync'
 gem 'nokogiri', "= 1.5.9"
 
-# Sphinx full-text search support
-# Requires mysql gem even though we're using postgres
-gem 'mysql2'
-gem 'thinking-sphinx'
-
-# Without delayed deltas, we'd have to pause to reindex
-# recent papers every time someone scites something
-gem 'daemons'
-gem 'delayed_job_active_record'
-gem 'ts-delayed-delta', '~> 2.0.0'
+# Elasticsearch searchkick gem
+gem 'stretcher'
 
 # Asset preprocessors
 gem 'sass-rails'

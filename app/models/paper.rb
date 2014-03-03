@@ -52,6 +52,26 @@ class Paper < ActiveRecord::Base
 
   validate  :update_date_is_after_submit_date
 
+  searchkick
+
+  scope :search_import, -> { includes(:authors, :categories) }
+
+  def search_data
+    {
+      uid: uid,
+      title: title,
+      abstract: abstract,
+      authors_fullname: authors.map(&:fullname),
+      authors_searchterm: authors.map(&:searchterm),
+      feed_uids: categories.map(&:feed_uid),
+      scites_count: scites_count,
+      comments_count: comments_count,
+      submit_date: submit_date,
+      update_date: update_date,
+      pubdate: pubdate
+    }
+  end
+
   # Given when a paper was submitted, estimate the
   # time at which the arXiv was likely to have published it
   def self.estimate_pubdate(submit_date)

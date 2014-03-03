@@ -85,14 +85,10 @@ GEM
     colorize (0.6.0)
     daemons (1.1.9)
     database_cleaner (1.2.0)
-    delayed_job (4.0.0)
-      activesupport (>= 3.0, < 4.1)
-    delayed_job_active_record (4.0.0)
-      activerecord (>= 3.0, < 4.1)
-      delayed_job (>= 3.0, < 4.1)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     eventmachine (1.0.3)
+    excon (0.32.0)
     execjs (2.0.2)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -103,14 +99,15 @@ GEM
       multipart-post (~> 1.2.0)
     faraday_middleware (0.9.0)
       faraday (>= 0.7.4, < 0.9)
+    faraday_middleware-multi_json (0.0.5)
+      faraday_middleware
+      multi_json
     haml (4.0.5)
       tilt
+    hashie (2.0.5)
     hike (1.2.3)
     htmlentities (4.3.1)
     i18n (0.6.9)
-    innertube (1.1.0)
-    joiner (0.2.0)
-      activerecord (>= 3.1.0, < 4.1.0)
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
@@ -121,12 +118,10 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     method_source (0.8.2)
-    middleware (0.1.0)
     mime-types (1.25.1)
     minitest (4.7.5)
     multi_json (1.8.4)
     multipart-post (1.2.0)
-    mysql2 (0.3.13)
     newrelic_rpm (3.7.2.195)
     nokogiri (1.5.9)
     ox (2.1.1)
@@ -165,7 +160,6 @@ GEM
     rake (10.1.1)
     rb-fsevent (0.9.4)
     rb-readline (0.5.1)
-    riddle (1.5.10)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -212,18 +206,18 @@ GEM
       activerecord (>= 3.0)
       activesupport (>= 3.0)
       polyamorous (~> 0.6.0)
+    stretcher (1.21.1)
+      excon (>= 0.16)
+      faraday (~> 0.8)
+      faraday_middleware (~> 0.9.0)
+      faraday_middleware-multi_json (~> 0.0.5)
+      hashie (>= 1.2.0)
+      multi_json (>= 1.0)
     temple (0.6.7)
     thin (1.6.1)
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
-    thinking-sphinx (3.1.0)
-      activerecord (>= 3.1.0)
-      builder (>= 2.1.2)
-      innertube (>= 1.0.2)
-      joiner (>= 0.2.0)
-      middleware (>= 0.1.0)
-      riddle (>= 1.5.10)
     thor (0.18.1)
     thread_safe (0.2.0)
       atomic (>= 1.1.7, < 2)
@@ -231,9 +225,6 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    ts-delayed-delta (2.0.0)
-      delayed_job
-      thinking-sphinx
     tzinfo (0.3.38)
     uglifier (2.4.0)
       execjs (>= 0.3.0)
@@ -257,14 +248,11 @@ DEPENDENCIES
   capybara
   chronic
   coffee-rails
-  daemons
   database_cleaner
-  delayed_job_active_record
   exception_notification!
   factory_girl_rails
   haml
   jquery-rails
-  mysql2
   newrelic_rpm
   nokogiri (= 1.5.9)
   oai!
@@ -284,9 +272,8 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   squeel
+  stretcher
   thin
-  thinking-sphinx
-  ts-delayed-delta (~> 2.0.0)
   uglifier
   unidecoder (~> 1.1.2)
   will_paginate
