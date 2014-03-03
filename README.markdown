@@ -19,10 +19,10 @@ We encourage contributions!
 Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
 ```shell
-sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libmysqlclient-dev
+sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1
 ```
 
-You will also need to download and install [sphinxsearch 2.1.4](http://sphinxsearch.com/downloads/release/). Bundler should take care of the rest.
+You will also need to download and install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/). Bundler should take care of the rest.
 
 ```shell
 git clone git@github.com:draftable/scirate3
@@ -38,26 +38,18 @@ If you've just installed postgres, you'll need a new database user:
 sudo -u postgres createuser --superuser --pwprompt scirate
 ```
 
-Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database and Sphinx configuration files:
+Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
 
 ```
 cp config/database.yml.example config/database.yml
-cp config/thinking_sphinx.yml.example config/thinking_sphinx.yml
 ```
 
-Edit the former file and enter your auth details for the development database. Then initialize the database and sphinx, and download the basic feed layout:
+Edit the new file and enter your auth details for the development database. Then initialize the database and Elasticsearch, download the basic feed layout, and start the server:
 
 ```shell
 rake db:setup
-rake ts:index
+rake es:migrate
 rake arxiv:feed_import
-rails server
-```
-
-And start the server and delayed_job instance which updates the search index.
-
-```shell
-./bin/delayed_job start
 rails server
 ```
 
