@@ -38,13 +38,14 @@ If you've just installed postgres, you'll need a new database user:
 sudo -u postgres createuser --superuser --pwprompt scirate
 ```
 
-Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
+Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database and Sphinx configuration files:
 
 ```
 cp config/database.yml.example config/database.yml
+cp config/thinking_sphinx.yml.example config/thinking_sphinx.yml
 ```
 
-Edit this file and enter your auth details for the development database. Then initialize the database and sphinx, and download the basic feed layout:
+Edit the former file and enter your auth details for the development database. Then initialize the database and sphinx, and download the basic feed layout:
 
 ```shell
 rake db:setup
