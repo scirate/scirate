@@ -1,15 +1,24 @@
 module Search
-  class << self
-    attr_reader :es
-  end
+  def self.es
+    if @es.nil?
+      # This logic probably doesn't belong here
+      # If it's in an initializer though it breaks code reloading
+      @index = if Settings::STAGING
+        "scirate_staging"
+      elsif Rails.env == 'production'
+        "scirate_live"
+      else
+        "scirate_#{Rails.env}"
+      end
 
-  def self.configure(config)
-    @index = config[:index]
-    @es = Stretcher::Server.new('http://localhost:9200')
+      @es = Stretcher::Server.new('http://localhost:9200')
+    else
+      @es
+    end
   end
 
   def self.find_papers(params)
-    res = @es.index(@index).type(:paper).search(params)
+    res = es.index(@index).type(:paper).search(params)
     puts "  Elasticsearch (#{res.raw.took}ms) #{params}"
     res
   end
@@ -30,7 +39,7 @@ module Search
       'pubdate' => paper.pubdate
     }
 
-    @es.index(@index).bulk_index([doc])
+    es.index(@index).bulk_index([doc])
   end
 
   def self.full_index_papers
@@ -82,7 +91,7 @@ module Search
         end
       end
 
-      result = @es.index(@index).bulk_index(papers)
+      result = es.index(@index).bulk_index(papers)
       raise result if result.errors
 
       p prev_id.to_i-first_id.to_i
