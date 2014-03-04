@@ -151,8 +151,6 @@ class FeedsController < ApplicationController
   #
   # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
-    p backdate, date+1.day
-
     if feed_uids.nil?
       @range_query = 
         Paper.where("pubdate >= ? AND pubdate < ?", backdate, date+1.day)

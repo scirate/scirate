@@ -32,10 +32,18 @@ FactoryGirl.define do
     sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}/#{1000+n}.#{1000+n}" }
     sequence(:author_str)  { |n| "Hilbert N. Grande, Lucrezia Mongfish" }
 
+    factory :paper_with_authors do
+      ignore do
+        authors_count 2
+      end
+
+      after(:create) do |paper, evaluator|
+        FactoryGirl.create_list(:author, evaluator.authors_count, paper: paper)
+      end
+    end
+
     after(:create) do |paper, evaluator|
-      create(:category, feed: Feed.first, paper: paper)
-      create(:author, paper: paper, fullname: "Hilbert N. Grande")
-      create(:author, paper: paper, fullname: "Lucrezia Mongfish")
+      create(:category, paper: paper, feed: Feed.first)
     end
   end
 

@@ -31,7 +31,6 @@ require 'spec_helper'
 
 describe Paper do
   before do
-    @feed = FactoryGirl.create(:feed)
     @paper = FactoryGirl.create(:paper)
   end
 
@@ -73,11 +72,6 @@ describe Paper do
   end
 
   describe "authors" do
-    before do
-      @paper.authors = []
-      @paper.save
-    end
-
     let (:author1) { FactoryGirl.create(:author, paper: @paper, position: 0) }
     let (:author2) { FactoryGirl.create(:author, paper: @paper, position: 1) }
 

@@ -6,10 +6,9 @@ describe "Paper pages" do
 
   describe "paper page" do
     let(:paper) { 
-      paper = FactoryGirl.create(:paper)
-      category = FactoryGirl.build(:category)
-      paper.categories = [category]
-      paper.save
+      paper = FactoryGirl.create(:paper_with_authors)
+      FactoryGirl.create(:category, paper: paper)
+      paper.reload
       paper
     }
 

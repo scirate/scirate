@@ -16,6 +16,7 @@ module Search
 
   def self.index_paper(paper)
     doc = {
+      '_type' => 'paper',
       '_id' => paper.uid,
       'title' => paper.title,
       'abstract' => paper.abstract,
@@ -29,7 +30,7 @@ module Search
       'pubdate' => paper.pubdate
     }
 
-    @es.index(@index).type(:paper).put(paper.id, doc)
+    @es.index(@index).bulk_index([doc])
   end
 
   def self.full_index_papers
