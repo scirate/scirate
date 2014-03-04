@@ -7,6 +7,12 @@ module Search
     @es = Stretcher::Server.new('http://localhost:9200')
   end
 
+  def self.find_papers(params)
+    res = @es.index(:scirate).type(:paper).search(params)
+    puts "  Elasticsearch (#{res.raw.took}ms) #{params}"
+    res
+  end
+
   def self.index_paper(paper)
     doc = {
       'uid' => paper.uid,

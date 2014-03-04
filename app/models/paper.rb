@@ -130,17 +130,17 @@ class Paper::Search
     split
   end
 
-  # Strip field prefix and parens
+  # Strip field prefix
   def tstrip(term)
     ['au:','ti:','abs:','in:','order:','date:'].each do |prefix|
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
 
-    if term[0] == '(' && term[-1] == ')'
-      term[1..-2]
-    else
-      term
-    end
+    #if term[0] == '(' && term[-1] == ')'
+    #  term[1..-2]
+    #else
+    term
+    #end
   end
 
   def parse_date(term)
@@ -237,25 +237,45 @@ class Paper::Search
   end
 
   def run(opts={})
-    params = {}
-    params[:conditions] = @conditions
-    params[:with] = { pubdate: @date_range } unless @date_range.nil?
-    params = params.merge(opts)
+    es_query = []
+    es_query << @general unless @general.nil?
+    @conditions.each do |cond, vals|
+      vals.each do |val|
+        es_query << "#{cond}:#{val}"
+      end
+    end
 
-    res = ::Search.es.index(:scirate).search(
-      size: 10,
+    p es_query.join(' ')
+
+    filter = if @date_range
+      {
+        range: {
+          pubdate: {
+            from: @date_range.first,
+            to: @date_range.last
+          }
+        }
+      }
+    else
+      nil
+    end
+
+    params = {
+      sort: @sort,
       query: {
         filtered: {
           query: {
             query_string: {
-              query: @general
+              query: es_query.join(' '),
+              default_operator: 'AND'
             }
-          }
+          },
+          filter: filter
         }
       }
-    )
+    }.merge(opts)
 
-    @results = Paper.where(uid: res.documents.map(&:uid)).paginate(page: 1)
+    @results = ::Search.find_papers(params)
   end
 end
 

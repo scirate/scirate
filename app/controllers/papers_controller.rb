@@ -40,12 +40,20 @@ class PapersController < ApplicationController
   def search
     basic = params[:q]
     advanced = params[:advanced]
+    page = params[:page] ? params[:page].to_i : 1
 
     @search = Paper::Search.new(basic, advanced)
 
     if !@search.query.empty?
-      @papers = @search.run(page: params[:page], per_page: 20,
-                            include: [:authors, :feeds])
+      paper_ids = @search.run(from: (page-1)*20, size: 20).documents.map(&:_id).map(&:to_i)
+
+      @papers = Paper.includes(:authors, :feeds)
+                     .where(id: paper_ids)
+                     .index_by(&:id)
+                     .slice(*paper_ids)
+                     .values
+
+      @pagination = WillPaginate::Collection.new(page, 20, @search.results.raw.hits.total)
 
       # Determine which folder we should have selected
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
