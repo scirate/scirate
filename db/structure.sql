@@ -169,8 +169,7 @@ CREATE TABLE comments (
     updated_at timestamp without time zone,
     content text NOT NULL,
     deleted boolean DEFAULT false NOT NULL,
-    paper_uid text DEFAULT ''::text NOT NULL,
-    delta boolean DEFAULT true NOT NULL
+    paper_uid text DEFAULT ''::text NOT NULL
 );
 
 
@@ -277,7 +276,6 @@ CREATE TABLE papers (
     update_date timestamp without time zone NOT NULL,
     abs_url text NOT NULL,
     pdf_url text NOT NULL,
-    delta boolean DEFAULT true NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     scites_count integer DEFAULT 0 NOT NULL,
@@ -746,13 +744,6 @@ CREATE INDEX index_papers_on_comments_count ON papers USING btree (comments_coun
 
 
 --
--- Name: index_papers_on_delta; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_papers_on_delta ON papers USING btree (delta);
-
-
---
 -- Name: index_papers_on_pdf_url; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1140,3 +1131,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140304112236');
 INSERT INTO schema_migrations (version) VALUES ('20140304135944');
 
 INSERT INTO schema_migrations (version) VALUES ('20140304174436');
+
+INSERT INTO schema_migrations (version) VALUES ('20140304183641');
