@@ -194,142 +194,6 @@ ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 
 --
--- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE delayed_jobs (
-    id integer NOT NULL,
-    priority integer DEFAULT 0 NOT NULL,
-    attempts integer DEFAULT 0 NOT NULL,
-    handler text NOT NULL,
-    last_error text,
-    run_at timestamp without time zone,
-    locked_at timestamp without time zone,
-    failed_at timestamp without time zone,
-    locked_by character varying(255),
-    queue character varying(255),
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: delayed_jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE delayed_jobs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: delayed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
-
-
---
--- Name: down_votes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE down_votes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: down_votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE down_votes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: down_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE down_votes_id_seq OWNED BY down_votes.id;
-
-
---
--- Name: downvotes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE downvotes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: downvotes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE downvotes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: downvotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE downvotes_id_seq OWNED BY downvotes.id;
-
-
---
--- Name: feed_days; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE feed_days (
-    id integer NOT NULL,
-    pubdate date,
-    content text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    feed_name character varying(255)
-);
-
-
---
--- Name: feed_days_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE feed_days_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: feed_days_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE feed_days_id_seq OWNED BY feed_days.id;
-
-
---
 -- Name: feed_preferences; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -497,70 +361,6 @@ ALTER SEQUENCE subscriptions_id_seq OWNED BY subscriptions.id;
 
 
 --
--- Name: up_votes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE up_votes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: up_votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE up_votes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: up_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE up_votes_id_seq OWNED BY up_votes.id;
-
-
---
--- Name: upvotes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE upvotes (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: upvotes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE upvotes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: upvotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE upvotes_id_seq OWNED BY upvotes.id;
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -685,34 +485,6 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY down_votes ALTER COLUMN id SET DEFAULT nextval('down_votes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY downvotes ALTER COLUMN id SET DEFAULT nextval('downvotes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY feed_days ALTER COLUMN id SET DEFAULT nextval('feed_days_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY feed_preferences ALTER COLUMN id SET DEFAULT nextval('feed_preferences_id_seq'::regclass);
 
 
@@ -728,20 +500,6 @@ ALTER TABLE ONLY scites ALTER COLUMN id SET DEFAULT nextval('scites_id_seq'::reg
 --
 
 ALTER TABLE ONLY subscriptions ALTER COLUMN id SET DEFAULT nextval('subscriptions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY up_votes ALTER COLUMN id SET DEFAULT nextval('up_votes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY upvotes ALTER COLUMN id SET DEFAULT nextval('upvotes_id_seq'::regclass);
 
 
 --
@@ -791,38 +549,6 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY delayed_jobs
-    ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
-
-
---
--- Name: down_votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY down_votes
-    ADD CONSTRAINT down_votes_pkey PRIMARY KEY (id);
-
-
---
--- Name: downvotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY downvotes
-    ADD CONSTRAINT downvotes_pkey PRIMARY KEY (id);
-
-
---
--- Name: feed_days_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY feed_days
-    ADD CONSTRAINT feed_days_pkey PRIMARY KEY (id);
-
-
---
 -- Name: feed_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -863,22 +589,6 @@ ALTER TABLE ONLY subscriptions
 
 
 --
--- Name: up_votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY up_votes
-    ADD CONSTRAINT up_votes_pkey PRIMARY KEY (id);
-
-
---
--- Name: upvotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY upvotes
-    ADD CONSTRAINT upvotes_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -900,13 +610,6 @@ ALTER TABLE ONLY versions
 
 ALTER TABLE ONLY votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
-
-
---
--- Name: delayed_jobs_priority; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at);
 
 
 --
@@ -1012,13 +715,6 @@ CREATE INDEX index_comments_on_parent_id ON comments USING btree (parent_id);
 --
 
 CREATE INDEX index_comments_on_user_id ON comments USING btree (user_id);
-
-
---
--- Name: index_feed_days_on_pubdate_and_feed_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_feed_days_on_pubdate_and_feed_name ON feed_days USING btree (pubdate, feed_name);
 
 
 --
@@ -1440,3 +1136,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140228084747');
 INSERT INTO schema_migrations (version) VALUES ('20140302104318');
 
 INSERT INTO schema_migrations (version) VALUES ('20140304112236');
+
+INSERT INTO schema_migrations (version) VALUES ('20140304135944');
