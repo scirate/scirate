@@ -148,8 +148,6 @@ class FeedsController < ApplicationController
   # We optimize by using the denormalized crosslist_date on categories
   # to allow index use and prevent scanning two tables at once. This is
   # functionally identical to pubdate.
-  #
-  # NOTE (Mispy): Could this be improved somehow by using Sphinx?
   def _range_query(feed_uids, backdate, date, page)
     if feed_uids.nil?
       @range_query = 
