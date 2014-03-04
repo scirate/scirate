@@ -17,7 +17,6 @@ module Settings
 
   # This toggle should do very little, as the staging site
   # is meant to match production as closely as possible.
-  # It's mainly used to put up a differentiating message
   STAGING = false
 
   # Since usernames are in root url namespace, need to reserve anything we might want later

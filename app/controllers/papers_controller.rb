@@ -45,12 +45,12 @@ class PapersController < ApplicationController
     @search = Paper::Search.new(basic, advanced)
 
     if !@search.query.empty?
-      paper_ids = @search.run(from: (page-1)*20, size: 20).documents.map(&:_id).map(&:to_i)
+      paper_uids = @search.run(from: (page-1)*20, size: 20).documents.map(&:_id)
 
       @papers = Paper.includes(:authors, :feeds)
-                     .where(id: paper_ids)
-                     .index_by(&:id)
-                     .slice(*paper_ids)
+                     .where(uid: paper_uids)
+                     .index_by(&:uid)
+                     .slice(*paper_uids)
                      .values
 
       @pagination = WillPaginate::Collection.new(page, 20, @search.results.raw.hits.total)

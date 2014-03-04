@@ -3,19 +3,20 @@ module Search
     attr_reader :es
   end
 
-  def self.setup
+  def self.configure(config)
+    @index = config[:index]
     @es = Stretcher::Server.new('http://localhost:9200')
   end
 
   def self.find_papers(params)
-    res = @es.index(:scirate).type(:paper).search(params)
+    res = @es.index(@index).type(:paper).search(params)
     puts "  Elasticsearch (#{res.raw.took}ms) #{params}"
     res
   end
 
   def self.index_paper(paper)
     doc = {
-      'uid' => paper.uid,
+      '_id' => paper.uid,
       'title' => paper.title,
       'abstract' => paper.abstract,
       'authors_fullname' => paper.authors.map(&:fullname),
@@ -28,7 +29,7 @@ module Search
       'pubdate' => paper.pubdate
     }
 
-    @es.index(:scirate).type(:paper).put(paper.id, doc)
+    @es.index(@index).type(:paper).put(paper.id, doc)
   end
 
   def self.full_index_papers
@@ -46,7 +47,7 @@ module Search
       category_ids = {}
       results.each do |row|
         first_id ||= row['id']
-        if paper.nil? || row['uid'] != paper['uid']
+        if paper.nil? || row['uid'] != paper['_id']
           papers << paper unless paper.nil?
 
           category_ids = {}
@@ -54,8 +55,7 @@ module Search
           prev_id = row['id']
           paper = {
             '_type' => 'paper',
-            '_id' => row['id'].to_i,
-            'uid' => row['uid'],
+            '_id' => row['uid'],
             'title' => row['title'],
             'abstract' => row['abstract'],
             'authors_fullname' => [],
@@ -81,7 +81,7 @@ module Search
         end
       end
 
-      result = @es.index(:scirate).bulk_index(papers)
+      result = @es.index(@index).bulk_index(papers)
       raise result if result.errors
 
       p prev_id.to_i-first_id.to_i
