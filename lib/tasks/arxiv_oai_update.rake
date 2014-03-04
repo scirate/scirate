@@ -15,7 +15,7 @@ namespace :arxiv do
     if last_paper.nil?
       date = Date.today-1.days
     else
-      date = last_paper.update_date
+      date = last_paper.submit_date
 
       syncdate = nil
       if last_paper.pubdate > Date.today-1.days

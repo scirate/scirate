@@ -22,25 +22,22 @@ namespace :db do
     end
 
     i = 0
-    loop do
+    Paper.find_in_batches(batch_size: 10000) do |papers|
       paper_uids = []
       author_columns = [:paper_uid, :position, :fullname, :searchterm]
       author_values = []
-
-      papers = Paper.limit(10000).offset(i*10000).pluck(:uid, :author_str)
-      break if papers.empty?
       
-      papers.each do |uid, author_str|
-        fullnames = parse_fullnames(author_str)
+      papers.each do |paper|
+        fullnames = parse_fullnames(paper.author_str)
         fullnames.each_with_index do |fullname, j|
           author_values << [
-            uid,
+            paper.uid,
             j,
             fullname,
             Author.make_searchterm(fullname)
           ]
         end
-        paper_uids << uid
+        paper_uids << paper.uid
       end
 
       ActiveRecord::Base.transaction do
@@ -51,7 +48,7 @@ namespace :db do
         end
       end
 
-      puts (i+1)*10000
+      puts "Processed #{(i+1)*10000} papers"
       i += 1
     end
   end

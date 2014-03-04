@@ -118,9 +118,9 @@ module Arxiv::Import
     end
 
     unless updated_uids.empty?
-      Version.joins(:paper).where(paper_uid: updated_uids).delete_all
-      Author.joins(:paper).where(paper_uid: updated_uids).delete_all
-      Category.joins(:paper).where(paper_uid: updated_uids).delete_all
+      Version.where(paper_uid: updated_uids).delete_all
+      Author.where(paper_uid: updated_uids).delete_all
+      Category.where(paper_uid: updated_uids).delete_all
       Paper.where(uid: updated_uids).delete_all
     end
 

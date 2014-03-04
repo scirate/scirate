@@ -66,6 +66,18 @@ END
 $$;
 
 
+--
+-- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE authors_id_seq
+    START WITH 3189994
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -75,7 +87,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE authors (
-    id integer NOT NULL,
+    id integer DEFAULT nextval('authors_id_seq'::regclass) NOT NULL,
     "position" integer NOT NULL,
     fullname text NOT NULL,
     searchterm text NOT NULL,
@@ -84,22 +96,15 @@ CREATE TABLE authors (
 
 
 --
--- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE authors_id_seq
-    START WITH 1
+CREATE SEQUENCE categories_id_seq
+    START WITH 1416050
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
---
--- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE authors_id_seq OWNED BY authors.id;
 
 
 --
@@ -107,31 +112,12 @@ ALTER SEQUENCE authors_id_seq OWNED BY authors.id;
 --
 
 CREATE TABLE categories (
-    id integer NOT NULL,
+    id integer DEFAULT nextval('categories_id_seq'::regclass) NOT NULL,
     "position" integer NOT NULL,
     feed_uid text NOT NULL,
     paper_uid text,
     crosslist_date timestamp without time zone DEFAULT '2014-01-16 20:06:20'::timestamp without time zone NOT NULL
 );
-
-
---
--- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE categories_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
 
 
 --
@@ -395,11 +381,11 @@ CREATE TABLE feeds (
 
 
 --
--- Name: feeds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: papers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE feeds_id_seq
-    START WITH 1
+CREATE SEQUENCE papers_id_seq
+    START WITH 912413
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -407,18 +393,11 @@ CREATE SEQUENCE feeds_id_seq
 
 
 --
--- Name: feeds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE feeds_id_seq OWNED BY feeds.id;
-
-
---
 -- Name: papers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE papers (
-    id integer NOT NULL,
+    id integer DEFAULT nextval('papers_id_seq'::regclass) NOT NULL,
     uid text NOT NULL,
     submitter text,
     title text NOT NULL,
@@ -442,25 +421,6 @@ CREATE TABLE papers (
     pubdate timestamp without time zone,
     author_str text NOT NULL
 );
-
-
---
--- Name: papers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE papers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: papers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE papers_id_seq OWNED BY papers.id;
 
 
 --
@@ -646,24 +606,11 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: versions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE versions (
-    id integer NOT NULL,
-    "position" integer NOT NULL,
-    date timestamp without time zone NOT NULL,
-    size text,
-    paper_uid text NOT NULL
-);
-
-
---
 -- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE versions_id_seq
-    START WITH 1
+    START WITH 1361734
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -671,10 +618,16 @@ CREATE SEQUENCE versions_id_seq
 
 
 --
--- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: versions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER SEQUENCE versions_id_seq OWNED BY versions.id;
+CREATE TABLE versions (
+    id integer DEFAULT nextval('versions_id_seq'::regclass) NOT NULL,
+    "position" integer NOT NULL,
+    date timestamp without time zone NOT NULL,
+    size text,
+    paper_uid text NOT NULL
+);
 
 
 --
@@ -712,20 +665,6 @@ CREATE SEQUENCE votes_id_seq
 --
 
 ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY authors ALTER COLUMN id SET DEFAULT nextval('authors_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
 
 
 --
@@ -781,20 +720,6 @@ ALTER TABLE ONLY feed_preferences ALTER COLUMN id SET DEFAULT nextval('feed_pref
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY feeds ALTER COLUMN id SET DEFAULT nextval('feeds_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY papers ALTER COLUMN id SET DEFAULT nextval('papers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY scites ALTER COLUMN id SET DEFAULT nextval('scites_id_seq'::regclass);
 
 
@@ -824,13 +749,6 @@ ALTER TABLE ONLY upvotes ALTER COLUMN id SET DEFAULT nextval('upvotes_id_seq'::r
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq'::regclass);
 
 
 --
@@ -999,6 +917,13 @@ CREATE INDEX index_authors_on_paper_uid ON authors USING btree (paper_uid);
 
 
 --
+-- Name: index_authors_on_position_and_paper_uid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_authors_on_position_and_paper_uid ON authors USING btree ("position", paper_uid);
+
+
+--
 -- Name: index_authors_on_searchterm; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1027,6 +952,13 @@ CREATE INDEX index_categories_on_feed_uid_and_crosslist_date ON categories USING
 
 
 --
+-- Name: index_categories_on_feed_uid_and_paper_uid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_categories_on_feed_uid_and_paper_uid ON categories USING btree (feed_uid, paper_uid);
+
+
+--
 -- Name: index_categories_on_paper_uid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1038,6 +970,20 @@ CREATE INDEX index_categories_on_paper_uid ON categories USING btree (paper_uid)
 --
 
 CREATE INDEX index_categories_on_paper_uid_and_feed_uid_and_crosslist_date ON categories USING btree (paper_uid, feed_uid, crosslist_date);
+
+
+--
+-- Name: index_categories_on_position_and_paper_uid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_categories_on_position_and_paper_uid ON categories USING btree ("position", paper_uid);
+
+
+--
+-- Name: index_comment_reports_on_user_id_and_comment_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_comment_reports_on_user_id_and_comment_id ON comment_reports USING btree (user_id, comment_id);
 
 
 --
@@ -1086,7 +1032,14 @@ CREATE INDEX index_feeds_on_source ON feeds USING btree (source);
 -- Name: index_feeds_on_uid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_feeds_on_uid ON feeds USING btree (uid);
+CREATE UNIQUE INDEX index_feeds_on_uid ON feeds USING btree (uid);
+
+
+--
+-- Name: index_papers_on_abs_url; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_papers_on_abs_url ON papers USING btree (abs_url);
 
 
 --
@@ -1101,6 +1054,13 @@ CREATE INDEX index_papers_on_comments_count ON papers USING btree (comments_coun
 --
 
 CREATE INDEX index_papers_on_delta ON papers USING btree (delta);
+
+
+--
+-- Name: index_papers_on_pdf_url; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_papers_on_pdf_url ON papers USING btree (pdf_url);
 
 
 --
@@ -1135,7 +1095,7 @@ CREATE INDEX index_papers_on_submit_date ON papers USING btree (submit_date);
 -- Name: index_papers_on_uid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_papers_on_uid ON papers USING btree (uid);
+CREATE UNIQUE INDEX index_papers_on_uid ON papers USING btree (uid);
 
 
 --
@@ -1143,6 +1103,13 @@ CREATE INDEX index_papers_on_uid ON papers USING btree (uid);
 --
 
 CREATE INDEX index_scites_on_paper_uid ON scites USING btree (paper_uid);
+
+
+--
+-- Name: index_scites_on_paper_uid_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_scites_on_paper_uid_and_user_id ON scites USING btree (paper_uid, user_id);
 
 
 --
@@ -1157,6 +1124,13 @@ CREATE INDEX index_scites_on_user_id ON scites USING btree (user_id);
 --
 
 CREATE INDEX index_subscriptions_on_feed_uid ON subscriptions USING btree (feed_uid);
+
+
+--
+-- Name: index_subscriptions_on_feed_uid_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_subscriptions_on_feed_uid_and_user_id ON subscriptions USING btree (feed_uid, user_id);
 
 
 --
@@ -1188,6 +1162,20 @@ CREATE INDEX index_users_on_remember_token ON users USING btree (remember_token)
 
 
 --
+-- Name: index_users_on_username; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_versions_on_position_and_paper_uid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_versions_on_position_and_paper_uid ON versions USING btree ("position", paper_uid);
+
+
+--
 -- Name: index_votes_on_votable_id_and_votable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1199,6 +1187,13 @@ CREATE INDEX index_votes_on_votable_id_and_votable_type ON votes USING btree (vo
 --
 
 CREATE INDEX index_votes_on_votable_id_and_votable_type_and_vote_scope ON votes USING btree (votable_id, votable_type, vote_scope);
+
+
+--
+-- Name: index_votes_on_votable_id_and_votable_type_and_voter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_votes_on_votable_id_and_votable_type_and_voter_id ON votes USING btree (votable_id, votable_type, voter_id);
 
 
 --
@@ -1443,3 +1438,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140219052417');
 INSERT INTO schema_migrations (version) VALUES ('20140228084747');
 
 INSERT INTO schema_migrations (version) VALUES ('20140302104318');
+
+INSERT INTO schema_migrations (version) VALUES ('20140304112236');
