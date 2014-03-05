@@ -152,6 +152,7 @@ class FeedsController < ApplicationController
     page ||= 1
     per_page = 100
 
+=begin
     filters = [
       { 
         range: {
@@ -185,11 +186,29 @@ class FeedsController < ApplicationController
 
     res = Search::Paper.find(query)
     paper_uids = res.documents.map(&:_id)
+=end
 
-    @pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
+
+    if feed_uids.nil?
+      @range_query = 
+        Paper.where("pubdate >= ? AND pubdate < ?", backdate, date+1.day)
+    else
+      @range_query =
+        Paper.joins(:categories)
+          .where("categories.feed_uid IN (?) AND categories.crosslist_date >= ? AND categories.crosslist_date < ?", feed_uids, backdate, date+1.day)
+    end
+
+    @range_query = @range_query
+        .order("scites_count DESC, comments_count DESC, pubdate DESC")
+        .paginate(per_page: 100, page: page)
+
+    paper_uids = @range_query.pluck(:uid)
+
+    #@pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
+    @pagination = @range_query
 
     papers = Paper.includes(:authors, :feeds)
-                  .where(id: paper_uids)
+                  .where(uid: paper_uids)
                   .index_by(&:uid)
                   .slice(*paper_uids)
                   .values
