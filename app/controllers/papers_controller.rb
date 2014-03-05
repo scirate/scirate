@@ -44,8 +44,10 @@ class PapersController < ApplicationController
 
     @search = Paper::Search.new(basic, advanced)
 
+    per_page = 100
+
     if !@search.query.empty?
-      paper_uids = @search.run(from: (page-1)*20, size: 20).documents.map(&:_id)
+      paper_uids = @search.run(from: (page-1)*per_page, size: per_page).documents.map(&:_id)
 
       @papers = Paper.includes(:authors, :feeds)
                      .where(uid: paper_uids)
@@ -53,7 +55,7 @@ class PapersController < ApplicationController
                      .slice(*paper_uids)
                      .values
 
-      @pagination = WillPaginate::Collection.new(page, 20, @search.results.raw.hits.total)
+      @pagination = WillPaginate::Collection.new(page, per_page, @search.results.raw.hits.total)
 
       # Determine which folder we should have selected
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)

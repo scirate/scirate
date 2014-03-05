@@ -160,7 +160,7 @@ class FeedsController < ApplicationController
 
     @range_query = @range_query
         .order("scites_count DESC, comments_count DESC, pubdate DESC")
-        .paginate(per_page: 30, page: page)
+        .paginate(per_page: 100, page: page)
 
     paper_ids = @range_query.pluck(:id)
 
