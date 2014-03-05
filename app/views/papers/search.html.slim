@@ -28,7 +28,7 @@ script
           button.btn.btn-default#submitCustomDate Go
 
   #searchForm
-    = form_tag(papers_search_path, method: :get) do |f|
+    = form_tag(papers_search_path+'#results', method: :get) do |f|
       .form-group
         = label_tag :q, "Search query", class: 'sr-only'
         = text_field_tag :q, @search.basic, class: 'form-control'
@@ -101,6 +101,7 @@ script
               td How to sort the results
       
   - if @papers
+    a name="results"
     h3
       #{@search.results.raw.hits.total} results for #{@search.query}
     /= render 'papers/abstract_toggle'
