@@ -150,7 +150,7 @@ class FeedsController < ApplicationController
   # functionally identical to pubdate.
   def _range_query(feed_uids, backdate, date, page)
     page = (page.nil? ? 1 : page.to_i)
-    per_page = 100
+    per_page = 70
 
     filters = [
       { 

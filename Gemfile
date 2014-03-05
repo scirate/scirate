@@ -40,6 +40,9 @@ gem 'haml'
 gem 'slim'
 gem 'ractive-rails'
 
+# Memcached gem
+gem 'dalli'
+
 # SCSS mixins for CSS3 browser compatibility
 gem 'bourbon'
 

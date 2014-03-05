@@ -44,7 +44,7 @@ class PapersController < ApplicationController
 
     @search = Paper::Search.new(basic, advanced)
 
-    per_page = 100
+    per_page = 70
 
     if !@search.query.empty?
       paper_uids = @search.run(from: (page-1)*per_page, size: per_page).documents.map(&:_id)

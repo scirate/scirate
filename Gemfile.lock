@@ -84,6 +84,7 @@ GEM
     coffee-script-source (1.7.0)
     colorize (0.6.0)
     daemons (1.1.9)
+    dalli (2.7.0)
     database_cleaner (1.2.0)
     diff-lcs (1.2.5)
     erubis (2.7.0)
@@ -248,6 +249,7 @@ DEPENDENCIES
   capybara
   chronic
   coffee-rails
+  dalli
   database_cleaner
   exception_notification!
   factory_girl_rails
