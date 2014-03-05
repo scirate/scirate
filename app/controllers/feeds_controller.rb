@@ -8,7 +8,7 @@ class FeedsController < ApplicationController
     end
 
     @range = _parse_range(params) || 1
-    @page = params[:page]
+    @page = params[:page] || 1
 
     @backdate = @date - (@range-1).days
 
@@ -41,7 +41,7 @@ class FeedsController < ApplicationController
     end
 
     @range = _parse_range(params) || :since_last# || @preferences.range
-    @page = params[:page]
+    @page = params[:page] || 1
 
     if @range == :since_last
       @range = [1, (@date - @preferences.previous_last_visited.to_date).to_i].max
@@ -149,25 +149,51 @@ class FeedsController < ApplicationController
   # to allow index use and prevent scanning two tables at once. This is
   # functionally identical to pubdate.
   def _range_query(feed_uids, backdate, date, page)
-    if feed_uids.nil?
-      @range_query = 
-        Paper.where("pubdate >= ? AND pubdate < ?", backdate, date+1.day)
-    else
-      @range_query =
-        Paper.joins(:categories)
-          .where("categories.feed_uid IN (?) AND categories.crosslist_date >= ? AND categories.crosslist_date < ?", feed_uids, backdate, date+1.day)
-    end
+    page ||= 1
+    per_page = 100
 
-    @range_query = @range_query
-        .order("scites_count DESC, comments_count DESC, pubdate DESC")
-        .paginate(per_page: 100, page: page)
+    query = {
+      size: per_page,
+      from: (page-1)*per_page,
+      sort: [
+        { scites_count: 'desc' },
+        { comments_count: 'desc' },
+        { pubdate: 'desc' },
+        { submit_date: 'asc' }
+      ],
 
-    paper_ids = @range_query.pluck(:id)
+      query: {
+        filtered: {
+          filter: {
+            :and => [
+              { 
+                range: {
+                  pubdate: {
+                   from: backdate,
+                   to: date+1.day
+                  }
+                } 
+              },
+              { 
+                terms: {
+                  feed_uids: feed_uids
+                } 
+              } 
+            ]
+          }
+        }
+      }
+    }
+
+    res = Search::Paper.find(query)
+    paper_uids = res.documents.map(&:_id)
+
+    @pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
 
     papers = Paper.includes(:authors, :feeds)
-                  .where(id: paper_ids)
-                  .index_by(&:id)
-                  .slice(*paper_ids)
+                  .where(id: paper_uids)
+                  .index_by(&:uid)
+                  .slice(*paper_uids)
                   .values
 
     return papers

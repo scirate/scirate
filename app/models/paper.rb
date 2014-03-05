@@ -52,7 +52,7 @@ class Paper < ActiveRecord::Base
   validate :update_date_is_after_submit_date
 
   after_save do
-    ::Search.index_paper(self)
+    ::Search::Paper.index(self)
   end
 
   # Given when a paper was submitted, estimate the
@@ -272,7 +272,7 @@ class Paper::Search
       }
     }.merge(opts)
 
-    @results = ::Search.find_papers(params)
+    @results = ::Search::Paper.find(params)
   end
 end
 

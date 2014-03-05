@@ -61,6 +61,8 @@ module Arxiv::Import
       # date of submission, we may have to estimate it ourselves
       pubdate = if syncdate && !existing
         syncdate
+      elsif existing
+        existing.pubdate
       else
         Paper.estimate_pubdate(model.versions[0].date.utc)
       end

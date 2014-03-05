@@ -65,7 +65,7 @@ describe "arxiv importer" do
       paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
 
       # Now test the search index
-      doc = Search.find_papers({ query: { query_string: { query: "title:\"Revisiting Norm Estimation in Data Streams\"" } } }).docs[0]
+      doc = Search::Paper.find({ query: { query_string: { query: "title:\"Revisiting Norm Estimation in Data Streams\"" } } }).docs[0]
 
       doc._id.should == "0811.3648"
       doc.title.should == "Revisiting Norm Estimation in Data Streams"

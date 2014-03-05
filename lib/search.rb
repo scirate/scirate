@@ -1,28 +1,29 @@
 module Search
-  def self.es
-    if @es.nil?
-      # This logic probably doesn't belong here
-      # If it's in an initializer though it breaks code reloading
-      @index = if Rails.env == 'production'
-        if Settings::STAGING
-          "scirate_staging"
-        else
-          "scirate_live"
-        end
-      else
-        "scirate_#{Rails.env}"
-      end
+  class << self
+    attr_reader :index_name
+  end
 
-      @es = Stretcher::Server.new('http://localhost:9200')
+  def self.es
+    @es ||= Stretcher::Server.new('http://localhost:9200')
+  end
+
+  def self.index_name
+    # This logic probably doesn't belong here
+    # If it's in an initializer though it breaks code reloading
+    @index_name ||= if Rails.env == 'production'
+      if Settings::STAGING
+        "scirate_staging"
+      else
+        "scirate_live"
+      end
     else
-      @es
+      "scirate_#{Rails.env}"
     end
   end
 
-  # Clear out the entire search database
-  # Used for testing
-  def self.clear_index
-    es.index(@index).delete rescue nil
+
+  def self.index
+    es.index(index_name)
   end
 
   # Defines our Elasticsearch type schema
@@ -33,9 +34,9 @@ module Search
         properties: {
           title: { type: 'string' },
           abstract: { type: 'string' },
-          authors_fullname: { type: 'string' }, # array
-          authors_searchterm: { type: 'string' }, # array
-          feed_uids: { type: 'string' }, # array
+          authors_fullname: { type: 'string', index: 'not_analyzed' }, # array
+          authors_searchterm: { type: 'string', index: 'not_analyzed' }, # array
+          feed_uids: { type: 'string', index: 'not_analyzed' }, # array
           scites_count: { type: 'integer' },
           comments_count: { type: 'integer' },
           submit_date: { type: 'date' },
@@ -54,13 +55,13 @@ module Search
     # Find the previous index, if any
     old_index = nil
     begin
-      old_index = es.index(@index).request(:get, "_alias/*").keys[0]
+      old_index = index.request(:get, "_alias/*").keys[0]
     rescue Stretcher::RequestError::NotFound
     end
 
     # Create the new index, named by time of creation
     timestamp = Time.now.to_i.to_s
-    new_index = "#{@index}_#{timestamp}"
+    new_index = "#{index_name}_#{timestamp}"
     puts "Creating new index #{new_index}"
     es.index(new_index).create(mappings: mappings)
 
@@ -72,17 +73,17 @@ module Search
     else
       actions = [
         { remove: {
-          :alias => @index,
+          :alias => index_name,
           :index => old_index
         }}
       ]
-      puts "Removing alias #{@index} => #{old_index}"
+      puts "Removing alias #{index_name} => #{old_index}"
     end
 
-    puts "Adding alias #{@index} => #{new_index}"
+    puts "Adding alias #{index_name} => #{new_index}"
     actions << [
       { add: {
-        :alias => @index,
+        :alias => index_name,
         :index => new_index
       }}
     ]
@@ -97,10 +98,8 @@ module Search
 end
 
 module Search::Paper
-  def self.es; Search.es; end
-
   def self.find(params)
-    res = es.index(@index).type(:paper).search(params)
+    res = Search.index.type(:paper).search(params)
     puts "  Elasticsearch (#{res.raw.took}ms) #{params}"
     res
   end
@@ -126,26 +125,26 @@ module Search::Paper
 
   # Add/update a single paper in the search index
   # Should be called after a paper is modified (e.g. scited)
-  def self.index_paper(paper)
-    es.index(@index).bulk_index([make_doc(paper)])
+  def self.index(paper)
+    Search.index.bulk_index([make_doc(paper)])
   end
 
   # Add/update multiple papers
   # Called after an oai_update
   def self.index_by_uids(uids)
-    papers = Paper.includes(:authors, :categories).where(uid: uids)
+    papers = ::Paper.includes(:authors, :categories).where(uid: uids)
     
-    puts "Search indexing #{papers.count} papers..."
+    puts "Indexing #{papers.count} papers by uid for #{Search.index_name}"
 
     docs = papers.map { |paper| make_doc(paper) }
 
-    es.index(@index).bulk_index(docs)
+    Search.index.bulk_index(docs)
   end
 
   # Reindex entire database of papers
   # Invoked manually by rake es:index
-  def self.full_index(index)
-    puts "Indexing #{Paper.count} papers for #{index}"
+  def self.full_index(index_name)
+    puts "Indexing #{::Paper.count} papers for #{index_name}"
     first_id = nil
     prev_id = 0
     loop do
@@ -194,7 +193,7 @@ module Search::Paper
         end
       end
 
-      result = es.index(index).bulk_index(papers)
+      result = Search.es.index(index_name).bulk_index(papers)
       raise result if result.errors
 
       p prev_id.to_i-first_id.to_i
