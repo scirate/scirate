@@ -18,7 +18,6 @@
 #  update_date     :datetime         not null
 #  abs_url         :text             not null
 #  pdf_url         :text             not null
-#  delta           :boolean          default(TRUE), not null
 #  created_at      :datetime
 #  updated_at      :datetime
 #  scites_count    :integer          default(0), not null
