@@ -127,7 +127,8 @@ module Search::Paper
   # Should be called after a paper is modified (e.g. scited)
   def self.index(paper)
     puts "Updating search index for \"#{paper.title}\""
-    Search.index.bulk_index([make_doc(paper)])
+    res = Search.index.bulk_index([make_doc(paper)])
+    raise res if res.errors
   end
 
   # Add/update multiple papers
@@ -139,7 +140,8 @@ module Search::Paper
 
     docs = papers.map { |paper| make_doc(paper) }
 
-    Search.index.bulk_index(docs)
+    res = Search.index.bulk_index(docs)
+    raise res if res.errors
   end
 
   # Reindex entire database of papers
@@ -147,7 +149,7 @@ module Search::Paper
   def self.full_index(index_name)
     puts "Indexing #{::Paper.count} papers for #{index_name}"
     first_id = nil
-    prev_id = 0
+    prev_id = -1
     loop do
       command = ["SELECT papers.id, papers.uid, papers.title, papers.abstract, authors.id AS author_id, authors.fullname AS author_fullname, authors.searchterm AS author_searchterm, categories.id AS category_id, categories.feed_uid, papers.scites_count, papers.comments_count, papers.submit_date, papers.update_date, papers.pubdate FROM papers INNER JOIN authors ON authors.paper_uid=uid INNER JOIN categories ON categories.paper_uid=uid WHERE papers.id > ? ORDER BY papers.id ASC LIMIT 10000;", prev_id]
       sql = ActiveRecord::Base.send(:sanitize_sql_array, command)
