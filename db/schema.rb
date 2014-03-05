@@ -81,8 +81,7 @@ ActiveRecord::Schema.define(version: 20140304183641) do
     t.datetime "updated_at"
   end
 
-  create_table "feeds", id: false, force: true do |t|
-    t.integer  "id",                              null: false
+  create_table "feeds", force: true do |t|
     t.text     "uid",                             null: false
     t.text     "source",                          null: false
     t.text     "fullname",                        null: false
