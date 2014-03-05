@@ -66,6 +66,7 @@ class View.Search extends Backbone.View
     title = ""
     abstract = ""
     category = ""
+    scited_by = ""
     date = null
     order = null
 
@@ -80,6 +81,7 @@ class View.Search extends Backbone.View
         when 'ti' then title = content
         when 'abs' then abstract = content
         when 'in' then category = content
+        when 'scited_by' then scited_by = content
         when 'date'
           date = switch content
             when @ranges.week then 'week'
@@ -95,6 +97,7 @@ class View.Search extends Backbone.View
     @$('#title').val title
     @$('#abstract').val abstract
     @$('#category').val category
+    @$('#scited_by').val scited_by
     @$('#date').val date if date?
     @$('#order').val order if order?
 
@@ -163,6 +166,9 @@ class View.Search extends Backbone.View
 
     category = @$('#category').val()
     query.push("in:#{@escape(category)}") if category.length > 0
+
+    scited_by = @$('#scited_by').val()
+    query.push("scited_by:#{@escape(scited_by)}") if scited_by.length > 0
 
     date = @$('#date').val()
     if date != 'any' && @ranges[date]?

@@ -49,14 +49,25 @@ describe "search fields" do
 
   it "should allow searching for papers scited by a user" do
     user = FactoryGirl.create(:user)
+    user2 = FactoryGirl.create(:user)
     paper1 = FactoryGirl.create(:paper)
     paper2 = FactoryGirl.create(:paper)
+
     user.scite!(paper1)
     paper1.reload
     Search::Paper.index(paper1)
 
     sleep 1
     uids = Search::Paper.query_uids("scited_by:#{user.username}")
+    uids.should == [paper1.uid]
+
+    uids = Search::Paper.query_uids("scited_by:#{user2.username}")
+    uids.should == []
+
+    # Make sure this works with duplicate fullnames
+    user2.fullname = user.fullname
+    user2.save
+    uids = Search::Paper.query_uids("scited_by:(#{user.fullname})")
     uids.should == [paper1.uid]
   end
 end

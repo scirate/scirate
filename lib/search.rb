@@ -128,11 +128,29 @@ module Search
 end
 
 module Search::Paper
-  def self.find(params)
+  def self.es_find(params)
     res = Search.index.type(:paper).search(params)
     puts "  Elasticsearch (#{res.raw.took}ms) #{params}"
     res
   end
+
+  def self.es_basic(q)
+    params = {
+      query: {
+        filtered: {
+          query: {
+            query_string: {
+              query: q,
+              default_operator: 'AND'
+            }
+          },
+          filter: nil
+        }
+      }
+    }
+    Search::Paper.es_find(params)
+  end
+
 
   def self.query_uids(q)
     search = Search::Paper::Query.new(q, "")
@@ -289,11 +307,17 @@ class Search::Paper::Query
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
 
-    #if term[0] == '(' && term[-1] == ')'
-    #  term[1..-2]
-    #else
     term
-    #end
+  end
+
+  # Strip parens as well
+  def full_tstrip(term)
+    term = tstrip(term)
+    if term[0] == '(' && term[-1] == ')'
+      term[1..-2]
+    else
+      term
+    end
   end
 
   def parse_date(term)
@@ -358,8 +382,17 @@ class Search::Paper::Query
         @conditions[:feed_uids] ||= []
         @conditions[:feed_uids] << tstrip(term)
       elsif term.start_with?('scited_by:')
+        name = full_tstrip(term)
+        p name
+
+        # Prioritize username over fullname
+        ids = User.where(username: name).pluck(:id)
+        if ids.empty?
+          ids = User.where(fullname: name).pluck(:id)
+        end
+
         @conditions[:sciter_ids] ||= []
-        @conditions[:sciter_ids] += User.where(username: tstrip(term)).map(&:id)
+        @conditions[:sciter_ids] << '(' + ids.join(" OR ") + ')'
       elsif term.start_with?('order:')
         @orders << tstrip(term).to_sym
       elsif term.start_with?('date:')
@@ -431,6 +464,6 @@ class Search::Paper::Query
       }
     }.merge(opts)
 
-    @results = ::Search::Paper.find(params)
+    @results = Search::Paper.es_find(params)
   end
 end

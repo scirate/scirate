@@ -188,7 +188,7 @@ class FeedsController < ApplicationController
       }
     }
 
-    res = Search::Paper.find(query)
+    res = Search::Paper.es_find(query)
     paper_uids = res.documents.map(&:_id)
 
     @pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)

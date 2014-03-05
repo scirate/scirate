@@ -821,7 +821,11 @@ div.feed-rightbar {
   margin-top: 10px;
 }
 
-// Search page
+// Search stuff
+
+.inline-search {
+  position: relative;
+}
 
 #searchPage {
   .form-group {
