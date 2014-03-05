@@ -126,6 +126,7 @@ module Search::Paper
   # Add/update a single paper in the search index
   # Should be called after a paper is modified (e.g. scited)
   def self.index(paper)
+    puts "Updating search index for \"#{paper.title}\""
     Search.index.bulk_index([make_doc(paper)])
   end
 
