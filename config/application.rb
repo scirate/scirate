@@ -76,7 +76,7 @@ module SciRate3
   end
 
   SciRate3::Application.config.middleware.use ::ExceptionNotifier,
-    email_prefix: "[SciRate Error] ",
+    email_prefix: "[#{Settings::STAGING ? 'scirate-dev' : 'scirate'} error] ",
     sender_address: "notifier@scirate.com",
     exception_recipients: %w{scirate@mispy.me}
 
