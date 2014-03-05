@@ -47,6 +47,11 @@ module Search
     }
   end
 
+  def self.full_index(index_name=nil)
+    index_name ||= self.index_name
+    Search::Paper.full_index(index_name)
+  end
+
   # Atomically reindexes the database
   # A new index is created, populated and then aliased to the
   # main index name. The old index is deleted. This permits
@@ -66,7 +71,7 @@ module Search
     es.index(new_index).create(mappings: mappings)
 
     # Populate the new index with data
-    Search::Paper.full_index(new_index)
+    Search.full_index(new_index)
 
     if old_index.nil?
       actions = []
