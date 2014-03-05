@@ -75,9 +75,8 @@ class Paper < ActiveRecord::Base
       end
     end
 
-    pubdate
+    pubdate.utc
   end
-
 
   def to_param
     uid
