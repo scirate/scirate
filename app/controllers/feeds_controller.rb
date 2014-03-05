@@ -172,7 +172,7 @@ class FeedsController < ApplicationController
         { scites_count: 'desc' },
         { comments_count: 'desc' },
         { pubdate: 'desc' },
-        { submit_date: 'asc' }
+        { submit_date: 'desc' }
       ],
       query: {
         filtered: {
