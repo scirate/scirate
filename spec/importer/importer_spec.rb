@@ -4,16 +4,31 @@ require 'arxiv_import'
 
 describe "arxiv importer" do
   it "should estimate pubdates correctly" do
-    time1 = Time.parse("Sun Jan 19 18:11:14 UTC 2014")
-    time2 = Time.parse("Mon Jan 20 08:11:14 UTC 2014")
-    time3 = Time.parse("Mon Jan 20 22:11:14 UTC 2014")
-    time4 = Time.parse("Fri Jan 24 12:11:14 UTC 2014")
-    time5 = Time.parse("Fri Jan 24 23:11:14 UTC 2014")
-    Paper.estimate_pubdate(time1).should == Time.parse("Tue Jan 21 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time2).should == Time.parse("Tue Jan 21 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time3).should == Time.parse("Wed Jan 22 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time4).should == Time.parse("Mon Jan 27 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time5).should == Time.parse("Tue Jan 28 01:00:00 UTC 2014")
+    # arXiv runs on EST localtime
+    # arxiv.org/localtime
+    zone = ActiveSupport::TimeZone["EST"]
+
+    time1 = zone.parse("Wed Mar 5 15:59 EST 2014")
+    time2 = zone.parse("Wed Mar 5 16:01 EST 2014")
+    time3 = zone.parse("Thu Mar 6 01:00 EST 2014")
+    Paper.estimate_pubdate(time1).should == zone.parse("Wed Mar 5 20:00 EST 2014")
+    Paper.estimate_pubdate(time2).should == zone.parse("Thu Mar 6 20:00 EST 2014")
+    Paper.estimate_pubdate(time3).should == zone.parse("Thu Mar 6 20:00 EST 2014")
+
+    time4 = zone.parse("Fri Mar 7 15:59 EST 2014")
+    time5 = zone.parse("Fri Mar 7 16:01 EST 2014")
+    time6 = zone.parse("Sat Mar 8 15:59 EST 2014")
+    time7 = zone.parse("Sat Mar 8 16:01 EST 2014")
+    time8 = zone.parse("Sun Mar 9 15:59 EST 2014")
+    time9 = zone.parse("Sun Mar 9 16:01 EST 2014")
+    time10 = zone.parse("Mon Mar 10 15:59 EST 2014")
+    Paper.estimate_pubdate(time4).should == zone.parse("Sun Mar 9 20:00 EST 2014")
+    Paper.estimate_pubdate(time5).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time6).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time7).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time8).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time9).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time10).should == zone.parse("Mon Mar 10 20:00 EST 2014")
   end
 
   it "should import correctly" do
