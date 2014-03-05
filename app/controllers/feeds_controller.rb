@@ -149,7 +149,7 @@ class FeedsController < ApplicationController
   # to allow index use and prevent scanning two tables at once. This is
   # functionally identical to pubdate.
   def _range_query(feed_uids, backdate, date, page)
-    page ||= 1
+    page = (page.nil? ? 1 : page.to_i)
     per_page = 100
 
     filters = [
