@@ -3,10 +3,12 @@ module Search
     if @es.nil?
       # This logic probably doesn't belong here
       # If it's in an initializer though it breaks code reloading
-      @index = if Settings::STAGING
-        "scirate_staging"
-      elsif Rails.env == 'production'
-        "scirate_live"
+      @index = if Rails.env == 'production'
+        if Settings::STAGING
+          "scirate_staging"
+        else
+          "scirate_live"
+        end
       else
         "scirate_#{Rails.env}"
       end
@@ -23,8 +25,10 @@ module Search
     res
   end
 
-  def self.index_paper(paper)
-    doc = {
+  # Convert a Paper object into a JSON-compatible
+  # hash we can place in the search index
+  def self.paper_to_doc(paper)
+    {
       '_type' => 'paper',
       '_id' => paper.uid,
       'title' => paper.title,
@@ -38,10 +42,28 @@ module Search
       'update_date' => paper.update_date,
       'pubdate' => paper.pubdate
     }
-
-    es.index(@index).bulk_index([doc])
   end
 
+  # Add/update a single paper in the search index
+  # Should be called after a paper is modified (e.g. scited)
+  def self.index_paper(paper)
+    es.index(@index).bulk_index([paper_to_doc(paper)])
+  end
+
+  # Add/update multiple papers
+  # Called after an oai_update
+  def self.index_papers_by_uids(uids)
+    papers = Paper.includes(:authors, :categories).where(uid: uids)
+    
+    puts "Search indexing #{papers.count} papers..."
+
+    docs = papers.map { |paper| paper_to_doc(paper) }
+
+    es.index(@index).bulk_index(docs)
+  end
+
+  # Reindex entire database of papers
+  # Invoked manually by rake es:index
   def self.full_index_papers
     first_id = nil
     prev_id = 0
@@ -96,5 +118,11 @@ module Search
 
       p prev_id.to_i-first_id.to_i
     end
+  end
+
+  # Clear out the entire search database
+  # Used for testing
+  def self.clear_index
+    es.index(@index).delete rescue nil
   end
 end

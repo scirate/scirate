@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140304183641) do
+ActiveRecord::Schema.define(version: 20140305044305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -181,6 +181,7 @@ ActiveRecord::Schema.define(version: 20140304183641) do
     t.text     "paper_uid", null: false
   end
 
+  add_index "versions", ["paper_uid"], name: "index_versions_on_paper_uid", using: :btree
   add_index "versions", ["position", "paper_uid"], name: "index_versions_on_position_and_paper_uid", unique: true, using: :btree
 
   create_table "votes", force: true do |t|

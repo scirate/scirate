@@ -39,6 +39,7 @@ RSpec.configure do |config|
 
   # Ensure database is cleaned properly
   config.before(:suite) do
+    Search.clear_index
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.start

@@ -58,10 +58,24 @@ describe "arxiv importer" do
       paper.abstract.should include "The problem of estimating the pth moment F_p"
 
       # Calculated from above
-      paper.submit_date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 GMT")
-      paper.update_date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 GMT")
+      paper.submit_date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
+      paper.update_date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
+      paper.pubdate.should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
       paper.abs_url.should == "http://arxiv.org/abs/0811.3648"
       paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
+
+      # Now test the search index
+      doc = Search.find_papers({ query: { query_string: { query: "title:\"Revisiting Norm Estimation in Data Streams\"" } } }).docs[0]
+
+      doc._id.should == "0811.3648"
+      doc.title.should == "Revisiting Norm Estimation in Data Streams"
+      doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
+      doc.authors_searchterm.should == ["Kane_D", "Nelson_J", "Woodruff_D"]
+      doc.feed_uids.should == ["cs.DS", "cs.CC"]
+      doc.abstract.should include "The problem of estimating the pth moment F_p"
+      Time.parse(doc.submit_date).should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
+      Time.parse(doc.update_date).should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
+      Time.parse(doc.pubdate).should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
     end
   end
 end

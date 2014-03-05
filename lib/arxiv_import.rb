@@ -8,6 +8,9 @@ module Arxiv::Import
       paper_uids = self._import_papers(models, opts)
     end
 
+    # Ensure Elasticsearch knows about these new/updated papers
+    Search.index_papers_by_uids(paper_uids)
+
     paper_uids
   end
 
