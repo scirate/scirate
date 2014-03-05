@@ -157,7 +157,7 @@ class FeedsController < ApplicationController
         range: {
           pubdate: {
            from: backdate,
-           to: date+1.day
+           to: date
           }
         } 
       },
