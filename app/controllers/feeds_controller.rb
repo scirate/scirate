@@ -152,6 +152,19 @@ class FeedsController < ApplicationController
     page ||= 1
     per_page = 100
 
+    filters = [
+      { 
+        range: {
+          pubdate: {
+           from: backdate,
+           to: date+1.day
+          }
+        } 
+      },
+    ]
+
+    filters << {terms: {feed_uids: feed_uids}} unless feed_uids.nil?
+
     query = {
       size: per_page,
       from: (page-1)*per_page,
@@ -161,25 +174,10 @@ class FeedsController < ApplicationController
         { pubdate: 'desc' },
         { submit_date: 'asc' }
       ],
-
       query: {
         filtered: {
           filter: {
-            :and => [
-              { 
-                range: {
-                  pubdate: {
-                   from: backdate,
-                   to: date+1.day
-                  }
-                } 
-              },
-              { 
-                terms: {
-                  feed_uids: feed_uids
-                } 
-              } 
-            ]
+            :and => filters         
           }
         }
       }
