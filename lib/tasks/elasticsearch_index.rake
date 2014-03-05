@@ -1,6 +1,6 @@
 namespace :es do
-  desc "Reindex papers"
+  desc "Migrate search schema and reindex papers"
   task index: :environment do
-    Search.full_index_papers
+    Search.migrate
   end
 end

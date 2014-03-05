@@ -19,7 +19,87 @@ module Search
     end
   end
 
-  def self.find_papers(params)
+  # Clear out the entire search database
+  # Used for testing
+  def self.clear_index
+    es.index(@index).delete rescue nil
+  end
+
+  # Defines our Elasticsearch type schema
+  # Changing this will require creating a new index
+  def self.mappings
+    { 
+      paper: {
+        properties: {
+          title: { type: 'string' },
+          abstract: { type: 'string' },
+          authors_fullname: { type: 'string' }, # array
+          authors_searchterm: { type: 'string' }, # array
+          feed_uids: { type: 'string' }, # array
+          scites_count: { type: 'integer' },
+          comments_count: { type: 'integer' },
+          submit_date: { type: 'date' },
+          update_date: { type: 'date' },
+          pubdate: { type: 'date' },
+        }
+      }
+    }
+  end
+
+  # Atomically reindexes the database
+  # A new index is created, populated and then aliased to the
+  # main index name. The old index is deleted. This permits
+  # zero downtime mapping changes
+  def self.migrate
+    # Find the previous index, if any
+    old_index = nil
+    begin
+      old_index = es.index(@index).request(:get, "_alias/*").keys[0]
+    rescue Stretcher::RequestError::NotFound
+    end
+
+    # Create the new index, named by time of creation
+    timestamp = Time.now.to_i.to_s
+    new_index = "#{@index}_#{timestamp}"
+    puts "Creating new index #{new_index}"
+    es.index(new_index).create(mappings: mappings)
+
+    # Populate the new index with data
+    Search::Paper.full_index(new_index)
+
+    if old_index.nil?
+      actions = []
+    else
+      actions = [
+        { remove: {
+          :alias => @index,
+          :index => old_index
+        }}
+      ]
+      puts "Removing alias #{@index} => #{old_index}"
+    end
+
+    puts "Adding alias #{@index} => #{new_index}"
+    actions << [
+      { add: {
+        :alias => @index,
+        :index => new_index
+      }}
+    ]
+
+    es.request(:post, "_aliases", nil, actions: actions)
+
+    unless old_index.nil?
+      puts "Deleting index #{old_index}"
+      es.index(old_index).delete
+    end
+  end
+end
+
+module Search::Paper
+  def self.es; Search.es; end
+
+  def self.find(params)
     res = es.index(@index).type(:paper).search(params)
     puts "  Elasticsearch (#{res.raw.took}ms) #{params}"
     res
@@ -27,7 +107,7 @@ module Search
 
   # Convert a Paper object into a JSON-compatible
   # hash we can place in the search index
-  def self.paper_to_doc(paper)
+  def self.make_doc(paper)
     {
       '_type' => 'paper',
       '_id' => paper.uid,
@@ -47,24 +127,25 @@ module Search
   # Add/update a single paper in the search index
   # Should be called after a paper is modified (e.g. scited)
   def self.index_paper(paper)
-    es.index(@index).bulk_index([paper_to_doc(paper)])
+    es.index(@index).bulk_index([make_doc(paper)])
   end
 
   # Add/update multiple papers
   # Called after an oai_update
-  def self.index_papers_by_uids(uids)
+  def self.index_by_uids(uids)
     papers = Paper.includes(:authors, :categories).where(uid: uids)
     
     puts "Search indexing #{papers.count} papers..."
 
-    docs = papers.map { |paper| paper_to_doc(paper) }
+    docs = papers.map { |paper| make_doc(paper) }
 
     es.index(@index).bulk_index(docs)
   end
 
   # Reindex entire database of papers
   # Invoked manually by rake es:index
-  def self.full_index_papers
+  def self.full_index(index)
+    puts "Indexing #{Paper.count} papers for #{index}"
     first_id = nil
     prev_id = 0
     loop do
@@ -113,16 +194,10 @@ module Search
         end
       end
 
-      result = es.index(@index).bulk_index(papers)
+      result = es.index(index).bulk_index(papers)
       raise result if result.errors
 
       p prev_id.to_i-first_id.to_i
     end
-  end
-
-  # Clear out the entire search database
-  # Used for testing
-  def self.clear_index
-    es.index(@index).delete rescue nil
   end
 end
