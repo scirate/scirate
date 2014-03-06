@@ -74,12 +74,11 @@
             = render 'papers/abstract_toggle'
           - cache [@date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
-          - cache @recent_comments
-            - unless @recent_comments.empty?
-              h3 
-                - if @feed.nil?
-                  a href=(comments_path) Recent comments
-                - else
-                  a href=(feed_comments_path(@feed)) Recent comments
-              = render :partial => "comments/abbr_comment", :collection => @recent_comments
+          - unless @recent_comments.empty?
+            h3 
+              - if @feed.nil?
+                a href=(comments_path) Recent comments
+              - else
+                a href=(feed_comments_path(@feed)) Recent comments
+            = render :partial => "comments/abbr_comment", :collection => @recent_comments
 
