@@ -774,8 +774,13 @@ div.feed-rightbar {
 
 .paper-download.btn {
   vertical-align: top;
-  color: black;
-  padding: 6px 10px;
+  color: white;
+  padding-top: 9px;
+  padding-bottom: 8px;
+  padding-left: 6px;
+  padding-right: 6px;
+  border: none;
+  font-size: 12px;
 }
 
 
@@ -792,8 +797,13 @@ div.feed-rightbar {
 
   // Buttons need to be smaller here
 
-  .pull-right .btn {
+  .scite-toggle .btn {
     padding: 4px 8px;
+  }
+
+  .paper-download.btn {
+    padding-top: 7px;
+    padding-bottom: 6px;
   }
 
   li.paper .col-md-9 {
