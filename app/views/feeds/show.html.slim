@@ -70,8 +70,10 @@
                 = will_paginate @pagination
 
         .col-md-3.feed-rightbar
-          = render 'papers/abstract_toggle'
-          = render :partial => 'feeds/next_prev_links'
+          - cache current_user.expand_abstracts
+            = render 'papers/abstract_toggle'
+          - cache [@date, @range, @backdate, @since_last]
+            = render 'feeds/next_prev_links'
           - cache @recent_comments
             - unless @recent_comments.empty?
               h3 
