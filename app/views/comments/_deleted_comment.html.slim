@@ -1,0 +1,31 @@
+- comment = deleted_comment
+
+div.comment data-id=(comment.id) data-markup=(comment.content)
+  .votes
+    div.upvote class=('active' if @voted == true)
+      i.fa.fa-arrow-up
+    div.downvote class=('active' if @voted == false)
+      i.fa.fa-arrow-down
+  .nonvotes
+    - if @user
+      div= link_to comment.paper.title, comment.paper
+    = link_to comment.user.fullname, comment.user
+    - if comment.parent
+      |  in reply to #{link_to comment.parent.user.fullname, comment.parent.user}
+    span.timeago
+      = " #{time_ago_in_words(comment.created_at)} ago"
+      - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
+        |  (<span class="score">#{comment.cached_votes_up-comment.cached_votes_down}</span> points)
+    .body.tex2jax
+      = simple_format(strip_tags(comment.content))
+    - if @paper && current_user
+      .actions
+        a.permalink href="##{comment.id}" permalink
+        - if current_user.id == comment.user_id
+          a.edit edit
+          = link_to 'restore', restore_comment_path(comment), method: :post
+        - else
+          - if comment.reports.exists?(user_id: current_user.id)
+              a.unreport reported (undo)
+          - else
+            a.report report

@@ -78,6 +78,16 @@ class Paper < ActiveRecord::Base
     pubdate.utc
   end
 
+  def refresh_comments_count!
+    self.comments_count = Comment.where(
+      paper_uid: uid,
+      deleted: false,
+      hidden: false
+    ).count
+
+    save
+  end
+
   def to_param
     uid
   end

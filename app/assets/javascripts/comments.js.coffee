@@ -12,7 +12,7 @@ class Comment
       @reply_html = $('#comment_reply').removeClass('hidden').remove()[0].outerHTML
 
     # Render markup and setup interface for individual comments
-    $('.comment').each -> new Comment($(this))
+    $('.comment:not(.deleted)').each -> new Comment($(this))
 
   @bindEditor: (suffix) ->
     suffix ?= ''

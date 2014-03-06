@@ -15,6 +15,7 @@ SciRate3::Application.routes.draw do
     member do
       post :edit
       post :delete
+      post :restore
       post :upvote
       post :downvote
       post :unvote

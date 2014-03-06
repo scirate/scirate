@@ -1,0 +1,69 @@
+- provide :title, @paper.title
+- provide :description, @paper.abstract
+
+.container
+  .paper.row
+    .col-md-12
+      .row.title-row.tex2jax
+        .col-md-10
+          h1.title= @paper.title
+        .col-md-2
+          = render(partial: 'scites/toggle', object: @paper, as: :paper)
+          a.paper-download.btn.btn-success href=(@paper.pdf_url) title="Download PDF" PDF
+      ul.authors
+        - @paper.authors.each do |author|
+          li>
+            a href="/search?q=au:#{author.searchterm}"
+              = author.fullname + (author != @paper.authors[-1] ? ',' : '')
+      .abstract.tex2jax
+        = @paper.abstract
+      .dates
+        | Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} to 
+        strong= @paper.feeds[0].fullname
+        |  [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
+        - if @paper.updated?
+          |  Updated #{@paper.update_date.to_formatted_s(:rfc822)}
+          br
+      - if @paper.categories.length > 1
+        .categories
+          | Subjects: 
+          - @paper.categories[0..-1].each do |cat|
+            => link_to cat.feed_uid, feed_path(cat.feed_uid)
+      - [:author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy].each do |field|
+        - unless @paper.send(field).nil?
+          = field.to_s.gsub('_', ' ').capitalize
+          | : #{@paper.send(field)}
+          br
+      = link_to @paper.abs_url, @paper.abs_url
+      br
+        = link_to @paper.pdf_url, @paper.pdf_url
+        - if @paper.scites_count > 0
+          .scites
+            strong 
+              | Scited by: 
+            - @paper.sciters.each_with_index do |user, i|
+              = link_to user.fullname, user
+              - if i != @paper.scites_count-1
+                | ,
+        .comments
+          a name="comments"
+          h4= pluralize(@comments.size, "comment")
+          - if flash[:comment]
+            div class="alert alert-#{flash[:comment][:status]}"
+              button.close data-dismiss="alert" type="button"
+              = raw flash[:comment][:raw]
+              = flash[:comment][:content]
+          .comment-list
+            = render @comments
+
+            - if current_user && current_user.is_moderator?
+              - @deleted_comments = Comment.where(paper_uid: @paper.uid, deleted: true)
+              - if @deleted_comments.length > 0
+                h4= status_warning + ' ' + pluralize(@deleted_comments.length, "deleted comment")
+                = render partial: "comments/deleted_comment", collection: @deleted_comments
+
+        .comment-form
+          - if signed_in?
+            = render 'comment_form'
+          - else
+            = link_to "sign in to comment", login_path

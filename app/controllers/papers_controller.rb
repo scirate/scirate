@@ -31,6 +31,10 @@ class PapersController < ApplicationController
       @comments << c
       @comments += @comment_tree[c.id]||[]
     end
+
+    @comments = @comments.reject do |c| 
+      c.deleted && (@comment_tree[c.id].nil? || @comment_tree[c.id].all? { |c2| c2.deleted })
+    end
   end
 
   def __quote(val)
