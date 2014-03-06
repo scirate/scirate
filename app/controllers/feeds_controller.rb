@@ -25,8 +25,8 @@ class FeedsController < ApplicationController
   def index
     return landing unless signed_in?
 
-    feeds = current_user.feeds.includes(:children)
-    feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
+    parent_uids = current_user.feeds.pluck(:uid)
+    feed_uids = parent_uids + Feed.where(parent_uid: parent_uids).pluck(:uid)
 
     @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
 
@@ -36,7 +36,7 @@ class FeedsController < ApplicationController
       if feed_uids.empty?
         @date = Date.today
       else
-        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").first.last_paper_date.to_date || Date.today
+        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.to_date || Date.today
       end
     end
 
@@ -137,7 +137,12 @@ class FeedsController < ApplicationController
   end
 
   def _recent_comments(feed_uids)
-    Comment.find_by_feed_uids(feed_uids).limit(10)
+    ids = Comment.find_by_feed_uids(feed_uids).limit(10).pluck(:id)
+    Comment.includes(:user, :paper)
+           .where(id: ids)
+           .index_by(&:id)
+           .slice(*ids)
+           .values
   end
 
   # The primary SciRate query. Given a set of feed uids, a pair of dates
@@ -145,9 +150,8 @@ class FeedsController < ApplicationController
   # them by relevance.
   #
   # This can be an expensive query, particularly for large date ranges.
-  # We optimize by using the denormalized crosslist_date on categories
-  # to allow index use and prevent scanning two tables at once. This is
-  # functionally identical to pubdate.
+  # We optimize by delegating to Elasticsearch instead of Postgres, which
+  # is better suited for these kinds of tag queries.
   def _range_query(feed_uids, backdate, date, page)
     page = (page.nil? ? 1 : page.to_i)
     per_page = 70
@@ -166,6 +170,7 @@ class FeedsController < ApplicationController
     filters << {terms: {feed_uids: feed_uids}} unless feed_uids.nil?
 
     query = {
+      fields: ['_id'],
       size: per_page,
       from: (page-1)*per_page,
       sort: [
