@@ -175,7 +175,7 @@ class View.Search extends Backbone.View
       query.push "date:#{@ranges[date]}"
 
     order = @$('#order').val()
-    if order != "scites"
+    if order != "recency"
       query.push("order:#{order}")
 
     query_text = query.join(' ')

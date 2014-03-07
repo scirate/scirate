@@ -408,7 +408,7 @@ class Search::Paper::Query
 
     @sort = []
 
-    @orders = [:scites] if @orders.empty?
+    @orders = [:recency] if @orders.empty?
 
     @orders.each do |order|
       case order
