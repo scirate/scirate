@@ -22,8 +22,8 @@
         strong= @paper.feeds[0].fullname
         |  [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
         - if @paper.updated?
-          |  Updated #{@paper.update_date.to_formatted_s(:rfc822)}
           br
+          |  Updated #{@paper.update_date.to_date.to_formatted_s(:rfc822)}
       - if @paper.categories.length > 1
         .categories
           | Subjects: 
