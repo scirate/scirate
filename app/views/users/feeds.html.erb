@@ -8,7 +8,7 @@
   Please choose one or more feeds to subscribe to. Papers from subscribed feeds will appear on your <a href="/">home feed</a>.
 
   <h2>Physics</h2>
-  <% Feed.in_order(['astro-ph', 'cond-mat'] + ['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed| %>
+  <% Feed.in_order(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed| %>
     <div class="feed-card">
       <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
       <%= render 'feeds/subscribe', feed: feed,
@@ -16,7 +16,7 @@
     </div>
   <% end %>
 
-  <% Feed.in_order(['physics', 'cond-mat', 'math', 'stat', 'cs', 'q-bio', 'q-fin', 'nlin']).each do |feed| %>
+  <% Feed.in_order(['astro-ph', 'cond-mat', 'physics', 'math', 'stat', 'cs', 'q-bio', 'q-fin', 'nlin']).each do |feed| %>
     <h2><%= feed.fullname %></h2>
     <div class="feed-card">
       <%= feed.fullname %> [<a href="<%= url_for(feed) %>"><%= feed.uid %></a>]
