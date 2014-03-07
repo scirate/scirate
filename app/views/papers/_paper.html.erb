@@ -14,13 +14,13 @@
       </div>
       <div class="authors">
         <% paper.authors[0..19].each do |author| %>
-          <%= author_link_to(author) + (author != paper.authors[-1] ? "," : ' ') %>
+          <%= author_link_to(author, paper) + (author != paper.authors[-1] ? "," : ' ') %>
         <% end %>
         <% if paper.authors.length > 20 %>
           <a class="expand-authors">et al (<%= paper.authors.length - 20 %>)</a>
           <span class="more-authors hidden">
             <% paper.authors[20..-1].each do |author| %>
-              <%= author_link_to(author) + (author != paper.authors[-1] ? "," : ' ') %>
+              <%= author_link_to(author, paper) + (author != paper.authors[-1] ? "," : ' ') %>
             <% end %>
           </span>
         <% end %>
