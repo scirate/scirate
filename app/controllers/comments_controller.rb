@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, :only => [:edit, :delete, :upvote, :downvote, :unvote, :report, :unreport, :reply]
+  before_filter :find_comment, :only => [:edit, :delete, :restore, :upvote, :downvote, :unvote, :report, :unreport, :reply]
 
   def index
     if params[:feed]
@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
       feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
       comments = Comment.find_by_feed_uids(feed_uids)
     else
-      comments = Comment.all
+      comments = Comment.where(deleted: false, hidden: false)
     end
 
     @comments = comments.order("created_at DESC").paginate(page: params[:page]||1)
@@ -42,22 +42,30 @@ class CommentsController < ApplicationController
     end
   end
 
+  # "delete" a comment
+  # We do not fully delete anything yet, just hide it
   def delete
     paper = @comment.paper
     if @comment.user_id == current_user.id || current_user.is_moderator?
+      # We don't fully delete anything yet, just hide it
+      @comment.deleted = true
+      @comment.save
 
-      if @comment.children.length == 0
-        # If this comment has no replies, remove it completely
-        @comment.destroy
-      else
-        # Otherwise, just hide it away
-        @comment.deleted = true
-        @comment.save
-        paper.comments_count -= 1
-        paper.save
-      end
+      flash[:comment] = { status: 'success', raw: "Comment deleted. <a data-method='post' href='#{restore_comment_path(@comment.id)}'>(undo)</a>" }
+      redirect_to request.referer || paper
+    else
+      render :status => :forbidden
+    end
+  end
 
-      flash[:comment] = { status: 'success', content: "Comment deleted." }
+  # Restore a deleted comment
+  def restore
+    paper = @comment.paper
+    if @comment.user_id == current_user.id || current_user.is_moderator?
+      @comment.deleted = false
+      @comment.save
+
+      flash[:comment] = { status: 'success', content: "Comment restored." }
       redirect_to request.referer || paper
     else
       render :status => :forbidden

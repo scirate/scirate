@@ -8,11 +8,11 @@ class FeedsController < ApplicationController
     end
 
     @range = _parse_range(params) || 1
-    @page = params[:page]
+    @page = params[:page] || 1
 
     @backdate = @date - (@range-1).days
 
-    @recent_comments = Comment.order("created_at DESC").limit(10)
+    @recent_comments = Comment.where(deleted: false, hidden: false).order("created_at DESC").limit(10)
 
     @scited_ids = []
 
@@ -25,8 +25,8 @@ class FeedsController < ApplicationController
   def index
     return landing unless signed_in?
 
-    feeds = current_user.feeds.includes(:children)
-    feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
+    parent_uids = current_user.feeds.pluck(:uid)
+    feed_uids = parent_uids + Feed.where(parent_uid: parent_uids).pluck(:uid)
 
     @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
 
@@ -36,15 +36,15 @@ class FeedsController < ApplicationController
       if feed_uids.empty?
         @date = Date.today
       else
-        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").first.last_paper_date.to_date || Date.today
+        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.to_date || Date.today
       end
     end
 
     @range = _parse_range(params) || :since_last# || @preferences.range
-    @page = params[:page]
+    @page = params[:page] || 1
 
     if @range == :since_last
-      @range = [1, (@date - @preferences.previous_last_visited.to_date).to_i].max
+      @range = [1, (Date.today - @preferences.previous_last_visited.to_date).to_i].max
       @since_last = true
     end
 
@@ -137,7 +137,12 @@ class FeedsController < ApplicationController
   end
 
   def _recent_comments(feed_uids)
-    Comment.find_by_feed_uids(feed_uids).limit(10)
+    ids = Comment.find_by_feed_uids(feed_uids).limit(10).pluck(:id)
+    Comment.includes(:user, :paper)
+           .where(id: ids)
+           .index_by(&:id)
+           .slice(*ids)
+           .values
   end
 
   # The primary SciRate query. Given a set of feed uids, a pair of dates
@@ -145,29 +150,55 @@ class FeedsController < ApplicationController
   # them by relevance.
   #
   # This can be an expensive query, particularly for large date ranges.
-  # We optimize by using the denormalized crosslist_date on categories
-  # to allow index use and prevent scanning two tables at once. This is
-  # functionally identical to pubdate.
-  #
-  # NOTE (Mispy): Could this be improved somehow by using Sphinx?
+  # We optimize by delegating to Elasticsearch instead of Postgres, which
+  # is better suited for these kinds of tag queries.
   def _range_query(feed_uids, backdate, date, page)
-    with = {
-      pubdate: backdate..(date+1.day),
+    page = (page.nil? ? 1 : page.to_i)
+    per_page = 70
+
+    filters = [
+      { 
+        range: {
+          pubdate: {
+           from: backdate,
+           to: date
+          }
+        } 
+      },
+    ]
+
+    filters << {terms: {feed_uids: feed_uids}} unless feed_uids.nil?
+
+    query = {
+      fields: ['_id'],
+      size: per_page,
+      from: (page-1)*per_page,
+      sort: [
+        { scites_count: 'desc' },
+        { comments_count: 'desc' },
+        { pubdate: 'desc' },
+        { submit_date: 'desc' }
+      ],
+      query: {
+        filtered: {
+          filter: {
+            :and => filters         
+          }
+        }
+      }
     }
 
-    if feed_uids && !feed_uids.empty?
-      with['feed_uids_filter'] = feed_uids.map { |uid| Zlib.crc32(uid) }
-    end
+    res = Search::Paper.find(query)
+    paper_uids = res.documents.map(&:_id)
 
-    papers = Paper.search(
-      with: with,
-      order: "scites_count DESC, comments_count DESC, pubdate DESC",
-      page: page,
-      per_page: 20,
-      sql: {
-        include: [:authors, :feeds]
-      }
-    )
+    @pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
+
+    papers = Paper.includes(:authors, :feeds)
+                  .where(uid: paper_uids)
+                  .index_by(&:uid)
+                  .slice(*paper_uids)
+                  .values
+
     return papers
   end
 end

@@ -96,7 +96,7 @@ script
       
   - if @papers
     h3
-      #{@search.results.count} results for #{@search.query}
+      #{@search.results.raw.hits.total} results for #{@search.query}
     /= render 'papers/abstract_toggle'
     .paperlist
       ul.papers
@@ -105,4 +105,4 @@ script
         - else
           - @papers.each do |paper|
             = render 'papers/paper', paper: paper
-    = will_paginate @papers
+    = will_paginate @pagination

@@ -3,16 +3,21 @@ require 'spec_helper'
 describe "Admin tools" do
   describe "Comment moderation" do
     let(:moderator) { FactoryGirl.create(:user, account_status: User::STATUS_MODERATOR) }
-    let(:comment) { FactoryGirl.create(:comment) }
-    let(:paper) { comment.paper.reload }
+    let(:paper) { FactoryGirl.create(:paper_with_comments) }
+    let(:comment) { paper.comments.where(deleted: false).first }
+    let(:deleted_comment) { paper.comments.where(deleted: true).first }
 
     before { sign_in(moderator) }
-    before { visit paper_path(comment.paper) }
+    before { visit paper_path(paper) }
 
     it "shows comment moderation actions" do
       page.should have_content('moderator:')
       page.should have_content('edit')
       page.should have_content('delete')
+    end
+
+    it "shows deleted comments to moderators" do
+      page.should have_content("this is a deleted comment")
     end
 
     it "lets moderators edit comments" do
@@ -28,6 +33,15 @@ describe "Admin tools" do
         flash[:comment][:status].should == 'success'
         paper.reload
       end.to change(paper, :comments_count).by(-1)
+    end
+
+    it "lets moderators restore comments" do
+      expect do
+        xhr :post, restore_comment_path(deleted_comment)
+        response.should be_redirect
+        flash[:comment][:status].should == 'success'
+        paper.reload
+      end.to change(paper, :comments_count).by(1)
     end
   end
 

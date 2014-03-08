@@ -4,16 +4,31 @@ require 'arxiv_import'
 
 describe "arxiv importer" do
   it "should estimate pubdates correctly" do
-    time1 = Time.parse("Sun Jan 19 18:11:14 UTC 2014")
-    time2 = Time.parse("Mon Jan 20 08:11:14 UTC 2014")
-    time3 = Time.parse("Mon Jan 20 22:11:14 UTC 2014")
-    time4 = Time.parse("Fri Jan 24 12:11:14 UTC 2014")
-    time5 = Time.parse("Fri Jan 24 23:11:14 UTC 2014")
-    Paper.estimate_pubdate(time1).should == Time.parse("Tue Jan 21 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time2).should == Time.parse("Tue Jan 21 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time3).should == Time.parse("Wed Jan 22 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time4).should == Time.parse("Mon Jan 27 01:00:00 UTC 2014")
-    Paper.estimate_pubdate(time5).should == Time.parse("Tue Jan 28 01:00:00 UTC 2014")
+    # arXiv runs on EST localtime
+    # arxiv.org/localtime
+    zone = ActiveSupport::TimeZone["EST"]
+
+    time1 = zone.parse("Wed Mar 5 15:59 EST 2014")
+    time2 = zone.parse("Wed Mar 5 16:01 EST 2014")
+    time3 = zone.parse("Thu Mar 6 01:00 EST 2014")
+    Paper.estimate_pubdate(time1).should == zone.parse("Wed Mar 5 20:00 EST 2014")
+    Paper.estimate_pubdate(time2).should == zone.parse("Thu Mar 6 20:00 EST 2014")
+    Paper.estimate_pubdate(time3).should == zone.parse("Thu Mar 6 20:00 EST 2014")
+
+    time4 = zone.parse("Fri Mar 7 15:59 EST 2014")
+    time5 = zone.parse("Fri Mar 7 16:01 EST 2014")
+    time6 = zone.parse("Sat Mar 8 15:59 EST 2014")
+    time7 = zone.parse("Sat Mar 8 16:01 EST 2014")
+    time8 = zone.parse("Sun Mar 9 15:59 EST 2014")
+    time9 = zone.parse("Sun Mar 9 16:01 EST 2014")
+    time10 = zone.parse("Mon Mar 10 15:59 EST 2014")
+    Paper.estimate_pubdate(time4).should == zone.parse("Sun Mar 9 20:00 EST 2014")
+    Paper.estimate_pubdate(time5).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time6).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time7).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time8).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time9).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    Paper.estimate_pubdate(time10).should == zone.parse("Mon Mar 10 20:00 EST 2014")
   end
 
   it "should import correctly" do
@@ -43,10 +58,25 @@ describe "arxiv importer" do
       paper.abstract.should include "The problem of estimating the pth moment F_p"
 
       # Calculated from above
-      paper.submit_date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 GMT")
-      paper.update_date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 GMT")
+      paper.submit_date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
+      paper.update_date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
+      paper.pubdate.should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
       paper.abs_url.should == "http://arxiv.org/abs/0811.3648"
       paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
+
+      # Now test the search index
+      sleep 1
+      doc = Search::Paper.find({ query: { query_string: { query: "title:\"Revisiting Norm Estimation in Data Streams\"" } } }).docs[0]
+
+      doc._id.should == "0811.3648"
+      doc.title.should == "Revisiting Norm Estimation in Data Streams"
+      doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
+      doc.authors_searchterm.should == ["Kane_D", "Nelson_J", "Woodruff_D"]
+      doc.feed_uids.should == ["cs.DS", "cs.CC"]
+      doc.abstract.should include "The problem of estimating the pth moment F_p"
+      Time.parse(doc.submit_date).should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
+      Time.parse(doc.update_date).should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
+      Time.parse(doc.pubdate).should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
     end
   end
 end

@@ -27,13 +27,18 @@ describe CommentsController do
       comment.reload.content.should == "wubbles"
     end
 
-    it "should delete a comment" do
+    it "should delete and restore a comment" do
       expect do
         xhr :post, :delete, id: comment.id
         response.should be_redirect
         flash[:comment][:status].should == 'success'
         paper.reload
-      end.to change(paper, :comments_count).by(-1)
+
+        xhr :post, :restore, id: comment.id
+        response.should be_redirect
+        flash[:comment][:status].should == 'success'
+        paper.reload
+      end.to change(paper, :comments_count).by(0)
     end
 
     it "should reply to a comment" do

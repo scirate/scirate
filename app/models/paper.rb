@@ -18,7 +18,6 @@
 #  update_date     :datetime         not null
 #  abs_url         :text             not null
 #  pdf_url         :text             not null
-#  delta           :boolean          default(TRUE), not null
 #  created_at      :datetime
 #  updated_at      :datetime
 #  scites_count    :integer          default(0), not null
@@ -50,32 +49,49 @@ class Paper < ActiveRecord::Base
   validates :submit_date, presence: true
   validates :update_date, presence: true
 
-  validate  :update_date_is_after_submit_date
+  validate :update_date_is_after_submit_date
+
+  after_save do
+    ::Search::Paper.index(self)
+  end
 
   # Given when a paper was submitted, estimate the
   # time at which the arXiv was likely to have published it
   def self.estimate_pubdate(submit_date)
-    pubdate = submit_date.dup.change(hour: 1)
+    submit_date = submit_date.in_time_zone('EST')
+    pubdate = submit_date.dup.change(hour: 20)
 
-    # Weekend submissions => Tuesday
+    # Weekend submissions => Monday
     if [6,0].include?(submit_date.wday)
-      pubdate += 2.days if submit_date.wday == 0
-      pubdate += 3.days if submit_date.wday == 6
+      pubdate += 1.days if submit_date.wday == 0
+      pubdate += 2.days if submit_date.wday == 6
     else
       if submit_date.wday == 5
-        pubdate += 3.days # Friday submissions => Monday
-      else
-        pubdate += 1.day # Otherwise => next day
+        pubdate += 2.days # Friday submissions => Sunday
       end
 
-      if submit_date.hour >= 21 # Past submission deadline
+      if submit_date.hour >= 16 # Past submission deadline
         pubdate += 1.day
       end
     end
 
-    pubdate
+    pubdate.utc
   end
 
+  def refresh_comments_count!
+    self.comments_count = Comment.where(
+      paper_uid: uid,
+      deleted: false,
+      hidden: false
+    ).count
+
+    save
+  end
+
+  def refresh_scites_count!
+    self.scites_count = Scite.where(paper_uid: uid).count
+    save
+  end
 
   def to_param
     uid
@@ -126,17 +142,17 @@ class Paper::Search
     split
   end
 
-  # Strip field prefix and parens
+  # Strip field prefix
   def tstrip(term)
     ['au:','ti:','abs:','in:','order:','date:'].each do |prefix|
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
 
-    if term[0] == '(' && term[-1] == ')'
-      term[1..-2]
-    else
-      term
-    end
+    #if term[0] == '(' && term[-1] == ')'
+    #  term[1..-2]
+    #else
+    term
+    #end
   end
 
   def parse_date(term)
@@ -177,8 +193,8 @@ class Paper::Search
     @general = nil # Term to apply as OR across all text fields
     @conditions = {}
     @authors = []
-    @orders = []
     @date_range = nil
+    @orders = []
 
     psplit(@query).each do |term|
       if term.start_with?('au:')
@@ -213,33 +229,65 @@ class Paper::Search
       end
     end
 
+    @sort = []
+
     @orders = [:scites] if @orders.empty?
 
-    @orders = @orders.map do |order|
-       case order
-       when :scites then "scites_count DESC"
-       when :comments then "comments_count DESC"
-       when :recency then "pubdate DESC"
-       when :relevancy then nil # Default Sphinx match relevancy
-       end
+    @orders.each do |order|
+      case order
+      when :scites then @sort << { scites_count: 'desc' }
+      when :comments then @sort << { comments_count: 'desc' }
+      when :recency then @sort << { pubdate: 'desc' }
+      when :relevancy then nil # Standard text match sort
+      end
     end
 
-    @order_sql = @orders.join(', ')
-
     # Everything is post-sorted by pubdate except :relevancy
-    unless @order_sql.empty?
-      @order_sql += ", pubdate DESC"
+    unless @sort.empty? || @orders.include?(:recency)
+      @sort << { pubdate: 'desc' }
     end
   end
 
   def run(opts={})
-    params = {}
-    params[:conditions] = @conditions
-    params[:order] = @order_sql unless @order_sql.empty?
-    params[:with] = { pubdate: @date_range } unless @date_range.nil?
+    es_query = []
+    es_query << @general unless @general.nil?
+    @conditions.each do |cond, vals|
+      vals.each do |val|
+        es_query << "#{cond}:#{val}"
+      end
+    end
 
-    params = params.merge(opts)
-    @results = Paper.search(@general, params)
+    p es_query.join(' ')
+
+    filter = if @date_range
+      {
+        range: {
+          pubdate: {
+            from: @date_range.first,
+            to: @date_range.last
+          }
+        }
+      }
+    else
+      nil
+    end
+
+    params = {
+      sort: @sort,
+      query: {
+        filtered: {
+          query: {
+            query_string: {
+              query: es_query.join(' '),
+              default_operator: 'AND'
+            }
+          },
+          filter: filter
+        }
+      }
+    }.merge(opts)
+
+    @results = ::Search::Paper.find(params)
   end
 end
 

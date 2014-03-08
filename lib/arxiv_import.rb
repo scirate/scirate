@@ -4,14 +4,12 @@ module Arxiv::Import
   def self.papers(models, opts={})
     paper_uids = []
 
-    # Pause sphinx delta updates so we can do it all
-    # in one batch after the import
-
-    ThinkingSphinx::Deltas.suspend :paper do
-      ActiveRecord::Base.transaction do
-        paper_uids = self._import_papers(models, opts)
-      end
+    ActiveRecord::Base.transaction do
+      paper_uids = self._import_papers(models, opts)
     end
+
+    # Ensure Elasticsearch knows about these new/updated papers
+    Search::Paper.index_by_uids(paper_uids)
 
     paper_uids
   end
@@ -63,6 +61,8 @@ module Arxiv::Import
       # date of submission, we may have to estimate it ourselves
       pubdate = if syncdate && !existing
         syncdate
+      elsif existing
+        existing.pubdate
       else
         Paper.estimate_pubdate(model.versions[0].date.utc)
       end
@@ -123,9 +123,9 @@ module Arxiv::Import
     end
 
     unless updated_uids.empty?
-      Version.joins(:paper).where(paper_uid: updated_uids).delete_all
-      Author.joins(:paper).where(paper_uid: updated_uids).delete_all
-      Category.joins(:paper).where(paper_uid: updated_uids).delete_all
+      Version.where(paper_uid: updated_uids).delete_all
+      Author.where(paper_uid: updated_uids).delete_all
+      Category.where(paper_uid: updated_uids).delete_all
       Paper.where(uid: updated_uids).delete_all
     end
 

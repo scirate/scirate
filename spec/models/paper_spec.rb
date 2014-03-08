@@ -18,7 +18,6 @@
 #  update_date     :datetime         not null
 #  abs_url         :text             not null
 #  pdf_url         :text             not null
-#  delta           :boolean          default(TRUE), not null
 #  created_at      :datetime
 #  updated_at      :datetime
 #  scites_count    :integer          default(0), not null
@@ -31,7 +30,6 @@ require 'spec_helper'
 
 describe Paper do
   before do
-    @feed = FactoryGirl.create(:feed)
     @paper = FactoryGirl.create(:paper)
   end
 
@@ -73,11 +71,6 @@ describe Paper do
   end
 
   describe "authors" do
-    before do
-      @paper.authors = []
-      @paper.save
-    end
-
     let (:author1) { FactoryGirl.create(:author, paper: @paper, position: 0) }
     let (:author2) { FactoryGirl.create(:author, paper: @paper, position: 1) }
 

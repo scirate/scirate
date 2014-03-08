@@ -1,0 +1,20 @@
+.abbr-comment
+  .tex2jax
+    - if abbr_comment.paper.title.length > 75
+      a href="#{url_for(abbr_comment.paper)}##{abbr_comment.id}"
+        = sanitize(abbr_comment.paper.title[0..72])
+        | ...
+    - else
+      a href="#{url_for(abbr_comment.paper)}##{abbr_comment.id}"
+        = abbr_comment.paper.title
+  span.username
+    a href=(url_for(abbr_comment.user))
+      = abbr_comment.user.fullname
+  span.timeago
+    =< time_ago_in_words(abbr_comment.created_at)
+    |  ago
+  blockquote.tex2jax style="margin-top: 5px;"
+    = strip_tags(abbr_comment.content[0..299])
+    - if abbr_comment.content.length > 300
+      a href=(url_for(abbr_comment.paper))
+        |  ...(continued)

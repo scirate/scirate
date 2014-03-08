@@ -15,7 +15,7 @@ class PapersController < ApplicationController
     # Less naive statistical comment sorting as per
     # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
     @toplevel_comments = Comment.find_by_sql([
-      "SELECT *, COALESCE(((cached_votes_up + 1.9208) / NULLIF(cached_votes_up + cached_votes_down, 0) - 1.96 * SQRT((cached_votes_up * cached_votes_down) / NULLIF(cached_votes_up + cached_votes_down, 0) + 0.9604) / NULLIF(cached_votes_up + cached_votes_down, 0)) / (1 + 3.8416 / NULLIF(cached_votes_up + cached_votes_down, 0)), 0) AS ci_lower_bound FROM comments WHERE paper_uid = ? AND ancestor_id IS NULL AND (hidden = FALSE OR user_id = ?) ORDER BY ci_lower_bound DESC;",
+      "SELECT *, COALESCE(((cached_votes_up + 1.9208) / NULLIF(cached_votes_up + cached_votes_down, 0) - 1.96 * SQRT((cached_votes_up * cached_votes_down) / NULLIF(cached_votes_up + cached_votes_down, 0) + 0.9604) / NULLIF(cached_votes_up + cached_votes_down, 0)) / (1 + 3.8416 / NULLIF(cached_votes_up + cached_votes_down, 0)), 0) AS ci_lower_bound FROM comments WHERE paper_uid = ? AND ancestor_id IS NULL AND (hidden = FALSE OR user_id = ?) ORDER BY ci_lower_bound DESC, created_at ASC;",
       @paper.uid,
       current_user ? current_user.id : nil
     ])
@@ -31,6 +31,10 @@ class PapersController < ApplicationController
       @comments << c
       @comments += @comment_tree[c.id]||[]
     end
+
+    @comments = @comments.reject do |c| 
+      c.deleted && (@comment_tree[c.id].nil? || @comment_tree[c.id].all? { |c2| c2.deleted })
+    end
   end
 
   def __quote(val)
@@ -40,12 +44,22 @@ class PapersController < ApplicationController
   def search
     basic = params[:q]
     advanced = params[:advanced]
+    page = params[:page] ? params[:page].to_i : 1
 
     @search = Paper::Search.new(basic, advanced)
 
+    per_page = 70
+
     if !@search.query.empty?
-      @papers = @search.run(page: params[:page], per_page: 20,
-                            include: [:authors, :feeds])
+      paper_uids = @search.run(from: (page-1)*per_page, size: per_page).documents.map(&:_id)
+
+      @papers = Paper.includes(:authors, :feeds)
+                     .where(uid: paper_uids)
+                     .index_by(&:uid)
+                     .slice(*paper_uids)
+                     .values
+
+      @pagination = WillPaginate::Collection.new(page, per_page, @search.results.raw.hits.total)
 
       # Determine which folder we should have selected
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)

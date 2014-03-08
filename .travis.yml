@@ -12,3 +12,5 @@ before_script:
 notifications:
   email:
     - scirate@mispy.me
+services:
+  - elasticsearch
