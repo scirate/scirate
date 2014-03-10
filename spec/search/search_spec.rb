@@ -1,25 +1,21 @@
 require 'spec_helper'
-require 'arxivsync'
-require 'arxiv_import'
+
 describe "search migrations" do
-  before :all do
-    @paper1 = FactoryGirl.create(:paper)
+  before :each do
+    Search.drop
   end
 
   it "should create a new index if one doesn't exist" do
-    Search.drop
     Search.true_index_name.should be_nil
     Search.migrate
     Search.true_index_name.should_not be_nil
   end
 
   it "should migrate if the current mapping is obsolete" do
-    Search.drop
+    mappings = Search.mappings.dup
+    mappings[:paper][:properties][:foo] = { type: 'string' }
 
-    old_mappings = Search.mappings.dup
-    old_mappings[:paper][:properties][:foo] = { type: 'string' }
-
-    Search.es.index(:scirate_test_old).create(mappings: old_mappings)
+    Search.es.index(:scirate_test_old).create(mappings: mappings)
     Search.es.index(:scirate_test_old).alias(:scirate_test).create
     Search.true_index_name.should == "scirate_test_old"
 
@@ -34,5 +30,33 @@ describe "search migrations" do
     index_name = Search.true_index_name
     Search.migrate('v2')
     Search.true_index_name.should == index_name
+  end
+end
+
+describe "search fields" do
+  it "should allow searching for papers in a particular category" do
+    feed = FactoryGirl.create(:feed)
+    paper1 = FactoryGirl.create(:paper)
+    paper2 = FactoryGirl.create(:paper)
+    paper1.categories.create(feed_uid: feed.uid, position: 3)
+    paper1.reload
+    Search::Paper.index(paper1)
+
+    sleep 1
+    uids = Search::Paper.query_uids("in:#{feed.uid}")
+    uids.should == [paper1.uid]
+  end
+
+  it "should allow searching for papers scited by a user" do
+    user = FactoryGirl.create(:user)
+    paper1 = FactoryGirl.create(:paper)
+    paper2 = FactoryGirl.create(:paper)
+    user.scite!(paper1)
+    paper1.reload
+    Search::Paper.index(paper1)
+
+    sleep 1
+    uids = Search::Paper.query_uids("scited_by:#{user.username}")
+    uids.should == [paper1.uid]
   end
 end
