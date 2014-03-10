@@ -21,7 +21,6 @@ module Search
     end
   end
 
-
   def self.index
     es.index(index_name)
   end
@@ -37,6 +36,7 @@ module Search
           authors_fullname: { type: 'string', index: 'not_analyzed' }, # array
           authors_searchterm: { type: 'string', index: 'not_analyzed' }, # array
           feed_uids: { type: 'string', index: 'not_analyzed' }, # array
+          sciter_ids: { type: 'integer', index: 'not_analyzed' }, # array
           scites_count: { type: 'integer' },
           comments_count: { type: 'integer' },
           submit_date: { type: 'date' },
@@ -52,23 +52,41 @@ module Search
     Search::Paper.full_index(index_name)
   end
 
+  # Fetch the true, timestamped index name behind the alias
+  # e.g. scirate_test_1394158756
+  def self.true_index_name
+    begin
+      index.request(:get, "_alias/*").keys[0]
+    rescue Stretcher::RequestError::NotFound
+      nil
+    end
+  end
+
   # Atomically reindexes the database
   # A new index is created, populated and then aliased to the
   # main index name. The old index is deleted. This permits
   # zero downtime mapping changes
-  def self.migrate
+  def self.migrate(index_suffix=nil)
     # Find the previous index, if any
-    old_index = nil
-    begin
-      old_index = index.request(:get, "_alias/*").keys[0]
-    rescue Stretcher::RequestError::NotFound
-    end
+    old_index = Search.true_index_name
 
-    # Create the new index, named by time of creation
-    timestamp = Time.now.to_i.to_s
-    new_index = "#{index_name}_#{timestamp}"
+    # Create the new index, named by time of creation (or an argument)
+    # to avoid namespace conflicts with any old indexes
+    index_suffix = index_suffix || Time.now.to_i.to_s
+    new_index = "#{index_name}_#{index_suffix}"
     puts "Creating new index #{new_index}"
     es.index(new_index).create(mappings: mappings)
+
+    # Check to make sure we actually need new mappings here
+    unless old_index.nil?
+      old_mappings = es.index(old_index).get_mapping[old_index]['mappings']
+      new_mappings = es.index(new_index).get_mapping[new_index]['mappings']
+      if old_mappings == new_mappings
+        puts "Search mappings are current, no migration needed"
+        es.index(new_index).delete
+        return
+      end
+    end
 
     # Populate the new index with data
     Search.full_index(new_index)
@@ -99,6 +117,13 @@ module Search
       puts "Deleting index #{old_index}"
       es.index(old_index).delete
     end
+  end
+
+  # Drop the current search index
+  # Highly destructive!! Only use in testing
+  def self.drop
+    puts "Deleting index #{index_name}"
+    es.index(index_name).delete rescue nil
   end
 end
 
