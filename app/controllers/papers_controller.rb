@@ -46,7 +46,7 @@ class PapersController < ApplicationController
     advanced = params[:advanced]
     page = params[:page] ? params[:page].to_i : 1
 
-    @search = Paper::Search.new(basic, advanced)
+    @search = Search::Paper::Query.new(basic, advanced)
 
     per_page = 70
 
