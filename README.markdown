@@ -32,19 +32,21 @@ bundle install
 
 ## Setting up the database
 
-If you've just installed postgres, you'll need a new database user:
+If you've just installed postgres, it'll be easiest to use the default 'peer' authentication method.  Create a postgres role for your user account:
 
 ```shell
-sudo -u postgres createuser --superuser --pwprompt scirate
+sudo -u postgres createuser --superuser $USER
 ```
 
-Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
+Copy the example database configuration file:
 
 ```
 cp config/database.yml.example config/database.yml
 ```
 
-Edit the new file and enter your auth details for the development database. Then initialize the database and Elasticsearch, download the basic feed layout, and start the server:
+Edit the new file and remove both pairs of `username` and `password` settings.
+
+Then, initialize the database and Elasticsearch, download the basic feed layout, and start the server:
 
 ```shell
 rake db:setup
