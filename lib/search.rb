@@ -7,6 +7,27 @@ module Search
     @es ||= Stretcher::Server.new('http://localhost:9200')
   end
 
+  # http://stackoverflow.com/questions/16205341/symbols-in-query-string-for-elasticsearch
+  def self.sanitize(str)
+    # Escape special characters
+    # http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html#Escaping Special Characters
+    escaped_characters = Regexp.escape('\\+-&|!(){}[]^~*?:/')
+    str = str.gsub(/([#{escaped_characters}])/, '\\\\\1')
+
+    # AND, OR and NOT are used by lucene as logical operators. We need
+    # to escape them
+    ['AND', 'OR', 'NOT'].each do |word|
+      escaped_word = word.split('').map {|char| "\\#{char}" }.join('')
+      str = str.gsub(/\s*\b(#{word.upcase})\b\s*/, " #{escaped_word} ")
+    end
+
+    # Escape odd quotes
+    quote_count = str.count '"'
+    str = str.gsub(/(.*)"(.*)/, '\1\"\3') if quote_count % 2 == 1
+
+    str
+  end
+
   def self.index_name
     # This logic probably doesn't belong here
     # If it's in an initializer though it breaks code reloading
@@ -30,7 +51,9 @@ module Search
   def self.mappings
     { 
       paper: {
+        _id: { path: 'uid' },
         properties: {
+          uid: { type: 'string' },
           title: { type: 'string' },
           abstract: { type: 'string' },
           authors_fullname: { type: 'string', index: 'not_analyzed' }, # array
@@ -155,7 +178,7 @@ module Search::Paper
   def self.query_uids(q)
     search = Search::Paper::Query.new(q, "")
     search.run
-    search.results.documents.map(&:_id)
+    search.results.documents.map(&:uid)
   end
 
   # Convert a Paper object into a JSON-compatible
@@ -163,7 +186,7 @@ module Search::Paper
   def self.make_doc(paper)
     {
       '_type' => 'paper',
-      '_id' => paper.uid,
+      'uid' => paper.uid,
       'title' => paper.title,
       'abstract' => paper.abstract,
       'authors_fullname' => paper.authors.map(&:fullname),
@@ -227,7 +250,7 @@ module Search::Paper
           prev_id = row['id']
           paper = {
             '_type' => 'paper',
-            '_id' => row['uid'],
+            'uid' => row['uid'],
             'title' => row['title'],
             'abstract' => row['abstract'],
             'authors_fullname' => [],
@@ -427,7 +450,7 @@ class Search::Paper::Query
 
   def run(opts={})
     es_query = []
-    es_query << @general unless @general.nil?
+    es_query << Search.sanitize(@general) unless @general.nil?
     @conditions.each do |cond, vals|
       vals.each do |val|
         es_query << "#{cond}:#{val}"

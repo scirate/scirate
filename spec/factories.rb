@@ -18,7 +18,7 @@ FactoryGirl.define do
 
   factory :category do
     feed
-    sequence(:position) { |n| n}
+    sequence(:position) { |n| n }
   end
 
   factory :paper do |p|

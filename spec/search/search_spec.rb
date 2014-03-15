@@ -34,11 +34,20 @@ describe "search migrations" do
 end
 
 describe "search fields" do
+  it "should allow searching for a paper by uid" do
+    paper1 = FactoryGirl.create(:paper)
+    paper2 = FactoryGirl.create(:paper)
+
+    sleep 1
+    uids = Search::Paper.query_uids(paper1.uid)
+    uids.should == [paper1.uid]
+  end
+
   it "should allow searching for papers in a particular category" do
     feed = FactoryGirl.create(:feed)
     paper1 = FactoryGirl.create(:paper)
     paper2 = FactoryGirl.create(:paper)
-    paper1.categories.create(feed_uid: feed.uid, position: 3)
+    paper1.categories.create(feed_uid: feed.uid, position: paper1.categories.length+1)
     paper1.reload
     Search::Paper.index(paper1)
 
