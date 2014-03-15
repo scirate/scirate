@@ -9,7 +9,7 @@
   .row
     .col-md-2.feedbar
       ul.nav.nav-list.tree-sidebar
-        = cache [current_user, params] do
+        = cache [current_user, params.except(:feed)] do
           - if signed_in?
             li.feed-folder.my-feeds
               label.nav-header
@@ -22,20 +22,20 @@
                 - else
                   - current_user.feeds.order(:fullname).each do |feed|
                     li.leaf title=(feed.uid)
-                      = link_to(feed.fullname, feed_path(feed, params))
+                      = link_to(feed.fullname, feed_path(feed, params.except(:feed)))
 
-        = cache [(@feed.nil? ? 'index' : @feed.uid), params] do
+        = cache params do
           li.source-heading arXiv.org
           - Feed.in_order(Settings::ARXIV_FOLDERS).each do |parent|
             li.feed-folder class=(@feed == parent ? 'active' : '') title=(parent.uid)
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               label.nav-header
                 i class=(expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right') class=(parent.children.length > 0 ? '' : 'transparent')
-                = link_to parent.fullname.gsub("High Energy Physics", "HEP"), feed_path(parent, params)
+                = link_to parent.fullname.gsub("High Energy Physics", "HEP"), feed_path(parent, params.except(:feed))
               ul.nav.nav-list.tree style=(expanded ? '' : 'display: none;')
                 - parent.children.each do |feed|
                   li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid) 
-                    = link_to(feed.fullname, feed_path(feed, params))
+                    = link_to(feed.fullname, feed_path(feed, params.except(:feed)))
 
     .col-md-10.feed-center
       header.feed-header class=(@feed ? '' : 'home')
