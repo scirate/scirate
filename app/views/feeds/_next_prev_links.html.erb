@@ -33,7 +33,7 @@
     <% if signed_in? %>
       <tr>
         <td colspan="2" class="btn-default<% if @since_last %> btn-primary<% end %>">
-          <a href="<%= url_for(range: 'since_last') %>">Since Last Visit</a>
+          <a href="<%= url_for() %>">Since Last Visit</a>
         </td>
       </tr>
     <% end %>
