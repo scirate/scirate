@@ -10,7 +10,7 @@ namespace :db do
     end 
 
     puts "Counting comments..."
-    rows = ActiveRecord::Base.connection.execute("SELECT papers.uid, count(*) FROM papers JOIN comments ON (comments.paper_uid = papers.uid) GROUP BY papers.uid;")
+    rows = ActiveRecord::Base.connection.execute("SELECT papers.uid, count(*) FROM papers JOIN comments ON (comments.paper_uid = papers.uid AND comments.deleted IS FALSE AND comments.hidden IS FALSE) GROUP BY papers.uid;")
 
     rows.each_with_index do |row, i|
       puts i if i > 0 && i % 1000 == 0
