@@ -85,12 +85,12 @@ class Paper < ActiveRecord::Base
       hidden: false
     ).count
 
-    save
+    save!
   end
 
   def refresh_scites_count!
     self.scites_count = Scite.where(paper_uid: uid).count
-    save
+    save!
   end
 
   def to_param

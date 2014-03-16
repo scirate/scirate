@@ -10,7 +10,7 @@
 #
 
 class Scite < ActiveRecord::Base
-  belongs_to :user, class_name: "User", counter_cache: true, touch: true
+  belongs_to :user, class_name: "User", touch: true
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, touch: true
 
   validates :user, presence: true
@@ -18,9 +18,11 @@ class Scite < ActiveRecord::Base
 
   after_save do
     paper.refresh_scites_count!
+    user.refresh_scites_count!
   end
 
   after_destroy do
     paper.refresh_scites_count!
+    user.refresh_scites_count!
   end
 end
