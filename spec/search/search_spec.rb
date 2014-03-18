@@ -67,6 +67,8 @@ describe "search fields" do
     Search.refresh
     uids = Search::Paper.query_uids("in:#{feed.uid}")
     uids.should == [paper1.uid]
+    uids = Search::Paper.query_uids("in:#{feed.uid.split('.')[0]}")
+    uids.should == [paper1.uid]
   end
 
   it "should allow searching for papers scited by a user" do
