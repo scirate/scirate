@@ -136,6 +136,7 @@ blockquote {
 
 header.navbar {
   width: 100%;
+  z-index: 2;
 
   border-radius: 0;
   border-bottom: 6px solid #1e95f9;
@@ -171,6 +172,7 @@ header.navbar {
     color: white;
     font-size: 18px;
     font-weight: 400;
+    background: #000;
   }
 
   .nav li a:hover {
@@ -204,6 +206,21 @@ header.navbar {
 
   .searchbox {
     margin-left: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  header.navbar {
+    .searchbox {
+      background: #fff;
+      margin: 0px;
+    }
+    .navbar-collapse {
+      padding: 0;
+    }
+    .navbar-form, .navbar-nav {
+      margin: 0;
+    }
   }
 }
 
