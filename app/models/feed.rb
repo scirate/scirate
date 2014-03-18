@@ -87,7 +87,20 @@ class Feed < ActiveRecord::Base
     uid
   end
 
-  def update_last_paper_date
+  # Update last_paper_date to the given timestamp if applicable
+  # Also update parent
+  def new_paper_date!(dt)
+    if self.last_paper_date.nil? || dt.to_date > self.last_paper_date.to_date
+      self.last_paper_date = dt
+      self.save!
+
+      unless self.parent_uid.nil?
+        self.parent.new_paper_date!(dt)
+      end
+    end
+  end
+
+  def update_last_paper_date!
     uids = [self.uid] + self.children.pluck(:uid)
     category = Category.where(feed_uid: uids).order("crosslist_date ASC").last
     unless category.nil?

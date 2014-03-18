@@ -115,11 +115,7 @@ module Arxiv::Import
           pubdate
         ]
 
-        feed = feeds_by_uid[feed_uid]
-        if feed.last_paper_date.nil? || pubdate.to_date > feed.last_paper_date.to_date
-          feed.last_paper_date = pubdate
-          feed.save
-        end
+        feeds_by_uid[feed_uid].new_paper_date!(pubdate)
       end
     end
 

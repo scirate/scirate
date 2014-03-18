@@ -64,6 +64,12 @@ describe "arxiv importer" do
       paper.abs_url.should == "http://arxiv.org/abs/0811.3648"
       paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
 
+      # Ensure last_paper_date is updated on all feeds including parents
+      paper.feeds.each do |feed|
+        feed.last_paper_date.should_not be_nil
+        feed.parent.last_paper_date.should_not be_nil
+      end
+
       # Now test the search index
       Search.drop
       Search.migrate
