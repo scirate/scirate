@@ -454,8 +454,10 @@ div.abbr_comment {
   li.feed-folder .nav-header {
     margin-bottom: 0;
     font-weight: normal;
-
     text-transform: none;
+    display: block;
+    clear: both;
+    padding-bottom: 5px;
 
     i {
       line-height: 1.5em;
