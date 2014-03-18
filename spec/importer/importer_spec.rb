@@ -36,7 +36,7 @@ describe "arxiv importer" do
     archive = ArxivSync::XMLArchive.new("#{Rails.root.to_s}/spec/data/arxiv")
 
     archive.read_metadata do |models|
-      paper_uids = Arxiv::Import.papers(models, validate: false)
+      paper_uids = Arxiv::Import.papers(models, validate: false, index: false)
 
       paper_uids.length.should == 1000
 
@@ -65,9 +65,13 @@ describe "arxiv importer" do
       paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
 
       # Now test the search index
-      sleep 1
-      doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
+      Search.drop
+      Search.migrate
 
+      sleep 1
+      Search::Paper.es_basic("*").raw.hits.total.should == 1000
+
+      doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
       doc._id.should == "0811.3648"
       doc.title.should == "Revisiting Norm Estimation in Data Streams"
       doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]

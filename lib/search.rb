@@ -222,32 +222,38 @@ module Search::Paper
     raise res if res.errors
   end
 
+  def self.execute(sql, *args)
+    sanitized = ActiveRecord::Base.send(:sanitize_sql_array, [sql]+args)
+    ActiveRecord::Base.connection.execute(sanitized).to_a
+  end
+
   # Reindex entire database of papers
   # Invoked manually by rake es:index
   def self.full_index(index_name)
     puts "Indexing #{::Paper.count} papers for #{index_name}"
     first_id = nil
     prev_id = -1
+    slice_size = 10000
     loop do
-      command = ["SELECT papers.id, papers.uid, papers.title, papers.abstract, authors.id AS author_id, authors.fullname AS author_fullname, authors.searchterm AS author_searchterm, categories.id AS category_id, scites.user_id AS sciter_id, categories.feed_uid, papers.scites_count, papers.comments_count, papers.submit_date, papers.update_date, papers.pubdate FROM papers INNER JOIN authors ON authors.paper_uid=uid INNER JOIN categories ON categories.paper_uid=uid LEFT JOIN scites ON scites.paper_uid=uid WHERE papers.id > ? ORDER BY papers.id ASC LIMIT 10000;", prev_id]
-      sql = ActiveRecord::Base.send(:sanitize_sql_array, command)
-      results = ActiveRecord::Base.connection.execute(sql).to_a
+      results = execute("SELECT papers.id, papers.uid, papers.title, papers.abstract, authors.id AS author_id, authors.fullname AS author_fullname, authors.searchterm AS author_searchterm, scites.user_id AS sciter_id, papers.scites_count, papers.comments_count, papers.submit_date, papers.update_date, papers.pubdate FROM papers LEFT JOIN authors ON authors.paper_uid=papers.uid LEFT JOIN scites ON scites.paper_uid=papers.uid WHERE papers.id > ? AND papers.id < ? ORDER BY papers.id ASC, authors.position ASC;", prev_id, prev_id+slice_size)
       break if results.empty?
 
+      # Select categories separately to get correct ordering
+      categories = execute("SELECT papers.id, papers.uid, categories.feed_uid AS feed_uid FROM papers INNER JOIN categories ON categories.paper_uid=uid WHERE papers.id > ? AND papers.id < ? ORDER BY categories.position", prev_id, prev_id+slice_size)
+
+      papers = ActiveSupport::OrderedHash.new
+
       paper = nil
-      papers = []
       author_ids = {}
-      category_ids = {}
       sciter_ids = {}
       results.each do |row|
         first_id ||= row['id']
-        if paper.nil? || row['uid'] != paper['_id']
-          papers << paper unless paper.nil?
+        if paper.nil? || row['uid'] != paper['uid']
+          papers[paper['uid']] = paper unless paper.nil?
 
-          category_ids = {}
           author_ids = {}
           sciter_ids = {}
-          prev_id = row['id']
+          prev_id = row['id'].to_i
           paper = {
             '_type' => 'paper',
             'uid' => row['uid'],
@@ -271,18 +277,18 @@ module Search::Paper
           author_ids[row['author_id']] = true
         end
 
-        unless category_ids.has_key? row['category_id']
-          paper['feed_uids'] << row['feed_uid']
-          category_ids[row['category_id']] = true
-        end
-
         unless sciter_ids.has_key? row['sciter_id']
           paper['sciter_ids'] << row['sciter_id']
           sciter_ids[row['sciter_id']] = true
         end
       end
+      papers[paper['uid']] = paper
 
-      result = Search.es.index(index_name).bulk_index(papers)
+      categories.each do |row|
+        papers[row['uid']]['feed_uids'] << row['feed_uid']
+      end
+
+      result = Search.es.index(index_name).bulk_index(papers.values)
       raise result if result.errors
 
       p prev_id.to_i-first_id.to_i
