@@ -13,8 +13,7 @@
       ul.authors
         - @paper.authors.each do |author|
           li>
-            a href="/search?q=au:#{author.searchterm}+in:#{@paper.categories[0].feed_uid}"
-              = author.fullname + (author != @paper.authors[-1] ? ',' : '')
+            = author_link_to(author, @paper) + (author != @paper.authors[-1] ? ',' : '')
       .abstract.tex2jax
         = @paper.abstract
       .dates

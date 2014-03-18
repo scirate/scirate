@@ -3,7 +3,7 @@ module AuthorsHelper
     if paper.nil?
       link_to(author.fullname.html_safe, "/search?q=au:#{author.searchterm}")
     else
-      link_to(author.fullname.html_safe, "/search?q=au:#{author.searchterm}+in:#{paper.categories[0].feed_uid}")
+      link_to(author.fullname.html_safe, "/search?q=au:#{author.searchterm}+in:#{paper.categories[0].feed_uid.split('.')[0]}")
     end
   end
 end
