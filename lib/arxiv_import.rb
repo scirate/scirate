@@ -1,9 +1,9 @@
 module Arxiv; end
 
 module Arxiv::Import
-  def self.papers(models, opts={ index: true })
+  def self.papers(models, opts={})
+    index = opts.fetch(:index, true)
     paper_uids = []
-    index = opts.delete(:index)
 
     ActiveRecord::Base.transaction do
       paper_uids = self._import_papers(models, opts)
