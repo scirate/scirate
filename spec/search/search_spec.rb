@@ -38,7 +38,9 @@ describe "search migrations" do
   end
 
   it "should not migrate if the mapping/setting is current" do
-    Search.drop
+    Search.drop("scirate_test_v1")
+    Search.drop("scirate_test_v2")
+
     Search.migrate('v1')
     index_name = Search.true_index_name
     Search.migrate('v2')
@@ -68,7 +70,7 @@ describe "search fields" do
     uids = Search::Paper.query_uids("in:#{feed.uid}")
     uids.should == [paper1.uid]
     uids = Search::Paper.query_uids("in:#{feed.uid.split('.')[0]}")
-    uids.should == [paper1.uid]
+    uids.should include(paper1.uid)
   end
 
   it "should allow searching for papers scited by a user" do

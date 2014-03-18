@@ -16,14 +16,15 @@ describe Author do
     @author = FactoryGirl.create(:author)
   end
 
-  subject { @author }
+  it "has the right properties" do
+    @author.should respond_to(:fullname)
+    @author.should respond_to(:searchterm)
+    @author.should respond_to(:position)
 
-  it { should respond_to(:fullname) }
-  it { should respond_to(:searchterm) }
+    @author.should be_valid
+  end
 
-  it { should be_valid }
-
-  it "Should generate searchterms correctly" do
+  it "generates searchterms correctly" do
     term = Author.make_searchterm("Ben Toner (CWI)")
     term.should == "Toner_B"
 

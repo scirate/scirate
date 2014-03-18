@@ -77,7 +77,7 @@ def update
   click_button "Update"
 end
 
-def signout
+def sign_out
   click_link "Sign out"
 end
 

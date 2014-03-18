@@ -7,34 +7,31 @@ describe "Authentication" do
   describe "signin" do
     before { visit login_path }
 
-    describe "with invalid information" do
-      before { click_button "Sign in" }
+    it "shouldn't allow invalid information" do
+      click_button "Sign in"
 
-      it { should have_error_message 'Invalid' }
+      page.should have_error_message "Invalid"
     end
 
-    describe "with valid information" do
-      let(:user) { FactoryGirl.create(:user) }
-      before { sign_in(user) }
+    it "should sign in and out correctly" do
+      user = FactoryGirl.create(:user)
+      sign_in(user)
 
-      it { should have_title user.fullname }
-      it { should have_link('Profile', href: user_path(user)) }
-      it { should have_link('Settings', href: settings_path) }
-      it { should have_link('Sign out', href: logout_path) }
-      it { should_not have_link('Sign in', href: login_path) }
+      page.should have_title user.fullname
+      page.should have_link('Profile', href: user_path(user))
+      page.should have_link('Settings', href: settings_path)
+      page.should have_link('Sign out', href: logout_path)
+      page.should_not have_link('Sign in', href: login_path)
 
-      describe "followed by signout" do
-        before { signout }
-        it { should have_title('Top arXiv papers') }
-        it { should_not have_link('Sign out', href: logout_path) }
-        it { should_not have_link('Profile', href: user_path(user)) }
-        it { should_not have_link('Settings', href: settings_path) }
-      end
+      sign_out
+      page.should have_title('Top arXiv papers')
+      page.should_not have_link('Sign out', href: logout_path)
+      page.should_not have_link('Profile', href: user_path(user))
+      page.should_not have_link('Settings', href: settings_path)
     end
   end
 
   describe "authorization" do
-
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
 

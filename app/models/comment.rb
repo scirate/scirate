@@ -35,6 +35,10 @@ class Comment < ActiveRecord::Base
     paper.refresh_comments_count!
   end
 
+  after_destroy do
+    paper.refresh_comments_count!
+  end
+
   acts_as_votable
 
   def self.find_by_feed_uids(feed_uids)

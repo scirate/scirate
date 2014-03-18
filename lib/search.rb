@@ -181,9 +181,10 @@ module Search
 
   # Drop the current search index
   # Highly destructive!! Only use in testing
-  def self.drop
-    puts "Deleting index #{index_name}"
-    es.index(index_name).delete rescue nil
+  def self.drop(name=nil)
+    name = name || index_name
+    puts "Deleting index #{name}"
+    es.index(name).delete rescue nil
   end
 end
 

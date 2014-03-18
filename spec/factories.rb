@@ -28,6 +28,7 @@ FactoryGirl.define do
     sequence(:uid)  { |n| "#{1000+n}/#{1000+n}.#{1000+n}" }
     sequence(:submit_date) { |n| Date.today }
     sequence(:update_date) { |n| Date.today }
+    sequence(:pubdate)     { |n| Paper.estimate_pubdate(Date.today) }
     sequence(:abs_url)     { |n| "http://arxiv.org/abs/#{1000+n}/#{1000+n}.#{1000+n}" }
     sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}/#{1000+n}.#{1000+n}" }
     sequence(:author_str)  { |n| "Hilbert N. Grande, Lucrezia Mongfish" }
