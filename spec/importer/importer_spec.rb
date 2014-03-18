@@ -3,7 +3,7 @@ require 'arxivsync'
 require 'arxiv_import'
 
 describe "arxiv importer" do
-  it "should estimate pubdates correctly" do
+  it "estimates pubdates correctly" do
     # arXiv runs on EST localtime
     # arxiv.org/localtime
     zone = ActiveSupport::TimeZone["EST"]
@@ -31,12 +31,12 @@ describe "arxiv importer" do
     Paper.estimate_pubdate(time10).should == zone.parse("Mon Mar 10 20:00 EST 2014")
   end
 
-  it "should import correctly" do
+  it "imports papers into the database" do
     puts "Starting test"
     archive = ArxivSync::XMLArchive.new("#{Rails.root.to_s}/spec/data/arxiv")
 
     archive.read_metadata do |models|
-      paper_uids = Arxiv::Import.papers(models, validate: false, index: false)
+      paper_uids = Arxiv::Import.papers(models, validate: false)
 
       paper_uids.length.should == 1000
 
@@ -71,10 +71,25 @@ describe "arxiv importer" do
       end
 
       # Now test the search index
+      Search.refresh
+      Search::Paper.es_basic("*").raw.hits.total.should == 1000
+
+      doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
+      doc._id.should == "0811.3648"
+      doc.title.should == "Revisiting Norm Estimation in Data Streams"
+      doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
+      doc.authors_searchterm.should == ["Kane_D", "Nelson_J", "Woodruff_D"]
+      doc.feed_uids.should == ["cs.DS", "cs.CC"]
+      doc.abstract.should include "The problem of estimating the pth moment F_p"
+      Time.parse(doc.submit_date).should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
+      Time.parse(doc.update_date).should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
+      Time.parse(doc.pubdate).should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
+
+      # And the bulk indexer
       Search.drop
       Search.migrate
-
       Search.refresh
+
       Search::Paper.es_basic("*").raw.hits.total.should == 1000
 
       doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]

@@ -2,7 +2,6 @@ module Arxiv; end
 
 module Arxiv::Import
   def self.papers(models, opts={})
-    index = opts.fetch(:index, true)
     paper_uids = []
 
     ActiveRecord::Base.transaction do
@@ -10,7 +9,7 @@ module Arxiv::Import
     end
 
     # Ensure Elasticsearch knows about these new/updated papers
-    Search::Paper.index_by_uids(paper_uids) if index
+    Search::Paper.index_by_uids(paper_uids)
 
     paper_uids
   end
