@@ -15,7 +15,7 @@ describe "search migrations" do
     mappings = Search.mappings.dup
     mappings[:paper][:properties][:foo] = { type: 'string' }
 
-    Search.es.index(:scirate_test_old).create(mappings: mappings)
+    Search.es.index(:scirate_test_old).create(settings: Search.settings, mappings: mappings)
     Search.es.index(:scirate_test_old).alias(:scirate_test).create
     Search.true_index_name.should == "scirate_test_old"
 
@@ -24,7 +24,20 @@ describe "search migrations" do
     Search.true_index_name.should_not == "scirate_test_old"
   end
 
-  it "should not migrate if the mapping is current" do
+  it "should migrate if the current setting is obsolete" do
+    settings = Search.settings.dup
+    settings[:index][:analysis][:tokenizer][:category_path][:delimiter] = '/'
+
+    Search.es.index(:scirate_test_old).create(settings: settings, mappings: Search.mappings)
+    Search.es.index(:scirate_test_old).alias(:scirate_test).create
+    Search.true_index_name.should == "scirate_test_old"
+
+    Search.migrate
+    Search.true_index_name.should_not be_nil
+    Search.true_index_name.should_not == "scirate_test_old"
+  end
+
+  it "should not migrate if the mapping/setting is current" do
     Search.drop
     Search.migrate('v1')
     index_name = Search.true_index_name

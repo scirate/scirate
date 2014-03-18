@@ -46,6 +46,29 @@ module Search
     es.index(index_name)
   end
 
+  # Defines Elasticsearch index settings
+  # Changing this will require creating a new index
+  def self.settings
+    {
+      index: {
+        analysis: {
+          analyzer: {
+            category_path: {
+              type: 'custom',
+              tokenizer: 'category_path'
+            }
+          },
+          tokenizer: {
+            category_path: {
+              type: 'path_hierarchy',
+              delimiter: '.'
+            }
+          }
+        }
+      }
+    }
+  end
+
   # Defines our Elasticsearch type schema
   # Changing this will require creating a new index
   def self.mappings
@@ -56,9 +79,9 @@ module Search
           uid: { type: 'string' },
           title: { type: 'string' },
           abstract: { type: 'string' },
-          authors_fullname: { type: 'string', index: 'not_analyzed' }, # array
-          authors_searchterm: { type: 'string', index: 'not_analyzed' }, # array
-          feed_uids: { type: 'string', index: 'not_analyzed' }, # array
+          authors_fullname: { type: 'string', index: 'analyzed' }, # array
+          authors_searchterm: { type: 'string', index: 'analyzed' }, # array
+          feed_uids: { type: 'string', search_analyzer: 'whitespace', index_analyzer: 'category_path' }, # array
           sciter_ids: { type: 'integer', index: 'not_analyzed' }, # array
           scites_count: { type: 'integer' },
           comments_count: { type: 'integer' },
@@ -98,14 +121,21 @@ module Search
     index_suffix = index_suffix || Time.now.to_i.to_s
     new_index = "#{index_name}_#{index_suffix}"
     puts "Creating new index #{new_index}"
-    es.index(new_index).create(mappings: mappings)
+    es.index(new_index).create(settings: settings, mappings: mappings)
 
-    # Check to make sure we actually need new mappings here
+    # Check to make sure we actually need a new index here
     unless old_index.nil?
+      old_settings = es.index(old_index).get_settings[old_index]['settings']
+      new_settings = es.index(new_index).get_settings[new_index]['settings']
+
+      # uuid always varies
+      old_settings['index']['uuid'] = new_settings['index']['uuid']
+
       old_mappings = es.index(old_index).get_mapping[old_index]['mappings']
       new_mappings = es.index(new_index).get_mapping[new_index]['mappings']
-      if old_mappings == new_mappings
-        puts "Search mappings are current, no migration needed"
+
+      if old_settings == new_settings && old_mappings == new_mappings
+        puts "Search settings/mappings are current, no migration needed"
         es.index(new_index).delete
         return
       end
