@@ -74,7 +74,7 @@ describe "arxiv importer" do
       Search.drop
       Search.migrate
 
-      sleep 1
+      Search.refresh
       Search::Paper.es_basic("*").raw.hits.total.should == 1000
 
       doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]

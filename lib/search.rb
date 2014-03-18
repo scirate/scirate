@@ -142,6 +142,13 @@ module Search
     end
   end
 
+  # Force Elasticsearch to refresh the index
+  # In practice this is done automatically, but the tests
+  # need to know that the data is definitely available
+  def self.refresh
+    @es.refresh
+  end
+
   # Drop the current search index
   # Highly destructive!! Only use in testing
   def self.drop

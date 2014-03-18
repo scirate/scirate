@@ -38,7 +38,7 @@ describe "search fields" do
     paper1 = FactoryGirl.create(:paper)
     paper2 = FactoryGirl.create(:paper)
 
-    sleep 1
+    Search.refresh
     uids = Search::Paper.query_uids(paper1.uid)
     uids.should == [paper1.uid]
   end
@@ -51,7 +51,7 @@ describe "search fields" do
     paper1.reload
     Search::Paper.index(paper1)
 
-    sleep 1
+    Search.refresh
     uids = Search::Paper.query_uids("in:#{feed.uid}")
     uids.should == [paper1.uid]
   end
@@ -66,7 +66,7 @@ describe "search fields" do
     paper1.reload
     Search::Paper.index(paper1)
 
-    sleep 1
+    Search.refresh
     uids = Search::Paper.query_uids("scited_by:#{user.username}")
     uids.should == [paper1.uid]
 
