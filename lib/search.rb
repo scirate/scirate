@@ -232,17 +232,30 @@ module Search::Paper
   def self.full_index(index_name)
     puts "Indexing #{::Paper.count} papers for #{index_name}"
     first_id = nil
-    prev_id = -1
-    slice_size = 10000
+    slice_size = (Rails.env == 'test' ? 100 : 10000)
+
+    start_paper = ::Paper.order(:id).first
+    end_paper = ::Paper.order(:id).last
+
+    # In case there are just no papers in the database yet
+    start_id = start_paper.nil? ? 0 : start_paper.id
+    end_id = end_paper.nil? ? slice_size : end_paper.id
+    next_id = start_id + slice_size
+    total = 0
+
     loop do
-      results = execute("SELECT papers.id, papers.uid, papers.title, papers.abstract, authors.id AS author_id, authors.fullname AS author_fullname, authors.searchterm AS author_searchterm, scites.user_id AS sciter_id, papers.scites_count, papers.comments_count, papers.submit_date, papers.update_date, papers.pubdate FROM papers LEFT JOIN authors ON authors.paper_uid=papers.uid LEFT JOIN scites ON scites.paper_uid=papers.uid WHERE papers.id > ? AND papers.id < ? ORDER BY papers.id ASC, authors.position ASC;", prev_id, prev_id+slice_size)
-      break if results.empty?
+      break if start_id > end_id
+      results = execute("SELECT papers.id, papers.uid, papers.title, papers.abstract, authors.id AS author_id, authors.fullname AS author_fullname, authors.searchterm AS author_searchterm, scites.user_id AS sciter_id, papers.scites_count, papers.comments_count, papers.submit_date, papers.update_date, papers.pubdate FROM papers LEFT JOIN authors ON authors.paper_uid=papers.uid LEFT JOIN scites ON scites.paper_uid=papers.uid WHERE papers.id >= ? AND papers.id < ? ORDER BY papers.id ASC, authors.position ASC;", start_id, next_id)
+      categories = execute("SELECT papers.id, papers.uid, categories.feed_uid AS feed_uid FROM papers INNER JOIN categories ON categories.paper_uid=uid WHERE papers.id >= ? AND papers.id < ? ORDER BY categories.position", start_id, next_id)
+
+      start_id = next_id
+      next_id += slice_size
+      next if results.empty?
 
       # Select categories separately to get correct ordering
-      categories = execute("SELECT papers.id, papers.uid, categories.feed_uid AS feed_uid FROM papers INNER JOIN categories ON categories.paper_uid=uid WHERE papers.id > ? AND papers.id < ? ORDER BY categories.position", prev_id, prev_id+slice_size)
 
       papers = ActiveSupport::OrderedHash.new
-
+      
       paper = nil
       author_ids = {}
       sciter_ids = {}
@@ -253,7 +266,6 @@ module Search::Paper
 
           author_ids = {}
           sciter_ids = {}
-          prev_id = row['id'].to_i
           paper = {
             '_type' => 'paper',
             'uid' => row['uid'],
@@ -291,7 +303,8 @@ module Search::Paper
       result = Search.es.index(index_name).bulk_index(papers.values)
       raise result if result.errors
 
-      p prev_id.to_i-first_id.to_i
+      total += papers.length
+      puts total
     end
   end
 end
