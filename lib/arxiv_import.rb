@@ -9,7 +9,7 @@ module Arxiv::Import
     end
 
     # Ensure Elasticsearch knows about these new/updated papers
-    Search::Paper.index_by_uids(paper_uids)
+    Search::Paper.index_by_uids(paper_uids) unless paper_uids.empty?
 
     paper_uids
   end
