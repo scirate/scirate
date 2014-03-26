@@ -149,6 +149,12 @@ module Arxiv::Import
       SciRate3.notify_error("Error importing categories: #{result.failed_instances.inspect}")
     end
 
+    # Ensure counter caches are recreated for updated papers
+    Paper.where(uid: updated_uids).each do |paper|
+      paper.refresh_comments_count!
+      paper.refresh_scites_count!
+    end
+
     # Return uids of the papers we imported/updated
     new_uids+updated_uids
   end
