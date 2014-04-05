@@ -75,6 +75,10 @@ group :development do
 
   # For dumping feeds to seeds.rb to test with
   gem 'seed_dump'
+
+  # Deployment
+  gem 'capistrano', '~> 3.1.0'
+  gem 'capistrano-rvm'
 end
 
 group :test do

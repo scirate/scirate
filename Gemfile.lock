@@ -67,6 +67,13 @@ GEM
       sass (>= 3.2.0)
       thor
     builder (3.1.4)
+    capistrano (3.1.0)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (~> 1.3)
+    capistrano-rvm (0.1.1)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
     capybara (2.2.1)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -120,8 +127,12 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.2)
     mime-types (1.25.1)
+    minitest (4.7.5)
     multi_json (1.9.0)
     multipart-post (1.2.0)
+    net-scp (1.1.2)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.8.0)
     newrelic_rpm (3.7.2.195)
     nokogiri (1.5.9)
     ox (2.1.1)
@@ -206,6 +217,10 @@ GEM
       activerecord (>= 3.0)
       activesupport (>= 3.0)
       polyamorous (~> 0.6.0)
+    sshkit (1.3.0)
+      net-scp (>= 1.1.2)
+      net-ssh
+      term-ansicolor
     stretcher (1.21.1)
       excon (>= 0.16)
       faraday (~> 0.8)
@@ -214,6 +229,8 @@ GEM
       hashie (>= 1.2.0)
       multi_json (>= 1.0)
     temple (0.6.7)
+    term-ansicolor (1.3.0)
+      tins (~> 1.0)
     thin (1.6.2)
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)
@@ -222,6 +239,7 @@ GEM
     thread_safe (0.2.0)
       atomic (>= 1.1.7, < 2)
     tilt (1.4.1)
+    tins (1.0.1)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -245,6 +263,8 @@ DEPENDENCIES
   arxivsync!
   bcrypt-ruby
   bourbon
+  capistrano (~> 3.1.0)
+  capistrano-rvm
   capybara
   chronic
   coffee-rails
