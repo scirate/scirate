@@ -44,7 +44,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       within release_path do
         execute :ln, '-sf /home/scirate/database.yml config/database.yml'
-        execute :ln, '-sf /home/scirate/local_settings.rb config/local_settings.rb'
+        execute :ln, '-sf /home/scirate/local_settings.rb local_settings.rb'
 
         execute :bundle, 'install'
         execute :rake, 'db:migrate'
