@@ -11,7 +11,8 @@
 # definition into the server list. The second argument
 # something that quacks like a hash can be used to set
 # extended properties on the server.
-server '107.170.2.75', user: 'scirate', roles: %w{web app}
+server '162.243.192.154', user: 'scirate', roles: %w{web app}
+server '107.170.113.212', user: 'scirate', roles: %w{web app}
 
 set :rvm_type, :user
 set :rvm_ruby_version, '2.1.0'

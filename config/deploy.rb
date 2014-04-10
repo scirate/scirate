@@ -3,6 +3,7 @@ lock '3.1.0'
 
 set :application, 'scirate'
 set :repo_url, 'https://github.com/draftable/scirate3.git'
+set :deploy_via, :remote_cache
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
@@ -39,17 +40,26 @@ set :default_env, {
 
 namespace :deploy do
 
-  desc 'Restart application'
   task :setup do
-    on roles(:app), in: :sequence, wait: 5 do
+    on roles(:app), in: :parallel do
       within release_path do
         execute :ln, '-sf /home/scirate/database.yml config/database.yml'
         execute :ln, '-sf /home/scirate/local_settings.rb local_settings.rb'
 
         execute :bundle, 'install'
-        execute :rake, 'db:migrate'
         execute :rake, 'assets:clean'
         execute :rake, 'assets:precompile'
+      end
+    end
+
+    on roles(:app) do
+      within release_path do
+        execute :rake, 'db:migrate'
+      end
+    end
+
+    on roles(:app), in: :parallel do
+      within release_path do
         execute :sudo, 'service unicorn restart'
         execute :rake, 'cache:clear'
       end
@@ -57,14 +67,4 @@ namespace :deploy do
   end
 
   after :publishing, :setup
-
-  after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
-    end
-  end
-
 end
