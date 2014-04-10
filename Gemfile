@@ -102,4 +102,6 @@ end
 group :production do
   # XXX (Mispy): Not sure we're using this atm
   gem 'newrelic_rpm'
+
+  gem 'puma'
 end
