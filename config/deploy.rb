@@ -60,7 +60,7 @@ namespace :deploy do
 
     on roles(:app), in: :parallel do
       within release_path do
-        execute :sudo, 'service unicorn restart'
+        execute :sudo, 'service scirate restart'
         execute :rake, 'cache:clear'
       end
     end
