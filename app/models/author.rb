@@ -27,10 +27,7 @@
 class Author < ActiveRecord::Base
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid
 
-  validates :paper_uid, presence: true
-  validates :position, presence: true
-  validates :fullname, presence: true
-  validates :searchterm, presence: true
+  validates :paper_uid, :position, :fullname, :searchterm, presence: true
 
   # Makes a searchterm of the form e.g.
   # "Biagini_M" from "Maria Enrica Biagini"

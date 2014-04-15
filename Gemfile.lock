@@ -199,6 +199,8 @@ GEM
     seed_dump (3.1.0)
       activerecord
       activesupport
+    shoulda-matchers (2.6.0)
+      activesupport (>= 3.0.0)
     slim (2.0.2)
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
@@ -292,6 +294,7 @@ DEPENDENCIES
   rspec-rerun
   sass-rails
   seed_dump
+  shoulda-matchers
   slim
   spring
   spring-commands-rspec

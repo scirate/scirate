@@ -90,6 +90,8 @@ group :test do
   # browser for integration tests
   gem 'capybara'
 
+  gem 'shoulda-matchers'
+
   # So we can truncate the database properly
   # before each test suite is run
   gem 'database_cleaner'
