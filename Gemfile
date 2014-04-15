@@ -6,15 +6,14 @@ gem 'rails', "~> 4.0.0"
 gem 'bcrypt-ruby'
 
 # Sends us emails when stuff breaks in production
-gem 'exception_notification',
-    git: 'git://github.com/sunkencity/exception_notification'
+gem 'exception_notification', github: 'sunkencity/exception_notification'
 
 # Database stuff
 gem 'pg' # Postgres support
 gem 'squeel' # XXX (Mispy): Can we remove this?
 gem 'activerecord-import' # For bulk importing papers
 gem 'acts_as_votable' # Comment votes (not scites)
-gem 'unidecoder', "~> 1.1.2" # For making ascii author searchterms
+gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
 
 # Frontend stuff
 gem 'will_paginate' # Displaying pages of results
@@ -24,9 +23,9 @@ gem 'chronic' # Natural language date parsing
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
-gem 'oai', git: 'git://github.com/code4lib/ruby-oai'
-gem 'arxivsync', git: 'git://github.com/mispy/arxivsync'
-gem 'nokogiri', "= 1.5.9"
+gem 'oai', github: 'code4lib/ruby-oai'
+gem 'arxivsync', githb: 'mispy/arxivsync'
+gem 'nokogiri', '1.5.9'
 
 # Elasticsearch searchkick gem
 gem 'stretcher'
