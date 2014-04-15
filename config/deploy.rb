@@ -61,7 +61,7 @@ namespace :deploy do
     on roles(:app), in: :parallel do
       within release_path do
         execute :sudo, 'service scirate restart'
-        execute :rake, 'cache:clear'
+        execute :sudo, 'service memcached restart'
       end
     end
   end
