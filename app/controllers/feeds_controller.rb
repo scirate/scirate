@@ -36,7 +36,7 @@ class FeedsController < ApplicationController
       if feed_uids.empty?
         @date = Date.today
       else
-        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.to_date || Date.today
+        @date = (Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first || Date.today).to_date
       end
     end
 
