@@ -12,13 +12,8 @@
 require 'spec_helper'
 
 describe Category do
-  let(:paper) { FactoryGirl.create(:paper) }
-
-  let(:category) do
-    paper.categories.build(feed_uid: "waffles", position: 0)
-  end
-
-  subject{ category }
-
-  it { should be_valid }
+  it { should belong_to(:paper) }
+  it { should belong_to(:feed) }
+  it { should validate_presence_of(:paper_uid) }
+  it { should validate_presence_of(:feed_uid) }
 end
