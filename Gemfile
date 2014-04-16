@@ -35,7 +35,6 @@ gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
-gem 'haml'
 gem 'slim'
 gem 'ractive-rails'
 

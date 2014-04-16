@@ -110,8 +110,6 @@ GEM
     faraday_middleware-multi_json (0.0.5)
       faraday_middleware
       multi_json
-    haml (4.0.5)
-      tilt
     hashie (2.0.5)
     hike (1.2.3)
     htmlentities (4.3.1)
@@ -274,7 +272,6 @@ DEPENDENCIES
   database_cleaner
   exception_notification!
   factory_girl_rails
-  haml
   jquery-rails
   newrelic_rpm
   nokogiri (= 1.5.9)
