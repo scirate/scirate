@@ -24,7 +24,7 @@ gem 'chronic' # Natural language date parsing
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
 gem 'oai', github: 'code4lib/ruby-oai'
-gem 'arxivsync', githb: 'mispy/arxivsync'
+gem 'arxivsync', github: 'mispy/arxivsync'
 gem 'nokogiri', '1.5.9'
 
 # Elasticsearch searchkick gem

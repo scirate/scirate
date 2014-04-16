@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/code4lib/ruby-oai
+  remote: git://github.com/code4lib/ruby-oai.git
   revision: ebe92638c483813cd401c9588334d64ff46aae70
   specs:
     oai (0.3.1)
@@ -8,7 +8,7 @@ GIT
       faraday_middleware
 
 GIT
-  remote: git://github.com/mispy/arxivsync
+  remote: git://github.com/mispy/arxivsync.git
   revision: ea6be1ba6fe295c72cbe7addc6bbcfe579b378b3
   specs:
     arxivsync (0.1.1)
@@ -20,7 +20,7 @@ GIT
       ox (>= 2.0.2)
 
 GIT
-  remote: git://github.com/sunkencity/exception_notification
+  remote: git://github.com/sunkencity/exception_notification.git
   revision: b54ba10cea78f62758d3d71aa5f114cea658db3a
   specs:
     exception_notification (1.0.0)
@@ -89,7 +89,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
-    colorize (0.6.0)
+    colorize (0.7.2)
     daemons (1.1.9)
     dalli (2.7.0)
     database_cleaner (1.2.0)
