@@ -1,9 +1,9 @@
 FactoryGirl.define do
   factory :feed do
-    sequence(:uid)        { |n| "feed.#{n}" }
-    sequence(:fullname)       { |n| "Feed #{n}" }
-    sequence(:source)     { |n| "arxiv" }
-    last_paper_date       Date.today
+    sequence(:uid)      { |n| "feed.#{n}" }
+    sequence(:fullname) { |n| "Feed #{n}" }
+    sequence(:source)   { |n| "arxiv" }
+    last_paper_date     { Date.today }
   end
 
   factory :user do
@@ -14,6 +14,10 @@ FactoryGirl.define do
     account_status User::STATUS_USER
     password "foobar"
     password_confirmation "foobar"
+
+    factory :admin do
+      account_status User::STATUS_ADMIN
+    end
   end
 
   factory :category do
@@ -42,7 +46,7 @@ FactoryGirl.define do
     factory :paper_with_comments do
       after(:create) do |paper, evaluator|
         FactoryGirl.create_list(:comment, 3, paper: paper)
-        FactoryGirl.create(:comment, paper: paper, deleted: true, 
+        FactoryGirl.create(:comment, paper: paper, deleted: true,
                            content: "this is a deleted comment")
       end
     end

@@ -63,8 +63,9 @@ SciRate3::Application.routes.draw do
   get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
 
-  get '/admin/users/:username', to: 'admin#edit_user', as: 'admin_edit_user'
-  post '/admin/users/:username', to: 'admin#update_user', as: 'admin_update_user'
+  namespace :admin do
+    resources :users, only: [:edit, :update], param: :username
+  end
   get '/:username', to: 'users#profile', username: /.+/, as: 'user'
 
 
