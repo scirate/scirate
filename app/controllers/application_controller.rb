@@ -16,9 +16,4 @@ class ApplicationController < ActionController::Base
     return true
   end
 
-  def transaction
-    ActiveRecord::Base.transaction do
-      yield
-    end
-  end
 end
