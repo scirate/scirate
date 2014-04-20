@@ -122,11 +122,15 @@ module Search
     new_index = "#{index_name}_#{index_suffix}"
     puts "Creating new index #{new_index}"
     es.index(new_index).create(settings: settings, mappings: mappings)
+    es.refresh
 
     # Check to make sure we actually need a new index here
     unless old_index.nil?
       old_settings = es.index(old_index).get_settings[old_index]['settings']
       new_settings = es.index(new_index).get_settings[new_index]['settings']
+
+      p old_settings
+      p new_settings
 
       # uuid always varies
       old_settings['index']['uuid'] = new_settings['index']['uuid']
