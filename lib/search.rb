@@ -129,9 +129,6 @@ module Search
       old_settings = es.index(old_index).get_settings[old_index]['settings']
       new_settings = es.index(new_index).get_settings[new_index]['settings']
 
-      p old_settings
-      p new_settings
-
       # uuid always varies
       old_settings['index']['uuid'] = new_settings['index']['uuid']
 
