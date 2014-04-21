@@ -20,6 +20,8 @@
         | Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} to 
         strong= @paper.feeds[0].fullname
         |  [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
+        br
+        | Published #{@paper.pubdate.to_date.to_formatted_s(:rfc822)}
         - if @paper.updated?
           br
           |  Updated #{@paper.update_date.to_date.to_formatted_s(:rfc822)}
