@@ -10,6 +10,7 @@ before_script:
   - sudo apt-get remove elasticsearch
   - wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.0.deb
   - sudo dpkg -i /tmp/elasticsearch.deb
+  - sudo service elasticsearch start
   - cp config/database.yml.travis config/database.yml
   - psql -c 'create database scirate_test;' -U postgres
 notifications:
