@@ -1,0 +1,37 @@
+- provide :title, 'Edit user'
+
+.container
+  h1
+    | #{status_warning} editing #{@user.username}
+
+  p
+    = gravatar_for(@user)
+    = @user.fullname
+
+  = form_for [:admin, @user] do |f| %>
+    = render 'shared/error_messages', object: f.object
+
+    table.table.table-striped.table-form
+      tr
+        td
+          = f.label :fullname, 'Name'
+        td
+          = f.text_field :fullname, class: 'form-control'
+      tr
+        td
+          f.label :username, 'Username'
+        td
+          f.text_field :username, class: 'form-control'
+      tr
+        td
+          f.label :email, 'Email'
+        td
+          f.email_field :email, class: 'form-control'
+      tr
+        td
+          f.label :account_status, 'Account Status'
+        td
+          f.select :account_status, User::ACCOUNT_STATES, {}, class: 'form-control'
+
+    = f.submit 'Save changes', class: 'btn btn-default'
+
