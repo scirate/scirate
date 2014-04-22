@@ -1,5 +1,37 @@
+require 'exception_notifier'
+
+class Exception
+  # From http://stackoverflow.com/questions/2823748/how-do-i-add-information-to-an-exception-message-without-changing-its-class-in-r
+  def with_details(extra)
+    begin
+      raise self, "#{message} - #{extra}", backtrace
+    rescue Exception => e
+      return e
+    end
+  end
+end
+
+module SciRate3
+  def self.notify_error(exception, message = nil)
+    if exception.is_a?(String)
+      exception = RuntimeError.new(exception)
+    end
+    exception = exception.with_details(message) if message
+    puts exception.inspect
+    puts exception.backtrace.join("\n") if exception.backtrace
+    if Rails.production?
+      ExceptionNotifier::Notifier.background_exception_notification(exception)
+    end
+  end
+end
+
 SciRate3::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
+
+  config.middleware.use ExceptionNotifier,
+      email_prefix: "[#{Settings::STAGING ? 'scirate-dev' : 'scirate'} error] ",
+      sender_address: "notifier@scirate.com",
+      exception_recipients: %w{scirate@mispy.me}
 
   # Code is not reloaded between requests
   config.cache_classes = true
