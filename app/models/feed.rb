@@ -15,7 +15,7 @@
 class Feed < ActiveRecord::Base
   belongs_to :parent, foreign_key: :parent_uid,
              primary_key: :uid, class_name: "Feed"
-  has_many :children, foreign_key: :parent_uid, 
+  has_many :children, foreign_key: :parent_uid,
            primary_key: :uid, class_name: 'Feed'
   has_many :subscriptions, dependent: :destroy,
            foreign_key: :feed_uid, primary_key: :uid
@@ -27,8 +27,6 @@ class Feed < ActiveRecord::Base
   validates :uid, presence: true, uniqueness: true
   validates :fullname, presence: true
   validates :source, presence: true
-
-  default_scope { order(:position) }
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders
