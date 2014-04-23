@@ -29,12 +29,12 @@
 class Paper < ActiveRecord::Base
   has_many  :versions, -> { order("position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
-  has_many  :categories, -> { order("position ASC") }, dependent: :delete_all,
+  has_many  :categories, -> { order("categories.position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
   has_many  :authors, -> { order("position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
 
-  has_many  :feeds, -> { order("categories.position ASC") }, through: :categories
+  has_many  :feeds, through: :categories
 
   has_many  :scites, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
