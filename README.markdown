@@ -1,6 +1,7 @@
 # SciRate 3
 
 [![Build Status](https://travis-ci.org/draftable/scirate3.svg?branch=master)](https://travis-ci.org/draftable/scirate3)
+[![Code Climate](https://codeclimate.com/github/draftable/scirate3.png)](https://codeclimate.com/github/draftable/scirate3)
 
 A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon, [Bill Rosgen](http://intractable.ca/bill/) and [Aram Harrow](http://www.mit.edu/~aram/). Currently being expanded upon by [Draftable](https://draftable.com/).
 

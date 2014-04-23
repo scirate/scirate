@@ -72,7 +72,7 @@ module Search
   # Defines our Elasticsearch type schema
   # Changing this will require creating a new index
   def self.mappings
-    { 
+    {
       paper: {
         _id: { path: 'uid' },
         properties: {
@@ -252,7 +252,7 @@ module Search::Paper
   # Called after an oai_update
   def self.index_by_uids(uids)
     papers = ::Paper.includes(:authors, :categories).where(uid: uids)
-    
+
     puts "Indexing #{papers.count} papers by uid for #{Search.index_name}"
 
     docs = papers.map { |paper| make_doc(paper) }
@@ -294,7 +294,7 @@ module Search::Paper
       # Select categories separately to get correct ordering
 
       papers = ActiveSupport::OrderedHash.new
-      
+
       paper = nil
       author_ids = {}
       sciter_ids = {}
