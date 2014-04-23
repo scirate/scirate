@@ -3,6 +3,8 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'net/http'
 
+require File.expand_path('../../lib/exception_notification',  __FILE__)
+
 if defined?(Bundler)
   ActiveSupport::Deprecation.silence do
     Bundler.require(:default, Rails.env)
