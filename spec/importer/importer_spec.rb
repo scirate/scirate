@@ -38,6 +38,42 @@ describe "arxiv importer" do
     Paper.estimate_pubdate(time10).should == zone.parse("Mon Mar 10 20:00 EST 2014")
   end
 
+  describe 'when importing papers failed' do
+    it 'notifies the errors' do
+      allow(Paper).to receive(:import).and_return(double(failed_instances: ['failed']))
+      expect(SciRate3).to receive(:notify_error).once
+
+      Arxiv::Import.papers(@models)
+    end
+  end
+
+  describe 'when importing versions failed' do
+    it 'notifies the errors' do
+      allow(Version).to receive(:import).and_return(double(failed_instances: ['failed']))
+      expect(SciRate3).to receive(:notify_error).once
+
+      Arxiv::Import.papers(@models)
+    end
+  end
+
+  describe 'when importing authors failed' do
+    it 'notifies the errors' do
+      allow(Author).to receive(:import).and_return(double(failed_instances: ['failed']))
+      expect(SciRate3).to receive(:notify_error).once
+
+      Arxiv::Import.papers(@models)
+    end
+  end
+
+  describe 'when importing categories failed' do
+    it 'notifies the errors' do
+      allow(Category).to receive(:import).and_return(double(failed_instances: ['failed']))
+      expect(SciRate3).to receive(:notify_error).once
+
+      Arxiv::Import.papers(@models)
+    end
+  end
+
   it "updates existing papers correctly" do
     Arxiv::Import.papers(@models)
 
