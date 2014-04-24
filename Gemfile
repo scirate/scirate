@@ -5,8 +5,6 @@ source 'http://rubygems.org'
 gem 'rails', "~> 4.0.0"
 gem 'bcrypt-ruby'
 
-# Sends us emails when stuff breaks in production
-gem 'exception_notification', github: 'sunkencity/exception_notification'
 
 # Database stuff
 gem 'pg' # Postgres support
@@ -103,6 +101,9 @@ end
 group :production do
   # XXX (Mispy): Not sure we're using this atm
   gem 'newrelic_rpm'
+
+  # Sends us emails when stuff breaks in production
+  gem 'exception_notification', github: 'sunkencity/exception_notification'
 
   gem 'puma'
 end

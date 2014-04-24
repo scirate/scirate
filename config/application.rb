@@ -2,22 +2,12 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'net/http'
-require 'exception_notifier'
+
+require File.expand_path('../../lib/exception_notification',  __FILE__)
 
 if defined?(Bundler)
   ActiveSupport::Deprecation.silence do
     Bundler.require(:default, Rails.env)
-  end
-end
-
-class Exception
-  # From http://stackoverflow.com/questions/2823748/how-do-i-add-information-to-an-exception-message-without-changing-its-class-in-r
-  def with_details(extra)
-    begin
-      raise self, "#{message} - #{extra}", backtrace
-    rescue Exception => e
-      return e
-    end
   end
 end
 
@@ -73,24 +63,5 @@ module SciRate3
     config.action_mailer.default_url_options = { :host => Settings::HOST }
 
     config.cache_store = :memory_store
-  end
-
-  SciRate3::Application.config.middleware.use ::ExceptionNotifier,
-    email_prefix: "[#{Settings::STAGING ? 'scirate-dev' : 'scirate'} error] ",
-    sender_address: "notifier@scirate.com",
-    exception_recipients: %w{scirate@mispy.me}
-
-  class << self
-    def notify_error(exception, message=nil)
-      if exception.is_a?(String)
-        exception = RuntimeError.new(exception)
-      end
-      exception = exception.with_details(message) if message
-      puts exception.inspect
-      puts exception.backtrace.join("\n") if exception.backtrace
-      if Rails.env == "production"
-        ::ExceptionNotifier::Notifier.background_exception_notification(exception)
-      end
-    end
   end
 end
