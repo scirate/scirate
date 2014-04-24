@@ -41,6 +41,7 @@ describe "arxiv importer" do
   describe 'when importing papers failed' do
     it 'notifies the errors' do
       allow(Paper).to receive(:import).and_return(double(failed_instances: ['failed']))
+      allow(Search::Paper).to receive(:index_by_uids) # stub out indexer
       expect(SciRate3).to receive(:notify_error).once
 
       Arxiv::Import.papers(@models)
