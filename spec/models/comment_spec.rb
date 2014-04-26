@@ -20,35 +20,13 @@
 require 'spec_helper'
 
 describe Comment do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:paper) { FactoryGirl.create(:paper) }
-
-  before do
-    @comment = user.comments.create(paper_uid: paper.uid, content: "Test comment.")
-  end
-
-  subject { @comment }
-
-  it { should respond_to(:content) }
-  it { should respond_to(:user_id) }
-  it { should respond_to(:paper_uid) }
-  its(:user) { should == user }
-  its(:paper){ should == paper }
-  
-  it { should be_valid }
-
-  describe "when user id is not present" do
-    before { @comment.user_id = nil }
-    it { should_not be_valid }
-  end
-
-  describe "when paper id is not present" do
-    before { @comment.paper_uid = nil }
-    it { should_not be_valid }
-  end
-
-  describe "when content is not present" do
-    before { @comment.content = " " }
-    it { should_not be_valid }
-  end
+  it { should belong_to(:user) }
+  it { should belong_to(:paper) }
+  it { should belong_to(:parent).class_name('Comment') }
+  it { should belong_to(:ancestor).class_name('Comment') }
+  it { should have_many(:reports).class_name('CommentReport') }
+  it { should have_many(:children).class_name('Comment') }
+  it { should validate_presence_of(:user) }
+  it { should validate_presence_of(:paper) }
+  it { should validate_presence_of(:content) }
 end

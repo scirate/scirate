@@ -24,9 +24,7 @@ class Comment < ActiveRecord::Base
   belongs_to :parent, class_name: "Comment" # Immediate reply ancestor
   belongs_to :ancestor, class_name: "Comment" # Highest-level reply ancestor
 
-  validates :user,    presence: true
-  validates :paper,   presence: true
-  validates :content, presence: true
+  validates :user, :paper, :content, presence: true
 
   has_many :reports, class_name: "CommentReport"
   has_many :children, foreign_key: 'parent_id', class_name: 'Comment'
@@ -43,7 +41,7 @@ class Comment < ActiveRecord::Base
 
   def self.find_by_feed_uids(feed_uids)
     Comment.joins(:paper, paper: :categories)
-           .where(deleted: false, hidden: false, 
+           .where(deleted: false, hidden: false,
                   paper: { categories: { feed_uid: feed_uids } })
            .group('comments.id')
            .order("comments.created_at DESC")
