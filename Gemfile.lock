@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/code4lib/ruby-oai.git
-  revision: ebe92638c483813cd401c9588334d64ff46aae70
-  specs:
-    oai (0.3.1)
-      builder (>= 2.0.0)
-      faraday
-      faraday_middleware
-
-GIT
   remote: git://github.com/mispy/arxivsync.git
   revision: ea6be1ba6fe295c72cbe7addc6bbcfe579b378b3
   specs:
@@ -132,6 +123,10 @@ GEM
     net-ssh (2.8.0)
     newrelic_rpm (3.7.3.204)
     nokogiri (1.5.9)
+    oai (0.3.1)
+      builder (>= 2.0.0)
+      faraday
+      faraday_middleware
     ox (2.1.1)
     pg (0.17.1)
     polyamorous (0.6.4)
@@ -273,11 +268,8 @@ DEPENDENCIES
   database_cleaner
   exception_notification!
   factory_girl_rails
-  faraday (= 0.8.9)
   jquery-rails
   newrelic_rpm
-  nokogiri (= 1.5.9)
-  oai!
   pg
   pry
   pry-rails
