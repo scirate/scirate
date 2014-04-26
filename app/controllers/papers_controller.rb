@@ -3,32 +3,8 @@ class PapersController < ApplicationController
 
   def show
     @paper = Paper.find_by_uid!(paper_id)
-
     @scited = current_user && current_user.scited_papers.where(id: @paper.id).exists?
-
-    # Less naive statistical comment sorting as per
-    # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
-    @toplevel_comments = Comment.find_by_sql([
-      "SELECT *, COALESCE(((cached_votes_up + 1.9208) / NULLIF(cached_votes_up + cached_votes_down, 0) - 1.96 * SQRT((cached_votes_up * cached_votes_down) / NULLIF(cached_votes_up + cached_votes_down, 0) + 0.9604) / NULLIF(cached_votes_up + cached_votes_down, 0)) / (1 + 3.8416 / NULLIF(cached_votes_up + cached_votes_down, 0)), 0) AS ci_lower_bound FROM comments WHERE paper_uid = ? AND ancestor_id IS NULL AND (hidden = FALSE OR user_id = ?) ORDER BY ci_lower_bound DESC, created_at ASC;",
-      @paper.uid,
-      current_user ? current_user.id : nil
-    ])
-
-    @comment_tree = {}
-    @paper.comments.where("ancestor_id IS NOT NULL").order("created_at ASC").each do |c|
-      @comment_tree[c.ancestor_id] ||= []
-      @comment_tree[c.ancestor_id] << c
-    end
-
-    @comments = []
-    @toplevel_comments.each do |c|
-      @comments << c
-      @comments += @comment_tree[c.id]||[]
-    end
-
-    @comments = @comments.reject do |c|
-      c.deleted? && (@comment_tree[c.id].nil? || @comment_tree[c.id].all? { |c2| c2.deleted? })
-    end
+    @comments = find_comments_sorted_by_rating
   end
 
   def __quote(val)
@@ -130,5 +106,39 @@ class PapersController < ApplicationController
 
   def has_versioning_suffix?(id)
     id =~ /v\d/
+  end
+
+  # Less naive statistical comment sorting as per
+  # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
+  def find_top_level_comments
+    total_votes = %Q{ NULLIF(cached_votes_up + cached_votes_down, 0) }
+    Comment.find_by_sql([
+      %Q{
+        SELECT *, COALESCE(
+          ((cached_votes_up + 1.9208) / #{total_votes} - 1.96 * SQRT((cached_votes_up * cached_votes_down) / #{total_votes} + 0.9604) / #{total_votes} ) / (1 + 3.8416 / #{total_votes})
+        , 0) AS ci_lower_bound
+        FROM comments
+        WHERE paper_uid = ? AND ancestor_id IS NULL AND deleted = FALSE
+        AND (hidden = FALSE OR user_id = ?)
+        ORDER BY ci_lower_bound DESC, created_at ASC;
+      }, @paper.uid, current_user.try(:id)])
+  end
+
+  def find_comments_with_ancestors(ancestors)
+    ancestor_ids = ancestors.map(&:id)
+    @paper.comments.where(ancestor_id: ancestor_ids, deleted: false).order('created_at ASC')
+  end
+
+  def find_comments_sorted_by_rating
+    toplevel_comments = find_top_level_comments
+    comment_tree = find_comments_with_ancestors(toplevel_comments).group_by(&:ancestor_id)
+
+    comments = []
+    toplevel_comments.each do |ancestor|
+      comments << ancestor
+      comments += comment_tree[ancestor.id] || []
+    end
+
+    comments
   end
 end
