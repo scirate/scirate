@@ -4,7 +4,7 @@ describe "Admin tools" do
   describe "Comment moderation" do
     before do
       @moderator = FactoryGirl.create(:user, account_status: User::STATUS_MODERATOR)
-      @paper = FactoryGirl.create(:paper_with_comments)
+      @paper = FactoryGirl.create(:paper_with_comments_and_categories)
       @comment = @paper.comments.where(deleted: false).first
       @deleted_comment = @paper.comments.where(deleted: true).first
       sign_in(@moderator)
