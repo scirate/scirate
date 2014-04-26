@@ -2,13 +2,7 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.find_by_uid(params[:id])
-
-    if @paper.nil?
-      # Might be a versioned link
-      @paper = Paper.find_by_uid!(params[:id].split(/v\d/)[0])
-      redirect_to paper_path(@paper)
-    end
+    @paper = Paper.find_by_uid!(paper_id)
 
     @scited = current_user && current_user.scited_papers.where(id: @paper.id).exists?
 
@@ -32,8 +26,8 @@ class PapersController < ApplicationController
       @comments += @comment_tree[c.id]||[]
     end
 
-    @comments = @comments.reject do |c| 
-      c.deleted && (@comment_tree[c.id].nil? || @comment_tree[c.id].all? { |c2| c2.deleted })
+    @comments = @comments.reject do |c|
+      c.deleted? && (@comment_tree[c.id].nil? || @comment_tree[c.id].all? { |c2| c2.deleted? })
     end
   end
 
@@ -122,5 +116,19 @@ class PapersController < ApplicationController
     end
 
     redirect_to papers_path(params.merge(date: pdate, action: nil))
+  end
+
+  private
+
+  def paper_id
+    if has_versioning_suffix?(params[:id])
+      params[:id].split(/v\d/)[0]
+    else
+      params[:id]
+    end
+  end
+
+  def has_versioning_suffix?(id)
+    id =~ /v\d/
   end
 end
