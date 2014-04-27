@@ -137,7 +137,7 @@ class FeedsController < ApplicationController
   end
 
   def _recent_comments(feed_uids)
-    ids = Comment.find_by_feed_uids(feed_uids).limit(10).pluck(:id)
+    ids = Comment.find_all_by_feed_uids(feed_uids).limit(10).pluck(:id)
     Comment.includes(:user, :paper)
            .where(id: ids)
            .index_by(&:id)
@@ -157,13 +157,13 @@ class FeedsController < ApplicationController
     per_page = 70
 
     filters = [
-      { 
+      {
         range: {
           pubdate: {
            from: backdate,
            to: date
           }
-        } 
+        }
       },
     ]
 
@@ -182,7 +182,7 @@ class FeedsController < ApplicationController
       query: {
         filtered: {
           filter: {
-            :and => filters         
+            :and => filters
           }
         }
       }

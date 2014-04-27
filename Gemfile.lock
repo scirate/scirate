@@ -134,8 +134,6 @@ GEM
     nokogiri (1.5.9)
     ox (2.1.1)
     pg (0.17.1)
-    polyamorous (0.6.4)
-      activerecord (>= 3.0)
     polyglot (0.3.4)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -215,10 +213,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
-    squeel (1.1.1)
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
-      polyamorous (~> 0.6.0)
     sshkit (1.4.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -295,7 +289,6 @@ DEPENDENCIES
   slim
   spring
   spring-commands-rspec
-  squeel
   stretcher
   thin
   uglifier
