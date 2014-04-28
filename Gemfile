@@ -20,13 +20,10 @@ gem 'chronic' # Natural language date parsing
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
-gem 'oai', github: 'code4lib/ruby-oai'
 gem 'arxivsync', github: 'mispy/arxivsync'
-gem 'nokogiri', '1.5.9'
 
 # Elasticsearch searchkick gem
 gem 'stretcher'
-gem 'faraday', '0.8.9' # 0.9.0 breaks faraday_middleware-multi_json
 
 # Asset preprocessors
 gem 'sass-rails'
