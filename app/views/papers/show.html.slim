@@ -18,7 +18,7 @@
         = @paper.abstract
       .dates
         | Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} to
-        strong= @paper.feeds[0].fullname
+        strong<= @paper.feeds[0].fullname
         |  [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
         br
         | Published #{@paper.pubdate.to_date.to_formatted_s(:rfc822)}
@@ -29,7 +29,7 @@
         .categories
           | Subjects:
           - @paper.categories[0..-1].each do |cat|
-            => link_to cat.feed_uid, feed_path(cat.feed_uid)
+            =< link_to cat.feed_uid, feed_path(cat.feed_uid)
       - [:author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy].each do |field|
         - unless @paper.send(field).nil?
           = field.to_s.gsub('_', ' ').capitalize
