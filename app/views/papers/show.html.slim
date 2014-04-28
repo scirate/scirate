@@ -17,7 +17,7 @@
       .abstract.tex2jax
         = @paper.abstract
       .dates
-        | Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} to 
+        | Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} to
         strong= @paper.feeds[0].fullname
         |  [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
         br
@@ -27,7 +27,7 @@
           |  Updated #{@paper.update_date.to_date.to_formatted_s(:rfc822)}
       - if @paper.categories.length > 1
         .categories
-          | Subjects: 
+          | Subjects:
           - @paper.categories[0..-1].each do |cat|
             => link_to cat.feed_uid, feed_path(cat.feed_uid)
       - [:author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy].each do |field|
@@ -40,12 +40,12 @@
         = link_to @paper.pdf_url, @paper.pdf_url
         - if @paper.scites_count > 0
           .scites
-            strong 
-              | Scited by: 
+            strong
+              | Scited by:
             - @paper.sciters.each_with_index do |user, i|
               = link_to user.fullname, user
               - if i != @paper.scites_count-1
-                | , 
+                | ,
         .comments
           a name="comments"
           h4= pluralize(@comments.size, "comment")
