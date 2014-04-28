@@ -20,7 +20,7 @@ gem 'chronic' # Natural language date parsing
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
-gem 'oai', github: 'code4lib/ruby-oai'
+gem 'oai', github: 'mispy/ruby-oai' # For Rails 4.1 compatibility
 gem 'arxivsync', github: 'mispy/arxivsync'
 gem 'nokogiri', '1.5.9'
 
