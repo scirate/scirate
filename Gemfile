@@ -93,8 +93,11 @@ group :test do
   gem 'database_cleaner'
 
   # OS X specific?
-  gem 'rb-fsevent', :require => false
+  gem 'rb-fsevent', require: false
   gem 'rb-readline'
+
+  # Code coverage
+  gem 'coveralls', require: false
 end
 
 group :production do

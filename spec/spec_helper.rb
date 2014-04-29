@@ -1,3 +1,8 @@
+
+# Code coverage for Travis
+require 'coveralls'
+Coveralls.wear!
+
 require 'capybara/rspec'
 
 ENV["RAILS_ENV"] ||= 'test'
