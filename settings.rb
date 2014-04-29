@@ -2,10 +2,10 @@ module Settings
   # Definable application-wide settings which can be
   # overrided by either a local_settings.rb file or values
   # of ENV (in that order). Intended to separate SciRate
-  # settings (some of which are sensitive) from general Rails 
+  # settings (some of which are sensitive) from general Rails
   # configuration.
-  
-  # An ordered list of the top-level arxiv categories which may be parents 
+
+  # An ordered list of the top-level arxiv categories which may be parents
   # to other categories. Used for the sidebar, search etc
   ARXIV_FOLDERS = ['astro-ph', 'cond-mat', 'gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nlin', 'nucl-ex', 'nucl-th', 'physics', 'quant-ph', 'math', 'cs', 'q-bio', 'q-fin', 'stat']
 
@@ -34,12 +34,12 @@ module Settings
 
   #####
   # Sensitive production settings
-  # Define in Heroku ENV config
+  # Define in ENV or server local_settings.rb
   #####
 
   # Rails secret token for signing cookies
   if ENV['RAILS_ENV'] == 'production'
-    SECRET_KEY_BASE = '' 
+    SECRET_KEY_BASE = ''
     SECRET_TOKEN = ''
   else
     SECRET_KEY_BASE = '027d35bd099187fe704c6cb189fced29f1562ff46397d77c8e6cfc3e2e66667b98ecb61fa0809807b80934fde0ac4b874ac6c6a3a78e3dcd8e0d906288d1306f'
@@ -49,7 +49,11 @@ module Settings
   # Sendgrid auth details used in production to send UserMailer mail
   SENDGRID_USERNAME = ''
   SENDGRID_PASSWORD = ''
-  
+
+  # Google OAuth tokens as per https://github.com/zquestz/omniauth-google-oauth2
+  GOOGLE_CLIENT_ID = ''
+  GOOGLE_CLIENT_SECRET = ''
+
   # New Relic app monitoring auth details
   # NEW_RELIC_LICENSE_KEY = ''
   # NEW_RELIC_APP_NAME = ''

@@ -5,7 +5,6 @@ source 'http://rubygems.org'
 gem 'rails', "~> 4.0.0"
 gem 'bcrypt-ruby'
 
-
 # Database stuff
 gem 'pg' # Postgres support
 gem 'activerecord-import' # For bulk importing papers
@@ -16,6 +15,10 @@ gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
 gem 'will_paginate' # Displaying pages of results
 gem 'chronic' # Natural language date parsing
 
+# Authentication
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+
 # For interfacing with the arxiv OAI to
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
@@ -24,7 +27,7 @@ gem 'oai', github: 'mispy/ruby-oai' # For Rails 4.1 compatibility
 gem 'arxivsync', github: 'mispy/arxivsync'
 gem 'nokogiri', '1.5.9'
 
-# Elasticsearch searchkick gem
+# Elasticsearch API gem
 gem 'stretcher'
 gem 'faraday', '0.8.9' # 0.9.0 breaks faraday_middleware-multi_json
 
