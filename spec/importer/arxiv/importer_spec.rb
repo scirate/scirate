@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'arxivsync'
-require 'arxiv_import'
 
 describe "arxiv importer" do
   before(:all) do
@@ -8,34 +7,6 @@ describe "arxiv importer" do
     archive.read_metadata do |models|
       @models = models
     end
-  end
-
-  it "estimates pubdates correctly" do
-    # arXiv runs on EST localtime
-    # arxiv.org/localtime
-    zone = ActiveSupport::TimeZone["EST"]
-
-    time1 = zone.parse("Wed Mar 5 15:59 EST 2014")
-    time2 = zone.parse("Wed Mar 5 16:01 EST 2014")
-    time3 = zone.parse("Thu Mar 6 01:00 EST 2014")
-    Paper.estimate_pubdate(time1).should == zone.parse("Wed Mar 5 20:00 EST 2014")
-    Paper.estimate_pubdate(time2).should == zone.parse("Thu Mar 6 20:00 EST 2014")
-    Paper.estimate_pubdate(time3).should == zone.parse("Thu Mar 6 20:00 EST 2014")
-
-    time4 = zone.parse("Fri Mar 7 15:59 EST 2014")
-    time5 = zone.parse("Fri Mar 7 16:01 EST 2014")
-    time6 = zone.parse("Sat Mar 8 15:59 EST 2014")
-    time7 = zone.parse("Sat Mar 8 16:01 EST 2014")
-    time8 = zone.parse("Sun Mar 9 15:59 EST 2014")
-    time9 = zone.parse("Sun Mar 9 16:01 EST 2014")
-    time10 = zone.parse("Mon Mar 10 15:59 EST 2014")
-    Paper.estimate_pubdate(time4).should == zone.parse("Sun Mar 9 20:00 EST 2014")
-    Paper.estimate_pubdate(time5).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time6).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time7).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time8).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time9).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time10).should == zone.parse("Mon Mar 10 20:00 EST 2014")
   end
 
   describe 'when importing papers failed' do

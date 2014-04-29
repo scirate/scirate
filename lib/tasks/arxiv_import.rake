@@ -1,5 +1,5 @@
 require 'arxivsync'
-require 'arxiv_import'
+require 'arxiv/import'
 
 namespace :arxiv do
   desc "Bulk import of scraped arxiv data"

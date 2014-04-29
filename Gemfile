@@ -98,6 +98,7 @@ group :test do
 
   # Code coverage
   gem 'coveralls', require: false
+  gem 'byebug', require: false
 end
 
 group :production do
