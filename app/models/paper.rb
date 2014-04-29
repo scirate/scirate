@@ -55,29 +55,6 @@ class Paper < ActiveRecord::Base
     ::Search::Paper.index(self)
   end
 
-  # Given when a paper was submitted, estimate the
-  # time at which the arXiv was likely to have published it
-  def self.estimate_pubdate(submit_date)
-    submit_date = submit_date.in_time_zone('EST')
-    pubdate = submit_date.dup.change(hour: 20)
-
-    # Weekend submissions => Monday
-    if [6,0].include?(submit_date.wday)
-      pubdate += 1.days if submit_date.wday == 0
-      pubdate += 2.days if submit_date.wday == 6
-    else
-      if submit_date.wday == 5
-        pubdate += 2.days # Friday submissions => Sunday
-      end
-
-      if submit_date.hour >= 16 # Past submission deadline
-        pubdate += 1.day
-      end
-    end
-
-    pubdate.utc
-  end
-
   def refresh_comments_count!
     self.comments_count = Comment.where(
       paper_uid: uid,
@@ -102,6 +79,7 @@ class Paper < ActiveRecord::Base
   end
 
   private
+
     def update_date_is_after_submit_date
       return unless submit_date and update_date
 
@@ -109,5 +87,5 @@ class Paper < ActiveRecord::Base
         errors.add(:update_date, "must not be earlier than submit_date")
       end
     end
-end
 
+end

@@ -33,7 +33,7 @@ FactoryGirl.define do
     sequence(:uid)         { |n| "#{1000+n}/#{1000+n}.#{1000+n}" }
     submit_date            { Date.today }
     update_date            { Date.today }
-    pubdate                { Paper.estimate_pubdate(Date.today) }
+    sequence(:pubdate)     { |n| Arxiv::PaperPublishedDateEstimation.new(Date.today + n.days).estimate_pubdate }
     sequence(:abs_url)     { |n| "http://arxiv.org/abs/#{1000+n}/#{1000+n}.#{1000+n}" }
     sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}/#{1000+n}.#{1000+n}" }
     author_str             'Hilbert N. Grande, Lucrezia Mongfish'
