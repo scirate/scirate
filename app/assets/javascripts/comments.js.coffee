@@ -61,7 +61,7 @@ class Comment
     @votestate = 'downvote'
 
     $.post "/comments/#{@cid}/downvote"
-  
+
   unvote: ->
     """Undo an existing downvote or upvote."""
     if @votestate == 'upvote'
