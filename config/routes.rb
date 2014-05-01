@@ -26,7 +26,7 @@ SciRate3::Application.routes.draw do
   end
   get '/comments', to: 'comments#index'
 
-  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/:provider/callback', to: 'sessions#omniauth_create'
   get 'auth/failure', to: redirect('/login')
 
   get '/signup',   to: 'users#new', as: 'signup'

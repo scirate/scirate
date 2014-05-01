@@ -7,7 +7,7 @@ module SessionsHelper
     end
 
     if session[:api_action]
-      
+
     end
 
     self.current_user = user

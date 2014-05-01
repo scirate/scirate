@@ -4,7 +4,7 @@
   h1 Sign in to SciRate
 
   -# Google sign in
-  span id="signinButton" class="g-signin" data-callback="googleSignin" data-clientid=(Settings::GOOGLE_CLIENT_ID) data-cookiepolicy="single_host_origin" data-request-visibleactions="" data-scope="profile"
+  = link_to "Sign in with Google", "/auth/google_oauth2", id: "sign_in"
 
   = form_tag login_path do
     .row

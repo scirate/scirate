@@ -13,8 +13,14 @@ class SessionsController < ApplicationController
       redirect_back_or user
     else
       flash.now[:error] = "Invalid email/password combination"
-      render 'new'    
+      render 'new'
     end
+  end
+
+  def omniauth_create
+    user = User.from_omniauth(env['omniauth.auth'])
+    sign_in user, remember_me: (params[:remember_me] == "1")
+    redirect_back_or user
   end
 
   def destroy

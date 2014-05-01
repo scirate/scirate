@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
   STATUS_SPAM = 'spam'
   ACCOUNT_STATES = [STATUS_ADMIN, STATUS_MODERATOR, STATUS_USER, STATUS_SPAM]
 
-  has_secure_password
+  has_secure_password(validations: false)
 
   has_many :scites, dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
@@ -45,13 +45,15 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
 
   valid_username_regex = /\A[a-zA-Z0-9\-_\.]+\z/i
-  validates :username, presence: true, 
+  validates :username, presence: true,
             format: { with: valid_username_regex, message: "may only contain alphanumeric characters and - or _" },
                     uniqueness: { case_sensitive: false }
 
   validate do |user|
-    if user.password && user.password.length < 6
-      user.errors.add :password, "must be at least 6 characters"
+    if user.provider.nil? # Only need a password if it's not oauth
+      if user.password && user.password.length < 6
+        user.errors.add :password, "must be at least 6 characters"
+      end
     end
 
     if user.username && Settings::RESERVED_USERNAMES.include?(user.username.downcase)
@@ -74,6 +76,19 @@ class User < ActiveRecord::Base
       else
         self.comments.update_all(hidden: false)
       end
+    end
+  end
+
+  def self.from_omniauth(auth)
+    where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
+      user.provider = auth.provider
+      user.uid = auth.uid
+      user.email = auth.info.email
+      user.fullname = auth.info.name
+      user.username = auth.uid.to_s
+      user.oauth_token = auth.credentials.token
+      user.oauth_expires_at = Time.at(auth.credentials.expires_at)
+      user.save!
     end
   end
 

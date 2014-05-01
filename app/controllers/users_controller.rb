@@ -4,18 +4,6 @@ class UsersController < ApplicationController
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def self.from_omniauth
-    where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
-      user.provider = auth.provider
-      user.uid = auth.uid
-      user.fullname = auth.info.name
-      user.username = auth.uid
-      user.oauth_token = auth.credentials.token
-      user.oauth_expires_at = Time.at(auth.credentials.expires_at)
-      user.save!
-    end
-  end
-
   def profile
     @user = User.find_by_username!(params[:username])
 

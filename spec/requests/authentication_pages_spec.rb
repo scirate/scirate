@@ -1,5 +1,25 @@
 require 'spec_helper'
 
+describe "omniauth signup" do
+  it "should allow signup via google" do
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+      provider: 'google',
+      uid: 'some_uid',
+      info: {
+        name: "Jaiden Mispy",
+        email: "jaiden@contextualsystems.com"
+      },
+      credentials: {
+        token: "some_token",
+        expires_at: (Date.today+1.day).to_time.to_i
+      }
+    })
+
+    visit login_path
+    click_link "Sign in with Google"
+  end
+end
+
 describe "Authentication" do
 
   subject { page }
@@ -89,7 +109,6 @@ describe "Authentication" do
         specify { response.should redirect_to(root_path) }
       end
     end
-
 
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
