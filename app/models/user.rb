@@ -79,19 +79,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.from_omniauth(auth)
-    where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
-      user.provider = auth.provider
-      user.uid = auth.uid
-      user.email = auth.info.email
-      user.fullname = auth.info.name
-      user.username = auth.uid.to_s
-      user.oauth_token = auth.credentials.token
-      user.oauth_expires_at = Time.at(auth.credentials.expires_at)
-      user.save!
-    end
-  end
-
   # Tell Rails routes to use our username
   # instead of id in generating urls
   def to_param
@@ -103,7 +90,7 @@ class User < ActiveRecord::Base
   end
 
   def self.default_username(fullname)
-    "#{fullname.parameterize}"
+    "#{fullname.parameterize}" + "-#{User.count}"
   end
 
   def scited?(paper)

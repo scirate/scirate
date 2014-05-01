@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140501194227) do
+ActiveRecord::Schema.define(version: 20140501213230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "auth_links", force: true do |t|
+    t.string   "provider",         null: false
+    t.string   "uid",              null: false
+    t.string   "oauth_token",      null: false
+    t.datetime "oauth_expires_at", null: false
+    t.integer  "user_id",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "authors", force: true do |t|
     t.integer "position",   null: false
@@ -167,10 +177,6 @@ ActiveRecord::Schema.define(version: 20140501194227) do
     t.boolean  "expand_abstracts",       default: false
     t.text     "account_status",         default: "user"
     t.text     "username",                                null: false
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "oauth_token"
-    t.datetime "oauth_expires_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
