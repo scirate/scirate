@@ -26,16 +26,19 @@ SciRate3::Application.routes.draw do
   end
   get '/comments', to: 'comments#index'
 
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/login')
+
   get '/signup',   to: 'users#new', as: 'signup'
   post '/signup',  to: 'users#create'
   get '/login',    to: 'sessions#new'
   post '/login',   to: 'sessions#create'
   get '/logout',   to: 'sessions#destroy'
-  get '/about',    to: 'static_pages#about'
-  get '/legal',    to: 'static_pages#legal'
-
   get '/signin',   to: redirect('/login')
   get '/signout',  to: redirect('/logout')
+
+  get '/about',    to: 'static_pages#about'
+  get '/legal',    to: 'static_pages#legal'
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'
@@ -48,8 +51,6 @@ SciRate3::Application.routes.draw do
 
   get '/settings/password', to: 'users#settings_password'
   post '/settings/password', to: 'users#settings_password'
-
-
 
   #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
   get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'
