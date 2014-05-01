@@ -29,10 +29,7 @@ class Comment < ActiveRecord::Base
   has_many :reports, class_name: "CommentReport"
   has_many :children, foreign_key: 'parent_id', class_name: 'Comment'
 
-  scope :active,  -> { where(deleted: false) }
-  scope :deleted, -> { where(deleted: true) }
-  scope :hidden,  -> { where(hidden: true) }
-  scope :visible, -> { where(hidden: false) }
+  scope :visible, -> { where(hidden: false, deleted: false) }
 
   after_save do
     paper.refresh_comments_count!

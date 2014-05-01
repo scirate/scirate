@@ -5,15 +5,17 @@ class CommentsController < ApplicationController
 
   def index
     if params[:feed]
+      # Comments on papers in a particular feed
       @feed = Feed.find_by_uid!(params[:feed])
       feed_uids = find_feed_ids(@feed)
       comments = Comment.find_all_by_feed_uids(feed_uids)
     elsif signed_in?
+      # Comments on papers in the user's home timeline
       feeds = current_user.feeds.includes(:children)
       feed_uids = feeds.map { |feed| find_feed_ids(feed) }.flatten
       comments = Comment.find_all_by_feed_uids(feed_uids)
     else
-      comments = Comment.active.visible
+      comments = Comment.all.visible
     end
 
     @comments = comments.order('created_at DESC').paginate(page: page_params)
