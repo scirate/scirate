@@ -17,8 +17,30 @@ class SessionsController < ApplicationController
     end
   end
 
+  # Sign in with an omniauth provider, creating a
+  # new user if necessary
   def omniauth_create
-    link = AuthLink.from_omniauth(env['omniauth.auth'])
+    auth = env['omniauth.auth']
+
+    begin
+      link = AuthLink.from_omniauth(auth)
+    rescue ActiveRecord::RecordInvalid => e
+      # Account with this email already created, but
+      # using a different auth method.
+      if e.message.include? "Email has already been taken"
+        if auth.provider == 'google_oauth2'
+          provider = "Google"
+        else
+          provider = auth.provider.capitalize
+        end
+
+        flash[:error] = "The email address #{auth.info.email} is already associated with a SciRate account. To connect your account to #{provider} please visit your settings page."
+        return render 'sessions/new'
+      else
+        raise
+      end
+    end
+
     user = link.user
     sign_in user, remember_me: (params[:remember_me] == "1")
     redirect_back_or user

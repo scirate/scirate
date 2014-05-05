@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe "omniauth signup" do
-  it "should allow signup via google" do
+describe "google signup" do
+  before do
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
       provider: 'google',
       uid: 'some_uid',
@@ -14,9 +14,20 @@ describe "omniauth signup" do
         expires_at: (Date.today+1.day).to_time.to_i
       }
     })
+  end
+
+  it "should allow signup via google" do
+    visit login_path
+    click_link "Sign in with Google"
+  end
+
+  it "should handle the case when email is taken" do
+    FactoryGirl.create(:user, email: "jaiden@contextualsystems.com")
 
     visit login_path
     click_link "Sign in with Google"
+    p page.text
+    page.should have_error_message "please visit your settings page"
   end
 end
 
