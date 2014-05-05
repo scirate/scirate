@@ -16,6 +16,7 @@ gem 'will_paginate' # Displaying pages of results
 gem 'chronic' # Natural language date parsing
 
 # Authentication
+gem 'activerecord-session_store'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 

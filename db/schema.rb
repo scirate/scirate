@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140501213230) do
+ActiveRecord::Schema.define(version: 20140505104518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,6 +147,16 @@ ActiveRecord::Schema.define(version: 20140501213230) do
   add_index "scites", ["paper_uid", "user_id"], name: "index_scites_on_paper_uid_and_user_id", unique: true, using: :btree
   add_index "scites", ["paper_uid"], name: "index_scites_on_paper_uid", using: :btree
   add_index "scites", ["user_id"], name: "index_scites_on_user_id", using: :btree
+
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "subscriptions", force: true do |t|
     t.integer  "user_id"
