@@ -18,7 +18,8 @@ class SessionsController < ApplicationController
   end
 
   def omniauth_create
-    user = User.from_omniauth(env['omniauth.auth'])
+    link = AuthLink.from_omniauth(env['omniauth.auth'])
+    user = link.user
     sign_in user, remember_me: (params[:remember_me] == "1")
     redirect_back_or user
   end

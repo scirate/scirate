@@ -32,6 +32,7 @@ doc/
 .project
 .DS_Store
 backup/*.dump
+coverage
 
 # This is deployment-specific
 public/robots.txt
