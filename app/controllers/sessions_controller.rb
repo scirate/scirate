@@ -26,6 +26,11 @@ class SessionsController < ApplicationController
 
     link = AuthLink.from_omniauth(auth)
 
+    unless link.user.nil?
+      sign_in link.user
+      return redirect_back_or link.user
+    end
+
     if auth.provider == 'google_oauth2'
       @provider = "Google"
     else
@@ -38,7 +43,7 @@ class SessionsController < ApplicationController
       # Account with this email already created, but
       # using a different auth method.
       flash[:error] = "The email address #{auth.info.email} is already associated with a SciRate account. To connect your account to #{@provider} please visit your settings page."
-      redirect_to login_path and return
+      return redirect_to login_path
     end
 
     # Preserve this while we ask for confirmation

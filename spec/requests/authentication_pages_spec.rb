@@ -1,15 +1,13 @@
 require 'spec_helper'
 
 describe "google signup" do
-  let(:email) { "jaiden@contextualsystems.com" }
-
-  before do
-    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+  let(:mock_auth) do
+    OmniAuth::AuthHash.new({
       provider: 'google',
       uid: 'some_uid',
       info: {
         name: "Jaiden Mispy",
-        email: email
+        email: "jaiden@contextualsystems.com"
       },
       credentials: {
         token: "some_token",
@@ -18,27 +16,40 @@ describe "google signup" do
     })
   end
 
+  before do
+    OmniAuth.config.mock_auth[:google_oauth2] = mock_auth
+  end
+
   it "should allow signup via google" do
     visit login_path
     click_link "Sign in with Google"
     expect(page).to have_content "about to create a new SciRate account"
     expect(page).to have_content "Google"
-    expect(page).to have_content email
+    expect(page).to have_content mock_auth.info.email
 
     click_button "Confirm And Create This Account"
     expect(page).to have_content "Sign out"
 
-    user = User.where(email: email).first
+    user = User.where(email: mock_auth.info.email).first
     expect(user.active?).to be_true
   end
 
   it "should handle the case when email is taken" do
-    FactoryGirl.create(:user, email: email)
+    FactoryGirl.create(:user, email: mock_auth.info.email)
 
     visit login_path
     click_link "Sign in with Google"
     p page.text
     expect(page).to have_error_message "please visit your settings page"
+  end
+
+  it "should allow login after account creation" do
+    AuthLink.from_omniauth(mock_auth).create_user!(mock_auth)
+
+    visit login_path
+    click_link "Sign in with Google"
+
+    expect(page).to have_content "Sign out"
   end
 end
 

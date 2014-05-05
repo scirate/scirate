@@ -15,13 +15,12 @@
 class AuthLink < ActiveRecord::Base
   belongs_to :user
 
-  def self.from_omniauth(auth, user=nil)
+  def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |link|
       link.provider = auth.provider
       link.uid = auth.uid
       link.oauth_token = auth.credentials.token
       link.oauth_expires_at = Time.at(auth.credentials.expires_at)
-      link.user = user
     end
   end
 

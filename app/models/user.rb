@@ -38,9 +38,9 @@ class User < ActiveRecord::Base
   has_many :scited_papers, through: :scites, source: :paper
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
+  has_many :feed_preferences, dependent: :destroy
+  has_many :auth_links, dependent: :destroy
   has_many :feeds, through: :subscriptions
-  has_many :feed_preferences
-  has_many :auth_links
 
   validates :fullname, presence: true, length: { maximum: 50 }
 
