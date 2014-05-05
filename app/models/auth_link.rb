@@ -21,17 +21,20 @@ class AuthLink < ActiveRecord::Base
       link.uid = auth.uid
       link.oauth_token = auth.credentials.token
       link.oauth_expires_at = Time.at(auth.credentials.expires_at)
-
-      if user.nil?
-        user = User.new
-        user.email = auth.info.email
-        user.fullname = auth.info.name
-        user.username = User.default_username(auth.info.name)
-        user.save!
-      end
-
       link.user = user
-      link.save!
+    end
+  end
+
+  def create_user!(auth)
+    User.new.tap do |user|
+      user.email = auth.info.email
+      user.fullname = auth.info.name
+      user.username = User.default_username(auth.info.name)
+      user.active = true # Don't need to ask for email confirmation in oauth
+      user.save!
+
+      self.user = user
+      save!
     end
   end
 end

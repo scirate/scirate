@@ -162,7 +162,7 @@ class User < ActiveRecord::Base
     UserMailer.email_change(self, address).deliver
   end
 
-  def active?
+  def email_confirmed?
     active
   end
 

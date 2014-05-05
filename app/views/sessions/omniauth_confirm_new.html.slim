@@ -1,0 +1,13 @@
+- provide :title, "Confirm new account"
+
+.container
+  h1 Confirm new account
+
+  p
+    | You are about to create a new SciRate account using a login from:
+
+  b
+    | #{@provider} #{@email}
+
+  = form_tag omniauth_create_path
+    = submit_tag "Confirm And Create This Account", class: 'btn btn-default'

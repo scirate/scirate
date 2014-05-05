@@ -70,7 +70,7 @@ class UsersController < ApplicationController
   def activate
     user = User.find_by_id(params[:id])
 
-    if user && !user.active? && user.confirmation_token == params[:confirmation_token]
+    if user && !user.email_confirmed? && user.confirmation_token == params[:confirmation_token]
 
       if user.confirmation_sent_at > 2.days.ago
         user.activate
