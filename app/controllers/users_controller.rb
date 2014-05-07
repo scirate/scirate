@@ -129,7 +129,7 @@ class UsersController < ApplicationController
     @user = current_user
     return unless request.post?
 
-    if @user.authenticate(params[:current_password])
+    if @user.password_digest.nil? || @user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
         if @user.change_password(params[:new_password])
           sign_in @user

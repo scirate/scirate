@@ -1,20 +1,7 @@
 require 'spec_helper'
 
 describe "google signup" do
-  let(:mock_auth) do
-    OmniAuth::AuthHash.new({
-      provider: 'google',
-      uid: 'some_uid',
-      info: {
-        name: "Jaiden Mispy",
-        email: "jaiden@contextualsystems.com"
-      },
-      credentials: {
-        token: "some_token",
-        expires_at: (Date.today+1.day).to_time.to_i
-      }
-    })
-  end
+  let(:mock_auth) { MockAuth.google }
 
   before do
     OmniAuth.config.mock_auth[:google_oauth2] = mock_auth
@@ -44,7 +31,7 @@ describe "google signup" do
   end
 
   it "should allow login after account creation" do
-    AuthLink.from_omniauth(mock_auth).create_user!(mock_auth)
+    AuthLink.from_omniauth(mock_auth).create_user!
 
     visit login_path
     click_link "Sign in with Google"

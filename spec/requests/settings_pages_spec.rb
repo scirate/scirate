@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "settings" do
+describe "Settings page" do
   before do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -53,5 +53,8 @@ describe "settings" do
     click_button "Save changes"
 
     expect(last_email).to be_nil
+  end
+
+  it "allows linking to google" do
   end
 end

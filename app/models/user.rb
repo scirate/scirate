@@ -54,14 +54,19 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
 
   validate do |user|
-    if user.auth_links.empty? # Only need a password if it's not oauth
-      if user.password && user.password.length < 6
-        user.errors.add :password, "must be at least 6 characters"
-      end
+    # Only need a password if it's not oauth
+    needs_password = user.auth_links.empty?
 
-      if user.password && user.password_confirmation != user.password
-        user.errors.add :password, "must match password confirmation"
-      end
+    if needs_password && user.password.nil?
+      user.errors.add :password, "must be present"
+    end
+
+    if user.password && user.password.length < 6
+      user.errors.add :password, "must be at least 6 characters"
+    end
+
+    if user.password && user.password_confirmation != user.password
+      user.errors.add :password, "must match password confirmation"
     end
 
     if user.username && Settings::RESERVED_USERNAMES.include?(user.username.downcase)

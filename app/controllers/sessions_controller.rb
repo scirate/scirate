@@ -17,14 +17,27 @@ class SessionsController < ApplicationController
     end
   end
 
-  # We have the information needed to sign in.
-  # However, the account may not exist, in which case:
-  # - Need to check that the email isn't taken
-  # - Ask for confirmation in case they didn't want a new account
-  def omniauth_check
+  def _omniauth_link_to_existing(link)
+    link.user = current_user
+    link.save!
+  end
+
+  def omniauth_callback
     auth = env['omniauth.auth']
 
     link = AuthLink.from_omniauth(auth)
+
+    if link.user.nil?
+      if signed_in?
+        # Link existing user to omniauth data
+        _omniauth_link_to_existing(link)
+      else
+        # Create a new user with omniauth data
+        _omniauth_new_user
+
+      end
+
+    else
 
     unless link.user.nil?
       sign_in link.user
@@ -52,13 +65,12 @@ class SessionsController < ApplicationController
     render 'sessions/omniauth_confirm_new'
   end
 
-  # Sign in with an omniauth provider, creating a
-  # new user if necessary
+  # Confirm creation of a new account from omniauth data
   def omniauth_create
     auth = session['omniauth.auth']
 
     link = AuthLink.from_omniauth(auth)
-    user = link.create_user!(auth)
+    user = link.create_user!
 
     sign_in user, remember_me: (params[:remember_me] == "1")
     redirect_back_or user
