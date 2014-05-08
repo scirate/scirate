@@ -15,5 +15,4 @@
 require 'spec_helper'
 
 describe AuthLink do
-  it { should validate_presence_of(:user) }
 end

@@ -30,7 +30,7 @@ describe "Settings page" do
     fill_in "Email", with: new_email
     click_button "Save changes"
 
-    expect(page).to have_selector('.alert-success')
+    expect(page).to have_success_message
 
     @user.reload
     expect(@user.fullname).to eq new_name
@@ -54,7 +54,42 @@ describe "Settings page" do
 
     expect(last_email).to be_nil
   end
+end
 
-  it "allows linking to google" do
+describe "Linking to Google" do
+  before do
+    OmniAuth.config.mock_auth[:google_oauth2] = MockAuth.google
+  end
+
+  context "with no existing auth link" do
+    let(:user) { FactoryGirl.create(:user) }
+
+    before do
+      sign_in user
+      visit settings_path
+      click_link "Enable Google login"
+    end
+
+    it "links successfully" do
+      expect(page).to have_success_message
+      expect(page).to have_content "Connected to Google"
+    end
+  end
+
+  context "with a mismatched auth link" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:link) { AuthLink.from_omniauth(MockAuth.google) }
+
+    before do
+      link.create_user!
+      sign_in user
+      visit settings_path
+      click_link "Enable Google login"
+    end
+
+    it "tells the user to disconnect the other link" do
+      expect(page).to have_error_message "already linked to another user"
+      expect(page).to_not have_content "Connected to Google"
+    end
   end
 end

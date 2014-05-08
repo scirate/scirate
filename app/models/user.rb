@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
 
   validate do |user|
     # Only need a password if it's not oauth
-    needs_password = user.auth_links.empty?
+    needs_password = user.auth_links.empty? && user.password_digest.nil?
 
     if needs_password && user.password.nil?
       user.errors.add :password, "must be present"
