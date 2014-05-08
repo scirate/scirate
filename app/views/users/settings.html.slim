@@ -20,13 +20,15 @@
         td= f.email_field :email, class: 'form-control'
     = f.submit "Save changes", class: "btn btn-default"
 
-  - if @user.auth_links.empty?
-    = link_to "Enable Google login", "/auth/google_oauth2", id: "sign_in"
-  - else
-    p
+  p.google
+    i> class="fa fa-google-plus-square"
+    - if @user.auth_links.empty?
+      = link_to "Enable Google login", "/auth/google_oauth2", id: "sign_in"
+    - else
       | Connected to Google (#{@user.auth_links[0].auth.info.email})
+      br
       = link_to "disconnect", omniauth_disconnect_path("google_oauth2")
 
   .gravatar
-    = gravatar_for(@user)
+    => gravatar_for(@user)
     = link_to "change", "http://gravatar.com/emails", target: "_blank"

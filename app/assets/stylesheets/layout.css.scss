@@ -557,7 +557,7 @@ div.abbr_comment {
   }
 
   .view-subs {
-    
+
   }
 }
 
@@ -849,6 +849,21 @@ div.feed-rightbar {
   margin-top: 10px;
 }
 
+#settingsPage .google {
+  margin-top: 10px;
+  line-height: 32px;
+  padding-left: 32px;
+  position: relative;
+
+  i {
+    position: absolute;
+    left: 0;
+    vertical-align: middle;
+    font-size: 32px;
+    color: #d73d32;
+  }
+}
+
 // Search stuff
 
 .inline-search {
@@ -886,7 +901,7 @@ div.feed-rightbar {
 #about {
   font-size: 15px;
   line-height: 1.7;
-  
+
   p {
     max-width: 750px;
   }
