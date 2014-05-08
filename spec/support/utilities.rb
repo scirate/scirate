@@ -96,6 +96,10 @@ def sign_in_with_google
 
   visit login_path
   click_link "Sign in with Google"
+end
+
+def sign_up_with_google
+  sign_in_with_google
 
   click_button "Confirm And Create This Account"
 end

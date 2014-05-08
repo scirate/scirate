@@ -25,6 +25,7 @@
   - else
     p
       | Connected to Google (#{@user.auth_links[0].auth.info.email})
+      = link_to "disconnect", omniauth_disconnect_path("google_oauth2")
 
   .gravatar
     = gravatar_for(@user)

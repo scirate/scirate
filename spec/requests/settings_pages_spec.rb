@@ -93,3 +93,39 @@ describe "Linking to Google" do
     end
   end
 end
+
+describe "Unlinking from Google" do
+  let(:user) { google_user }
+
+  context "with no password" do
+    before do
+      sign_up_with_google
+      visit settings_path
+      click_link "disconnect"
+    end
+
+    it "tells the user to add a password" do
+      expect(page).to have_error_message "add a password"
+      expect(page).to have_content "Connected to Google"
+    end
+  end
+
+  context "with password" do
+    before do
+      sign_up_with_google
+
+      visit settings_password_path
+      fill_in "new_password", with: 'newpass'
+      fill_in 'confirm_password', with: 'newpass'
+      click_button "Save changes"
+
+      visit settings_path
+      click_link "disconnect"
+    end
+
+    it "disconnects successfully" do
+      expect(page).to have_success_message "disconnected"
+      expect(page).to_not have_content "Connected to Google"
+    end
+  end
+end

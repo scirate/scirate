@@ -72,6 +72,17 @@ class SessionsController < ApplicationController
     end
   end
 
+  def omniauth_disconnect
+    if current_user.password_digest.nil?
+      flash[:error] = "Please add a password first. If you disconnect your Google account without a password, you won't be able to log in."
+      redirect_to settings_path
+    else
+      current_user.auth_links.destroy_all
+      flash[:success] = "Google account disconnected successfully."
+      redirect_to settings_path
+    end
+  end
+
   # Confirm creation of a new account from omniauth data
   def omniauth_create
     auth = session['omniauth.auth']
