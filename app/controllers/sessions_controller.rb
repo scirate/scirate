@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
 
     if user && user.authenticate(params[:password])
       sign_in user, remember_me: (params[:remember_me] == "1")
-      redirect_back_or user
+      redirect_back_or root_path
     else
       flash.now[:error] = "Invalid email/password combination"
       render 'new'
@@ -91,7 +91,7 @@ class SessionsController < ApplicationController
     user = link.create_user!
 
     sign_in user, remember_me: (params[:remember_me] == "1")
-    redirect_back_or user
+    redirect_back_or root_path
   end
 
   def destroy
