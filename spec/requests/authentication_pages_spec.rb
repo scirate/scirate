@@ -57,7 +57,7 @@ describe "Authentication" do
       user = FactoryGirl.create(:user)
       sign_in(user)
 
-      page.should have_title user.fullname
+      page.should have_title "Home feed"
       page.should have_link('Profile', href: user_path(user))
       page.should have_link('Settings', href: settings_path)
       page.should have_link('Sign out', href: logout_path)
@@ -151,8 +151,8 @@ describe "Authentication" do
         describe "when signing in again" do
           before { sign_in user }
 
-          it "should render the default (profile) page" do
-            page.should have_title user.fullname
+          it "should render the (default) home feed" do
+            page.should have_title "Home feed"
           end
         end
       end

@@ -6,7 +6,7 @@ describe "Password Settings" do
     let(:user) { google_user }
 
     before do
-      sign_in_with_google
+      sign_up_with_google
       visit settings_password_path
 
       expect(page).to have_content "does not require a password"
