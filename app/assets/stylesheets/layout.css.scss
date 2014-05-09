@@ -85,6 +85,30 @@ a.js:hover {
   background: #5eb348;
 }
 
+.btn-google {
+  background-color: #ef6666;
+  border: 1px solid #e34242;
+  color: white !important;
+  position: relative;
+
+  i {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 36px;
+    height: 41px;
+    background: image-url("icon-gplus.png") no-repeat;
+    background-color: rgba(255, 255, 255, 0.07);
+  }
+
+  span {
+    display: inline-block;
+    margin-left: 34px;
+    margin-top: -3px;
+  }
+}
+
 // Slightly faded description text
 
 .description {

@@ -3,8 +3,13 @@
 .container
   h1 Sign in to SciRate
 
-  -# Google sign in
-  = link_to "Sign in with Google", "/auth/google_oauth2", id: "sign_in"
+  .row
+    .col-md-6
+      a.btn.btn-google href="/auth/google_oauth2"
+        i
+        span Sign in with Google
+
+      hr
 
   = form_tag login_path do
     .row
@@ -34,37 +39,3 @@
         p
           | New user? #{link_to "Sign up now!", signup_path}
 
-
-|
-  <script type="text/javascript">
-    jQuery(function() {
-      return $.ajax({
-        url: 'https://apis.google.com/js/client:plus.js?onload=gpAsyncInit',
-        dataType: 'script',
-        cache: true
-      });
-    });
-
-    window.gpAsyncInit = function() {
-      $('.googleplus-login').click(function(e) {
-        e.preventDefault();
-        gapi.auth.authorize({
-          immediate: true,
-          response_type: 'code',
-          cookie_policy: 'single_host_origin',
-          client_id: '000000000000.apps.googleusercontent.com',
-          scope: 'email profile'
-        }, function(response) {
-          if (response && !response.error) {
-            // google authentication succeed, now post data to server and handle data securely
-            jQuery.ajax({type: 'POST', url: "/auth/google_oauth2/callback", dataType: 'json', data: response,
-              success: function(json) {
-                // response from server
-            });
-          } else {
-            // google authentication failed
-          }
-        });
-      });
-    };
-  </script>

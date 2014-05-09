@@ -1,0 +1,25 @@
+- provide(:title, 'Join SciRate')
+
+#signup.container
+  .row
+    .col-md-6
+      h1 Join SciRate
+
+      a.btn.btn-google href="/auth/google_oauth2"
+        i
+        span Sign up with Google
+
+      hr
+
+      = form_for(@user, url: signup_path(@user)) do |f|
+        = render 'shared/error_messages', object: f.object
+        .form-group
+          = f.label :fullname, "Name"
+          = f.text_field :fullname, class: 'form-control'
+        .form-group
+          = f.label :email
+          = f.text_field :email, class: 'form-control'
+        .form-group
+          = f.label :password
+          = f.password_field :password, class: 'form-control'
+        = f.submit "Sign up", class: 'btn btn-default'
