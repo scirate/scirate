@@ -85,6 +85,30 @@ a.js:hover {
   background: #5eb348;
 }
 
+.btn-google {
+  background-color: #ef6666;
+  border: 1px solid #e34242;
+  color: white !important;
+  position: relative;
+
+  i {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 36px;
+    height: 41px;
+    background: image-url("icon-gplus.png") no-repeat;
+    background-color: rgba(255, 255, 255, 0.07);
+  }
+
+  span {
+    display: inline-block;
+    margin-left: 34px;
+    margin-top: -3px;
+  }
+}
+
 // Slightly faded description text
 
 .description {
@@ -557,7 +581,7 @@ div.abbr_comment {
   }
 
   .view-subs {
-    
+
   }
 }
 
@@ -849,6 +873,21 @@ div.feed-rightbar {
   margin-top: 10px;
 }
 
+p.google {
+  margin-top: 10px;
+  line-height: 32px;
+  padding-left: 32px;
+  position: relative;
+
+  i {
+    position: absolute;
+    left: 0;
+    vertical-align: middle;
+    font-size: 32px;
+    color: #d73d32;
+  }
+}
+
 // Search stuff
 
 .inline-search {
@@ -886,7 +925,7 @@ div.feed-rightbar {
 #about {
   font-size: 15px;
   line-height: 1.7;
-  
+
   p {
     max-width: 750px;
   }

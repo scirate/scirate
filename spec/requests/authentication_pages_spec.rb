@@ -1,5 +1,45 @@
 require 'spec_helper'
 
+describe "google signup" do
+  let(:mock_auth) { MockAuth.google }
+
+  before do
+    OmniAuth.config.mock_auth[:google_oauth2] = mock_auth
+  end
+
+  it "should allow signup via google" do
+    visit login_path
+    click_link "Sign in with Google"
+    expect(page).to have_content "about to create a new SciRate account"
+    expect(page).to have_content "Google"
+    expect(page).to have_content mock_auth.info.email
+
+    click_button "Confirm And Create This Account"
+    expect(page).to have_content "Sign out"
+
+    user = User.where(email: mock_auth.info.email).first
+    expect(user.active?).to be_true
+  end
+
+  it "should handle the case when email is taken" do
+    FactoryGirl.create(:user, email: mock_auth.info.email)
+
+    visit login_path
+    click_link "Sign in with Google"
+    p page.text
+    expect(page).to have_error_message "please visit your settings page"
+  end
+
+  it "should allow login after account creation" do
+    AuthLink.from_omniauth(mock_auth).create_user!
+
+    visit login_path
+    click_link "Sign in with Google"
+
+    expect(page).to have_content "Sign out"
+  end
+end
+
 describe "Authentication" do
 
   subject { page }
@@ -17,7 +57,7 @@ describe "Authentication" do
       user = FactoryGirl.create(:user)
       sign_in(user)
 
-      page.should have_title user.fullname
+      page.should have_title "Home feed"
       page.should have_link('Profile', href: user_path(user))
       page.should have_link('Settings', href: settings_path)
       page.should have_link('Sign out', href: logout_path)
@@ -90,7 +130,6 @@ describe "Authentication" do
       end
     end
 
-
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
       let(:paper){ FactoryFirl.create(:paper) }
@@ -112,8 +151,8 @@ describe "Authentication" do
         describe "when signing in again" do
           before { sign_in user }
 
-          it "should render the default (profile) page" do
-            page.should have_title user.fullname
+          it "should render the (default) home feed" do
+            page.should have_title "Home feed"
           end
         end
       end

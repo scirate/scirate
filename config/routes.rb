@@ -26,16 +26,22 @@ SciRate3::Application.routes.draw do
   end
   get '/comments', to: 'comments#index'
 
+  get '/auth/:provider/callback', to: 'sessions#omniauth_callback'
+  get '/auth/:provider/disconnect',
+    to: 'sessions#omniauth_disconnect', as: 'omniauth_disconnect'
+  get '/auth/failure', to: redirect('/login')
+  post '/auth/create', to: 'sessions#omniauth_create', as: 'omniauth_create'
+
   get '/signup',   to: 'users#new', as: 'signup'
   post '/signup',  to: 'users#create'
   get '/login',    to: 'sessions#new'
   post '/login',   to: 'sessions#create'
   get '/logout',   to: 'sessions#destroy'
-  get '/about',    to: 'static_pages#about'
-  get '/legal',    to: 'static_pages#legal'
-
   get '/signin',   to: redirect('/login')
   get '/signout',  to: redirect('/logout')
+
+  get '/about',    to: 'static_pages#about'
+  get '/legal',    to: 'static_pages#legal'
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'
@@ -48,8 +54,6 @@ SciRate3::Application.routes.draw do
 
   get '/settings/password', to: 'users#settings_password'
   post '/settings/password', to: 'users#settings_password'
-
-
 
   #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
   get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'

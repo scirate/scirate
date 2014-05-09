@@ -21,7 +21,7 @@
 #
 # Instead, we should choose the assumptions we want to make for
 # unifying different authors at the point of retrieval. This also
-# makes queries and sphinx indexing faster, as we only have to go
+# makes queries and indexing faster, as we only have to go
 # through a single association to get most of the data.
 #
 class Author < ActiveRecord::Base

@@ -91,10 +91,44 @@ def sign_in(user)
   cookies[:remember_token] = user.remember_token
 end
 
+def sign_in_with_google
+  OmniAuth.config.mock_auth[:google_oauth2] = MockAuth.google
+
+  visit login_path
+  click_link "Sign in with Google"
+end
+
+def sign_up_with_google
+  sign_in_with_google
+
+  click_button "Confirm And Create This Account"
+end
+
+def google_user
+  User.where(email: MockAuth.google.info.email).first
+end
+
 def last_email
   ActionMailer::Base.deliveries.last
 end
 
 def reset_email
   ActionMailer::Base.deliveries = []
+end
+
+class MockAuth
+  def self.google
+    OmniAuth::AuthHash.new({
+      provider: 'google',
+      uid: 'some_uid',
+      info: {
+        name: "Jaiden Mispy",
+        email: "jaiden@contextualsystems.com"
+      },
+      credentials: {
+        token: "some_token",
+        expires_at: (Date.today+1.day).to_time.to_i
+      }
+    })
+  end
 end

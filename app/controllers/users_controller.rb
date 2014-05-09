@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      default_username = User.default_username(params[:user][:fullname]) + "-#{User.count}"
+      default_username = User.default_username(params[:user][:fullname])
       @user = User.new(params.required(:user).permit(:fullname, :email, :password).merge(username: default_username, password_confirmation: params[:user][:password]))
       if @user.save
         @user.send_signup_confirmation
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
   def activate
     user = User.find_by_id(params[:id])
 
-    if user && !user.active? && user.confirmation_token == params[:confirmation_token]
+    if user && !user.email_confirmed? && user.confirmation_token == params[:confirmation_token]
 
       if user.confirmation_sent_at > 2.days.ago
         user.activate
@@ -129,7 +129,7 @@ class UsersController < ApplicationController
     @user = current_user
     return unless request.post?
 
-    if @user.authenticate(params[:current_password])
+    if @user.password_digest.nil? || @user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
         if @user.change_password(params[:new_password])
           sign_in @user

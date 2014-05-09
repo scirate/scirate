@@ -1,10 +1,19 @@
 - provide :title, "Sign in to SciRate"
 
 .container
+  h1 Sign in to SciRate
+
+  .row
+    .col-md-6
+      a.btn.btn-google href="/auth/google_oauth2"
+        i
+        span Sign in with Google
+
+      hr
+
   = form_tag login_path do
     .row
       .col-md-6
-        h1 Sign in to SciRate
         .form-group
           = label_tag :email_or_username, "Email"
           = text_field_tag :email_or_username, params[:email_or_username], class: 'form-control'
@@ -29,3 +38,4 @@
 
         p
           | New user? #{link_to "Sign up now!", signup_path}
+

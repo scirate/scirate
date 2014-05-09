@@ -77,7 +77,7 @@ class View.SubscribeToggle extends View
       else
         -1
     ).appendTo(".my-feeds .tree")
-    
+
 
   unsubscribe: ->
     @$el.removeClass('active')

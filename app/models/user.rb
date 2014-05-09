@@ -19,7 +19,7 @@
 #  subscriptions_count    :integer          default(0)
 #  expand_abstracts       :boolean          default(FALSE)
 #  account_status         :text             default("user")
-#  username               :text
+#  username               :text             not null
 #
 
 class User < ActiveRecord::Base
@@ -29,14 +29,18 @@ class User < ActiveRecord::Base
   STATUS_SPAM = 'spam'
   ACCOUNT_STATES = [STATUS_ADMIN, STATUS_MODERATOR, STATUS_USER, STATUS_SPAM]
 
-  has_secure_password
+  # We don't use the default validations because if users sign up
+  # with oauth they don't need a password.
+  has_secure_password(validations: false)
+  attr_accessor :password_confirmation
 
   has_many :scites, dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
+  has_many :feed_preferences, dependent: :destroy
+  has_many :auth_links, dependent: :destroy
   has_many :feeds, through: :subscriptions
-  has_many :feed_preferences
 
   validates :fullname, presence: true, length: { maximum: 50 }
 
@@ -45,13 +49,24 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
 
   valid_username_regex = /\A[a-zA-Z0-9\-_\.]+\z/i
-  validates :username, presence: true, 
+  validates :username, presence: true,
             format: { with: valid_username_regex, message: "may only contain alphanumeric characters and - or _" },
                     uniqueness: { case_sensitive: false }
 
   validate do |user|
+    # Only need a password if it's not oauth
+    needs_password = user.auth_links.empty? && user.password_digest.nil?
+
+    if needs_password && user.password.nil?
+      user.errors.add :password, "must be present"
+    end
+
     if user.password && user.password.length < 6
       user.errors.add :password, "must be at least 6 characters"
+    end
+
+    if user.password && user.password_confirmation != user.password
+      user.errors.add :password, "must match password confirmation"
     end
 
     if user.username && Settings::RESERVED_USERNAMES.include?(user.username.downcase)
@@ -88,7 +103,7 @@ class User < ActiveRecord::Base
   end
 
   def self.default_username(fullname)
-    "#{fullname.parameterize}"
+    "#{fullname.parameterize}" + "-#{User.count}"
   end
 
   def scited?(paper)
@@ -152,7 +167,7 @@ class User < ActiveRecord::Base
     UserMailer.email_change(self, address).deliver
   end
 
-  def active?
+  def email_confirmed?
     active
   end
 

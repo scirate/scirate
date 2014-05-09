@@ -3,6 +3,10 @@
 require 'coveralls'
 Coveralls.wear!
 
+# OmniAuth test mode
+require 'omniauth'
+OmniAuth.config.test_mode = true
+
 require 'capybara/rspec'
 
 ENV["RAILS_ENV"] ||= 'test'

@@ -50,7 +50,7 @@ describe "signup page" do
     user.fullname.should == fullname
 
     page.should have_title "Home feed"
-    
+
     # Test presence of welcome banner
     page.should have_content "Welcome to SciRate!"
     page.should have_content user.email
@@ -120,60 +120,5 @@ describe "email confirmation" do
 
       page.should have_content("link is invalid")
     end
-  end
-end
-
-describe "settings" do
-  before do
-    @user = FactoryGirl.create(:user)
-    sign_in @user
-    visit settings_path
-  end
-
-  it "has the right settings fields" do
-    page.should have_link('change', href: 'http://gravatar.com/emails')
-    page.should have_field "Name", with: @user.fullname
-    page.should have_field "Email", with: @user.email
-  end
-
-  it "doesn't allow use of reserved usernames" do
-    fill_in "Username", with: "arxiv"
-    click_button "Save changes"
-
-    page.should have_error_message "Username is already taken"
-  end
-
-  it "changes name, username and email" do
-    new_name = "New Name"
-    new_username = "new_name"
-    new_email = "new@example.com"
-
-    fill_in "Name", with: new_name
-    fill_in "Username", with: new_username
-    fill_in "Email", with: new_email
-    click_button "Save changes"
-
-    page.should have_selector('.alert-success')
-    @user.reload
-    @user.fullname.should == new_name
-    @user.username.should == new_username
-    @user.email.should == new_email
-  end
-
-  it "emails about address changes" do
-    new_email = "new@example.com"
-    fill_in "Email", with: new_email
-    click_button "Save changes"
-
-    last_email.should_not be_nil
-    last_email.to.should include(@user.email)
-  end
-
-  it "doesn't email without address changes" do
-    new_name = "New Name"
-    fill_in "Name", with: new_name
-    click_button "Save changes"
-
-    last_email.should be_nil
   end
 end

@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20120313073916) do
+ActiveRecord::Schema.define(version: 20140507113629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "auth_links", force: true do |t|
+    t.string   "provider",         null: false
+    t.string   "uid",              null: false
+    t.string   "oauth_token",      null: false
+    t.datetime "oauth_expires_at", null: false
+    t.integer  "user_id",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "auth",             null: false
+  end
 
   create_table "authors", force: true do |t|
     t.integer "position",   null: false
@@ -138,6 +149,16 @@ ActiveRecord::Schema.define(version: 20120313073916) do
   add_index "scites", ["paper_uid"], name: "index_scites_on_paper_uid", using: :btree
   add_index "scites", ["user_id"], name: "index_scites_on_user_id", using: :btree
 
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
+
   create_table "subscriptions", force: true do |t|
     t.integer  "user_id"
     t.datetime "created_at",              null: false
@@ -166,7 +187,7 @@ ActiveRecord::Schema.define(version: 20120313073916) do
     t.integer  "subscriptions_count",    default: 0
     t.boolean  "expand_abstracts",       default: false
     t.text     "account_status",         default: "user"
-    t.text     "username"
+    t.text     "username",                                null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

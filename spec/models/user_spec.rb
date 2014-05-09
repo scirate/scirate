@@ -19,7 +19,7 @@
 #  subscriptions_count    :integer          default(0)
 #  expand_abstracts       :boolean          default(FALSE)
 #  account_status         :text             default("user")
-#  username               :text
+#  username               :text             not null
 #
 
 require 'spec_helper'
@@ -36,7 +36,6 @@ describe User do
   it { should respond_to(:email) }
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
-  it { should respond_to(:password_confirmation) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
   it { should respond_to(:scites) }
