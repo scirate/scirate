@@ -28,6 +28,21 @@ module Search
     str
   end
 
+  # Let the user apply boolean operators and brackets, but escape
+  # everything else (wildcards in particular are dangerous)
+  def self.partial_sanitize(str)
+    # Escape special characters
+    # http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html#Escaping Special Characters
+    escaped_characters = Regexp.escape('\\+-&|!{}[]^~*?:/')
+    str = str.gsub(/([#{escaped_characters}])/, '\\\\\1')
+
+    # Escape odd quotes
+    quote_count = str.count '"'
+    str = str.gsub(/(.*)"(.*)/, '\1\"\3') if quote_count % 2 == 1
+
+    str
+  end
+
   def self.index_name
     # This logic probably doesn't belong here
     # If it's in an initializer though it breaks code reloading
@@ -388,7 +403,7 @@ class Search::Paper::Query
       term = term.split(':', 2)[1] if term.start_with?(prefix)
     end
 
-    term
+    Search.partial_sanitize(term)
   end
 
   # Strip parens as well
@@ -437,31 +452,23 @@ class Search::Paper::Query
     @query = [@basic, @advanced].join(' ').strip
 
     @general = nil # Term to apply as OR across all text fields
-    @conditions = {}
-    @authors = []
     @date_range = nil
     @orders = []
+    @es_query = []
 
     psplit(@query).each do |term|
       if term.start_with?('au:')
         if term.include?('_')
-          @authors << tstrip(term)
-          @conditions[:authors_searchterm] ||= []
-          @conditions[:authors_searchterm] << tstrip(term)
+          @es_query << "authors_searchterm:" + tstrip(term)
         else
-          @authors << tstrip(term)
-          @conditions[:authors_fullname] ||= []
-          @conditions[:authors_fullname] << tstrip(term)
+          @es_query << "authors_fullname:" + tstrip(term)
         end
       elsif term.start_with?('ti:')
-        @conditions[:title] ||= []
-        @conditions[:title] << tstrip(term)
+        @es_query << "title:" + tstrip(term)
       elsif term.start_with?('abs:')
-        @conditions[:abstract] ||= []
-        @conditions[:abstract] << tstrip(term)
+        @es_query << "abstract:" + tstrip(term)
       elsif term.start_with?('in:')
-        @conditions[:feed_uids] ||= []
-        @conditions[:feed_uids] << tstrip(term)
+        @es_query << "feed_uids:" + tstrip(term)
       elsif term.start_with?('scited_by:')
         name = full_tstrip(term)
         p name
@@ -472,18 +479,13 @@ class Search::Paper::Query
           ids = User.where(fullname: name).pluck(:id)
         end
 
-        @conditions[:sciter_ids] ||= []
-        @conditions[:sciter_ids] << '(' + ids.join(" OR ") + ')'
+        @es_query << 'sciter_ids:' + '(' + ids.join(" OR ") + ')'
       elsif term.start_with?('order:')
         @orders << tstrip(term).to_sym
       elsif term.start_with?('date:')
         @date_range = parse_date_range(tstrip(term))
       else
-        if @general
-          @general += ' ' + term
-        else
-          @general = term
-        end
+        @es_query << Search.partial_sanitize(term)
       end
     end
 
@@ -507,15 +509,7 @@ class Search::Paper::Query
   end
 
   def run(opts={})
-    es_query = []
-    es_query << Search.sanitize(@general) unless @general.nil?
-    @conditions.each do |cond, vals|
-      vals.each do |val|
-        es_query << "#{cond}:#{val}"
-      end
-    end
-
-    p es_query.join(' ')
+    p @es_query.join(' ')
 
     filter = if @date_range
       {
@@ -536,7 +530,7 @@ class Search::Paper::Query
         filtered: {
           query: {
             query_string: {
-              query: es_query.join(' '),
+              query: @es_query.join(' '),
               default_operator: 'AND'
             }
           },
