@@ -101,6 +101,25 @@ class Paper < ActiveRecord::Base
     update_date > submit_date
   end
 
+  def to_bibtex
+    props = {
+      Author: author_str,
+      Title: title,
+      Year: pubdate.year,
+      Eprint: uid
+    }
+
+    props[:Howpublished] = journal_ref unless journal_ref.nil?
+
+    props = props.map { |k,v| "#{k} = {#{v}}" }
+
+    <<END
+@misc{#{uid},
+#{props.join(",\n")}
+}
+END
+  end
+
   private
     def update_date_is_after_submit_date
       return unless submit_date and update_date

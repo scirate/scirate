@@ -50,6 +50,28 @@ describe Paper do
 
   it { should be_valid }
 
+  describe "#to_bibtex" do
+    it "generates bibtex correctly" do
+      paper = FactoryGirl.create(:paper,
+        author_str: "Susanta Kumar Khan and Madhumangal Pal",
+        title: "Interval-Valued Intuitionistic Fuzzy Matrices",
+        pubdate: "2014-05-12 01:00:00 UTC",
+        uid: "1404.6949",
+        journal_ref: "Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27"
+      )
+
+     expect(paper.to_bibtex).to eq <<END
+@misc{1404.6949,
+Author = {Susanta Kumar Khan and Madhumangal Pal},
+Title = {Interval-Valued Intuitionistic Fuzzy Matrices},
+Year = {2014},
+Eprint = {1404.6949},
+Howpublished = {Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27}
+}
+END
+    end
+  end
+
   describe "when update_date is older than submit_date" do
     before { @paper.update_date = @paper.submit_date - 1.day }
     it { should_not be_valid }
