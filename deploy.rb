@@ -18,7 +18,7 @@ end
 
 run [web1, web2], <<END
 cd ~/scirate3
-git fetch origin master
+git fetch -f
 git reset --hard origin/master
 ln -sf ~/database.yml config/database.yml
 ln -sf ~/local_settings.rb local_settings.rb
