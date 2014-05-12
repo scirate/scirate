@@ -25,6 +25,10 @@ a {
   cursor: pointer;
 }
 
+textarea {
+  resize: none;
+}
+
 .timeago { color: rgba(0, 0, 0, 0.5); }
 .username { font-weight: bold; }
 .hidden { display: none !important; }
@@ -378,6 +382,21 @@ div.paper {
 
   div.scites {
     margin-top: 10px;
+  }
+
+  .reference textarea {
+    width: 100%;
+    height: 150px;
+  }
+
+  .reference .btn {
+    width: 100%;
+    position: relative;
+  }
+
+  .reference .btn.zeroclipboard-is-hover:not(.btn-success) {
+    background-color: #ebebeb;
+    border-color: #adadad;
   }
 }
 

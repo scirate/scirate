@@ -19,4 +19,5 @@
 //= require typeahead.bundle.js
 //= require backbone
 //= require datepicker.js
+//= require ZeroClipboard.js
 //= require_tree .
