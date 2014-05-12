@@ -44,11 +44,11 @@
             - if @paper.scites_count > 0
               .scites
                 strong
-                  |> Scited by:
+                  | Scited by:
                 - @paper.sciters.each_with_index do |user, i|
-                  = link_to user.fullname, user
+                  =< link_to user.fullname, user
                   - if i != @paper.scites_count-1
-                    |> ,
+                    | ,
         .col-md-3
           .reference
             ul.nav.nav-tabs
