@@ -1,7 +1,7 @@
 <%
 assets = {}
 Dir.chdir("#{Rails.root}/app/assets/") do
-  Dir["**/*"].each do |path|
+  Dir["**/*"].sort.each do |path|
     filename = path.split('/')[-1]
     unless path.include?("javascript") || path.include?("css")
       assets[filename] = asset_path(filename)
