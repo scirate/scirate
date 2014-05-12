@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140507113629) do
+ActiveRecord::Schema.define(version: 20140511230518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,18 +63,19 @@ ActiveRecord::Schema.define(version: 20140507113629) do
   add_index "comment_reports", ["user_id", "comment_id"], name: "index_comment_reports_on_user_id_and_comment_id", unique: true, using: :btree
 
   create_table "comments", force: true do |t|
-    t.integer  "user_id",                           null: false
-    t.integer  "score",             default: 0,     null: false
-    t.integer  "cached_votes_up",   default: 0,     null: false
-    t.integer  "cached_votes_down", default: 0,     null: false
-    t.boolean  "hidden",            default: false, null: false
+    t.integer  "user_id",                            null: false
+    t.integer  "score",              default: 0,     null: false
+    t.integer  "cached_votes_up",    default: 0,     null: false
+    t.integer  "cached_votes_down",  default: 0,     null: false
+    t.boolean  "hidden",             default: false, null: false
     t.integer  "parent_id"
     t.integer  "ancestor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "content",                           null: false
-    t.boolean  "deleted",           default: false, null: false
-    t.text     "paper_uid",         default: "",    null: false
+    t.text     "content",                            null: false
+    t.boolean  "deleted",            default: false, null: false
+    t.text     "paper_uid",          default: "",    null: false
+    t.boolean  "hidden_from_recent", default: false, null: false
   end
 
   add_index "comments", ["ancestor_id"], name: "index_comments_on_ancestor_id", using: :btree

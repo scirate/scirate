@@ -21,6 +21,10 @@ ul {
   padding-left: 0;
 }
 
+a {
+  cursor: pointer;
+}
+
 .timeago { color: rgba(0, 0, 0, 0.5); }
 .username { font-weight: bold; }
 .hidden { display: none !important; }
@@ -712,6 +716,11 @@ li.paper:hover {
 div.feed-rightbar {
   .abbr-comment {
     font-size: 0.8em;
+    margin-bottom: 10px;
+  }
+
+  .abbr-comment blockquote {
+    margin-bottom: 0;
   }
 
   .abstract-toggle {

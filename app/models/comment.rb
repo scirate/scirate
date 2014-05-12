@@ -2,19 +2,20 @@
 #
 # Table name: comments
 #
-#  id                :integer          not null, primary key
-#  user_id           :integer          not null
-#  score             :integer          default(0), not null
-#  cached_votes_up   :integer          default(0), not null
-#  cached_votes_down :integer          default(0), not null
-#  hidden            :boolean          default(FALSE), not null
-#  parent_id         :integer
-#  ancestor_id       :integer
-#  created_at        :datetime
-#  updated_at        :datetime
-#  content           :text             not null
-#  deleted           :boolean          default(FALSE), not null
-#  paper_uid         :text             default(""), not null
+#  id                 :integer          not null, primary key
+#  user_id            :integer          not null
+#  score              :integer          default(0), not null
+#  cached_votes_up    :integer          default(0), not null
+#  cached_votes_down  :integer          default(0), not null
+#  hidden             :boolean          default(FALSE), not null
+#  parent_id          :integer
+#  ancestor_id        :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  content            :text             not null
+#  deleted            :boolean          default(FALSE), not null
+#  paper_uid          :text             default(""), not null
+#  hidden_from_recent :boolean          default(FALSE), not null
 #
 
 class Comment < ActiveRecord::Base
@@ -51,7 +52,8 @@ class Comment < ActiveRecord::Base
 
   def self.find_all_by_feed_uids(feed_uids)
     Comment.joins(paper: :categories)
-           .where(deleted: false, hidden: false, categories: { feed_uid: feed_uids })
+           .where(deleted: false, hidden: false, hidden_from_recent: false,
+                  categories: { feed_uid: feed_uids })
            .group('comments.id')
            .order('comments.created_at DESC')
   end

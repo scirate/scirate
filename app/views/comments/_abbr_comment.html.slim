@@ -1,4 +1,4 @@
-.abbr-comment
+.abbr-comment data-comment-id=(abbr_comment.id)
   .tex2jax
     - if abbr_comment.paper.title.length > 75
       a href="#{url_for(abbr_comment.paper)}##{abbr_comment.id}"
@@ -18,3 +18,7 @@
     - if abbr_comment.content.length > 300
       a href=(url_for(abbr_comment.paper))
         |  ...(continued)
+  - if current_user.is_moderator?
+    .moderate
+      | #{status_warning} <a class="hide-from-recent">hide from recent comments</a>
+

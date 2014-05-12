@@ -34,7 +34,7 @@
                 = link_to parent.fullname.gsub("High Energy Physics", "HEP"), feed_path(parent, params.except(:feed, :page))
               ul.nav.nav-list.tree style=(expanded ? '' : 'display: none;')
                 - parent.children.each do |feed|
-                  li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid) 
+                  li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid)
                     = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page)))
 
     .col-md-10.feed-center
@@ -59,7 +59,7 @@
           .paperlist
             ul.papers
               - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
-                p.description 
+                p.description
                   | New papers from all your subscribed feeds will appear here. You can find feeds to subscribe to using the links on the left, or by visiting the <a href="#{feeds_path}">my feeds</a> page.
               - elsif @papers.count == 0
                   p No papers found!
@@ -75,7 +75,7 @@
           - cache [current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
           - unless @recent_comments.empty?
-            h3 
+            h3
               - if @feed.nil?
                 a href=(comments_path) Recent comments
               - else

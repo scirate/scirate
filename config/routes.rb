@@ -3,11 +3,17 @@ SciRate3::Application.routes.draw do
 
   get '/search', to: 'papers#search', as: 'papers_search'
 
-  match '/api/scite/:paper_uid', to: 'api#scite', via: [:get, :post], as: :scite, paper_uid: /.+/
-  match '/api/unscite/:paper_uid', to: 'api#unscite', via: [:get, :post], as: :unscite, paper_uid: /.+/
-  match '/api/subscribe/:feed_uid', to: 'api#subscribe', via: [:get, :post], as: :subscribe, feed_uid: /.+/
-  match '/api/unsubscribe/:feed_uid', to: 'api#unsubscribe', via: [:get, :post], as: :unsubscribe, feed_uid: /.+/
-  match '/api/settings', to: 'api#settings', via: [:get, :post]
+  post '/api/scite/:paper_uid', to: 'api#scite',
+       as: :scite, paper_uid: /.+/
+  post '/api/unscite/:paper_uid', to: 'api#unscite',
+       as: :unscite, paper_uid: /.+/
+  post '/api/subscribe/:feed_uid', to: 'api#subscribe',
+       as: :subscribe, feed_uid: /.+/
+  post '/api/unsubscribe/:feed_uid', to: 'api#unsubscribe',
+       as: :unsubscribe, feed_uid: /.+/
+  post '/api/hide_from_recent/:comment_id', to: 'api#hide_from_recent',
+       as: :hide_from_recent
+  post '/api/settings', to: 'api#settings'
 
   post '/api/resend_confirm', to: 'api#resend_confirm', as: :resend_confirm
 

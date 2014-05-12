@@ -1,5 +1,6 @@
 class ApiController < ApplicationController
   before_filter :authorize
+  before_filter :needs_moderator, only: [:hide_from_recent]
 
   def scite
     @paper = Paper.find_by_uid!(params[:paper_uid])
@@ -59,11 +60,26 @@ class ApiController < ApplicationController
     render json: current_user.slice(*settings)
   end
 
+  def hide_from_recent
+    comment = Comment.find_by_id!(params[:comment_id])
+
+    comment.hidden_from_recent = true
+    comment.save!
+
+    render json: { success: true }
+  end
+
   private
     def authorize
       unless signed_in?
         session[:return_to] = request.fullpath
         render json: { error: 'login_required' }, status: 401
+      end
+    end
+
+    def needs_moderator
+      unless signed_in? && current_user.is_moderator?
+        render json: { error: 'unauthorized' }, status: 403
       end
     end
 end

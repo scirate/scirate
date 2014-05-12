@@ -2,19 +2,20 @@
 #
 # Table name: comments
 #
-#  id                :integer          not null, primary key
-#  user_id           :integer          not null
-#  score             :integer          default(0), not null
-#  cached_votes_up   :integer          default(0), not null
-#  cached_votes_down :integer          default(0), not null
-#  hidden            :boolean          default(FALSE), not null
-#  parent_id         :integer
-#  ancestor_id       :integer
-#  created_at        :datetime
-#  updated_at        :datetime
-#  content           :text             not null
-#  deleted           :boolean          default(FALSE), not null
-#  paper_uid         :text             default(""), not null
+#  id                 :integer          not null, primary key
+#  user_id            :integer          not null
+#  score              :integer          default(0), not null
+#  cached_votes_up    :integer          default(0), not null
+#  cached_votes_down  :integer          default(0), not null
+#  hidden             :boolean          default(FALSE), not null
+#  parent_id          :integer
+#  ancestor_id        :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  content            :text             not null
+#  deleted            :boolean          default(FALSE), not null
+#  paper_uid          :text             default(""), not null
+#  hidden_from_recent :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'

@@ -10,6 +10,7 @@
 #  user_id          :integer          not null
 #  created_at       :datetime
 #  updated_at       :datetime
+#  auth             :text             not null
 #
 
 require 'spec_helper'

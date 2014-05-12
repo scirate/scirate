@@ -18,6 +18,10 @@ FactoryGirl.define do
     factory :admin do
       account_status User::STATUS_ADMIN
     end
+
+    trait :moderator do
+      account_status User::STATUS_MODERATOR
+    end
   end
 
   factory :category do

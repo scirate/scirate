@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   let(:user)  { FactoryGirl.create(:user) }
   let(:feed) { FactoryGirl.create(:feed) }
   let(:paper) { FactoryGirl.create(:paper) }
@@ -54,8 +53,36 @@ describe ApiController do
       xhr :post, :unsubscribe, feed_uid: feed.uid
     end
 
-    it "should unsubscribe" do
-      user.feeds.should_not include(feed)
+    it "unsubscribes" do
+      expect(user.feeds).to_not include(feed)
+    end
+  end
+
+  describe "moderator: hiding a comment from recent comments" do
+    let(:comment) { FactoryGirl.create(:comment) }
+    let(:moderator) { FactoryGirl.create(:user, :moderator) }
+
+    context "as a normal user" do
+      before do
+        xhr :post, :hide_from_recent, comment_id: comment.id
+      end
+
+      it "throws a 403" do
+        expect(response).to_not be_success
+        expect(comment.reload.hide_from_recent).to be_false
+      end
+    end
+
+    context "as a moderator" do
+      before do
+        sign_in moderator
+        xhr :post, :hide_from_recent, comment_id: comment.id
+      end
+
+      it "hides the comment" do
+        expect(response).to be_success
+        expect(commend.reload.hide_from_recent).to be_true
+      end
     end
   end
 end
