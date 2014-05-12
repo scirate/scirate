@@ -60,15 +60,13 @@ describe Paper do
         journal_ref: "Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27"
       )
 
-     expect(paper.to_bibtex).to eq <<END
-@misc{1404.6949,
+     expect(paper.to_bibtex).to eq %Q{@misc{1404.6949,
 Author = {Susanta Kumar Khan and Madhumangal Pal},
 Title = {Interval-Valued Intuitionistic Fuzzy Matrices},
 Year = {2014},
 Eprint = {1404.6949},
 Howpublished = {Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27}
-}
-END
+}}
     end
   end
 
