@@ -69,7 +69,7 @@ describe ApiController do
 
       it "throws a 403" do
         expect(response).to_not be_success
-        expect(comment.reload.hide_from_recent).to be_false
+        expect(comment.reload.hidden_from_recent).to be_false
       end
     end
 
@@ -81,7 +81,7 @@ describe ApiController do
 
       it "hides the comment" do
         expect(response).to be_success
-        expect(commend.reload.hide_from_recent).to be_true
+        expect(comment.reload.hidden_from_recent).to be_true
       end
     end
   end

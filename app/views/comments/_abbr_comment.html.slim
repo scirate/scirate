@@ -18,7 +18,7 @@
     - if abbr_comment.content.length > 300
       a href=(url_for(abbr_comment.paper))
         |  ...(continued)
-  - if current_user.is_moderator?
+  - if signed_in? && current_user.is_moderator?
     .moderate
       | #{status_warning} <a class="hide-from-recent">hide from recent comments</a>
 
