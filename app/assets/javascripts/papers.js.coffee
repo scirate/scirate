@@ -1,4 +1,4 @@
-ZeroClipboard.config(moviePath: "/ZeroClipboard.swf")
+ZeroClipboard.config(moviePath: "/assets/ZeroClipboard.swf")
 clip = new ZeroClipboard($('#copyButton').get(0))
 
 clip.on 'mouseover', ->
