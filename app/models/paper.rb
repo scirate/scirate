@@ -113,11 +113,13 @@ class Paper < ActiveRecord::Base
 
     props = props.map { |k,v| "#{k} = {#{v}}" }
 
-    <<END
+    s = <<END
 @misc{#{uid},
 #{props.join(",\n")}
 }
 END
+
+    s.strip
   end
 
   private
