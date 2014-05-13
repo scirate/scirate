@@ -103,13 +103,13 @@ class Paper < ActiveRecord::Base
 
   def to_bibtex
     props = {
-      Author: author_str,
-      Title: title,
-      Year: pubdate.year,
-      Eprint: uid
+      author: author_str,
+      title: title,
+      year: pubdate.year,
+      eprint: uid
     }
 
-    props[:Howpublished] = journal_ref unless journal_ref.nil?
+    props[:howpublished] = journal_ref unless journal_ref.nil?
 
     props = props.map { |k,v| "#{k} = {#{v}}" }
 
