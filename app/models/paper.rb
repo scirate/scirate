@@ -114,7 +114,7 @@ class Paper < ActiveRecord::Base
     props = props.map { |k,v| "#{k} = {#{v}}" }
 
     %Q{@misc{#{uid},
-#{props.join(",\n")}
+  #{props.join(",\n  ")}
 }}
   end
 
