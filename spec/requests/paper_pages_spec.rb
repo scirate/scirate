@@ -9,7 +9,7 @@ describe "Paper pages" do
   end
 
   describe "paper page" do
-    before(:all) do
+    before do
       visit paper_path(@paper)
     end
 
@@ -22,8 +22,6 @@ describe "Paper pages" do
       expect(page).to have_content @paper.abstract
       expect(page).to have_link @paper.abs_url
       expect(page).to have_content @paper.submit_date.to_date.to_formatted_s(:rfc822)
-
-      expect(page).to have_content @paper.to_bibtex
     end
   end
 
@@ -41,5 +39,23 @@ describe "Paper pages" do
       expect(page).to have_content @paper.scites_count
       expect(page).to have_content @user.fullname
     end
+  end
+end
+
+describe "Paper page javascript", js: true do
+  let(:paper) { FactoryGirl.create(:paper, :with_categories) }
+
+  before do
+    p paper_path(paper)
+    visit paper_path(paper)
+  end
+
+  it "selects the bibtex" do
+    click_button "Copy Citation"
+
+    test = page.driver.evaluate_script %Q{
+      window.getSelection().baseNode.getAttribute('class')
+    }
+    expect(test).to eq "reference"
   end
 end

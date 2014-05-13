@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :feed do
     sequence(:uid)      { |n| "feed.#{n}" }
     sequence(:fullname) { |n| "Feed #{n}" }
+    sequence(:position) { |n| n }
     source              'arxiv'
     last_paper_date     { Date.today }
   end

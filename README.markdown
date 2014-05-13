@@ -23,7 +23,7 @@ We encourage contributions!
 Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
 ```shell
-sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1
+sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev
 ```
 
 You will also need to download and install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/). Bundler should take care of the rest.

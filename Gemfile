@@ -49,6 +49,10 @@ gem 'bourbon'
 group :development, :test do
   gem 'rspec-rails'
   gem 'rspec-rerun'
+
+  # An improved IRB alternative for rails console
+  gem 'pry'
+  gem 'pry-rails'
 end
 
 group :development do
@@ -59,10 +63,6 @@ group :development do
   # reflect the database schema into helpful
   # comments in the model code
   gem 'annotate'
-
-  # An improved IRB alternative for rails console
-  gem 'pry'
-  gem 'pry-rails'
 
   # Suppresses annoying asset pipeline logs
   gem 'quiet_assets'
@@ -102,6 +102,9 @@ group :test do
 
   # Code coverage
   gem 'coveralls', require: false
+
+  # Javascript testing
+  gem 'capybara-webkit'
 end
 
 group :production do
