@@ -20,7 +20,7 @@ if hasFlash
 
   clip.on 'mouseout', ->
     $(this).removeClass("btn-success")
-    $(this).text("Copy Reference")
+    $(this).text("Copy Citation")
 else
   $('#copyButton').on 'click', ->
     $(".reference textarea").focus()
