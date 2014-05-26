@@ -103,7 +103,7 @@ class Paper < ActiveRecord::Base
 
   def to_bibtex
     props = {
-      author: author_str,
+      author: author_str.gsub(/\. /, ".~"), # unbreakable space
       title: title,
       year: pubdate.year,
       eprint: uid

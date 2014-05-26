@@ -53,18 +53,17 @@ describe Paper do
   describe "#to_bibtex" do
     let(:paper) do
       FactoryGirl.create(:paper,
-        author_str: "Susanta Kumar Khan and Madhumangal Pal",
+        author_str: "Susanta K. Khan and Madhumangal Pal",
         title: "Interval-Valued Intuitionistic Fuzzy Matrices",
         pubdate: "2014-05-12 01:00:00 UTC",
         uid: "1404.6949",
         journal_ref: "Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27"
       )
-
     end
 
     it "generates bibtex correctly" do
      expect(paper.to_bibtex).to eq %Q{@misc{1404.6949,
-  author = {Susanta Kumar Khan and Madhumangal Pal},
+  author = {Susanta K.~Khan and Madhumangal Pal},
   title = {Interval-Valued Intuitionistic Fuzzy Matrices},
   year = {2014},
   eprint = {1404.6949},
