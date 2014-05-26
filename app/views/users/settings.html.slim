@@ -18,6 +18,15 @@
       tr
         td= f.label :email, "Email"
         td= f.email_field :email, class: 'form-control'
+      tr
+      tr
+        - desc = "Organization(s) you are affiliated with (comma-separated)"
+        td= f.label :affiliation, "Affiliation"
+        td= f.text_field :affiliation, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "Some descriptive text about yourself"
+        td= f.label :about
+        td= f.text_area :about, class: 'form-control', title: desc, placeholder: desc
     = f.submit "Save changes", class: "btn btn-default"
 
   p.google
