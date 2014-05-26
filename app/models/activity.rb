@@ -1,5 +1,5 @@
 class Activity < ActiveRecord::Base
-  enum type: [:scite, :comment, :subscribe]
+  enum event: [:scite, :comment, :subscribe]
   belongs_to :user
   belongs_to :subject, polymorphic: true
 

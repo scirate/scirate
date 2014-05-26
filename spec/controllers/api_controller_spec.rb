@@ -16,7 +16,7 @@ describe ApiController do
       scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
       expect(scite).to_not be_nil
 
-      activity = Activity.where(user_id: user.id, subject_id: scite.id, type: :scite)
+      activity = Activity.scite.where(user_id: user.id, subject_id: scite.id).first
       expect(activity).to_not be_nil
     end
 

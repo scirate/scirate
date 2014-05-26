@@ -114,11 +114,13 @@ class User < ActiveRecord::Base
   def scite!(paper)
     unless scites.find_by_paper_uid(paper.uid)
       scites.create!(paper_uid: paper.uid)
+      activities.scite.create!(subject: paper)
     end
   end
 
   def unscite!(paper)
     scites.find_by_paper_uid(paper.uid).destroy
+    activities.scite.where(subject: paper).destroy_all
   end
 
   def refresh_scites_count!
