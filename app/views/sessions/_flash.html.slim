@@ -1,9 +1,9 @@
 - @alert_classes = { error: 'danger', warning: 'warning', success: 'success' }
 
 - flash.each do |key, val|
-  - if [:error, :warning, :success].include?(key)
+  - if ['error', 'warning', 'success'].include?(key)
     - flash.delete(key)
-    div class="alert alert-#{@alert_classes[key]}"
+    div class="alert alert-#{@alert_classes[key.to_sym]}"
       button.close type="button" data-dismiss="alert" &times;
       - if val.respond_to? :each
         - val.each do |val|
