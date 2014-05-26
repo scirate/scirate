@@ -18,7 +18,7 @@ if hasFlash
     $(this).addClass("btn-success")
     $(this).text("Copied to clipboard")
 
-  clip.on 'mouseout', ->
+  clip.on 'mouseover', ->
     $(this).removeClass("btn-success")
     $(this).text("Copy Citation")
 else
