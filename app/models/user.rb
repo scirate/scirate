@@ -128,16 +128,20 @@ class User < ActiveRecord::Base
     save!
   end
 
-  def subscribed?(feed)
-    subscriptions.find_by_feed_uid(feed.uid)
-  end
-
   def subscribe!(feed)
-    subscriptions.create!(feed_uid: feed.uid)
+    unless subscriptions.find_by_feed_uid(feed.uid)
+      subscriptions.create!(feed_uid: feed.uid)
+      activities.subscribe.create!(subject: feed)
+    end
   end
 
   def unsubscribe!(feed)
     subscriptions.find_by_feed_uid(feed.uid).destroy
+    activities.subscribe.where(subject: feed).destroy_all
+  end
+
+  def subscribed?(feed)
+    subscriptions.find_by_feed_uid(feed.uid)
   end
 
   def has_subscriptions?

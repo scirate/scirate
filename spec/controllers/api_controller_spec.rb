@@ -16,29 +16,27 @@ describe ApiController do
       scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
       expect(scite).to_not be_nil
 
-      activity = Activity.scite.where(user_id: user.id, subject_id: scite.id).first
+      activity = Activity.scite.where(user_id: user.id, subject_id: paper.id).first
       expect(activity).to_not be_nil
-    end
 
-    it "responds with success" do
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
   describe "unsciting a paper" do
     before do
-      user.scite!(paper)
-    end
-
-    it "should decrement the Scite count" do
-      expect do
-        xhr :post, :unscite, paper_uid: paper.uid
-      end.to change(Scite, :count).by(-1)
-    end
-
-    it "should respond with success" do
+      xhr :post, :scite, paper_uid: paper.uid
       xhr :post, :unscite, paper_uid: paper.uid
-      response.should be_success
+    end
+
+    it "removes the scite and activity entry" do
+      scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
+      expect(scite).to be_nil
+
+      activity = Activity.scite.where(user_id: user.id, subject_id: paper.id).first
+      expect(activity).to be_nil
+
+      expect(response).to be_success
     end
   end
 
@@ -47,8 +45,14 @@ describe ApiController do
       xhr :post, :subscribe, feed_uid: feed.uid
     end
 
-    it "should subscribe" do
-      user.feeds.should include(feed)
+    it "creates a subscription and activity entry" do
+      sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
+      expect(sub).to_not be_nil
+
+      activity = Activity.subscribe.where(user_id: user.id, subject_id: feed.id).first
+      expect(activity).to_not be_nil
+
+      expect(response).to be_success
     end
   end
 
@@ -58,8 +62,14 @@ describe ApiController do
       xhr :post, :unsubscribe, feed_uid: feed.uid
     end
 
-    it "unsubscribes" do
-      expect(user.feeds).to_not include(feed)
+    it "removes the subscription and activity entry" do
+      sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
+      expect(sub).to be_nil
+
+      activity = Activity.subscribe.where(user_id: user.id, subject_id: feed.id).first
+      expect(activity).to be_nil
+
+      expect(response).to be_success
     end
   end
 

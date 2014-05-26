@@ -26,7 +26,7 @@ class ApiController < ApplicationController
 
   def subscribe
     @feed = Feed.find_by_uid!(params[:feed_uid])
-    @feed.subscriptions.find_or_create_by(user_id: current_user.id)
+    current_user.subscribe!(@feed)
     if request.xhr?
       render json: true
     else
@@ -36,7 +36,7 @@ class ApiController < ApplicationController
 
   def unsubscribe
     @feed = Feed.find_by_uid!(params[:feed_uid])
-    @feed.subscriptions.where(user_id: current_user.id).destroy_all
+    current_user.unsubscribe!(@feed)
     if request.xhr?
       render json: true
     else
