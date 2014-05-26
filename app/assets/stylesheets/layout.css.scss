@@ -866,32 +866,51 @@ div.feed-rightbar {
 
 // User profile page
 
-#profile-page {
-  table {
-    margin-bottom: 0;
+#profilePage {
+  margin-top: 20px;
+
+  .nav-tabs {
+    margin-bottom: 20px;
   }
 
-  ul + li.paper {
-    border-top: none;
+  #details h1 {
+    margin-top: 5px;
+    margin-bottom: 15px;
   }
 
-  // Buttons need to be smaller here
-
-  .scite-toggle .btn {
-    padding: 4px 8px;
+  #details .fullname {
+    display: block;
   }
 
-  .paper-download.btn {
-    padding-top: 7px;
-    padding-bottom: 6px;
+  #details .username {
+    display: block;
+    font-size: 20px;
+    font-weight: normal;
+    color: #666;
   }
 
-  li.paper .col-md-9 {
-    width: 70%;
+  #details ul {
+    list-style: none;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
   }
 
-  li.paper .col-md-3 {
-    width: 30%;
+  #activity .event {
+    border-top: 1px solid #f1f1f1;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 45px;
+  }
+
+  #activity .event time {
+    font-size: 12px;
+    color: #bbb;
+  }
+
+  #activity .event:first-child {
+    border-top: 0;
   }
 }
 

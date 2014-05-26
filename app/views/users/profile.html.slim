@@ -1,40 +1,55 @@
 - provide :title, @user.fullname
 - provide :image, gravatar_url(@user, size: 200)
 
-#profile-page.container
-  table.table
-    tr
-      td
-        h1
-          => gravatar_for @user, size: 100
-          = @user.fullname
-        - if current_user && current_user.is_moderator?
-          = status_warning
-          a href=(edit_admin_user_path(@user))  edit user
+#profilePage.container
+  #details.col-md-3
+    div= gravatar_for(@user, size: 230)
+    h1
+      span.fullname= @user.fullname
+      span.username = @user.username
+    /
+      - if current_user && current_user.is_moderator?
+        = status_warning
+        a href=(edit_admin_user_path(@user))  edit user
+    ul
+      li Joined on #{@user.created_at.to_date.to_formatted_s(:rfc822)}
+  .col-md-9
+    ul.nav.nav-tabs
+      li class=('active' if @tab == :activity)
+        a href=(user_path @user) Activity
+      li class=('active' if @tab == :scites)
+        a href=(user_scites_path @user) Scites
+      li class=('active' if @tab == :comments)
+        a href=(user_comments_path @user) Comments
 
-  .row
-    .col-md-6
-      h3
-        | Scites (#{@user.scites_count})
-      - if @user.scites_count == 0
-        p No papers scited.
-      - else
-        .inline-search
-          = form_tag(papers_search_path + '#results', method: :get) do |f|
-            = label_tag :q, "Search query", class: 'sr-only'
-            = text_field_tag :q, nil, class: 'form-control', placeholder: "Search Scites"
-            = hidden_field_tag :advanced, "scited_by:#{@user.username}"
+    - if @tab == :activity
+      = render partial: 'users/activity'
 
-            button.btn.btn-primary.btn-right type="submit"
-              i.fa.fa-search.fa-lg
 
-        = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
-        = will_paginate @scited_papers, param_name: 'scite_page'
-    .col-md-6
-      h3
-        | Comments (#{@user.comments_count})
-      - if @user.comments_count == 0
-        p No comments posted.
-      - else
-        = render @comments
-        = will_paginate @comments, param_name: 'comment_page'
+  /
+    .row
+      .col-md-6
+        h3
+          | Scites (#{@user.scites_count})
+        - if @user.scites_count == 0
+          p No papers scited.
+        - else
+          .inline-search
+            = form_tag(papers_search_path + '#results', method: :get) do |f|
+              = label_tag :q, "Search query", class: 'sr-only'
+              = text_field_tag :q, nil, class: 'form-control', placeholder: "Search Scites"
+              = hidden_field_tag :advanced, "scited_by:#{@user.username}"
+
+              button.btn.btn-primary.btn-right type="submit"
+                i.fa.fa-search.fa-lg
+
+          = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
+          = will_paginate @scited_papers, param_name: 'scite_page'
+      .col-md-6
+        h3
+          | Comments (#{@user.comments_count})
+        - if @user.comments_count == 0
+          p No comments posted.
+        - else
+          = render @comments
+          = will_paginate @comments, param_name: 'comment_page'

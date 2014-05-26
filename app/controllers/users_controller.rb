@@ -6,20 +6,27 @@ class UsersController < ApplicationController
 
   def profile
     @user = User.find_by_username!(params[:username])
+    @tab = :activity
+    @activities = @user.activities.order('created_at DESC').limit(50)
+  end
 
-    if params[:scite_order] == 'published'
-      @scite_order = :published
-      scited_papers = @user.scited_papers.order("submit_date DESC")
-    else
-      @scite_order = :scited
-      scited_papers = @user.scited_papers.order("scites.created_at DESC")
-    end
+  def scites
+    @user = User.find_by_username!(params[:username])
+    @tab = :scites
+
+    scited_papers = @user.scited_papers.order("scites.created_at DESC")
 
     @scited_ids = current_user.scited_papers.pluck(:id) if current_user
 
     @scited_papers = scited_papers
       .includes(:feeds, :authors)
       .paginate(page: params[:scite_page], per_page: 10)
+  end
+
+  def comments
+    @user = User.find_by_username!(params[:username])
+    @tab = :comments
+
     @comments = @user.comments
       .where(hidden: false, deleted: false)
       .includes(:user, :paper)

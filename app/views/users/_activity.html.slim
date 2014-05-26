@@ -1,0 +1,10 @@
+#activity
+  - @activities.each do |activity|
+    .event
+      div
+        time= time_ago_in_words(activity.created_at) + ' ago'
+      .title
+        | #{@user.fullname} commented on <a href="#{paper_url(activity.subject.paper)}">#{activity.subject.paper.title}</a>
+      .content
+        = activity.subject.content
+

@@ -76,7 +76,10 @@ SciRate3::Application.routes.draw do
   namespace :admin do
     resources :users, only: [:edit, :update], param: :username
   end
+
   get '/:username', to: 'users#profile', username: /.+/, as: 'user'
+  get '/:username/scites', to: 'users#scites', username: /.+/, as: 'user_scites'
+  get '/:username/comments', to: 'users#comments', username: /.+/, as: 'user_comments'
 
 
   # The priority is based upon order of creation:
