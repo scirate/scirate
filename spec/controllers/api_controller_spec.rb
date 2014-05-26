@@ -8,14 +8,19 @@ describe ApiController do
   before { sign_in user }
 
   describe "sciting a paper" do
-    it "should increment the Scite count" do
-      expect do
-        xhr :post, :scite, paper_uid: paper.uid
-      end.to change(Scite, :count).by(1)
+    before do
+      xhr :post, :scite, paper_uid: paper.uid
     end
 
-    it "should respond with success" do
-      xhr :post, :scite, paper_uid: paper.uid
+    it "creates a scite and activity entry" do
+      scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
+      expect(scite).to_not be_nil
+
+      activity = Activity.where(user_id: user.id, subject_id: scite.id, type: :scite)
+      expect(activity).to_not be_nil
+    end
+
+    it "responds with success" do
       response.should be_success
     end
   end

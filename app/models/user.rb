@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
   has_many :feed_preferences, dependent: :destroy
   has_many :auth_links, dependent: :destroy
+  has_many :activities, dependent: :destroy
   has_many :feeds, through: :subscriptions
 
   validates :fullname, presence: true, length: { maximum: 50 }
