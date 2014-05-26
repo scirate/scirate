@@ -114,13 +114,11 @@ class User < ActiveRecord::Base
   def scite!(paper)
     unless scites.find_by_paper_uid(paper.uid)
       scites.create!(paper_uid: paper.uid)
-      activities.scite.create!(subject: paper)
     end
   end
 
   def unscite!(paper)
     scites.find_by_paper_uid(paper.uid).destroy
-    activities.scite.where(subject: paper).destroy_all
   end
 
   def refresh_scites_count!
@@ -131,13 +129,11 @@ class User < ActiveRecord::Base
   def subscribe!(feed)
     unless subscriptions.find_by_feed_uid(feed.uid)
       subscriptions.create!(feed_uid: feed.uid)
-      activities.subscribe.create!(subject: feed)
     end
   end
 
   def unsubscribe!(feed)
     subscriptions.find_by_feed_uid(feed.uid).destroy
-    activities.subscribe.where(subject: feed).destroy_all
   end
 
   def subscribed?(feed)

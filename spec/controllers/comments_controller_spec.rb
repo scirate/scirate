@@ -1,87 +1,115 @@
 require 'spec_helper'
 
 describe CommentsController do
-
   let(:comment) { FactoryGirl.create(:comment) }
   let(:user)  { comment.user.reload }
   let(:other_user) { FactoryGirl.create(:user) }
   let(:paper) { comment.paper.reload }
 
-
-  describe "commenting" do
-    before { sign_in user }
-
-    it "should post a comment" do
-      expect do
-        xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
-        response.should be_redirect
-        flash[:comment][:status].should == :success
-        paper.comments.last.content.should == "fishies"
-        paper.reload
-      end.to change(paper, :comments_count).by(1)
+  describe "posting a comment" do
+    before do
+      sign_in user
+      xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
+      response.should be_redirect
     end
 
-    it "should edit a comment" do
+    it "creates a comment and activity entry" do
+      expect(flash[:comment][:status]).to eq :success
+
+      comment = paper.comments.where(content: "fishies").first
+      expect(comment).to_not be_nil
+
+      activity = user.activities.comment.where(subject_id: comment.id).first
+      expect(activity).to_not be_nil
+    end
+  end
+
+  describe "editing a comment" do
+    before do
+      sign_in user
       xhr :post, :edit, id: comment.id, content: "wubbles"
-      response.should be_success
-      comment.reload.content.should == "wubbles"
     end
 
-    it "should delete and restore a comment" do
-      expect do
-        xhr :post, :delete, id: comment.id
-        response.should be_redirect
-        flash[:comment][:status].should == 'success'
-        paper.reload
+    it "edits the comment" do
+      expect(response).to be_success
+      expect(comment.reload.content).to eq "wubbles"
+    end
+  end
 
-        xhr :post, :restore, id: comment.id
-        response.should be_redirect
-        flash[:comment][:status].should == 'success'
-        paper.reload
-      end.to change(paper, :comments_count).by(0)
+  describe "deleting a comment" do
+    before do
+      sign_in user
+      xhr :post, :delete, id: comment.id
+      expect(response).to be_redirect
     end
 
-    it "should reply to a comment" do
-      expect do
-        xhr :post, :reply, id: comment.id, content: "snuffles"
-        response.should be_redirect
-        flash[:comment][:status].should == 'success'
-        paper.reload
+    it "marks comment as deleted and removes activity entry" do
+      flash[:comment][:status].should == 'success'
 
-        reply = comment.children[0]
-        reply.content.should == "snuffles"
-        reply.paper_uid.should == paper.uid
-      end.to change(paper, :comments_count).by(1)
+      expect(comment.reload.deleted).to be_true
+
+      activity = user.activities.comment.where(subject_id: comment.id).first
+      expect(activity).to be_nil
+    end
+  end
+
+  describe "restoring a comment" do
+    before do
+      sign_in user
+      comment.deleted = true
+      comment.save
+      xhr :post, :restore, id: comment.id
+      response.should be_redirect
+    end
+
+    it "restores the comment" do
+      flash[:comment][:status].should == 'success'
+      expect(comment.reload.deleted).to be_false
+    end
+  end
+
+  describe "replying to a comment" do
+    before do
+      sign_in user
+      xhr :post, :reply, id: comment.id, content: "snuffles"
+      response.should be_redirect
+    end
+
+    it "creates a new comment in reply" do
+      flash[:comment][:status].should == 'success'
+      reply = comment.reload.children[0]
+      expect(reply.content).to eq "snuffles"
+      expect(reply.paper_uid).to eq paper.uid
     end
   end
 
   describe "voting" do
     before { sign_in other_user }
 
-    it "should allow a single upvote" do
-      expect do 
+    it "allows a single upvote" do
+      expect do
         xhr :post, :upvote, id: comment.id
-        response.should be_success
+        expect(response).to be_success
         xhr :post, :upvote, id: comment.id
         comment.reload
       end.to change(comment, :cached_votes_up).by(1)
     end
 
-    it "should allow a single downvote" do
-      expect do 
+    it "allows a single downvote" do
+      expect do
         xhr :post, :downvote, id: comment.id
-        response.should be_success
+        expect(response).to be_success
         xhr :post, :downvote, id: comment.id
         comment.reload
       end.to change(comment, :cached_votes_down).by(1)
     end
 
-    it "should allow unvoting" do
-      expect do 
+    it "allows unvoting" do
+      expect do
         xhr :post, :upvote, id: comment.id
-        response.should be_success
+        expect(response).to be_success
         xhr :post, :unvote, id: comment.id
-        response.should be_success
+        expect(response).to be_success
         comment.reload
       end.to_not change(comment, :cached_votes_up)
     end
