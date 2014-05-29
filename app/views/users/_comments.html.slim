@@ -1,0 +1,8 @@
+#profileComments
+  h3
+    | Comments (#{@user.comments_count})
+  - if @user.comments_count == 0
+    p No comments posted.
+  - else
+    = render @comments
+    = will_paginate @comments, param_name: 'comment_page'

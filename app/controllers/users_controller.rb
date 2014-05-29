@@ -21,6 +21,8 @@ class UsersController < ApplicationController
     @scited_papers = scited_papers
       .includes(:feeds, :authors)
       .paginate(page: params[:scite_page], per_page: 10)
+
+    render 'users/profile'
   end
 
   def comments
@@ -31,6 +33,8 @@ class UsersController < ApplicationController
       .where(hidden: false, deleted: false)
       .includes(:user, :paper)
       .paginate(page: params[:comment_page], per_page: 20)
+
+    render 'users/profile'
   end
 
   def new
@@ -99,15 +103,6 @@ class UsersController < ApplicationController
   def feeds
     @user = current_user
     @subscribed_ids = @user.subscriptions.pluck(:feed_uid)
-  end
-
-  def scited_papers
-    @user = User.find(params[:id])
-    @papers = @user.scited_papers.paginate(page: params[:page]).includes(:feed)
-  end
-
-  def comments
-    @user = User.includes(comments: :paper).find(params[:id])
   end
 
   def settings

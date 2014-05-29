@@ -3,8 +3,15 @@
     .event
       div
         time= time_ago_in_words(activity.created_at) + ' ago'
-      .title
-        | #{@user.fullname} commented on <a href="#{paper_url(activity.subject.paper)}">#{activity.subject.paper.title}</a>
-      .content
-        = activity.subject.content
+      - if activity.event == 'comment'
+        .title
+          | #{@user.fullname} commented on #{link_to activity.subject.paper.title, activity.subject.paper}
+        .content
+          = activity.subject.content
+      - elsif activity.event == 'scite'
+        .title
+          | #{@user.fullname} scited #{link_to activity.subject.paper.title, activity.subject.paper}
+      - elsif activity.event == 'subscribe'
+        .title
+          | #{@user.fullname} subscribed to #{link_to activity.subject.feed.fullname, activity.subject.feed}
 

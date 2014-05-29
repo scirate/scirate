@@ -62,8 +62,6 @@ SciRate3::Application.routes.draw do
   post '/settings/password', to: 'users#settings_password'
 
   #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
-  get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'
-  get '/users/:id/comments', to: 'users#comments', as: 'comments_user'
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: 'subscriptions_user'
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: 'activate_user'
   get '/feeds', to: 'users#feeds', as: 'feeds'
@@ -77,9 +75,9 @@ SciRate3::Application.routes.draw do
     resources :users, only: [:edit, :update], param: :username
   end
 
-  get '/:username', to: 'users#profile', username: /.+/, as: 'user'
   get '/:username/scites', to: 'users#scites', username: /.+/, as: 'user_scites'
   get '/:username/comments', to: 'users#comments', username: /.+/, as: 'user_comments'
+  get '/:username', to: 'users#profile', username: /.+/, as: 'user'
 
 
   # The priority is based upon order of creation:
