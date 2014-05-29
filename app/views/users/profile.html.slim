@@ -47,7 +47,7 @@
         a href=(user_path @user)
           i.fa.fa-fw.fa-rss>
           | Activity
-      - if @user.author_identifier
+      - unless @user.author_identifier.empty?
         li class=('active' if @tab == :papers)
           a href=(user_papers_path @user)
             i.fa.fa-fw.fa-file-text-o>

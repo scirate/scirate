@@ -60,7 +60,8 @@ class User < ActiveRecord::Base
 
   valid_aid_regex = /\A[a-z0-9_]+\z/
   validates :author_identifier,
-            format: { with: valid_aid_regex, message: "must be a valid arXiv author id" }
+            format: { with: valid_aid_regex, message: "must be a valid arXiv author id" },
+            allow_blank: true
 
   validate do |user|
     # Only need a password if it's not oauth
@@ -92,7 +93,6 @@ class User < ActiveRecord::Base
     end
 
     if author_identifier_changed?
-      authorships.destroy_all
       update_authorship!
     end
 
@@ -226,8 +226,9 @@ class User < ActiveRecord::Base
   # authored by this user and makes corresponding UserAuthor
   # connections
   def update_authorship!
-    unless author_identifier
-      raise Exception, "Can't update_authorship! for #{username}, no author_identifier"
+    if author_identifier.empty?
+      authorships.destroy_all
+      return
     end
 
     url = "http://export.arxiv.org/fb/feed/#{author_identifier}/?format=xml"
