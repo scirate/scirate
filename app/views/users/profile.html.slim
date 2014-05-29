@@ -39,15 +39,22 @@
     ul.subscriptions
       - @user.subscriptions.order('feed_uid ASC').each do |sub|
         li.badge
-          = link_to sub.feed.uid, sub.feed
+          a href=(feed_url sub.feed) title=(sub.feed.fullname)
+            = sub.feed.uid
   .col-md-9
     ul.nav.nav-tabs
       li class=('active' if @tab == :activity)
-        a href=(user_path @user) Activity
+        a href=(user_path @user)
+          i.fa.fa-rss>
+          | Activity
       li class=('active' if @tab == :scites)
-        a href=(user_scites_path @user) Scites
+        a href=(user_scites_path @user)
+          i.fa.fa-star>
+          | Scites
       li class=('active' if @tab == :comments)
-        a href=(user_comments_path @user) Comments
+        a href=(user_comments_path @user)
+          i.fa.fa-comments>
+          | Comments
 
     - if @tab == :activity
       = render partial: 'users/activity'
