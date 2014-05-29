@@ -77,6 +77,7 @@ SciRate3::Application.routes.draw do
 
   get '/:username/scites', to: 'users#scites', username: /.+/, as: 'user_scites'
   get '/:username/comments', to: 'users#comments', username: /.+/, as: 'user_comments'
+  get '/:username/papers', to: 'users#papers', username: /.+/, as: 'user_papers'
   get '/:username', to: 'users#activity', username: /.+/, as: 'user'
 
 

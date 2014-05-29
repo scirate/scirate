@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140529103318) do
+ActiveRecord::Schema.define(version: 20140529132921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,6 +180,13 @@ ActiveRecord::Schema.define(version: 20140529103318) do
   add_index "subscriptions", ["feed_uid"], name: "index_subscriptions_on_feed_uid", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
+  create_table "user_authors", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.text     "paper_uid",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.text     "fullname"
     t.text     "email"
@@ -202,6 +209,7 @@ ActiveRecord::Schema.define(version: 20140529103318) do
     t.text     "about",                  default: "",     null: false
     t.text     "url",                    default: "",     null: false
     t.text     "location",               default: "",     null: false
+    t.text     "author_identifier"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

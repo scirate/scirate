@@ -1,10 +1,12 @@
+require 'open-uri'
+
 class UsersController < ApplicationController
   before_filter :signed_in_user,
            only: [:feeds, :edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  before_filter :profile_data, only: [:activity, :scites, :comments]
+  before_filter :profile_data, only: [:activity, :papers, :scites, :comments]
 
   def profile_data
     @user = User.find_by_username!(params[:username])
@@ -13,6 +15,25 @@ class UsersController < ApplicationController
   def activity
     @tab = :activity
     @activities = @user.activities.order('created_at DESC').limit(50)
+
+    render 'users/profile'
+  end
+
+  def papers
+    @tab = :papers
+
+    url = "http://arxiv.org/a/#{@user.author_identifier}.atom2"
+    doc = Nokogiri(open(url))
+    doc.css('entry id').each do |el|
+      uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]
+      if m = uid.match(/(.+)v\d+/) # Strip version if needed
+        uid = m[1]
+      end
+      UserAuthor.where(user_id: @user.id, paper_uid: uid).first_or_create!
+    end
+
+    @authored_papers = @user.reload.authored_papers.paginate(page: params[:page])
+    @scited_ids = current_user.scited_papers.pluck(:id) if current_user
 
     render 'users/profile'
   end
@@ -26,7 +47,7 @@ class UsersController < ApplicationController
 
     @scited_papers = scited_papers
       .includes(:feeds, :authors)
-      .paginate(page: params[:scite_page], per_page: 10)
+      .paginate(page: params[:page], per_page: 10)
 
     render 'users/profile'
   end
@@ -37,7 +58,7 @@ class UsersController < ApplicationController
     @comments = @user.comments
       .where(hidden: false, deleted: false)
       .includes(:user, :paper)
-      .paginate(page: params[:comment_page], per_page: 20)
+      .paginate(page: params[:page], per_page: 20)
 
     render 'users/profile'
   end
@@ -117,7 +138,7 @@ class UsersController < ApplicationController
     old_email = @user.email
 
     user_params = params.required(:user)
-                        .permit(:fullname, :email, :username, :url, :organization, :location, :about)
+                        .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about)
 
     if @user.update_attributes(user_params)
       if old_email != @user.email

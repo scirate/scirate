@@ -47,6 +47,11 @@
         a href=(user_path @user)
           i.fa.fa-fw.fa-rss>
           | Activity
+      - if @user.author_identifier
+        li class=('active' if @tab == :papers)
+          a href=(user_papers_path @user)
+            i.fa.fa-fw.fa-file-text-o>
+            | Papers
       li class=('active' if @tab == :scites)
         a href=(user_scites_path @user)
           i.fa.fa-fw.fa-star>
@@ -64,6 +69,8 @@
 
     - if @tab == :activity
       = render partial: 'users/activity'
+    - elsif @tab == :papers
+      = render partial: 'users/papers'
     - elsif @tab == :scites
       = render partial: 'users/scites'
     - elsif @tab == :comments

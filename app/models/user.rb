@@ -22,6 +22,8 @@
 #  username               :text             not null
 #
 
+require 'open-uri'
+
 class User < ActiveRecord::Base
   STATUS_ADMIN = 'admin'
   STATUS_MODERATOR = 'moderator'
@@ -36,6 +38,8 @@ class User < ActiveRecord::Base
 
   has_many :scites, dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
+  has_many :user_authors, dependent: :destroy
+  has_many :authored_papers, through: :user_authors, source: :paper
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :feed_preferences, dependent: :destroy
@@ -53,6 +57,10 @@ class User < ActiveRecord::Base
   validates :username, presence: true,
             format: { with: valid_username_regex, message: "may only contain alphanumeric characters and - or _" },
                     uniqueness: { case_sensitive: false }
+
+  valid_aid_regex = /\A[a-z0-9_]+\z/
+  validates :author_identifier,
+            format: { with: valid_aid_regex, message: "must be a valid arXiv author id" }
 
   validate do |user|
     # Only need a password if it's not oauth
@@ -207,6 +215,25 @@ class User < ActiveRecord::Base
       email: self.email,
       expand_abstracts: self.expand_abstracts
     }.to_json
+  end
+
+  # Given an author_identifier, queries arXiv for papers
+  # authored by this user and makes corresponding UserAuthor
+  # connections
+  def update_authorship!
+    unless author_identifier
+      raise Exception, "Can't update_authorship! for #{username}, no author_identifier"
+    end
+
+    url = "http://export.arxiv.org/fb/feed/#{author_identifier}/?format=xml"
+    doc = Nokogiri(open(url))
+    doc.css('entry id').each do |el|
+      uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]
+      if m = uid.match(/(.+)v\d+/) # Strip version if needed
+        uid = m[1]
+      end
+      UserAuthor.where(user_id: @user.id, paper_uid: uid).first_or_create!
+    end
   end
 
   private
