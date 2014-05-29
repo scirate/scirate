@@ -22,7 +22,7 @@ git fetch -f
 git reset --hard origin/master
 ln -sf ~/database.yml config/database.yml
 ln -sf ~/local_settings.rb local_settings.rb
-bundle install
+bundle install --without="development test"
 END
 
 run [web1], <<END
