@@ -22,17 +22,7 @@ class UsersController < ApplicationController
   def papers
     @tab = :papers
 
-    url = "http://arxiv.org/a/#{@user.author_identifier}.atom2"
-    doc = Nokogiri(open(url))
-    doc.css('entry id').each do |el|
-      uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]
-      if m = uid.match(/(.+)v\d+/) # Strip version if needed
-        uid = m[1]
-      end
-      UserAuthor.where(user_id: @user.id, paper_uid: uid).first_or_create!
-    end
-
-    @authored_papers = @user.reload.authored_papers.paginate(page: params[:page])
+    @authored_papers = @user.authored_papers.paginate(page: params[:page])
     @scited_ids = current_user.scited_papers.pluck(:id) if current_user
 
     render 'users/profile'

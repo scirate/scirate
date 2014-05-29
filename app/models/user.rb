@@ -38,8 +38,8 @@ class User < ActiveRecord::Base
 
   has_many :scites, dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
-  has_many :user_authors, dependent: :destroy
-  has_many :authored_papers, through: :user_authors, source: :paper
+  has_many :authorships, dependent: :destroy, class_name: 'UserAuthor'
+  has_many :authored_papers, through: :authorships, source: :paper
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :feed_preferences, dependent: :destroy
@@ -89,6 +89,11 @@ class User < ActiveRecord::Base
     # Reset the user session if vital information changes
     if new_record? || password_digest_changed? || email_changed?
       generate_token(:remember_token)
+    end
+
+    if author_identifier_changed?
+      authorships.destroy_all
+      update_authorship!
     end
 
     # Switching to/from spam needs propagation to comments
@@ -232,7 +237,7 @@ class User < ActiveRecord::Base
       if m = uid.match(/(.+)v\d+/) # Strip version if needed
         uid = m[1]
       end
-      UserAuthor.where(user_id: @user.id, paper_uid: uid).first_or_create!
+      authorships.where(paper_uid: uid).first_or_create!
     end
   end
 
