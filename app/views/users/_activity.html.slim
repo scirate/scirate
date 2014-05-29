@@ -1,17 +1,25 @@
 #activity
   - @activities.each do |activity|
-    .event
-      div
-        time= time_ago_in_words(activity.created_at) + ' ago'
-      - if activity.event == 'comment'
-        .title
-          | #{@user.fullname} commented on #{link_to activity.subject.paper.title, activity.subject.paper}
-        .content
-          = activity.subject.content
-      - elsif activity.event == 'scite'
-        .title
-          | #{@user.fullname} scited #{link_to activity.subject.paper.title, activity.subject.paper}
-      - elsif activity.event == 'subscribe'
-        .title
-          | #{@user.fullname} subscribed to #{link_to activity.subject.feed.fullname, activity.subject.feed}
+    .event.row
+      .icon.col-md-1
+        - if activity.event == 'comment'
+          i.fa.fa-comment
+        - elsif activity.event == 'scite'
+          i.fa.fa-star
+        - elsif activity.event == 'subscribe'
+          i.fa.fa-list
+      .col-md-11
+        div
+          time= time_ago_in_words(activity.created_at) + ' ago'
+        - if activity.event == 'comment'
+          .title
+            | #{@user.fullname} commented on #{link_to activity.subject.paper.title, activity.subject.paper}
+          .content
+            = activity.subject.content
+        - elsif activity.event == 'scite'
+          .title
+            | #{@user.fullname} scited #{link_to activity.subject.paper.title, activity.subject.paper}
+        - elsif activity.event == 'subscribe'
+          .title
+            | #{@user.fullname} subscribed to #{link_to activity.subject.feed.fullname, activity.subject.feed}
 

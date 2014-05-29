@@ -927,7 +927,6 @@ div.feed-rightbar {
     border-top: 1px solid #f1f1f1;
     padding-top: 1em;
     padding-bottom: 1em;
-    padding-left: 45px;
   }
 
   #activity .event time {
@@ -937,6 +936,17 @@ div.feed-rightbar {
 
   #activity .event:first-child {
     border-top: 0;
+  }
+
+  #activity .icon {
+    width: 5%;
+  }
+
+  #activity .event > .icon i {
+    font-size: 24px;
+    color: #bbb;
+    padding-top: 10px;
+    padding-left: 2px;
   }
 }
 
