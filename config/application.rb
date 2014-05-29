@@ -60,6 +60,7 @@ module SciRate3
 
     config.assets.initialize_on_precompile = false
     config.assets.paths << Rails.root.join('app', 'assets', 'flash')
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
 
     config.action_mailer.default_url_options = { :host => Settings::HOST }
 

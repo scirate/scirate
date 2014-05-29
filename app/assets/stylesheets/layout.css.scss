@@ -897,8 +897,15 @@ div.feed-rightbar {
     border-bottom: 1px solid #eee;
   }
 
+  ul.user-info li {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
   ul.user-info i {
-    width: 16px;
+    display: inline-block;
+    margin-right: 5px;
+    color: #ccc;
   }
 
   ul.subscriptions li {
