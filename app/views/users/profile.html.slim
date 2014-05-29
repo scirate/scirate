@@ -12,6 +12,15 @@
         = status_warning
         a href=(edit_admin_user_path(@user))  edit user
     ul.user-info
+      - if @user.is_admin?
+        li.admin
+          i.fa.fa-fw.fa-sun-o
+          span Admin
+      - elsif @user.is_moderator?
+        li.moderator
+          i.fa.fa-fw.fa-star
+          span Moderator
+
       - unless @user.organization.empty?
         li
           i.fa.fa-fw.fa-group

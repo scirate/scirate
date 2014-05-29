@@ -902,6 +902,16 @@ div.feed-rightbar {
     padding-bottom: 2px;
   }
 
+  ul.user-info li.admin,
+  ul.user-info li.admin i {
+    color: orange;
+  }
+
+  ul.user-info li.moderator,
+  ul.user-info li.moderator i {
+    color: #1e95f9;
+  }
+
   ul.user-info i {
     display: inline-block;
     margin-right: 5px;
