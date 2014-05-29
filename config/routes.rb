@@ -77,7 +77,7 @@ SciRate3::Application.routes.draw do
 
   get '/:username/scites', to: 'users#scites', username: /.+/, as: 'user_scites'
   get '/:username/comments', to: 'users#comments', username: /.+/, as: 'user_comments'
-  get '/:username', to: 'users#profile', username: /.+/, as: 'user'
+  get '/:username', to: 'users#activity', username: /.+/, as: 'user'
 
 
   # The priority is based upon order of creation:

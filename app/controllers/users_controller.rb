@@ -4,14 +4,20 @@ class UsersController < ApplicationController
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def profile
+  before_filter :profile_data, only: [:activity, :scites, :comments]
+
+  def profile_data
     @user = User.find_by_username!(params[:username])
+  end
+
+  def activity
     @tab = :activity
     @activities = @user.activities.order('created_at DESC').limit(50)
+
+    render 'users/profile'
   end
 
   def scites
-    @user = User.find_by_username!(params[:username])
     @tab = :scites
 
     scited_papers = @user.scited_papers.order("scites.created_at DESC")
@@ -26,7 +32,6 @@ class UsersController < ApplicationController
   end
 
   def comments
-    @user = User.find_by_username!(params[:username])
     @tab = :comments
 
     @comments = @user.comments

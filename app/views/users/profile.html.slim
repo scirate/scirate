@@ -11,8 +11,14 @@
       - if current_user && current_user.is_moderator?
         = status_warning
         a href=(edit_admin_user_path(@user))  edit user
-    ul
-      li Joined on #{@user.created_at.to_date.to_formatted_s(:rfc822)}
+    ul.user-info
+      li
+        i.fa.fa-clock
+        span Joined on #{@user.created_at.to_date.to_formatted_s(:rfc822)}
+    ul.subscriptions
+      - @user.subscriptions.order('feed_uid ASC').each do |sub|
+        li.badge
+          = link_to sub.feed.uid, sub.feed
   .col-md-9
     ul.nav.nav-tabs
       li class=('active' if @tab == :activity)

@@ -889,12 +889,21 @@ div.feed-rightbar {
     color: #666;
   }
 
-  #details ul {
+  ul.user-info {
     list-style: none;
     padding-top: 15px;
     padding-bottom: 15px;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
+  }
+
+  ul.user-info i {
+    width: 16px;
+  }
+
+  ul.subscriptions li {
+    margin-right: 3px;
+    background-color: #eee;
   }
 
   #activity .event {
