@@ -875,6 +875,14 @@ div.feed-rightbar {
 
   .nav-tabs a {
     color: #666;
+    padding-left: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .nav-tabs .pull-right .btn {
+    margin-top: 2px;
+    padding: 4px 8px;
   }
 
   #details h1 {

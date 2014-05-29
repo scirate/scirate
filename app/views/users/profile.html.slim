@@ -45,16 +45,22 @@
     ul.nav.nav-tabs
       li class=('active' if @tab == :activity)
         a href=(user_path @user)
-          i.fa.fa-rss>
+          i.fa.fa-fw.fa-rss>
           | Activity
       li class=('active' if @tab == :scites)
         a href=(user_scites_path @user)
-          i.fa.fa-star>
-          | Scites
+          i.fa.fa-fw.fa-star>
+          | Scites (#{@user.scites_count})
       li class=('active' if @tab == :comments)
         a href=(user_comments_path @user)
-          i.fa.fa-comments>
-          | Comments
+          i.fa.fa-fw.fa-comments>
+          | Comments (#{@user.comments_count})
+      - if @user == current_user
+        .pull-right
+          a.btn.btn-default href=(settings_path)
+            i.fa.fa-fw.fa-pencil
+            | Edit profile
+
 
     - if @tab == :activity
       = render partial: 'users/activity'
