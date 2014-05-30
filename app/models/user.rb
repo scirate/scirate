@@ -253,7 +253,10 @@ class User < ActiveRecord::Base
       if m = uid.match(/(.+)v\d+/) # Strip version if needed
         uid = m[1]
       end
-      authorships.where(paper_uid: uid).first_or_create!
+      unless authorships.where(paper_uid: uid).exists?
+        puts "New paper published by #{username}: arxiv/#{uid}"
+        authorships.create(paper_uid: uid)
+      end
     end
 
     self.papers_count = Authorship.where(user_id: id).count
