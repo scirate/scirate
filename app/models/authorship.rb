@@ -5,9 +5,7 @@ class Authorship < ActiveRecord::Base
   validates :user, presence: true
   validates :paper, presence: true
 
-  before_create :match_pubdate
-
-  def match_pubdate
+  before_create do
     self.created_at = paper.pubdate
   end
 end

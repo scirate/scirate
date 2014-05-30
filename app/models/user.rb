@@ -97,7 +97,10 @@ class User < ActiveRecord::Base
     end
 
     if author_identifier_changed?
-      update_authorship!
+      authorships.destroy_all
+      self.papers_count = 0
+
+      update_authorship!(true) unless author_identifier.empty?
     end
 
     # Switching to/from spam needs propagation to comments
@@ -234,12 +237,7 @@ class User < ActiveRecord::Base
   # Given an author_identifier, queries arXiv for papers
   # authored by this user and makes corresponding Authorship
   # connections
-  def update_authorship!
-    if author_identifier.empty?
-      authorships.destroy_all
-      return
-    end
-
+  def update_authorship!(saving=false)
     url = "http://export.arxiv.org/fb/feed/#{author_identifier}/?format=xml"
     doc = Nokogiri(open(url))
     doc.css('entry id').each do |el|
@@ -249,6 +247,9 @@ class User < ActiveRecord::Base
       end
       authorships.where(paper_uid: uid).first_or_create!
     end
+
+    self.papers_count = Authorship.where(user_id: id).count
+    self.save! unless saving
   end
 
   def activity_feed(n=25)
