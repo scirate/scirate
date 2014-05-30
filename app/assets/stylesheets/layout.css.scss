@@ -910,6 +910,19 @@ div.feed-rightbar {
     color: #666;
   }
 
+  #details .user-info li {
+    padding-left: 24px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #details .user-info li i {
+    float: left;
+    margin-left: -24px;
+    position: relative;
+    top: 3px;
+  }
+
   ul.user-info {
     list-style: none;
     padding-top: 15px;
