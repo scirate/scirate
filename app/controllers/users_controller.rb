@@ -57,7 +57,7 @@ class UsersController < ApplicationController
     if !signed_in?
       @user = User.new
     else
-      flash[:error] = "Sign out to create a new user!"
+      #flash[:error] = "Sign out to create a new user!"
       redirect_to root_path
     end
   end
