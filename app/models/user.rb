@@ -23,6 +23,11 @@
 #
 
 require 'open-uri'
+require 'ostruct'
+require 'model_helpers'
+
+class Activity < OpenStruct
+end
 
 class User < ActiveRecord::Base
   STATUS_ADMIN = 'admin'
@@ -38,7 +43,7 @@ class User < ActiveRecord::Base
 
   has_many :scites, dependent: :destroy
   has_many :scited_papers, through: :scites, source: :paper
-  has_many :authorships, dependent: :destroy, class_name: 'UserAuthor'
+  has_many :authorships, dependent: :destroy, class_name: 'Authorship'
   has_many :authored_papers, through: :authorships, source: :paper
   has_many :comments, -> { order('created_at DESC') }, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
@@ -223,7 +228,7 @@ class User < ActiveRecord::Base
   end
 
   # Given an author_identifier, queries arXiv for papers
-  # authored by this user and makes corresponding UserAuthor
+  # authored by this user and makes corresponding Authorship
   # connections
   def update_authorship!
     if author_identifier.empty?
@@ -239,6 +244,55 @@ class User < ActiveRecord::Base
         uid = m[1]
       end
       authorships.where(paper_uid: uid).first_or_create!
+    end
+  end
+
+  def activity_feed(n=25)
+    # Fancy activity query
+    # We don't need no denormalization here
+    results = execute(%Q{
+      SELECT 'scite' AS event, 'paper' AS subject_type, paper_uid AS subject_id, created_at
+        FROM scites
+        WHERE scites.user_id = ?
+        UNION ALL
+      SELECT 'subscribe' AS event, 'feed' AS subject_type, feed_uid AS subject_id, created_at
+        FROM subscriptions
+        WHERE subscriptions.user_id = ?
+        UNION ALL
+      SELECT 'comment' AS event, 'comment' AS subject_type, id::text AS subject_id, created_at
+        FROM comments
+        WHERE comments.user_id = ?
+        UNION ALL
+      SELECT 'authorship' AS event, 'paper' AS subject_type, paper_uid AS subject_id, created_at
+        FROM authorships
+        WHERE authorships.user_id = ?
+      ORDER BY created_at DESC
+      LIMIT ?
+    }, id, id, id, id, n)
+
+    subject_ids = {}
+
+    results.each do |result|
+      type = result['subject_type']
+      if type == 'comment'
+        result['subject_id'] = result['subject_id'].to_i
+      end
+      subject_ids[type] ||= []
+      subject_ids[type] << result['subject_id']
+    end
+
+    subjects = {
+      'paper' => (map_models :uid, Paper.where(uid: subject_ids['paper'])),
+      'feed' => (map_models :uid, Feed.where(uid: subject_ids['feed'])),
+      'comment' => (map_models :id, Comment.where(id: subject_ids['comment']).includes(:paper))
+    }
+
+    results.map do |result|
+      subject = subjects[result['subject_type']][result['subject_id']]
+
+      Activity.new(event: result['event'],
+                   created_at: result['created_at'],
+                   result['subject_type'] => subject)
     end
   end
 

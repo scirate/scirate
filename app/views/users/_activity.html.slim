@@ -2,24 +2,28 @@
   - @activities.each do |activity|
     .event.row
       .icon.col-md-1
-        - if activity.event == 'comment'
-          i.fa.fa-comment
-        - elsif activity.event == 'scite'
+        - if activity.event == 'scite'
           i.fa.fa-star
         - elsif activity.event == 'subscribe'
           i.fa.fa-list
+        - if activity.event == 'comment'
+          i.fa.fa-comment
+        - elsif activity.event == 'authorship'
+          i.fa.fa-file-o
       .col-md-11
         div
           time= time_ago_in_words(activity.created_at) + ' ago'
-        - if activity.event == 'comment'
+        - if activity.event == 'scite'
           .title
-            | #{@user.fullname} commented on #{link_to activity.subject.paper.title, activity.subject.paper}
-          .content
-            = activity.subject.content
-        - elsif activity.event == 'scite'
-          .title
-            | #{@user.fullname} scited #{link_to activity.subject.paper.title, activity.subject.paper}
+            | #{@user.fullname} scited #{link_to activity.paper.title, activity.paper}
         - elsif activity.event == 'subscribe'
           .title
-            | #{@user.fullname} subscribed to #{link_to activity.subject.feed.fullname, activity.subject.feed}
-
+            | #{@user.fullname} subscribed to #{link_to activity.feed.fullname, activity.feed}
+        - elsif activity.event == 'comment'
+          .title
+            | #{@user.fullname} commented on #{link_to activity.comment.paper.title, activity.comment.paper}
+          .content
+            = activity.comment.content
+        - elsif activity.event == 'authorship'
+          .title
+            | #{@user.fullname} authored #{link_to activity.paper.title, activity.paper}

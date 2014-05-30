@@ -11,19 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140529144400) do
+ActiveRecord::Schema.define(version: 20140530113624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "activities", force: true do |t|
-    t.integer  "user_id",      null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "event",        null: false
-    t.integer  "subject_id",   null: false
-    t.string   "subject_type", null: false
-  end
 
   create_table "auth_links", force: true do |t|
     t.string   "provider",         null: false
@@ -46,6 +37,13 @@ ActiveRecord::Schema.define(version: 20140529144400) do
   add_index "authors", ["paper_uid"], name: "index_authors_on_paper_uid", using: :btree
   add_index "authors", ["position", "paper_uid"], name: "index_authors_on_position_and_paper_uid", unique: true, using: :btree
   add_index "authors", ["searchterm"], name: "index_authors_on_searchterm", using: :btree
+
+  create_table "authorships", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.text     "paper_uid",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "categories", force: true do |t|
     t.integer  "position",                                       null: false
@@ -179,13 +177,6 @@ ActiveRecord::Schema.define(version: 20140529144400) do
   add_index "subscriptions", ["feed_uid", "user_id"], name: "index_subscriptions_on_feed_uid_and_user_id", unique: true, using: :btree
   add_index "subscriptions", ["feed_uid"], name: "index_subscriptions_on_feed_uid", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
-
-  create_table "user_authors", force: true do |t|
-    t.integer  "user_id",    null: false
-    t.text     "paper_uid",  null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "users", force: true do |t|
     t.text     "fullname"

@@ -37,7 +37,7 @@
         i.fa.fa-fw.fa-clock-o
         span Joined on #{@user.created_at.to_date.to_formatted_s(:rfc822)}
     ul.subscriptions
-      - @user.subscriptions.order('feed_uid ASC').each do |sub|
+      - @user.subscriptions.order('feed_uid ASC').includes(:feed).each do |sub|
         li.badge
           a href=(feed_url sub.feed) title=(sub.feed.fullname)
             = sub.feed.uid

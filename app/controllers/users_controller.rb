@@ -14,7 +14,7 @@ class UsersController < ApplicationController
 
   def activity
     @tab = :activity
-    @activities = @user.activities.order('created_at DESC').limit(50)
+    @activities = @user.activity_feed(25)
 
     render 'users/profile'
   end
