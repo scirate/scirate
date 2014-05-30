@@ -130,16 +130,20 @@ class UsersController < ApplicationController
     user_params = params.required(:user)
                         .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about)
 
-    if @user.update_attributes(user_params)
-      if old_email != @user.email
-        @user.send_email_change_confirmation(old_email)
-        sign_in @user
-      end
+    begin
+      if @user.update_attributes(user_params)
+        if old_email != @user.email
+          @user.send_email_change_confirmation(old_email)
+          sign_in @user
+        end
 
-      sign_in @user
-      flash[:success] = "Profile updated"
-    else
-      flash[:error] = @user.errors.full_messages
+        sign_in @user
+        flash[:success] = "Profile updated"
+      else
+        flash[:error] = @user.errors.full_messages
+      end
+    rescue OpenURI::HTTPError
+      flash[:error] = "The arXiv doesn't seem to have that author identifier, please double check"
     end
   end
 
