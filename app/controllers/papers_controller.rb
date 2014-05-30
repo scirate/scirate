@@ -34,7 +34,7 @@ class PapersController < ApplicationController
       # Determine which folder we should have selected
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
 
-      @scited_ids = current_user.scited_papers.pluck(:id) if current_user
+      @scited_by_uid = current_user.scited_by_uid(@papers) if current_user
     end
 
     render :search

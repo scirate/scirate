@@ -1,40 +1,77 @@
 - provide :title, @user.fullname
 - provide :image, gravatar_url(@user, size: 200)
 
-#profile-page.container
-  table.table
-    tr
-      td
-        h1
-          => gravatar_for @user, size: 100
-          = @user.fullname
-        - if current_user && current_user.is_moderator?
-          = status_warning
-          a href=(edit_admin_user_path(@user))  edit user
+#profilePage.container
+  #details.col-md-3
+    div= gravatar_for(@user, size: 230)
+    h1
+      span.fullname= @user.fullname
+      span.username = @user.username
+    ul.user-info
+      - if @user.is_admin?
+        li.admin
+          i.fa.fa-fw.fa-sun-o
+          span Admin
+      - elsif @user.is_moderator?
+        li.moderator
+          i.fa.fa-fw.fa-star
+          span Moderator
 
-  .row
-    .col-md-6
-      h3
-        | Scites (#{@user.scites_count})
-      - if @user.scites_count == 0
-        p No papers scited.
-      - else
-        .inline-search
-          = form_tag(papers_search_path + '#results', method: :get) do |f|
-            = label_tag :q, "Search query", class: 'sr-only'
-            = text_field_tag :q, nil, class: 'form-control', placeholder: "Search Scites"
-            = hidden_field_tag :advanced, "scited_by:#{@user.username}"
+      - unless @user.organization.empty?
+        li
+          i.fa.fa-fw.fa-group
+          span= @user.organization
+      - unless @user.location.empty?
+        li
+          i.fa.fa-fw.fa-map-marker
+          span= @user.location
+      - unless @user.url.empty?
+        li
+          i.fa.fa-fw.fa-link
+          = link_to @user.url, @user.url
+      li
+        i.fa.fa-fw.fa-clock-o
+        span Joined #{@user.created_at.to_date.to_formatted_s(:rfc822)}
+    ul.subscriptions
+      - @user.subscriptions.order('feed_uid ASC').includes(:feed).each do |sub|
+        li.badge
+          a href=(feed_url sub.feed) title=(sub.feed.fullname)
+            = sub.feed.uid
+  .col-md-9
+    ul.nav.nav-tabs
+      li class=('active' if @tab == :activity)
+        a href=(user_path @user)
+          i.fa.fa-fw.fa-rss>
+          | Activity
+      - unless @user.author_identifier.empty?
+        li class=('active' if @tab == :papers)
+          a href=(user_papers_path @user)
+            i.fa.fa-fw.fa-file-text-o>
+            | Papers (#{@user.papers_count})
+      li class=('active' if @tab == :scites)
+        a href=(user_scites_path @user)
+          i.fa.fa-fw.fa-star>
+          | Scites (#{@user.scites_count})
+      li class=('active' if @tab == :comments)
+        a href=(user_comments_path @user)
+          i.fa.fa-fw.fa-comments>
+          | Comments (#{@user.comments_count})
+      - if @user == current_user
+        .pull-right
+          - if current_user && current_user.is_moderator?
+            a.btn.btn-danger href=(edit_admin_user_path(@user))
+              i.fa.fa-fw.fa-gear
+              | Admin
+          a.btn.btn-default href=(settings_path)
+            i.fa.fa-fw.fa-pencil
+            | Edit profile
 
-            button.btn.btn-primary.btn-right type="submit"
-              i.fa.fa-search.fa-lg
 
-        = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
-        = will_paginate @scited_papers, param_name: 'scite_page'
-    .col-md-6
-      h3
-        | Comments (#{@user.comments_count})
-      - if @user.comments_count == 0
-        p No comments posted.
-      - else
-        = render @comments
-        = will_paginate @comments, param_name: 'comment_page'
+    - if @tab == :activity
+      = render partial: 'users/activity'
+    - elsif @tab == :papers
+      = render partial: 'users/papers'
+    - elsif @tab == :scites
+      = render partial: 'users/scites'
+    - elsif @tab == :comments
+      = render partial: 'users/comments'

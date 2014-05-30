@@ -1,0 +1,5 @@
+#papersTab
+  = render partial: "papers/paper", collection: @authored_papers, locals: { showabs: false }
+  = will_paginate @authored_papers
+
+

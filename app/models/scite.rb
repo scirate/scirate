@@ -14,7 +14,7 @@ class Scite < ActiveRecord::Base
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, touch: true
 
   validates :user, presence: true
-  validates :paper,  presence: true
+  validates :paper, presence: true
 
   after_save do
     paper.refresh_scites_count!

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140511230518) do
+ActiveRecord::Schema.define(version: 20140530123200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,13 @@ ActiveRecord::Schema.define(version: 20140511230518) do
   add_index "authors", ["paper_uid"], name: "index_authors_on_paper_uid", using: :btree
   add_index "authors", ["position", "paper_uid"], name: "index_authors_on_position_and_paper_uid", unique: true, using: :btree
   add_index "authors", ["searchterm"], name: "index_authors_on_searchterm", using: :btree
+
+  create_table "authorships", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.text     "paper_uid",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "categories", force: true do |t|
     t.integer  "position",                                       null: false
@@ -189,6 +196,12 @@ ActiveRecord::Schema.define(version: 20140511230518) do
     t.boolean  "expand_abstracts",       default: false
     t.text     "account_status",         default: "user"
     t.text     "username",                                null: false
+    t.text     "organization",           default: "",     null: false
+    t.text     "about",                  default: "",     null: false
+    t.text     "url",                    default: "",     null: false
+    t.text     "location",               default: "",     null: false
+    t.text     "author_identifier",      default: "",     null: false
+    t.integer  "papers_count",           default: 0,      null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

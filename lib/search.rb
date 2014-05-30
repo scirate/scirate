@@ -1,3 +1,5 @@
+require 'data_helpers'
+
 module Search
   class << self
     attr_reader :index_name
@@ -274,11 +276,6 @@ module Search::Paper
 
     res = Search.index.bulk_index(docs)
     raise res if res.errors
-  end
-
-  def self.execute(sql, *args)
-    sanitized = ActiveRecord::Base.send(:sanitize_sql_array, [sql]+args)
-    ActiveRecord::Base.connection.execute(sanitized).to_a
   end
 
   # Reindex entire database of papers

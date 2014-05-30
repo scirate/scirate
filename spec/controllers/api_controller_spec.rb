@@ -8,32 +8,29 @@ describe ApiController do
   before { sign_in user }
 
   describe "sciting a paper" do
-    it "should increment the Scite count" do
-      expect do
-        xhr :post, :scite, paper_uid: paper.uid
-      end.to change(Scite, :count).by(1)
+    before do
+      xhr :post, :scite, paper_uid: paper.uid
     end
 
-    it "should respond with success" do
-      xhr :post, :scite, paper_uid: paper.uid
-      response.should be_success
+    it "creates a scite" do
+      scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
+      expect(scite).to_not be_nil
+
+      expect(response).to be_success
     end
   end
 
   describe "unsciting a paper" do
     before do
-      user.scite!(paper)
-    end
-
-    it "should decrement the Scite count" do
-      expect do
-        xhr :post, :unscite, paper_uid: paper.uid
-      end.to change(Scite, :count).by(-1)
-    end
-
-    it "should respond with success" do
+      xhr :post, :scite, paper_uid: paper.uid
       xhr :post, :unscite, paper_uid: paper.uid
-      response.should be_success
+    end
+
+    it "removes the scite" do
+      scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
+      expect(scite).to be_nil
+
+      expect(response).to be_success
     end
   end
 
@@ -42,8 +39,11 @@ describe ApiController do
       xhr :post, :subscribe, feed_uid: feed.uid
     end
 
-    it "should subscribe" do
-      user.feeds.should include(feed)
+    it "creates a subscription" do
+      sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
+      expect(sub).to_not be_nil
+
+      expect(response).to be_success
     end
   end
 
@@ -53,8 +53,11 @@ describe ApiController do
       xhr :post, :unsubscribe, feed_uid: feed.uid
     end
 
-    it "unsubscribes" do
-      expect(user.feeds).to_not include(feed)
+    it "removes the subscription" do
+      sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
+      expect(sub).to be_nil
+
+      expect(response).to be_success
     end
   end
 

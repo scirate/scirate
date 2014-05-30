@@ -18,6 +18,26 @@
       tr
         td= f.label :email, "Email"
         td= f.email_field :email, class: 'form-control'
+      tr
+        - desc = "A personal website or other url"
+        td= f.label :url, "URL"
+        td= f.text_field :url, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "Primary group you are affiliated with"
+        td= f.label :organization, "Organization"
+        td= f.text_field :organization, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "Where you are in the world"
+        td= f.label :location, "Location"
+        td= f.text_field :location, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "arXiv author identifier will be used to display papers on your profile"
+        td= f.label :author_identifier, "Author Identifier"
+        td= f.text_field :author_identifier, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "Some descriptive text about yourself"
+        td= f.label :about
+        td= f.text_area :about, class: 'form-control', title: desc, placeholder: desc
     = f.submit "Save changes", class: "btn btn-default"
 
   p.google

@@ -1,3 +1,5 @@
+require 'data_helpers'
+
 class FeedsController < ApplicationController
   def landing
     @date = _parse_date(params)
@@ -13,8 +15,6 @@ class FeedsController < ApplicationController
     @backdate = @date - (@range-1).days
 
     @recent_comments = Comment.visible.where(hidden_from_recent: false).order("created_at DESC").limit(10)
-
-    @scited_ids = []
 
     @papers = _range_query(nil, @backdate, @date, @page)
 
@@ -54,14 +54,14 @@ class FeedsController < ApplicationController
 
     @recent_comments = _recent_comments(feed_uids)
 
-    @scited_ids = current_user.scited_papers.pluck(:id)
-
     if feed_uids.empty?
       # No subscriptions
       @papers = []
     else
       @papers = _range_query(feed_uids, @backdate, @date, @page)
     end
+
+    @scited_by_uid = current_user.scited_by_uid(@papers)
 
     render 'feeds/show'
   end
@@ -110,9 +110,10 @@ class FeedsController < ApplicationController
 
     @recent_comments = _recent_comments(feed_uids)
 
-    @scited_ids = current_user.scited_papers.pluck(:id)
-
     @papers = _range_query(feed_uids, @backdate, @date, @page)
+
+    @scited_by_uid = current_user.scited_by_uid(@papers)
+
   end
 
   private

@@ -1,29 +1,56 @@
+require 'open-uri'
+require 'data_helpers'
+
 class UsersController < ApplicationController
   before_filter :signed_in_user,
            only: [:feeds, :edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def profile
+  before_filter :profile_data, only: [:activity, :papers, :scites, :comments]
+
+  def profile_data
     @user = User.find_by_username!(params[:username])
+  end
 
-    if params[:scite_order] == 'published'
-      @scite_order = :published
-      scited_papers = @user.scited_papers.order("submit_date DESC")
-    else
-      @scite_order = :scited
-      scited_papers = @user.scited_papers.order("scites.created_at DESC")
-    end
+  def activity
+    @tab = :activity
+    @activities = @user.activity_feed(25)
 
-    @scited_ids = current_user.scited_papers.pluck(:id) if current_user
+    render 'users/profile'
+  end
 
-    @scited_papers = scited_papers
+  def papers
+    @tab = :papers
+
+    @authored_papers = @user.authored_papers.includes(:feeds, :authors).paginate(page: params[:page])
+    @scited_by_uid = current_user.scited_by_uid(@authored_papers) if current_user
+
+    render 'users/profile'
+  end
+
+  def scites
+    @tab = :scites
+
+    @scited_papers = @user.scited_papers
+      .order("scites.created_at DESC")
       .includes(:feeds, :authors)
-      .paginate(page: params[:scite_page], per_page: 10)
+      .paginate(page: params[:page], per_page: 10)
+
+    @scited_by_uid = current_user.scited_by_uid(@scited_papers) if current_user
+
+    render 'users/profile'
+  end
+
+  def comments
+    @tab = :comments
+
     @comments = @user.comments
       .where(hidden: false, deleted: false)
       .includes(:user, :paper)
-      .paginate(page: params[:comment_page], per_page: 20)
+      .paginate(page: params[:page], per_page: 20)
+
+    render 'users/profile'
   end
 
   def new
@@ -94,15 +121,6 @@ class UsersController < ApplicationController
     @subscribed_ids = @user.subscriptions.pluck(:feed_uid)
   end
 
-  def scited_papers
-    @user = User.find(params[:id])
-    @papers = @user.scited_papers.paginate(page: params[:page]).includes(:feed)
-  end
-
-  def comments
-    @user = User.includes(comments: :paper).find(params[:id])
-  end
-
   def settings
     @user = current_user
     return unless request.post?
@@ -110,7 +128,7 @@ class UsersController < ApplicationController
     old_email = @user.email
 
     user_params = params.required(:user)
-                        .permit(:fullname, :email, :username, :expand_abstracts)
+                        .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about)
 
     if @user.update_attributes(user_params)
       if old_email != @user.email
