@@ -956,27 +956,29 @@ div.feed-rightbar {
     margin-right: 3px;
     background-color: #eee;
   }
+}
 
-  #activity .event {
+#activityTab {
+  .event {
     border-top: 1px solid #f1f1f1;
     padding-top: 1em;
     padding-bottom: 1em;
   }
 
-  #activity .event time {
+  .event time {
     font-size: 12px;
     color: #bbb;
   }
 
-  #activity .event:first-child {
+  .event:first-child {
     border-top: 0;
   }
 
-  #activity .icon {
+  .icon {
     width: 5%;
   }
 
-  #activity .event > .icon i {
+  .event > .icon i {
     font-size: 24px;
     width: 24px;
     text-align: center;
@@ -985,12 +987,28 @@ div.feed-rightbar {
     padding-left: 2px;
   }
 
-  #activity .comment .body {
+  .well {
+    background-color: white;
+    margin-top: 10px;
     margin-bottom: 10px;
   }
 
-  #activity .comment p:last-child {
+  .comment p:last-child {
     margin-bottom: 0;
+  }
+
+  .authorship .icon i {
+    color: gold;
+  }
+
+  .authorship .well {
+    -webkit-box-shadow: 0px 0px 5px 1px gold;
+    -moz-box-shadow:    0px 0px 5px 1px gold;
+    box-shadow:         0px 0px 5px 1px gold;
+  }
+
+  .authorship .title {
+    font-size: 22px;
   }
 }
 

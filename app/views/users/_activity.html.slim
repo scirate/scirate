@@ -1,35 +1,48 @@
-#activity
+#activityTab
   - @activities.each do |activity|
-    .event.row
-      .icon.col-md-1
-        - if activity.event == 'scite'
+    .row.event class=(activity.event)
+      - if activity.event == 'scite'
+        .icon.col-md-1
           i.fa.fa-star
-        - elsif activity.event == 'subscribe'
-          i.fa.fa-list
-        - if activity.event == 'comment'
-          i.fa.fa-comment
-        - elsif activity.event == 'authorship'
-          i.fa.fa-file-o
-        - elsif activity.event == 'signup'
-          i.fa.fa-user
-      .col-md-11
-        div
+        .col-md-11
           time= time_ago_in_words(activity.created_at) + ' ago'
-        - if activity.event == 'scite'
           .title
             | #{@user.fullname} scited #{link_to activity.paper.title, activity.paper}
-        - elsif activity.event == 'subscribe'
+
+      - elsif activity.event == 'subscribe'
+        .col-md-1.icon
+          i.fa.fa-star
+        .col-md-11
+          time= time_ago_in_words(activity.created_at) + ' ago'
           .title
             | #{@user.fullname} subscribed to #{link_to activity.feed.fullname, activity.feed}
-        - elsif activity.event == 'comment'
-          .title style="margin-bottom: 10px;"
-            | #{@user.fullname} commented on <a href="#{paper_url(activity.comment.paper)}##{activity.comment.id}">#{activity.comment.paper.title}</a>
-          .content.comment.tex2jax data-markup=(activity.comment.content)
-            .body.well style="background-color: white;"
-              = simple_format(strip_tags(activity.comment.content))
-        - elsif activity.event == 'authorship'
+
+      - elsif activity.event == 'comment'
+        .col-md-1.icon
+          i.fa.fa-comment
+        .col-md-11
+          time= time_ago_in_words(activity.created_at) + ' ago'
           .title
-            | #{@user.fullname} authored #{link_to activity.paper.title, activity.paper}
-        - elsif activity.event == 'signup'
+              | #{@user.fullname} commented on <a href="#{paper_url(activity.comment.paper)}##{activity.comment.id}">#{activity.comment.paper.title}</a>
+          .content.well.tex2jax data-markup=(activity.comment.content)
+            .body
+              = simple_format(strip_tags(activity.comment.content))
+
+      - elsif activity.event == 'authorship'
+        .col-md-1.icon
+          i.fa.fa-pencil
+        .col-md-11
+          time= time_ago_in_words(activity.created_at) + ' ago'
+          .authorship
+            .title
+              | #{@user.fullname} published #{link_to activity.paper.title, activity.paper}
+            .content.well
+              = activity.paper.abstract
+
+      - elsif activity.event == 'signup'
+        .col-md-1.icon
+          i.fa.fa-user
+        .col-md-11
+          time= time_ago_in_words(activity.created_at) + ' ago'
           .title
             | #{@user.fullname} joined SciRate
