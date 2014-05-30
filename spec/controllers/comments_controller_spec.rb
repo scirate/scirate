@@ -13,14 +13,11 @@ describe CommentsController do
       response.should be_redirect
     end
 
-    it "creates a comment and activity entry" do
+    it "creates a comment" do
       expect(flash[:comment][:status]).to eq :success
 
       comment = paper.comments.where(content: "fishies").first
       expect(comment).to_not be_nil
-
-      activity = user.activities.comment.where(subject_id: comment.id).first
-      expect(activity).to_not be_nil
     end
   end
 
@@ -43,13 +40,10 @@ describe CommentsController do
       expect(response).to be_redirect
     end
 
-    it "marks comment as deleted and removes activity entry" do
+    it "marks comment as deleted" do
       flash[:comment][:status].should == 'success'
 
       expect(comment.reload.deleted).to be_true
-
-      activity = user.activities.comment.where(subject_id: comment.id).first
-      expect(activity).to be_nil
     end
   end
 

@@ -16,10 +16,6 @@ class Scite < ActiveRecord::Base
   validates :user, presence: true
   validates :paper, presence: true
 
-  after_create do
-    Activity.scite.create!(subject: self, user: user)
-  end
-
   after_save do
     paper.refresh_scites_count!
     user.refresh_scites_count!
@@ -28,6 +24,5 @@ class Scite < ActiveRecord::Base
   after_destroy do
     paper.refresh_scites_count!
     user.refresh_scites_count!
-    Activity.scite.where(subject: self, user: user).destroy_all
   end
 end

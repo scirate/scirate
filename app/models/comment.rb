@@ -32,22 +32,12 @@ class Comment < ActiveRecord::Base
 
   scope :visible, -> { where(hidden: false, deleted: false) }
 
-  after_create do
-    Activity.comment.create!(user: user, subject: self)
-  end
-
   after_save do
     paper.refresh_comments_count!
-    if deleted
-      Activity.comment.where(user: user, subject: self).destroy_all
-    elsif !Activity.comment.where(user: user, subject: self).exists?
-      Activity.comment.create!(user: user, subject: self, created_at: created_at)
-    end
   end
 
   after_destroy do
     paper.refresh_comments_count!
-    Activity.comment.where(user: user, subject: self).destroy_all
   end
 
   acts_as_votable

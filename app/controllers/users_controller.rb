@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'data_helpers'
 
 class UsersController < ApplicationController
   before_filter :signed_in_user,
@@ -22,8 +23,8 @@ class UsersController < ApplicationController
   def papers
     @tab = :papers
 
-    @authored_papers = @user.authored_papers.paginate(page: params[:page])
-    @scited_ids = current_user.scited_papers.pluck(:id) if current_user
+    @authored_papers = @user.authored_papers.includes(:feeds, :authors).paginate(page: params[:page])
+    @scited_by_uid = current_user.scited_by_uid(@authored_papers) if current_user
 
     render 'users/profile'
   end
@@ -31,13 +32,12 @@ class UsersController < ApplicationController
   def scites
     @tab = :scites
 
-    scited_papers = @user.scited_papers.order("scites.created_at DESC")
-
-    @scited_ids = current_user.scited_papers.pluck(:id) if current_user
-
-    @scited_papers = scited_papers
+    @scited_papers = @user.scited_papers
+      .order("scites.created_at DESC")
       .includes(:feeds, :authors)
       .paginate(page: params[:page], per_page: 10)
+
+    @scited_by_uid = current_user.scited_by_uid(@scited_papers) if current_user
 
     render 'users/profile'
   end

@@ -12,12 +12,9 @@ describe ApiController do
       xhr :post, :scite, paper_uid: paper.uid
     end
 
-    it "creates a scite and activity entry" do
+    it "creates a scite" do
       scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
       expect(scite).to_not be_nil
-
-      activity = Activity.scite.where(user_id: user.id, subject_id: paper.id).first
-      expect(activity).to_not be_nil
 
       expect(response).to be_success
     end
@@ -29,12 +26,9 @@ describe ApiController do
       xhr :post, :unscite, paper_uid: paper.uid
     end
 
-    it "removes the scite and activity entry" do
+    it "removes the scite" do
       scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
       expect(scite).to be_nil
-
-      activity = Activity.scite.where(user_id: user.id, subject_id: paper.id).first
-      expect(activity).to be_nil
 
       expect(response).to be_success
     end
@@ -45,12 +39,9 @@ describe ApiController do
       xhr :post, :subscribe, feed_uid: feed.uid
     end
 
-    it "creates a subscription and activity entry" do
+    it "creates a subscription" do
       sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
       expect(sub).to_not be_nil
-
-      activity = Activity.subscribe.where(user_id: user.id, subject_id: feed.id).first
-      expect(activity).to_not be_nil
 
       expect(response).to be_success
     end
@@ -62,12 +53,9 @@ describe ApiController do
       xhr :post, :unsubscribe, feed_uid: feed.uid
     end
 
-    it "removes the subscription and activity entry" do
+    it "removes the subscription" do
       sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
       expect(sub).to be_nil
-
-      activity = Activity.subscribe.where(user_id: user.id, subject_id: feed.id).first
-      expect(activity).to be_nil
 
       expect(response).to be_success
     end

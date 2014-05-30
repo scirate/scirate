@@ -24,7 +24,7 @@
 
 require 'open-uri'
 require 'ostruct'
-require 'model_helpers'
+require 'data_helpers'
 
 class Activity < OpenStruct
 end
@@ -49,7 +49,6 @@ class User < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
   has_many :feed_preferences, dependent: :destroy
   has_many :auth_links, dependent: :destroy
-  has_many :activities, dependent: :destroy
   has_many :feeds, through: :subscriptions
 
   validates :fullname, presence: true, length: { maximum: 50 }
@@ -142,6 +141,11 @@ class User < ActiveRecord::Base
   def refresh_scites_count!
     self.scites_count = Scite.where(user_id: id).count
     save!
+  end
+
+  # Given a collection of papers, map uids to scite status
+  def scited_by_uid(papers)
+    map_exists :paper_uid, scites.where(paper_uid: papers.map(&:uid))
   end
 
   def subscribe!(feed)
@@ -261,7 +265,7 @@ class User < ActiveRecord::Base
         UNION ALL
       SELECT 'comment' AS event, 'comment' AS subject_type, id::text AS subject_id, created_at
         FROM comments
-        WHERE comments.user_id = ?
+        WHERE comments.user_id = ? AND comments.deleted IS FALSE
         UNION ALL
       SELECT 'authorship' AS event, 'paper' AS subject_type, paper_uid AS subject_id, created_at
         FROM authorships

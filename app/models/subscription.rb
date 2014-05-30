@@ -16,12 +16,4 @@ class Subscription < ActiveRecord::Base
 
   validates :user_id, presence: true
   validates :feed_uid, presence: true
-
-  after_create do
-    Activity.subscribe.create(user: user, subject: self)
-  end
-
-  after_destroy do
-    Activity.subscribe.where(user: user, subject: self).destroy_all
-  end
 end

@@ -1,4 +1,4 @@
-require 'model_helpers'
+require 'data_helpers'
 
 module Search
   class << self
