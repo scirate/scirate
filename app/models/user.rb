@@ -296,13 +296,20 @@ class User < ActiveRecord::Base
       'comment' => (map_models :id, Comment.where(id: subject_ids['comment']).includes(:paper))
     }
 
-    results.map do |result|
+    activities = results.map do |result|
       subject = subjects[result['subject_type']][result['subject_id']]
 
       Activity.new(event: result['event'],
                    created_at: result['created_at'],
                    result['subject_type'] => subject)
     end
+
+    if activities.length < n
+      activities << Activity.new(event: 'signup',
+                                 created_at: created_at)
+    end
+
+    activities
   end
 
   private

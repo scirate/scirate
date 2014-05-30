@@ -10,6 +10,8 @@
           i.fa.fa-comment
         - elsif activity.event == 'authorship'
           i.fa.fa-file-o
+        - elsif activity.event == 'signup'
+          i.fa.fa-user
       .col-md-11
         div
           time= time_ago_in_words(activity.created_at) + ' ago'
@@ -27,3 +29,6 @@
         - elsif activity.event == 'authorship'
           .title
             | #{@user.fullname} authored #{link_to activity.paper.title, activity.paper}
+        - elsif activity.event == 'signup'
+          .title
+            | #{@user.fullname} joined SciRate
