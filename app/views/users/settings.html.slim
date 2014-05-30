@@ -34,10 +34,11 @@
         - desc = "arXiv author identifier will be used to display papers on your profile"
         td= f.label :author_identifier, "Author Identifier"
         td= f.text_field :author_identifier, class: 'form-control', title: desc, placeholder: desc
-      tr
-        - desc = "Some descriptive text about yourself"
-        td= f.label :about
-        td= f.text_area :about, class: 'form-control', title: desc, placeholder: desc
+      /
+        tr
+          - desc = "Some descriptive text about yourself"
+          td= f.label :about
+          td= f.text_area :about, class: 'form-control', title: desc, placeholder: desc
     = f.submit "Save changes", class: "btn btn-default"
 
   p.google
