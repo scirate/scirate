@@ -31,7 +31,7 @@
           = link_to @user.url, @user.url
       li
         i.fa.fa-fw.fa-clock-o
-        span Joined on #{@user.created_at.to_date.to_formatted_s(:rfc822)}
+        span Joined #{@user.created_at.to_date.to_formatted_s(:rfc822)}
     ul.subscriptions
       - @user.subscriptions.order('feed_uid ASC').includes(:feed).each do |sub|
         li.badge
