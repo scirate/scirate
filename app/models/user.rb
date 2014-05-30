@@ -87,7 +87,7 @@ class User < ActiveRecord::Base
       user.errors.add :username, "is already taken"
     end
 
-    if !user.url.empty? && !user.url.match(/http(s):\/\//)
+    if !user.url.empty? && !user.url.match(/http(s)?:\/\//)
       user.url = "http://" + user.url
     end
   end
