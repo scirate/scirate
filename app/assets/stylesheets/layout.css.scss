@@ -17,10 +17,6 @@ body {
   height: 100%;
 }
 
-ul {
-  padding-left: 0;
-}
-
 a {
   cursor: pointer;
 }
@@ -910,6 +906,10 @@ div.feed-rightbar {
     color: #666;
   }
 
+  #details ul {
+    padding-left: 0;
+  }
+
   #details .user-info li {
     padding-left: 24px;
     overflow-x: hidden;
@@ -983,6 +983,12 @@ div.feed-rightbar {
     color: #bbb;
     padding-top: 10px;
     padding-left: 2px;
+  }
+}
+
+#papersTab, #scitesTab {
+  .paper:first-child {
+    padding-top: 0;
   }
 }
 

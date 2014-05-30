@@ -1,6 +1,7 @@
-#scites
+#scitesTab
   - if @scited_papers.count == 0
-    p No papers scited.
+    .well
+      | No papers scited.
   - else
     .inline-search
       = form_tag(papers_search_path + '#results', method: :get) do |f|
@@ -10,9 +11,9 @@
 
         button.btn.btn-primary.btn-right type="submit"
           i.fa.fa-search.fa-lg
-
-
-      = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
+      hr
+      ul.papers
+        = render partial: "papers/paper", collection: @scited_papers, locals: { showabs: false }
       = will_paginate @scited_papers, param_name: 'scite_page'
 
 

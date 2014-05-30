@@ -22,10 +22,11 @@
           .title
             | #{@user.fullname} subscribed to #{link_to activity.feed.fullname, activity.feed}
         - elsif activity.event == 'comment'
-          .title
-            | #{@user.fullname} commented on #{link_to activity.comment.paper.title, activity.comment.paper}
-          .content
-            = activity.comment.content
+          .title style="margin-bottom: 10px;"
+            | #{@user.fullname} commented on <a href="#{paper_url(activity.comment.paper)}##{activity.comment.id}">#{activity.comment.paper.title}</a>
+          .content.comment.tex2jax data-markup=(activity.comment.content)
+            .body.well style="background-color: white;"
+              = simple_format(strip_tags(activity.comment.content))
         - elsif activity.event == 'authorship'
           .title
             | #{@user.fullname} authored #{link_to activity.paper.title, activity.paper}

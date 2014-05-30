@@ -40,5 +40,5 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
           - if current_user.is_moderator?
             .moderate
               | #{status_warning} <a class="edit">edit</a>
-              = link_to 'delete', delete_comment_path(comment), method: :post
+              =< link_to 'delete', delete_comment_path(comment), method: :post
   div style="clear: both;"

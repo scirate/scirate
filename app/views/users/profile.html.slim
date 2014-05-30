@@ -48,14 +48,14 @@
           a href=(user_papers_path @user)
             i.fa.fa-fw.fa-file-text-o>
             | Papers (#{@user.papers_count})
-      li class=('active' if @tab == :scites)
-        a href=(user_scites_path @user)
-          i.fa.fa-fw.fa-star>
-          | Scites (#{@user.scites_count})
       li class=('active' if @tab == :comments)
         a href=(user_comments_path @user)
           i.fa.fa-fw.fa-comments>
           | Comments (#{@user.comments_count})
+      li class=('active' if @tab == :scites)
+        a href=(user_scites_path @user)
+          i.fa.fa-fw.fa-star>
+          | Scites (#{@user.scites_count})
       .pull-right
         - if current_user && current_user.is_moderator?
           a.btn.btn-danger href=(edit_admin_user_path(@user))
