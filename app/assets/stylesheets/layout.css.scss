@@ -357,15 +357,16 @@ div.paper {
   }
 
   ul.authors {
+    padding-left: 0;
     margin-bottom: 2px;
+  }
 
-    li {
-      list-style: none;
-      display: inline-block;
-      padding-right: 3px;
+  ul.authors li {
+    list-style: none;
+    display: inline-block;
+    padding-right: 3px;
 
-      font-size: medium;
-    }
+    font-size: medium;
   }
 
   div.abstract {
