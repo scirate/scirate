@@ -56,12 +56,12 @@
         a href=(user_comments_path @user)
           i.fa.fa-fw.fa-comments>
           | Comments (#{@user.comments_count})
-      - if @user == current_user
-        .pull-right
-          - if current_user && current_user.is_moderator?
-            a.btn.btn-danger href=(edit_admin_user_path(@user))
-              i.fa.fa-fw.fa-gear
-              | Admin
+      .pull-right
+        - if current_user && current_user.is_moderator?
+          a.btn.btn-danger href=(edit_admin_user_path(@user))
+            i.fa.fa-fw.fa-gear
+            | Admin
+        - if @user == current_user
           a.btn.btn-default href=(settings_path)
             i.fa.fa-fw.fa-pencil
             | Edit profile
