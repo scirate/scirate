@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   before_filter :profile_data, only: [:activity, :papers, :scites, :comments]
 
   def profile_data
-    @user = User.find_by_username!(params[:username])
+    @user = User.where("lower(username) = lower(?)", params[:username]).first!
   end
 
   def activity

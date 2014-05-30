@@ -28,7 +28,7 @@ module Admin
     private
 
     def load_user
-      @user = User.find_by_username!(params[:username])
+      @user = User.where("lower(username) = lower(?)", params[:username]).first!
     end
 
   end
