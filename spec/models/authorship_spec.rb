@@ -1,5 +1,6 @@
 require 'spec_helper'
 
-describe UserAuthor do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe Authorship do
+  it { should validate_presence_of(:paper) }
+  it { should validate_presence_of(:user) }
 end

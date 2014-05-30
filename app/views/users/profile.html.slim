@@ -7,10 +7,6 @@
     h1
       span.fullname= @user.fullname
       span.username = @user.username
-    /
-      - if current_user && current_user.is_moderator?
-        = status_warning
-        a href=(edit_admin_user_path(@user))  edit user
     ul.user-info
       - if @user.is_admin?
         li.admin
@@ -62,6 +58,10 @@
           | Comments (#{@user.comments_count})
       - if @user == current_user
         .pull-right
+          - if current_user && current_user.is_moderator?
+            a.btn.btn-danger href=(edit_admin_user_path(@user))
+              i.fa.fa-fw.fa-gear
+              | Admin
           a.btn.btn-default href=(settings_path)
             i.fa.fa-fw.fa-pencil
             | Edit profile
