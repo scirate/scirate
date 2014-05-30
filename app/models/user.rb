@@ -86,6 +86,10 @@ class User < ActiveRecord::Base
     if user.username && Settings::RESERVED_USERNAMES.include?(user.username.downcase)
       user.errors.add :username, "is already taken"
     end
+
+    if !user.url.empty? && !user.url.match(/http(s):\/\//)
+      user.url = "http://" + user.url
+    end
   end
 
   acts_as_voter
