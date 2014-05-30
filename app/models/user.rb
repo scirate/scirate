@@ -124,7 +124,11 @@ class User < ActiveRecord::Base
   end
 
   def self.default_username(fullname)
-    "#{fullname.parameterize}" + "-#{User.count}"
+    if User.where(username: fullname.parameterize).exists?
+      "#{fullname.parameterize}" + "-#{User.count}"
+    else
+      fullname.parameterize
+    end
   end
 
   def scited?(paper)
