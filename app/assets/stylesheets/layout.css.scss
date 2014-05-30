@@ -988,6 +988,10 @@ div.feed-rightbar {
   #activity .comment .body {
     margin-bottom: 10px;
   }
+
+  #activity .comment p:last-child {
+    margin-bottom: 0;
+  }
 }
 
 #papersTab, #scitesTab {
