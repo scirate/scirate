@@ -8,6 +8,10 @@ module Admin
     def update
       old = @user.attributes.dup
 
+      user_params = params.required(:user)
+        .permit(:fullname, :email, :username, :url, :organization, :location,
+                :author_identifier, :about, :account_status)
+
       if @user.update(user_params)
         if old['email'] != @user.email
           @user.send_email_change_confirmation(old['email'])
@@ -25,14 +29,6 @@ module Admin
 
     def load_user
       @user = User.find_by_username!(params[:username])
-    end
-
-    def user_params
-      params.required(:user).permit(attributes)
-    end
-
-    def attributes
-      %i(fullname username email account_status)
     end
 
   end

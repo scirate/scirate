@@ -29,6 +29,26 @@
           = f.email_field :email, class: 'form-control'
       tr
         td
+          = f.label :url, 'URL'
+        td
+          = f.text_field :url, class: 'form-control'
+      tr
+        td
+          = f.label :organization, 'Organization'
+        td
+          = f.text_field :organization, class: 'form-control'
+      tr
+        td
+          = f.label :location, 'Location'
+        td
+          = f.text_field :location, class: 'form-control'
+      tr
+        td
+          = f.label :author_identifier, 'Author Identifier'
+        td
+          = f.text_field :author_identifier, class: 'form-control'
+      tr
+        td
           = f.label :account_status, 'Account Status'
         td
           = f.select :account_status, User::ACCOUNT_STATES, {}, class: 'form-control'
