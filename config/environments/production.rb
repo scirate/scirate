@@ -1,6 +1,6 @@
 require 'exception_notifier'
 
-SciRate3::Application.configure do
+SciRate::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   config.middleware.use ExceptionNotifier,

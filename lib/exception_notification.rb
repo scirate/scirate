@@ -9,7 +9,7 @@ class Exception
   end
 end
 
-module SciRate3
+module SciRate
   def self.notify_error(exception, message = nil)
     if exception.is_a?(String)
       exception = RuntimeError.new(exception)
