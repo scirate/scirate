@@ -83,7 +83,7 @@ describe "Authentication" do
         end
 
         describe "submitting to the update action" do
-          before { patch admin_user_path(user) }
+          before { post admin_update_user_path(user) }
           specify { response.should redirect_to(login_path) }
         end
       end
@@ -95,14 +95,14 @@ describe "Authentication" do
       before { sign_in user }
 
       describe "visiting Users#edit page" do
-        before { visit edit_admin_user_path(wrong_user) }
+        before { visit admin_edit_user_path(wrong_user) }
 
         it { should have_title '' }
       end
 
       describe "submitting to the Users#update action" do
         before do
-          patch admin_user_path(wrong_user)
+          post admin_update_user_path(wrong_user)
         end
 
         specify { response.should redirect_to(root_path) }

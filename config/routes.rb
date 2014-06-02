@@ -72,7 +72,7 @@ SciRate::Application.routes.draw do
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
 
   get '/admin/users/:username/edit', to: 'admin/users#edit', as: 'admin_edit_user'
-  get '/admin/users/:username/update', to: 'admin/users#update', as: 'admin_update_user'
+  post '/admin/users/:username/update', to: 'admin/users#update', as: 'admin_update_user'
   post '/admin/users/:username/become', to: 'admin/users#become', as: 'admin_become_user'
 
   get '/:username/scites', to: 'users#scites', username: /.+/, as: 'user_scites'
