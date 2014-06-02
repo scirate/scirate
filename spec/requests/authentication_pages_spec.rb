@@ -78,7 +78,7 @@ describe "Authentication" do
       describe "in the Users controller" do
 
         describe "visiting the edit page" do
-          before { visit edit_admin_user_path(user) }
+          before { visit admin_edit_user_path(user) }
           it { should have_title 'Sign in' }
         end
 
@@ -136,7 +136,7 @@ describe "Authentication" do
 
       describe "when attempting to visit a protected page" do
         before do
-          visit edit_admin_user_path(user)
+          visit admin_edit_user_path(user)
           fill_in "Email",    with: user.email
           fill_in "Password", with: user.password
           click_button "Sign in"

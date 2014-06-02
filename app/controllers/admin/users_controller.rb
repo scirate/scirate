@@ -5,6 +5,12 @@ module Admin
     def edit
     end
 
+    def become
+      sign_in @user
+      flash[:success] = "You are now signed in as #{@user.username}"
+      redirect_to root_path
+    end
+
     def update
       old = @user.attributes.dup
 
@@ -30,6 +36,5 @@ module Admin
     def load_user
       @user = User.where("lower(username) = lower(?)", params[:username]).first!
     end
-
   end
 end
