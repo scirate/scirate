@@ -12,7 +12,7 @@
     = form_tag admin_become_user_path(@user) do
       = submit_tag "Become #{@user.username}", title: "Log in as this user for debugging purposes", class: 'btn btn-danger'
 
-  = form_for @user, url: admin_update_user_path(@user) do |f|
+  = form_for @user, url: admin_update_user_path(@user), method: :post do |f|
     = render 'shared/error_messages', object: f.object
 
     table.table.table-striped.table-form
