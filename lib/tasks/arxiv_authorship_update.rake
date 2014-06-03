@@ -6,19 +6,15 @@ namespace :arxiv do
     threads = []
 
     User.where("author_identifier <> ''").each do |user|
-      threads << Thread.new do
-        begin
-          user.update_authorship!
-        rescue OpenURI::HTTPError
-          $stderr.puts "Invalid author_identifier for #{user.username}: #{user.author_identifier}"
-        rescue Exception => e
-          SciRate.notify_error(e, "Unknown error in update_authorship! for #{user.username}")
-        end
-
-        $stderr.puts "Synced authorship for #{user.username}"
+      begin
+        user.update_authorship!
+      rescue OpenURI::HTTPError
+        $stderr.puts "Invalid author_identifier for #{user.username}: #{user.author_identifier}"
+      rescue Exception => e
+        SciRate.notify_error(e, "Unknown error in update_authorship! for #{user.username}")
       end
-    end
 
-    threads.each { |thread| thread.join }
+      $stderr.puts "Synced authorship for #{user.username}"
+    end
   end
 end
