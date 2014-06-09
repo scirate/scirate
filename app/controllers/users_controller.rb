@@ -130,6 +130,8 @@ class UsersController < ApplicationController
     user_params = params.required(:user)
                         .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about)
 
+    user_params[:author_identifier] = user_params[:author_identifier].downcase
+
     begin
       if @user.update_attributes(user_params)
         if old_email != @user.email
