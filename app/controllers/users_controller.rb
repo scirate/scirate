@@ -130,7 +130,13 @@ class UsersController < ApplicationController
     user_params = params.required(:user)
                         .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about)
 
-    user_params[:author_identifier] = user_params[:author_identifier].downcase
+    # Handle some varying input forms of author identifiers
+    # e.g. https://twitter.com/fishcorn/status/476046077733261313
+    aid = user_params[:author_identifier]
+    if m = aid.match(/\/([^\/]+)\/?\Z/)
+      aid = m[1]
+    end
+    user_params[:author_identifier] = aid.downcase
 
     begin
       if @user.update_attributes(user_params)
