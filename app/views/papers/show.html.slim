@@ -9,7 +9,16 @@
           .col-md-10
             h1.title= @paper.title
           .col-md-2
-            = render(partial: 'scites/toggle', object: @paper, as: :paper)
+            div.scite-toggle> data-paper-uid=(paper.uid)
+              button.btn.unscite.btn-success title="Unscite this paper"
+                | Scited
+
+              button.btn.btn-default.scite title="Scite this paper if you find it interesting"
+                | Scite!
+
+              .scites-count
+                a href=(paper_scites_path(paper)) title="Number of Scites"
+            button.btn.btn-default.count= paper.scites_count
             a.paper-download.btn.btn-success href=(@paper.pdf_url) title="Download PDF" PDF
 
       hr

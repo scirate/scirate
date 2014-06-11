@@ -19,7 +19,17 @@ li.paper.tex2jax
           => link_to feed.uid, feed
     .col-md-3
       .pull-right
-        = render 'scites/toggle', paper: paper
+        div.scite-toggle> data-paper-uid=(paper.uid)
+          button.btn.unscite.btn-success title="Unscite this paper"
+            | Scited
+
+          button.btn.btn-default.scite title="Scite this paper if you find it interesting"
+            | Scite!
+
+          .scites-count
+            a href=(paper_scites_path(paper)) title="Number of Scites"
+              button.btn.btn-default.count= paper.scites_count
+
         a.paper-download.btn.btn-success title="Download PDF" href=(paper.pdf_url)
           | PDF
         - if paper.comments_count > 0
