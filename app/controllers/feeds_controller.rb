@@ -94,8 +94,8 @@ class FeedsController < ApplicationController
 
     @feed = later { Feed.find_by_uid!(params[:feed]) }
     @preferences = later { current_user.feed_preferences.where(feed_id: nil).first_or_create }
-    @recent_comments = later { _recent_comments(feed_uids) }
     feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
+    @recent_comments = later { _recent_comments(feed_uids) }
 
     @date = (_parse_date(params) || @feed.last_paper_date || Date.today).to_date
     @range = _parse_range(params) || :since_last# || @preferences.range
