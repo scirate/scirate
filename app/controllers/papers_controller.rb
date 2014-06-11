@@ -3,7 +3,13 @@ class PapersController < ApplicationController
 
   def show
     @paper = Paper.find_by_uid!(paper_id)
-    @scited = current_user && current_user.scited_papers.where(id: @paper.id).exists?
+
+    if current_user && current_user.scites.where(paper_uid: @paper.uid).exists?
+      @scited_by_uid = { @paper.uid => true }
+    else
+      @scited_by_uid = {}
+    end
+
     @comments = find_comments_sorted_by_rating
   end
 
