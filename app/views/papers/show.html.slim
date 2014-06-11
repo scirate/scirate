@@ -4,7 +4,7 @@
 .container
   .paper.row
     .col-md-12
-      - cache [@paper, @scited] do
+      - cache [:paper, @paper, @scited] do
         .row.title-row.tex2jax
           .col-md-10
             h1.title= @paper.title
@@ -14,7 +14,7 @@
 
       hr
 
-      - cache @paper do
+      - cache [:paper, @paper] do
         .row
           .col-md-9
             ul.authors
@@ -61,7 +61,7 @@
               textarea.bibtex= @paper.to_bibtex
               button#copyButton.btn.btn-default Copy Citation
 
-      - cache [@comments, current_user]
+      - cache [:comments, @comments, current_user]
         .comments
           a name="comments"
           h4= pluralize(@comments.size, "comment")
@@ -79,7 +79,7 @@
                 h4= status_warning + ' ' + pluralize(@deleted_comments.length, "deleted comment")
                 = render partial: "comments/deleted_comment", collection: @deleted_comments
 
-      - cache signed_in? do
+      - cache [:comment_form, signed_in?] do
         .comment-form
           - if signed_in?
             = render 'comment_form'

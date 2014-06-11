@@ -22,7 +22,7 @@
           = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
             = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
           ul.nav.navbar-nav.navbar-right
-            - cache current_user do
+            - cache [:header, current_user] do
               - if signed_in?
                 li= link_to "Home", root_path
                 li.dropdown
@@ -38,7 +38,7 @@
                 li= link_to "Sign in", login_path
                 li= link_to "Sign up", signup_path
     .container
-      = cache flash do
+      = cache [:flash, flash] do
         = render 'sessions/flash'
       - if signed_in? && !current_user.email_confirmed?
         .welcome-banner

@@ -9,7 +9,7 @@
   .row
     .col-md-2.feedbar
       ul.nav.nav-list.tree-sidebar
-        = cache [current_user, params.except(:feed, :page)] do
+        = cache [:my_feeds, current_user, params.except(:feed, :page)] do
           - if signed_in?
             li.feed-folder.my-feeds
               label.nav-header
@@ -24,7 +24,7 @@
                     li.leaf title=(feed.uid)
                       = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page)))
 
-        = cache params do
+        = cache [:sidebar, params] do
           li.source-heading arXiv.org
           - Feed.in_order(Settings::ARXIV_FOLDERS).each do |parent|
             li.feed-folder class=(@feed == parent ? 'active' : '') title=(parent.uid)
@@ -38,7 +38,7 @@
                     = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page)))
 
     .col-md-10.feed-center
-      - cache [@feed, current_user] do
+      - cache [:feed, @feed, current_user] do
         header.feed-header class=(@feed ? '' : 'home')
           .row
             - if @feed
@@ -65,18 +65,18 @@
               - elsif @papers.count == 0
                   p No papers found!
               - else
-                - cache @papers do
+                - cache [:papers, @papers] do
                   - @papers.each do |paper|
-                    = cache paper do
+                    = cache [:feed_paper, paper] do
                       = render partial: "papers/paper", object: paper
                 = will_paginate @pagination
 
         .col-md-3.feed-rightbar
-          - cache [:feed, current_user && current_user.expand_abstracts]
+          - cache [:abstoggle, current_user && current_user.expand_abstracts]
             = render 'papers/abstract_toggle'
-          - cache [:feed, current_user, @feed, @date, @range, @backdate, @since_last]
+          - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
-          - cache [:feed, @recent_comments, current_user && current_user.is_moderator?] do
+          - cache [:recent_comments, @recent_comments, current_user && current_user.is_moderator?] do
             - unless @recent_comments.empty?
               h3
                 - if @feed.nil?
