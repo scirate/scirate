@@ -3,7 +3,15 @@
 
 #profilePage.container
   #details.col-md-3
-    div= gravatar_for(@user, size: 230)
+    div#profileImage
+      - if @user == current_user
+        a href="https://gravatar.com/emails"
+          div.overlay
+            i.fa.fa-pencil
+            div.darken
+          = gravatar_for(@user, size: 230)
+      - else
+        = gravatar_for(@user, size: 230)
     h1
       span.fullname= @user.fullname
       span.username = @user.username
