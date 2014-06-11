@@ -173,8 +173,12 @@ class Comment
     @setupVoting()
     @setupActions()
 
-$ ->
+$(document).on 'ready', ->
   $('a.has-tooltip').tooltip()
   return unless ($('.comments').length || $('.comment').length)
   Comment.setupComments()
 
+$(document).on 'page:load', ->
+  $('a.has-tooltip').tooltip()
+  return unless ($('.comments').length || $('.comment').length)
+  Comment.setupComments()

@@ -144,11 +144,7 @@ class View.AbstractToggle extends View
       SciRate.current_user.expand_abstracts = true
       $.post '/api/settings', { expand_abstracts: true }
 
-$ ->
-  $(document).ajaxError (ev, jqxhr, settings, err) ->
-    if err == "Unauthorized"
-      SciRate.login()
-
+setupPageLoad = ->
   # Setup generic dropdowns
   $('.dropdown').each ->
     $(this).mouseenter -> $(this).find('.dropdown-toggle').dropdown('toggle')
@@ -183,3 +179,13 @@ $ ->
 
   $('li.paper').on 'mouseout', (ev) ->
     $(this).find('.links').addClass('hidden')
+
+$(document).on 'ready', ->
+  $(document).ajaxError (ev, jqxhr, settings, err) ->
+    if err == "Unauthorized"
+      SciRate.login()
+
+  setupPageLoad()
+
+$(document).on 'page:load', ->
+  setupPageLoad()

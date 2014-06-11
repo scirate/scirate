@@ -182,8 +182,10 @@ class View.Search extends Backbone.View
     $('input#advanced').val(query_text)
     $('#advancedPreview').text(@$('#q').val() + ' ' + query_text)
 
+$(document).on 'ready', ->
+  $('#searchPage').each ->
+    new View.Search(el: this)
 
-
-$ ->
+$(document).on 'page:load', ->
   $('#searchPage').each ->
     new View.Search(el: this)
