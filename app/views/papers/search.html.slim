@@ -36,70 +36,72 @@ script
         button.btn.btn-primary.btn-right type="submit"
           i.fa.fa-search.fa-lg
 
-      a.js#toggleAdvanced
-        i.fa.fa-chevron-right 
-        |  Advanced
-        
-      #advancedSearch.hidden
-        input.hidden id='advanced' value=(@search.advanced)
 
-        #advancedPreview.well
-          = @search.advanced
+      - cache :advanced do
+        a.js#toggleAdvanced
+          i.fa.fa-chevron-right
+          |  Advanced
+        #advancedSearch.hidden
 
-        table.table.table-striped.table-form
-          tbody
-            tr
-              td Author(s)
-              td
-                input.form-control#authors type="text"
-              td Comma-separated author names
-            tr
-              td Title
-              td
-                input.form-control#title type="text"
-              td Contents of paper title
+          input.hidden id='advanced' value=(@search.advanced)
 
-            tr
-              td Abstract
-              td
-                input.form-control#abstract type="text"
-              td Contents of paper abstract
+          #advancedPreview.well
+            = @search.advanced
 
-            tr
-              td Category
-              td
-                input.form-control.typeahead#category
-              td Search a particular arXiv category
+          table.table.table-striped.table-form
+            tbody
+              tr
+                td Author(s)
+                td
+                  input.form-control#authors type="text"
+                td Comma-separated author names
+              tr
+                td Title
+                td
+                  input.form-control#title type="text"
+                td Contents of paper title
 
-            tr
-              td Scited By
-              td
-                input.form-control.typeahead#scited_by
-              td Papers scited by a particular user
+              tr
+                td Abstract
+                td
+                  input.form-control#abstract type="text"
+                td Contents of paper abstract
 
-            tr
-              td Date Published
-              td
-                select.form-control#date
-                  option value="any" Any Time
-                  option value="week" Past Week
-                  option value="month" Past Month
-                  option value="year" Past Year
-                  option value="custom" Custom Range
-                button.btn.btn-default.hidden#editCustomDate
-                  i.fa.fa-edit
-              td Search within a given date range
+              tr
+                td Category
+                td
+                  input.form-control.typeahead#category
+                td Search a particular arXiv category
 
-            tr
-              td Order By
-              td
-                select.form-control#order
-                  option value="recency" Recency (Default)
-                  option value="scites" Scites
-                  option value="comments" Comments
-                  option value="relevance" Relevance
-              td How to sort the results
-      
+              tr
+                td Scited By
+                td
+                  input.form-control.typeahead#scited_by
+                td Papers scited by a particular user
+
+              tr
+                td Date Published
+                td
+                  select.form-control#date
+                    option value="any" Any Time
+                    option value="week" Past Week
+                    option value="month" Past Month
+                    option value="year" Past Year
+                    option value="custom" Custom Range
+                  button.btn.btn-default.hidden#editCustomDate
+                    i.fa.fa-edit
+                td Search within a given date range
+
+              tr
+                td Order By
+                td
+                  select.form-control#order
+                    option value="recency" Recency (Default)
+                    option value="scites" Scites
+                    option value="comments" Comments
+                    option value="relevance" Relevance
+                td How to sort the results
+
   - if @papers
     a name="results"
     h3
@@ -111,5 +113,6 @@ script
           | No papers found.
         - else
           - @papers.each do |paper|
-            = render 'papers/paper', paper: paper
+            - cache [paper, @scited_by_uid && @scited_by_uid[paper]] do
+              = render 'papers/paper', paper: paper
     = will_paginate @pagination
