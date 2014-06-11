@@ -808,13 +808,13 @@ div.feed-rightbar {
 // Scites
 
 .scite-toggle:not(.active) {
-  .scited {
+  .unscite {
     display: none;
   }
 }
 
 .scite-toggle.active {
-  .unscited {
+  .scite {
     display: none;
   }
 }

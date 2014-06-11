@@ -52,10 +52,13 @@ html lang="en"
 
       = favicon_link_tag 'favicon.png'
 
-      script
-        | window.SciRate = {}
-
     = stylesheet_link_tag "application", media: "all"
     = csrf_meta_tags
+
+    javascript:
+      window.SciRate = {}
+      SciRate.current_user = #{raw (current_user ? current_user.to_js : false)}
+      SciRate.scited_by_uid = #{raw @scited_by_uid.to_json}
+
 
   = yield :body

@@ -65,9 +65,10 @@
               - elsif @papers.count == 0
                   p No papers found!
               - else
-                - @papers.each do |paper|
-                  = cache [paper, @scited_by_uid && @scited_by_uid[paper.uid]] do
-                    = render partial: "papers/paper", object: paper
+                - cache @papers do
+                  - @papers.each do |paper|
+                    = cache paper do
+                      = render partial: "papers/paper", object: paper
                 = will_paginate @pagination
 
         .col-md-3.feed-rightbar
