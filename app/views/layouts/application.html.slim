@@ -38,8 +38,7 @@
                 li= link_to "Sign in", login_path
                 li= link_to "Sign up", signup_path
     .container
-      = cache [:flash, flash] do
-        = render 'sessions/flash'
+      = render 'sessions/flash'
       - if signed_in? && !current_user.email_confirmed?
         .welcome-banner
           .pull-right
