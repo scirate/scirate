@@ -156,7 +156,9 @@ class User < ActiveRecord::Base
 
   # Given a collection of papers, map uids to scite status
   def scited_by_uid(papers)
-    map_exists :paper_uid, scites.where(paper_uid: papers.map(&:uid))
+    Rails.cache.fetch [:scited_by_uid, self, papers] do
+      map_exists :paper_uid, scites.where(paper_uid: papers.map(&:uid))
+    end
   end
 
   def subscribe!(feed)

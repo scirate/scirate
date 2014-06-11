@@ -1,5 +1,5 @@
-<% 
-  @next_date = @date + @range.days 
+<%
+  @next_date = @date + @range.days
   @prev_date = @date - @range.days
 
   if @range == 1
@@ -14,8 +14,8 @@
   <h3>Date Published</h3>
   <p style="text-align: center;">
     <% if @range > 1 %>
-      <%= @backdate.to_formatted_s(:rfc822) %> &mdash; 
-      <%= @date.to_formatted_s(:rfc822) %>
+      <%= @backdate.strftime("%b %d %Y") %> &mdash;
+      <%= @date.strftime("%b %d %Y") %>
     <% else %>
       <%= @date.strftime("%a %e %b %Y") %>
     <% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140611162202) do
+ActiveRecord::Schema.define(version: 20140611210128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,7 @@ ActiveRecord::Schema.define(version: 20140611162202) do
   add_index "comments", ["deleted"], name: "index_comments_on_deleted", using: :btree
   add_index "comments", ["hidden"], name: "index_comments_on_hidden", using: :btree
   add_index "comments", ["hidden_from_recent"], name: "index_comments_on_hidden_from_recent", using: :btree
+  add_index "comments", ["id", "paper_uid", "deleted", "hidden", "hidden_from_recent"], name: "index_comments_for_recent", using: :btree
   add_index "comments", ["paper_uid"], name: "index_comments_on_paper_uid", using: :btree
   add_index "comments", ["parent_id"], name: "index_comments_on_parent_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
@@ -114,6 +115,7 @@ ActiveRecord::Schema.define(version: 20140611162202) do
   end
 
   add_index "feeds", ["source"], name: "index_feeds_on_source", using: :btree
+  add_index "feeds", ["uid", "last_paper_date"], name: "index_feeds_on_uid_and_last_paper_date", order: {"uid"=>:desc, "last_paper_date"=>:desc}, using: :btree
   add_index "feeds", ["uid"], name: "index_feeds_on_uid", unique: true, using: :btree
 
   create_table "papers", force: true do |t|

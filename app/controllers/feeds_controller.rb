@@ -1,56 +1,42 @@
 require 'data_helpers'
 
 class FeedsController < ApplicationController
-  def landing
-    @date = _parse_date(params)
+  before_filter :parse_params
 
+  # No user, and no feed specified: show all papers
+  def index_nouser
     if @date.nil?
-      feed = Feed.order("last_paper_date DESC").first
-      @date = (feed && feed.last_paper_date) ? feed.last_paper_date.to_date : Date.today
+      @date = Rails.cache.fetch [:last_paper_date, end_of_today] do
+        Feed.order("last_paper_date DESC")
+            .limit(1).pluck(:last_paper_date).first
+      end
     end
 
-    @range = _parse_range(params) || 1
-    @page = params[:page] || 1
-
-    @backdate = @date - (@range-1).days
-
-    @recent_comments = Comment.visible.where(hidden_from_recent: false).order("created_at DESC").limit(10)
-
+    @backdate = @date - @range.days
+    @recent_comments = _recent_comments
     @papers, @pagination = _range_query(nil, @backdate, @date, @page)
 
     render 'feeds/show'
   end
 
-  # Aggregated feed
+  # Aggregated index feed for a user
   def index
-    return landing unless signed_in?
+    feed_uids = Rails.cache.fetch [:index_uids, current_user] do
+      uids = current_user.subscriptions.pluck(:feed_uid)
+      uids.concat Feed.where(parent_uid: uids).pluck(:uid)
+    end
 
-    parent_uids = current_user.subscriptions.pluck(:feed_uid)
-    feed_uids = parent_uids + Feed.where(parent_uid: parent_uids).pluck(:uid)
-
-    @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
-
-    @date = _parse_date(params)
-
-    if @date.nil?
-      if feed_uids.empty?
-        @date = Date.today
+    if @date.nil? # No date specified
+      if feed_uids.empty? # User has no subscriptions; just default to today
+        @date = end_of_today
       else
-        @date = (Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first || Date.today).to_date
+        @date = Rails.cache.fetch [:last_paper_date, feed_uids, end_of_today] do
+          Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
+        end
       end
     end
 
-    @range = _parse_range(params) || :since_last# || @preferences.range
-    @page = params[:page] || 1
-
-    if @range == :since_last
-      @range = [1, (Date.today - @preferences.previous_last_visited.to_date).to_i].max
-      @since_last = true
-    end
-
-    @backdate = @date - (@range-1).days
-    # Remember what time range they selected
-
+    @backdate = @date - @range.days
     @recent_comments = _recent_comments(feed_uids)
 
     if feed_uids.empty?
@@ -62,64 +48,74 @@ class FeedsController < ApplicationController
 
     @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    @preferences.pref_update!(@range)
-
     render 'feeds/show'
   end
 
   # Showing a feed while we aren't signed in
   def show_nouser
     @feed = Feed.find_by_uid!(params[:feed])
-    feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
-
-    @date = (_parse_date(params) || @feed.last_paper_date || Date.today).to_date
-    @range = _parse_range(params) || 1
-    @page = params[:page]
-
-    if @range == :since_last
-      # If we're not signed in, there's no sense
-      # in which we can do "since last"
-      @range = 1
+    feed_uids = Rails.cache.fetch [:feed_uids, @feed] do
+      [@feed.uid] + @feed.children.pluck(:uid)
     end
 
-    @backdate = @date - (@range-1).days
+    if @date.nil?
+      @date = @feed.last_paper_date.at_end_of_day
+    end
 
+    @backdate = @date.at_end_of_day - @range.days
     @recent_comments = _recent_comments(feed_uids)
-
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
+
+    render 'feeds/show'
   end
 
+  # Showing a feed normally
   def show
-    return show_nouser unless signed_in?
-
     @feed = Feed.find_by_uid!(params[:feed])
-    @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
-    feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
-    @recent_comments = _recent_comments(feed_uids)
 
-    @date = (_parse_date(params) || @feed.last_paper_date || Date.today).to_date
-    @range = _parse_range(params) || :since_last# || @preferences.range
-    @page = params[:page]
-
-    if @range == :since_last
-      @range = [1, (@date - @preferences.previous_last_visited.to_date).to_i].max
-      @since_last = true
+    feed_uids = Rails.cache.fetch [:feed_uids, @feed] do
+      [@feed.uid] + @feed.children.pluck(:uid)
     end
 
-    @backdate = @date - (@range-1).days
+    @recent_comments = _recent_comments(feed_uids)
+
+    # If no date is specified, default to the last date
+    # with available papers
+    if @date.nil?
+      @date = @feed.last_paper_date.at_end_of_day
+    end
+
+    @backdate = @date - @range.days
 
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
     @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    @preferences.pref_update!(@range)
+    render 'feeds/show'
   end
 
   private
 
-  def _parse_date(params)
-    date = Chronic.parse(params[:date])
-    date = date.to_date unless date.nil?
+  def parse_params
+    @date = _parse_date(params)
+    @range = _parse_range(params) || :since_last
+    @page = params[:page] || 1
 
+    if @range == :since_last && signed_in?
+      # Define time range based on when they last visited this page
+      @preferences = Rails.cache.fetch [:feed_preferences, current_user, params[:feed]] do
+        current_user.feed_preferences.where(feed_id: params[:feed]).first_or_create
+      end
+
+      @since_last = end_of_today - @preferences.previous_last_visited.at_end_of_day
+      @range = [1, (@since_last / 1.day).round].max
+    elsif @range == :since_last && !signed_in?
+      # We don't know when the last value was here
+      @range = 1
+    end
+  end
+
+  def _parse_date(params)
+    date = params[:date] ? Chronic.parse(params[:date]).at_end_of_day : nil
     return date
   end
 
@@ -135,13 +131,25 @@ class FeedsController < ApplicationController
     return range
   end
 
-  def _recent_comments(feed_uids)
-    ids = Comment.find_all_by_feed_uids(feed_uids).limit(10).pluck(:id)
-    Comment.includes(:user, :paper)
-           .where(id: ids)
-           .index_by(&:id)
-           .slice(*ids)
-           .values
+  def _recent_comments(feed_uids=nil)
+    query = if feed_uids.nil?
+      Comment.joins(:user, :paper)
+             .where(deleted: false, hidden: false, hidden_from_recent: false)
+    else
+      Comment.joins(:user, paper: :categories)
+             .where(categories: { feed_uid: feed_uids })
+    end
+
+    query.order('comments.id DESC')
+         .limit(10)
+         .select('DISTINCT ON (comments.id) comments.id',
+                 'comments.content',
+                 'comments.created_at',
+                 'comments.updated_at',
+                 'papers.uid AS paper_uid',
+                 'papers.title AS paper_title',
+                 'users.username AS user_username',
+                 'users.fullname AS user_fullname')
   end
 
   # The primary SciRate query. Given a set of feed uids, a pair of dates

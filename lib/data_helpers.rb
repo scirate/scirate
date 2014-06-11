@@ -20,6 +20,10 @@ def later(&b)
   end
 end
 
+def end_of_today
+  Time.now.utc.at_end_of_day
+end
+
 def execute(sql, *args)
   sanitized = ActiveRecord::Base.send(:sanitize_sql_array, [sql]+args)
   ActiveRecord::Base.connection.execute(sanitized).to_a
