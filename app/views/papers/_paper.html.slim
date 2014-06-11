@@ -7,7 +7,7 @@ li.paper.tex2jax
   .row
     .col-md-9
       .title
-        = link_to paper.title, paper
+        a href="/arxiv/#{paper.uid}" = paper.title
       .authors
         - paper.authors[0..19].each do |author|
           => author_link_to(author, paper) + (author != paper.authors[-1] ? "," : ' ')
@@ -27,14 +27,15 @@ li.paper.tex2jax
             | Scite!
 
           .scites-count
-            a href=(paper_scites_path(paper)) title="Number of Scites"
+            a href="/arxiv/#{paper.uid}/scites" title="Number of Scites"
               button.btn.btn-default.count= paper.scites_count
 
         a.paper-download.btn.btn-success title="Download PDF" href=(paper.pdf_url)
           | PDF
         - if paper.comments_count > 0
           div
-            = link_to pluralize(paper.comments_count, 'comment'), paper
+            a href="/arxiv/#{paper.uid}"
+              = pluralize(paper.comments_count, 'comment')
 
   .abstract class=("hidden" unless showabs) class=("hideable" unless cool_paper)
     = paper.abstract

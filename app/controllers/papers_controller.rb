@@ -59,7 +59,7 @@ class PapersController < ApplicationController
 
   # Show the users who scited this paper
   def scites
-    @paper = Paper.find_by_uid!(params[:id])
+    @paper = Paper.find_by_uid!(params[:uid])
   end
 
   def next
