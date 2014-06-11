@@ -12,7 +12,7 @@ gem 'acts_as_votable' # Comment votes (not scites)
 gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
 
 # Ruby futures
-gem 'futuroscope', require: 'futuroscope/convenience'
+#gem 'futuroscope', require: 'futuroscope/convenience'
 
 # Frontend stuff
 gem 'will_paginate' # Displaying pages of results

@@ -125,7 +125,6 @@ GEM
     faraday_middleware-multi_json (0.0.6)
       faraday_middleware
       multi_json
-    futuroscope (0.1.11)
     hashie (2.1.1)
     hike (1.2.3)
     htmlentities (4.3.1)
@@ -318,7 +317,6 @@ DEPENDENCIES
   exception_notification!
   factory_girl_rails
   faraday (= 0.8.9)
-  futuroscope
   jquery-rails
   newrelic_rpm
   nokogiri (= 1.5.9)

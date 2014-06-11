@@ -14,9 +14,9 @@ class FeedsController < ApplicationController
 
     @backdate = @date - (@range-1).days
 
-    @recent_comments = later { Comment.visible.where(hidden_from_recent: false).order("created_at DESC").limit(10) }
+    @recent_comments = Comment.visible.where(hidden_from_recent: false).order("created_at DESC").limit(10)
 
-    @papers, @pagination = later { _range_query(nil, @backdate, @date, @page) }
+    @papers, @pagination = _range_query(nil, @backdate, @date, @page)
 
     render 'feeds/show'
   end
@@ -28,7 +28,7 @@ class FeedsController < ApplicationController
     parent_uids = current_user.subscriptions.pluck(:feed_uid)
     feed_uids = parent_uids + Feed.where(parent_uid: parent_uids).pluck(:uid)
 
-    @preferences = later { current_user.feed_preferences.where(feed_id: nil).first_or_create }
+    @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
 
     @date = _parse_date(params)
 
@@ -51,25 +51,25 @@ class FeedsController < ApplicationController
     @backdate = @date - (@range-1).days
     # Remember what time range they selected
 
-    @recent_comments = later { _recent_comments(feed_uids) }
+    @recent_comments = _recent_comments(feed_uids)
 
     if feed_uids.empty?
       # No subscriptions
       @papers = []
     else
-      @papers, @pagination = later { _range_query(feed_uids, @backdate, @date, @page) }
+      @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
     end
 
-    @scited_by_uid = later { current_user.scited_by_uid(@papers) }
+    @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    later { @preferences.pref_update!(@range) }
+    @preferences.pref_update!(@range)
 
     render 'feeds/show'
   end
 
   # Showing a feed while we aren't signed in
   def show_nouser
-    @feed = later { Feed.find_by_uid!(params[:feed]) }
+    @feed = Feed.find_by_uid!(params[:feed])
     feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
 
     @date = (_parse_date(params) || @feed.last_paper_date || Date.today).to_date
@@ -84,18 +84,18 @@ class FeedsController < ApplicationController
 
     @backdate = @date - (@range-1).days
 
-    @recent_comments = later { _recent_comments(feed_uids) }
+    @recent_comments = _recent_comments(feed_uids)
 
-    @papers, @pagination = later { _range_query(feed_uids, @backdate, @date, @page) }
+    @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
   end
 
   def show
     return show_nouser unless signed_in?
 
-    @feed = later { Feed.find_by_uid!(params[:feed]) }
-    @preferences = later { current_user.feed_preferences.where(feed_id: nil).first_or_create }
+    @feed = Feed.find_by_uid!(params[:feed])
+    @preferences = current_user.feed_preferences.where(feed_id: nil).first_or_create
     feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
-    @recent_comments = later { _recent_comments(feed_uids) }
+    @recent_comments = _recent_comments(feed_uids)
 
     @date = (_parse_date(params) || @feed.last_paper_date || Date.today).to_date
     @range = _parse_range(params) || :since_last# || @preferences.range
@@ -108,10 +108,10 @@ class FeedsController < ApplicationController
 
     @backdate = @date - (@range-1).days
 
-    @papers, @pagination = later { _range_query(feed_uids, @backdate, @date, @page) }
-    @scited_by_uid = later { current_user.scited_by_uid(@papers) }
+    @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
+    @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    later { @preferences.pref_update!(@range) }
+    @preferences.pref_update!(@range)
   end
 
   private

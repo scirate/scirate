@@ -4,15 +4,13 @@ class PapersController < ApplicationController
   def show
     @paper = Paper.find_by_uid!(paper_id)
 
-    @scited_by_uid = later do
-      if current_user && current_user.scites.where(paper_uid: @paper.uid).exists?
-        { @paper.uid => true }
-      else
-        {}
-      end
+    @scited_by_uid = if current_user && current_user.scites.where(paper_uid: @paper.uid).exists?
+      { @paper.uid => true }
+    else
+      {}
     end
 
-    @comments = later { find_comments_sorted_by_rating }
+    @comments = find_comments_sorted_by_rating
   end
 
   def __quote(val)
