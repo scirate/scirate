@@ -6,7 +6,7 @@ catch e
   hasFlash = true if navigator.mimeTypes and navigator.mimeTypes["application/x-shockwave-flash"] != undefined and navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin
 
 if hasFlash
-  ZeroClipboard.config(moviePath: asset_path("ZeroClipboard.swf"))
+  ZeroClipboard.config(moviePath: asset_path("ZeroClipboard.swf"), cacheBust: false)
   clip = new ZeroClipboard($('#copyButton').get(0))
 
   clip.on 'mouseover', ->
