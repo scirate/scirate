@@ -86,6 +86,7 @@ class SessionsController < ApplicationController
   # Confirm creation of a new account from omniauth data
   def omniauth_create
     auth = session['omniauth.auth']
+    session['omniauth.auth'] = nil
 
     link = AuthLink.from_omniauth(auth)
     user = link.create_user!

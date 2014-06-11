@@ -153,7 +153,7 @@ class FeedsController < ApplicationController
   # is better suited for these kinds of tag queries.
   def _range_query(feed_uids, backdate, date, page)
     page = (page.nil? ? 1 : page.to_i)
-    per_page = 70
+    per_page = 50
 
     filters = [
       {
@@ -169,7 +169,6 @@ class FeedsController < ApplicationController
     filters << {terms: {feed_uids: feed_uids}} unless feed_uids.nil?
 
     query = {
-      fields: ['_id'],
       size: per_page,
       from: (page-1)*per_page,
       sort: [
@@ -188,16 +187,9 @@ class FeedsController < ApplicationController
     }
 
     res = Search::Paper.es_find(query)
-    paper_uids = res.documents.map(&:_id)
 
     pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
 
-    papers = Paper.includes(:authors, :feeds)
-                  .where(uid: paper_uids)
-                  .index_by(&:uid)
-                  .slice(*paper_uids)
-                  .values
-
-    return [papers, pagination]
+    return [res.documents, pagination]
   end
 end

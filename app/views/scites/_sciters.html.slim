@@ -1,0 +1,4 @@
+.sciters
+  span.label
+    pluralize(@paper.sciters.size, "sciter")
+  - @paper.sciters.map { |s| link_to(sanitize(s.name), user_path(s))}.join(', ')  }

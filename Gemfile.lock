@@ -262,6 +262,7 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
       term-ansicolor
+    stackprof (0.2.6)
     stretcher (1.21.1)
       excon (>= 0.16)
       faraday (~> 0.8)
@@ -341,6 +342,7 @@ DEPENDENCIES
   slim
   spring
   spring-commands-rspec
+  stackprof
   stretcher
   thin
   uglifier

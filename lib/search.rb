@@ -107,6 +107,7 @@ module Search
           submit_date: { type: 'date' },
           update_date: { type: 'date' },
           pubdate: { type: 'date' },
+          pdf_url: { type: 'string', index: 'not_analyzed' }
         }
       }
     }
@@ -255,7 +256,8 @@ module Search::Paper
       'comments_count' => paper.comments_count,
       'submit_date' => paper.submit_date,
       'update_date' => paper.update_date,
-      'pubdate' => paper.pubdate
+      'pubdate' => paper.pubdate,
+      'pdf_url' => paper.pdf_url
     }
   end
 

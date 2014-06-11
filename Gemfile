@@ -116,6 +116,7 @@ end
 
 group :profile do
   gem 'stackprof'
+  gem 'ruby-prof'
 end
 
 group :production do
