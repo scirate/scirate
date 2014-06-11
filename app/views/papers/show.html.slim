@@ -17,7 +17,7 @@
                 | Scite!
 
               .scites-count
-                a href=(paper_scites_path(@paper)) title="Number of Scites"
+                a href="/arxiv/#{@paper.uid}/scites" title="Number of Scites"
                 button.btn.btn-default.count= @paper.scites_count
             a.paper-download.btn.btn-success href=(@paper.pdf_url) title="Download PDF" PDF
 
@@ -27,15 +27,15 @@
         .row
           .col-md-9
             ul.authors
-              - @paper.authors.each do |author|
+              - @authors.each do |author|
                 li>
-                  = author_link_to(author, @paper) + (author != @paper.authors[-1] ? ',' : '')
+                  = author_link_to(author, @paper) + (author != @authors[-1] ? ',' : '')
             .abstract.tex2jax
               = @paper.abstract
             .dates
               | Submitted #{@paper.submit_date.to_date.to_formatted_s(:rfc822)} to
-              strong<= @paper.feeds[0].fullname
-              |  [#{link_to @paper.feeds[0].uid, @paper.feeds[0]}]
+              strong<= @feeds[0].fullname
+              |  [#{link_to @feeds[0].uid, @feeds[0]}]
               br
               | Published #{@paper.pubdate.to_date.to_formatted_s(:rfc822)}
               - if @paper.updated?
@@ -44,8 +44,8 @@
             - if @paper.categories.length > 1
               .categories
                 | Subjects:
-                - @paper.categories[0..-1].each do |cat|
-                  =< link_to cat.feed_uid, feed_path(cat.feed_uid)
+                - @feeds.each do |feed|
+                  a> href="/arxiv/#{feed.uid}" = feed.uid
             - [:author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy].each do |field|
               - unless @paper.send(field).nil?
                 = field.to_s.gsub('_', ' ').capitalize
@@ -58,8 +58,8 @@
                 .scites
                   strong
                     | Scited by:
-                  - @paper.sciters.each_with_index do |user, i|
-                    =< link_to user.fullname, user
+                  - @sciters.each_with_index do |user, i|
+                    a< href="/#{user.username}" = user.fullname
                     - if i != @paper.scites_count-1
                       | ,
           .col-md-3

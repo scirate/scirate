@@ -2,9 +2,20 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.find_by_uid!(paper_id)
+    @paper = Paper.where(uid: params[:uid])
+      .select('uid', 'title', 'abstract', 'scites_count', 'abs_url', 'pdf_url', 'update_date', 'submit_date', 'pubdate', 'author_comments', 'msc_class', 'report_no', 'journal_ref', 'doi', 'proxy', 'updated_at', 'author_str')
+      .first
 
-    @scited_by_uid = if current_user && current_user.scites.where(paper_uid: @paper.uid).exists?
+    @feeds = @paper.feeds
+      .select('fullname', 'uid')
+
+    @authors = @paper.authors
+      .select('fullname', 'searchterm')
+
+    @sciters = @paper.sciters
+      .select('fullname', 'username')
+
+    @scited_by_uid = if current_user && @sciters.find { |s| s.username == current_user.username }
       { @paper.uid => true }
     else
       {}
