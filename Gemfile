@@ -110,6 +110,10 @@ group :test do
   gem 'capybara-webkit'
 end
 
+group :profile do
+  gem 'ruby-prof'
+end
+
 group :production do
   # XXX (Mispy): Not sure we're using this atm
   gem 'newrelic_rpm'

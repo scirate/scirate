@@ -25,7 +25,7 @@ class FeedsController < ApplicationController
   def index
     return landing unless signed_in?
 
-    parent_uids = current_user.feeds.pluck(:uid)
+    parent_uids = current_user.subscriptions.pluck(:feed_uid)
     feed_uids = parent_uids + Feed.where(parent_uid: parent_uids).pluck(:uid)
 
     @preferences = later { current_user.feed_preferences.where(feed_id: nil).first_or_create }

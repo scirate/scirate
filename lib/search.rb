@@ -54,6 +54,8 @@ module Search
       else
         "scirate_live"
       end
+    elsif Rails.env == 'profile'
+      "scirate_development"
     else
       "scirate_#{Rails.env}"
     end
