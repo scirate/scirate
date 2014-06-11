@@ -105,7 +105,7 @@ body.main
     - unless System.alert.empty?
       div class="alert alert-warning"
         button.close type="button" data-dismiss="alert" &times;
-        p= System.alert
+        p= raw System.alert
 
     = render 'sessions/flash'
     - if signed_in? && !current_user.email_confirmed?
