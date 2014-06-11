@@ -76,6 +76,12 @@ class Feed < ActiveRecord::Base
     mapping
   end
 
+  def self.find_related_uids(uids)
+    Rails.cache.fetch [:related_uids, uids] do
+      uids + Feed.where(parent_uid: uids).pluck(:uid)
+    end
+  end
+
   # Grab a set of feeds in order by uid
   def self.in_order(uids)
     Feed.where(uid: uids).includes(:children).index_by(&:uid).slice(*uids).values

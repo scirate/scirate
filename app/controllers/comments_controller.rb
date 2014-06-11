@@ -4,21 +4,40 @@ class CommentsController < ApplicationController
   before_filter :check_moderation_permission, only: [:edit, :delete, :restore]
 
   def index
-    if params[:feed]
+    @page = params.fetch(:page, 1).to_i
+    @per_page = 50
+
+    feed_uids = if params[:feed]
       # Comments on papers in a particular feed
-      @feed = Feed.find_by_uid!(params[:feed])
-      feed_uids = find_feed_ids(@feed)
-      comments = Comment.find_all_by_feed_uids(feed_uids)
+      feed_uids = Feed.find_related_uids([params[:feed]])
     elsif signed_in?
       # Comments on papers in the user's home timeline
-      feeds = current_user.feeds.includes(:children)
-      feed_uids = feeds.map { |feed| find_feed_ids(feed) }.flatten
-      comments = Comment.find_all_by_feed_uids(feed_uids)
-    else
-      comments = Comment.all.visible
+      sub_uids = current_user.subscriptions.pluck(:feed_uid)
+      feed_uids = Feed.find_related_uids(sub_uids)
     end
 
-    @comments = comments.order('created_at DESC').paginate(page: page_params)
+    query = if feed_uids.nil?
+      Comment.joins(:user, :paper)
+             .where(deleted: false, hidden: false)
+    else
+      Comment.joins(:user, paper: :categories)
+             .where(categories: { feed_uid: feed_uids })
+    end
+
+
+    @pagination = WillPaginate::Collection.new(@page, @per_page, query.count)
+
+    @comments = query.order('comments.id DESC')
+                     .limit(@per_page)
+                     .offset((@page-1)*@per_page)
+                     .select('DISTINCT ON (comments.id) comments.id',
+                             'comments.content',
+                             'comments.created_at',
+                             'comments.updated_at',
+                             'papers.uid AS paper_uid',
+                             'papers.title AS paper_title',
+                             'users.username AS user_username',
+                             'users.fullname AS user_fullname')
   end
 
   def create
@@ -120,10 +139,6 @@ class CommentsController < ApplicationController
 
     def find_comment
       @comment = Comment.find(params[:id])
-    end
-
-    def page_params
-      params.fetch(:page, 1)
     end
 
     def comment_params

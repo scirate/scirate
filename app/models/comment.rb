@@ -49,12 +49,4 @@ class Comment < ActiveRecord::Base
   def restore
     self.update(deleted: false)
   end
-
-  def self.find_all_by_feed_uids(feed_uids)
-    Comment.joins(paper: :categories)
-           .where(deleted: false, hidden: false, hidden_from_recent: false,
-                  categories: { feed_uid: feed_uids })
-           .group('comments.id')
-           .order('comments.created_at DESC')
-  end
 end
