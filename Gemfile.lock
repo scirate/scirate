@@ -284,6 +284,8 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
+    turbolinks (2.2.2)
+      coffee-rails
     tzinfo (1.1.0)
       thread_safe (~> 0.1)
     uglifier (2.5.0)
@@ -345,6 +347,7 @@ DEPENDENCIES
   stackprof
   stretcher
   thin
+  turbolinks
   uglifier
   unidecoder (~> 1.1.2)
   will_paginate

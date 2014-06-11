@@ -20,4 +20,5 @@
 //= require backbone
 //= require datepicker.js
 //= require ZeroClipboard.js
+//= require turbolinks
 //= require_tree .

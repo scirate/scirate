@@ -17,6 +17,7 @@ gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
 # Frontend stuff
 gem 'will_paginate' # Displaying pages of results
 gem 'chronic' # Natural language date parsing
+gem 'turbolinks'
 
 # Authentication
 gem 'activerecord-session_store'
