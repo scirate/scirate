@@ -48,12 +48,13 @@
           | Welcome to SciRate! A confirmation message was sent to <b>#{current_user.email}</b>.
     = yield
 
-    = javascript_include_tag "application"
-
     - cache :footer do
       .container
         = render 'layouts/footer'
 
+    = javascript_include_tag "application"
+
+    - cache :mathjax do
       - if Settings::ENABLE_MATHJAX
         script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
         javascript:

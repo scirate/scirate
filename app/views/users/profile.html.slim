@@ -76,10 +76,13 @@
 
 
     - if @tab == :activity
-      = render partial: 'users/activity'
+      - cache [:profile_activity, @user] do
+        = render partial: 'users/activity'
     - elsif @tab == :papers
-      = render partial: 'users/papers'
+      - cache [:profile_papers, @user] do
+        = render partial: 'users/papers'
     - elsif @tab == :scites
-      = render partial: 'users/scites'
+      - cache [:profile_scites, @user] do
+        = render partial: 'users/scites'
     - elsif @tab == :comments
       = render partial: 'users/comments'
