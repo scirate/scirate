@@ -113,7 +113,6 @@ class FeedsController < ApplicationController
     @papers = _range_query(feed_uids, @backdate, @date, @page)
 
     @scited_by_uid = current_user.scited_by_uid(@papers)
-
   end
 
   private
