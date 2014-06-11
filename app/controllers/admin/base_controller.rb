@@ -8,4 +8,13 @@ class Admin::BaseController < ApplicationController
     end
   end
 
+  def index
+    render 'admin/index'
+  end
+
+  def alert
+    System.alert = params[:alert]
+    System.save
+    redirect_to admin_path
+  end
 end

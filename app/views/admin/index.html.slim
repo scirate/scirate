@@ -1,0 +1,36 @@
+- provide :title, "Admin"
+
+.container
+  h1 SciRate Admin
+
+  h2 Global Alert
+
+  = form_tag "/admin/alert", class: 'form' do
+    .form-group
+      = text_area_tag :alert, System.alert, class: 'form-control'
+    = submit_tag "Save", class: 'btn btn-default'
+
+  hr
+
+  h2= "Users (#{User.count})"
+
+  table.table
+    thead
+      tr
+        th Fullname
+        th Username
+        th Email
+        th Scites
+        th Comments
+        th Actions
+    - User.order('scites_count DESC').each do |user|
+      tr
+        td
+          a href="/#{user.username}" = user.fullname
+        td= user.username
+        td= user.email
+        td= user.scites_count
+        td = user.comments_count
+        td
+          a href="/admin/users/#{user.username}/edit" Edit
+

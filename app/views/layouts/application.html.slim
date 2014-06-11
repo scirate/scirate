@@ -86,6 +86,9 @@ body.main
           - cache [:header, current_user] do
             - if signed_in?
               li= link_to "Home", root_path
+              - if current_user.is_admin?
+                li
+                  a href="/admin" Admin
               li.dropdown
                 a.dropdown-toggle data-toggle="dropdown"
                   = current_user.fullname
@@ -99,6 +102,11 @@ body.main
               li= link_to "Sign in", login_path
               li= link_to "Sign up", signup_path
   .container
+    - unless System.alert.empty?
+      div class="alert alert-warning"
+        button.close type="button" data-dismiss="alert" &times;
+        p= System.alert
+
     = render 'sessions/flash'
     - if signed_in? && !current_user.email_confirmed?
       .welcome-banner

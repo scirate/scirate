@@ -71,6 +71,9 @@ SciRate::Application.routes.draw do
   get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
 
+  get '/admin', to: 'admin/base#index', as: 'admin'
+  post '/admin/alert', to: 'admin/base#alert', as: 'admin_alert'
+
   get '/admin/users/:username/edit', to: 'admin/users#edit', as: 'admin_edit_user'
   post '/admin/users/:username/update', to: 'admin/users#update', as: 'admin_update_user'
   post '/admin/users/:username/become', to: 'admin/users#become', as: 'admin_become_user'
