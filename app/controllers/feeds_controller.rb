@@ -70,7 +70,7 @@ class FeedsController < ApplicationController
   # Showing a feed while we aren't signed in
   def show_nouser
     @feed = later { Feed.find_by_uid!(params[:feed]) }
-    feed_uids = later { [@feed.uid] + @feed.children.pluck(:uid) }
+    feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
 
     @date = (_parse_date(params) || @feed.last_paper_date || Date.today).to_date
     @range = _parse_range(params) || 1
@@ -93,9 +93,9 @@ class FeedsController < ApplicationController
     return show_nouser unless signed_in?
 
     @feed = later { Feed.find_by_uid!(params[:feed]) }
-    feed_uids = later { [@feed.uid] + @feed.children.pluck(:uid) }
     @preferences = later { current_user.feed_preferences.where(feed_id: nil).first_or_create }
     @recent_comments = later { _recent_comments(feed_uids) }
+    feed_uids = [@feed.uid] + @feed.children.pluck(:uid)
 
     @date = (_parse_date(params) || @feed.last_paper_date || Date.today).to_date
     @range = _parse_range(params) || :since_last# || @preferences.range
