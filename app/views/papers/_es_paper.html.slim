@@ -7,7 +7,7 @@ li.paper.tex2jax
   .row
     .col-md-9
       .title
-        = link_to paper.title, paper
+        a href="/arxiv/#{paper.uid}" = paper.title
       .authors
         - paper.authors_searchterm[0..19].each_with_index do |searchterm, i|
           a> href="/search?q=au:#{searchterm}+in:#{paper.feed_uids[0].split('.')[0]}"
