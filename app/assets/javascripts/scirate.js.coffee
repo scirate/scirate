@@ -10,7 +10,7 @@ class View.SciteToggle extends View
     'click .collapse': "collapse"
 
   initialize: ->
-    @$el.addClass('active') if SciRate.scited_by_uid[@$el.attr('data-paper-uid')]
+    @$el.addClass('active') if SciRate.scited_by_uid && SciRate.scited_by_uid[@$el.attr('data-paper-uid')]
 
   scite: ->
     return SciRate.login() unless SciRate.current_user
