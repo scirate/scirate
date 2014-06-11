@@ -1,15 +1,16 @@
-$ ->
-  hasFlash = false
-  try
-    fo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash")
-    hasFlash = true if fo
-  catch e
-    hasFlash = true if navigator.mimeTypes and navigator.mimeTypes["application/x-shockwave-flash"] != undefined and navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin
+hasFlash = false
+try
+  fo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash")
+  hasFlash = true if fo
+catch e
+  hasFlash = true if navigator.mimeTypes and navigator.mimeTypes["application/x-shockwave-flash"] != undefined and navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin
 
+setupCitationCopy = ->
+  return unless $('#paperPage')
 
   if hasFlash
     ZeroClipboard.config(moviePath: asset_path("ZeroClipboard.swf"), cacheBust: false)
-    clip = new ZeroClipboard($('#copyButton').get(0))
+    window.clip = new ZeroClipboard($('#copyButton').get(0))
 
     clip.on 'mouseover', ->
       $(this).attr('data-clipboard-text', $('.reference textarea').text())
@@ -27,3 +28,9 @@ $ ->
     $('#copyButton').on 'click', ->
       $(".reference textarea").focus()
       $(".reference textarea").select()
+
+$(document).on "ready", setupCitationCopy
+$(document).on "page:load", ->
+  $('#copyButton').removeClass('zeroclipboard-js-hover')
+  ZeroClipboard.destroy()
+  setupCitationCopy()

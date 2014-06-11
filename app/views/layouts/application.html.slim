@@ -37,6 +37,11 @@ html lang="en"
       meta property="og:locale" content="en_US"
       meta property="og:description" content=(@description)
 
+      javascript:
+        window.SciRate = {}
+        SciRate.current_user = #{raw (current_user ? current_user.to_js : false)}
+        SciRate.scited_by_uid = #{raw @scited_by_uid.to_json}
+
       <!--[if lt IE 9]>
           <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
       <![endif]-->
@@ -55,10 +60,35 @@ html lang="en"
     = stylesheet_link_tag "application", media: "all"
     = csrf_meta_tags
 
-    javascript:
-      window.SciRate = {}
-      SciRate.current_user = #{raw (current_user ? current_user.to_js : false)}
-      SciRate.scited_by_uid = #{raw @scited_by_uid.to_json}
+    = javascript_include_tag "application"
+
+    - cache :mathjax do
+      - if Settings::ENABLE_MATHJAX
+        script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+        javascript:
+          MathJax.Hub.Config({
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+              displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+              processEscapes: true,
+              ignoreClass: 'container',
+              processClass: 'tex2jax',
+            },
+            showProcessingMessages: false,
+            messageStyle: "none",
+            showMathMenu: false,
+            errorSettings: {
+              style: { color: "black" },
+            },
+            TeX: {
+              noUndefined: {
+                attributes: {
+                  mathcolor: 'black',
+                }
+              }
+            }
+          });
 
 body.main
   header.navbar.navbar-inverse role="banner"
@@ -119,33 +149,3 @@ body.main
   - cache :footer do
     .container
       = render 'layouts/footer'
-
-  = javascript_include_tag "application"
-
-  - cache :mathjax do
-    - if Settings::ENABLE_MATHJAX
-      script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-      javascript:
-        MathJax.Hub.Config({
-          jax: ["input/TeX", "output/HTML-CSS"],
-          tex2jax: {
-            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-            processEscapes: true,
-            ignoreClass: 'container',
-            processClass: 'tex2jax',
-          },
-          showProcessingMessages: false,
-          messageStyle: "none",
-          showMathMenu: false,
-          errorSettings: {
-            style: { color: "black" },
-          },
-          TeX: {
-            noUndefined: {
-              attributes: {
-                mathcolor: 'black',
-              }
-            }
-          }
-        });
