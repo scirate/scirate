@@ -58,6 +58,10 @@ group :development, :test do
   gem 'pry-rails'
 end
 
+group :production, :profile do
+  gem 'newrelic_rpm'
+end
+
 group :development do
   # Development webserver
   gem 'thin'
@@ -111,12 +115,10 @@ group :test do
 end
 
 group :profile do
-  gem 'ruby-prof'
+  gem 'stackprof'
 end
 
 group :production do
-  # XXX (Mispy): Not sure we're using this atm
-  gem 'newrelic_rpm'
 
   # Sends us emails when stuff breaks in production
   gem 'exception_notification', github: 'sunkencity/exception_notification'
