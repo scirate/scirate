@@ -300,7 +300,7 @@ module Search::Paper
 
     loop do
       break if start_id > end_id
-      results = execute("SELECT papers.id, papers.uid, papers.title, papers.abstract, authors.id AS author_id, authors.fullname AS author_fullname, authors.searchterm AS author_searchterm, scites.user_id AS sciter_id, papers.scites_count, papers.comments_count, papers.submit_date, papers.update_date, papers.pubdate FROM papers LEFT JOIN authors ON authors.paper_uid=papers.uid LEFT JOIN scites ON scites.paper_uid=papers.uid WHERE papers.id >= ? AND papers.id < ? ORDER BY papers.id ASC, authors.position ASC;", start_id, next_id)
+      results = execute("SELECT papers.id, papers.uid, papers.title, papers.abstract, authors.id AS author_id, authors.fullname AS author_fullname, authors.searchterm AS author_searchterm, scites.user_id AS sciter_id, papers.scites_count, papers.comments_count, papers.submit_date, papers.update_date, papers.pubdate, papers.pdf_url FROM papers LEFT JOIN authors ON authors.paper_uid=papers.uid LEFT JOIN scites ON scites.paper_uid=papers.uid WHERE papers.id >= ? AND papers.id < ? ORDER BY papers.id ASC, authors.position ASC;", start_id, next_id)
       categories = execute("SELECT papers.id, papers.uid, categories.feed_uid AS feed_uid FROM papers INNER JOIN categories ON categories.paper_uid=uid WHERE papers.id >= ? AND papers.id < ? ORDER BY categories.position", start_id, next_id)
 
       start_id = next_id
@@ -334,7 +334,8 @@ module Search::Paper
             'comments_count' => row['comments_count'].to_i,
             'submit_date' => Time.parse(row['submit_date'] + " UTC"),
             'update_date' => Time.parse(row['update_date'] + " UTC"),
-            'pubdate' => Time.parse(row['pubdate'] + " UTC")
+            'pubdate' => Time.parse(row['pubdate'] + " UTC"),
+            'pdf_url' => row['pdf_url']
           }
         end
 
