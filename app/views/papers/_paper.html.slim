@@ -1,0 +1,30 @@
+- cool_paper = paper.scites_count > 0 || @search
+
+- unless defined?(showabs)
+  - showabs = cool_paper || (current_user && current_user.expand_abstracts)
+
+li.paper.tex2jax
+  .row
+    .col-md-9
+      .title
+        = link_to paper.title, paper
+      .authors
+        - paper.authors[0..19].each do |author|
+          => author_link_to(author, paper) + (author != paper.authors[-1] ? "," : ' ')
+        - if paper.authors.length > 20
+          = link_to "et al (#{paper.authors.length - 20})", paper
+      .uid
+        => paper.pubdate.strftime("%b %d %Y")
+        - paper.feeds.each do |feed|
+          => link_to feed.uid, feed
+    .col-md-3
+      .pull-right
+        = render 'scites/toggle', paper: paper
+        a.paper-download.btn.btn-success title="Download PDF" href=(paper.pdf_url)
+          | PDF
+        - if paper.comments_count > 0
+          div
+            = link_to pluralize(paper.comments_count, 'comment'), paper
+
+  .abstract class=("hidden" unless showabs) class=("hideable" unless cool_paper)
+    = paper.abstract
