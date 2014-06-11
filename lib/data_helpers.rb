@@ -14,6 +14,12 @@ def map_exists(key, query)
   map
 end
 
+def later(&b)
+  future do
+    ActiveRecord::Base.connection_pool.with_connection(&b)
+  end
+end
+
 def execute(sql, *args)
   sanitized = ActiveRecord::Base.send(:sanitize_sql_array, [sql]+args)
   ActiveRecord::Base.connection.execute(sanitized).to_a
