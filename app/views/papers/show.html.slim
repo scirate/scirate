@@ -61,7 +61,7 @@
               textarea.bibtex= @paper.to_bibtex
               button#copyButton.btn.btn-default Copy Citation
 
-      - cache [@comments, current_user && current_user.is_moderator?]
+      - cache [@comments, current_user]
         .comments
           a name="comments"
           h4= pluralize(@comments.size, "comment")
