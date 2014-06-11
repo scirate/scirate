@@ -3,6 +3,8 @@
 .container
   h1 SciRate Admin
 
+  hr
+
   h2 Global Alert
 
   = form_tag "/admin/alert", class: 'form' do
@@ -20,17 +22,19 @@
         th Fullname
         th Username
         th Email
+        th Joined
         th Scites
         th Comments
         th Actions
-    - User.order('scites_count DESC').each do |user|
+    - User.order('created_at DESC').each do |user|
       tr
         td
           a href="/#{user.username}" = user.fullname
         td= user.username
         td= user.email
+        td width="20%" = time_ago_in_words(user.created_at) + ' ago'
         td= user.scites_count
-        td = user.comments_count
+        td= user.comments_count
         td
           a href="/admin/users/#{user.username}/edit" Edit
 
