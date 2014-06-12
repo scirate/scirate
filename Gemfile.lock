@@ -20,6 +20,16 @@ GIT
       faraday_middleware
 
 GIT
+  remote: git://github.com/rails/sass-rails.git
+  revision: 3a9e47db7d769221157c82229fc1bade55b580f0
+  specs:
+    sass-rails (4.0.1)
+      railties (>= 4.0.0, < 5.0)
+      sass (~> 3.2)
+      sprockets (~> 2.12)
+      sprockets-rails (~> 2.0)
+
+GIT
   remote: git://github.com/sunkencity/exception_notification.git
   revision: b54ba10cea78f62758d3d71aa5f114cea658db3a
   specs:
@@ -297,6 +307,7 @@ DEPENDENCIES
   rails (= 4.1.1)
   rspec-rails (~> 2.9)
   ruby-prof
+  sass-rails!
   seed_dump
   shoulda-matchers
   slim
