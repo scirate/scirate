@@ -70,7 +70,6 @@
               textarea.bibtex= @paper.to_bibtex
               button#copyButton.btn.btn-default Copy Citation
 
-      - cache [:paper_comments, @comments, current_user]
         .comments
           a name="comments"
           h4= pluralize(@comments.size, "comment")
@@ -80,7 +79,8 @@
               = raw flash[:comment][:raw]
               = flash[:comment][:content]
           .comment-list
-            = render @comments
+            - cache [:paper_comments, @comments, current_user]
+              = render @comments
 
             - if current_user && current_user.is_moderator?
               - @deleted_comments = Comment.where(paper_uid: @paper.uid, deleted: true)
