@@ -5,6 +5,9 @@
 doctype html
 html lang="en"
   head
+    javascript:
+      window.SciRate = {};
+
     - cache [@description, @title, @image] do
       - if title = yield(:title)
         title= title + " | SciRate"
@@ -36,11 +39,6 @@ html lang="en"
 
       meta property="og:locale" content="en_US"
       meta property="og:description" content=(@description)
-
-      javascript:
-        window.SciRate = {}
-        SciRate.current_user = #{raw (current_user ? current_user.to_js : false)}
-        SciRate.scited_by_uid = #{raw @scited_by_uid.to_json}
 
       <!--[if lt IE 9]>
           <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -121,7 +119,18 @@ body.main
   - if Settings::ENABLE_MATHJAX
     script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 
+  javascript:
+    SciRate.current_user = #{raw (current_user ? current_user.to_js : false)};
+    SciRate.scited_by_uid = #{raw @scited_by_uid.to_json};
+
+    // Bind scite toggles
+    $('.scite-toggle').each(function() {
+      new View.SciteToggle({el: this})
+    });
+
+
 
   - cache :footer do
     .container
       = render 'layouts/footer'
+

@@ -1,12 +1,14 @@
+require 'sessions_helper'
+
 class NeedsUserConstraint
   def self.matches?(request)
-    signed_in?
+    request.cookies.key?("remember_token")
   end
 end
 
 SciRate::Application.routes.draw do
+  get '/', to: 'feeds#index', constraints: NeedsUserConstraint
   get '/', to: 'feeds#index_nouser', as: 'root'
-  get '/', to: 'feeds#index', constraint: NeedsUserConstraint
 
   get '/search', to: 'papers#search', as: 'papers_search'
 
@@ -77,8 +79,8 @@ SciRate::Application.routes.draw do
   get '/arxiv/:feed/comments', to: 'comments#index', feed: /.+/, as: 'feed_comments'
   get '/arxiv/:uid', to: 'papers#show', uid: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
 
+  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, constraints: NeedsUserConstraint
   get '/arxiv/:feed', to: 'feeds#show_nouser', feed: /.+/, as: 'feed'
-  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, constraint: NeedsUserConstraint
 
   get '/admin', to: 'admin/base#index', as: 'admin'
   post '/admin/alert', to: 'admin/base#alert', as: 'admin_alert'

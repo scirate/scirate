@@ -150,10 +150,6 @@ setupPageLoad = ->
     $(this).mouseenter -> $(this).find('.dropdown-toggle').dropdown('toggle')
     $(this).mouseleave -> $(this).find('.dropdown-toggle').dropdown('hide')
 
-  # Bind scite toggles
-  $('.scite-toggle').each ->
-    new View.SciteToggle(el: this)
-
   # Feed subscription toggles
   $('.subscribe-toggle').each ->
     new View.SubscribeToggle(el: this)
