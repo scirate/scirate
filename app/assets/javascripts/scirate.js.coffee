@@ -180,12 +180,41 @@ setupPageLoad = ->
   $('li.paper').on 'mouseout', (ev) ->
     $(this).find('.links').addClass('hidden')
 
+  MathJax.Hub.Queue(["Typeset",MathJax.Hub])
+
+
+
+
 $(document).on 'ready', ->
   $(document).ajaxError (ev, jqxhr, settings, err) ->
     if err == "Unauthorized"
       SciRate.login()
 
   Turbolinks.enableTransitionCache()
+
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true,
+      ignoreClass: 'container',
+      processClass: 'tex2jax',
+    },
+    showProcessingMessages: false,
+    messageStyle: "none",
+    showMathMenu: false,
+    errorSettings: {
+      style: { color: "black" },
+    },
+    TeX: {
+      noUndefined: {
+        attributes: {
+          mathcolor: 'black',
+        }
+      }
+    }
+  })
 
   setupPageLoad()
 
