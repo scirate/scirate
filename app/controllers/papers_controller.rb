@@ -4,7 +4,7 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.where(uid: Arxiv.strip_version(params[:uid]))
+    @paper = Paper.where(uid: Arxiv.strip_version(params[:paper_uid]))
       .select('uid', 'title', 'abstract', 'scites_count', 'abs_url', 'pdf_url', 'update_date', 'submit_date', 'pubdate', 'author_comments', 'msc_class', 'report_no', 'journal_ref', 'doi', 'proxy', 'updated_at', 'author_str')
       .first!
 
@@ -24,6 +24,8 @@ class PapersController < ApplicationController
     end
 
     @comments = find_comments_sorted_by_rating
+
+    render 'papers/show'
   end
 
   def __quote(val)
@@ -61,7 +63,7 @@ class PapersController < ApplicationController
 
   # Show the users who scited this paper
   def scites
-    @paper = Paper.find_by_uid!(params[:uid])
+    @paper = Paper.find_by_uid!(params[:paper_uid])
   end
 
   def next
