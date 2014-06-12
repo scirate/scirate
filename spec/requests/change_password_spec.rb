@@ -17,7 +17,7 @@ describe "Password Settings" do
 
     it "changes the password" do
       expect(page).to have_selector('.alert-success')
-      expect(user.reload.authenticate('newpass')).to be_true
+      expect(user.reload.authenticate('newpass')).to be_truthy
     end
   end
 
@@ -39,7 +39,7 @@ describe "Password Settings" do
 
       it "throws an error" do
         expect(page).to have_error_message
-        expect(user.reload.authenticate('iamsleethacker')).to be_false
+        expect(user.reload.authenticate('iamsleethacker')).to be_falsey
       end
     end
 
@@ -53,7 +53,7 @@ describe "Password Settings" do
 
       it "changes the password" do
         expect(page).to have_selector('.alert-success')
-        expect(user.reload.authenticate(user.password+'new')).to be_true
+        expect(user.reload.authenticate(user.password+'new')).to be_truthy
       end
 
       it "sends an email notification" do

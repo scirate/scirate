@@ -7,7 +7,7 @@ describe "Admin tools" do
       @paper = FactoryGirl.create(:paper_with_comments_and_categories)
       @comment = @paper.comments.where(deleted: false).first
       @deleted_comment = @paper.comments.where(deleted: true).first
-      sign_in(@moderator)
+      sign_in @moderator
     end
 
     it "shows moderation actions and deleted comments" do

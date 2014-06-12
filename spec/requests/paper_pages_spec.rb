@@ -46,7 +46,6 @@ describe "Paper page javascript", js: true do
   let(:paper) { FactoryGirl.create(:paper, :with_categories) }
 
   before do
-    p paper_path(paper)
     visit paper_path(paper)
   end
 

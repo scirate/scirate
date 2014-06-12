@@ -7,13 +7,13 @@ describe Admin::UsersController do
   }
 
   describe 'when login as non-admin user' do
-    before { sign_in user }
+    before { become user }
 
     describe 'GET edit' do
       before { get :edit, username: user.username }
 
       specify do
-        expect(response).to redirect_to(root_url)
+        expect(response).to redirect_to(root_path)
         expect(flash[:error]).to eq "You don't have permission to do that!"
       end
     end
@@ -22,14 +22,14 @@ describe Admin::UsersController do
       before { patch :edit, username: user.username, user: {} }
 
       specify do
-        expect(response).to redirect_to(root_url)
+        expect(response).to redirect_to(root_path)
         expect(flash[:error]).to eq "You don't have permission to do that!"
       end
     end
   end
 
   describe 'when login as admin user' do
-    before { sign_in admin }
+    before { become admin }
 
     describe 'GET edit' do
       before { get :edit, username: user.username }

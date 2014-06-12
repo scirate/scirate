@@ -29,7 +29,7 @@ describe "signup page" do
   end
 
   it "errors on invalid details" do
-    expect { click_button "Sign up" }.not_to change(User, :count)
+    expect { click_button "Sign up" }.to_not change(User, :count)
 
     page.should have_title "Join SciRate"
     page.should have_error_message
@@ -86,7 +86,7 @@ describe "email confirmation" do
       expect do
         visit activate_user_path(@user.id, "bogus")
         @user.reload
-      end.not_to change(@user, :active).to(true)
+      end.to_not change(@user, :active).to(true)
 
       page.should have_content("link is invalid")
     end
@@ -102,7 +102,7 @@ describe "email confirmation" do
       expect do
         visit activate_user_path(@user.id, @user.confirmation_token)
         @user.reload
-      end.not_to change(@user, :active).to(true)
+      end.to_not change(@user, :active).to(true)
 
       page.should have_content("link has expired")
       page.should have_content("email has been sent")

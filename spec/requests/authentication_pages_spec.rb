@@ -18,7 +18,7 @@ describe "google signup" do
     expect(page).to have_content "Sign out"
 
     user = User.where(email: mock_auth.info.email).first
-    expect(user.active?).to be_true
+    expect(user.active?).to be_truthy
   end
 
   it "should handle the case when email is taken" do
@@ -111,7 +111,7 @@ describe "Authentication" do
 
     describe "as signed-in user" do
       let(:user) { FactoryGirl.create(:user) }
-      before { sign_in user }
+      before { become user }
 
       describe "submitting a GET request to the Users#new action" do
         before do

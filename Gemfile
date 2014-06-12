@@ -2,8 +2,8 @@ ruby '2.1.2'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', "~> 4.1.0"
-gem 'bcrypt-ruby'
+gem 'rails', '4.1.1'
+gem 'bcrypt', '~> 3.1.7'
 
 # Database stuff
 gem 'pg' # Postgres support
@@ -17,11 +17,10 @@ gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
 # Frontend stuff
 gem 'will_paginate' # Displaying pages of results
 gem 'chronic' # Natural language date parsing
-gem 'turbolinks'
+gem 'turbolinks' # Speeds up links
 
 # Authentication
-gem 'activerecord-session_store'
-gem 'omniauth'
+gem 'omniauth' # For google
 gem 'omniauth-google-oauth2'
 
 # For interfacing with the arxiv OAI to
@@ -37,12 +36,10 @@ gem 'stretcher'
 gem 'faraday', '0.8.9' # 0.9.0 breaks faraday_middleware-multi_json
 
 # Asset preprocessors
-gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'slim'
-gem 'ractive-rails'
 
 # Memcached gem
 gem 'dalli'
@@ -51,8 +48,7 @@ gem 'dalli'
 gem 'bourbon'
 
 group :development, :test do
-  gem 'rspec-rails'
-  gem 'rspec-rerun'
+  gem 'rspec-rails', '~> 2.9'
 
   # An improved IRB alternative for rails console
   gem 'pry'
@@ -83,10 +79,6 @@ group :development do
 
   # For dumping feeds to seeds.rb to test with
   gem 'seed_dump'
-
-  # Deployment
-  gem 'capistrano', '~> 3.1.0'
-  gem 'capistrano-rvm'
 end
 
 group :test do
@@ -98,15 +90,12 @@ group :test do
   # browser for integration tests
   gem 'capybara'
 
+  # Extensions to rspec syntax
   gem 'shoulda-matchers'
 
   # So we can truncate the database properly
   # before each test suite is run
   gem 'database_cleaner'
-
-  # OS X specific?
-  gem 'rb-fsevent', require: false
-  gem 'rb-readline'
 
   # Code coverage
   gem 'coveralls', require: false
@@ -121,7 +110,6 @@ group :profile do
 end
 
 group :production do
-
   # Sends us emails when stuff breaks in production
   gem 'exception_notification', github: 'sunkencity/exception_notification'
 

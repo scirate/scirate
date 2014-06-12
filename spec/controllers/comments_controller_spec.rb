@@ -8,7 +8,7 @@ describe CommentsController do
 
   describe "posting a comment" do
     before do
-      sign_in user
+      become user
       xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
       response.should be_redirect
     end
@@ -23,7 +23,7 @@ describe CommentsController do
 
   describe "editing a comment" do
     before do
-      sign_in user
+      become user
       xhr :post, :edit, id: comment.id, content: "wubbles"
     end
 
@@ -35,7 +35,7 @@ describe CommentsController do
 
   describe "deleting a comment" do
     before do
-      sign_in user
+      become user
       xhr :post, :delete, id: comment.id
       expect(response).to be_redirect
     end
@@ -43,13 +43,13 @@ describe CommentsController do
     it "marks comment as deleted" do
       flash[:comment][:status].should == 'success'
 
-      expect(comment.reload.deleted).to be_true
+      expect(comment.reload.deleted).to be_truthy
     end
   end
 
   describe "restoring a comment" do
     before do
-      sign_in user
+      become user
       comment.deleted = true
       comment.save
       xhr :post, :restore, id: comment.id
@@ -64,7 +64,7 @@ describe CommentsController do
 
   describe "replying to a comment" do
     before do
-      sign_in user
+      become user
       xhr :post, :reply, id: comment.id, content: "snuffles"
       response.should be_redirect
     end
@@ -78,7 +78,7 @@ describe CommentsController do
   end
 
   describe "voting" do
-    before { sign_in other_user }
+    before { become other_user }
 
     it "allows a single upvote" do
       expect do

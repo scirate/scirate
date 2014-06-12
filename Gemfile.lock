@@ -50,36 +50,23 @@ GEM
       arel (~> 5.0.0)
     activerecord-import (0.5.0)
       activerecord (>= 3.0)
-    activerecord-session_store (0.1.0)
-      actionpack (>= 4.0.0, < 5)
-      activerecord (>= 4.0.0, < 5)
-      railties (>= 4.0.0, < 5)
     activesupport (4.1.1)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    acts_as_votable (0.9.0)
+    acts_as_votable (0.10.0)
     annotate (2.6.3)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (5.0.1.20140414130214)
     bcrypt (3.1.7)
-    bcrypt-ruby (3.1.5)
-      bcrypt (>= 3.1.3)
-    bourbon (3.2.3)
-      sass (~> 3.2)
+    bourbon (4.0.2)
+      sass (~> 3.3)
       thor
     builder (3.2.2)
-    capistrano (3.1.0)
-      i18n
-      rake (>= 10.0.0)
-      sshkit (~> 1.3)
-    capistrano-rvm (0.1.1)
-      capistrano (~> 3.0)
-      sshkit (~> 1.2)
-    capybara (2.2.1)
+    capybara (2.3.0)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -108,11 +95,11 @@ GEM
     dalli (2.7.2)
     database_cleaner (1.3.0)
     diff-lcs (1.2.5)
-    docile (1.1.3)
+    docile (1.1.4)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.33.0)
-    execjs (2.0.2)
+    excon (0.37.0)
+    execjs (2.2.0)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.4.1)
@@ -127,7 +114,7 @@ GEM
       multi_json
     hashie (2.1.1)
     hike (1.2.3)
-    htmlentities (4.3.1)
+    htmlentities (4.3.2)
     i18n (0.6.9)
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
@@ -145,9 +132,6 @@ GEM
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (1.2.0)
-    net-scp (1.2.1)
-      net-ssh (>= 2.6.5)
-    net-ssh (2.9.1)
     newrelic_rpm (3.8.1.221)
     nokogiri (1.5.9)
     oauth2 (0.9.4)
@@ -169,10 +153,10 @@ GEM
       omniauth (~> 1.2)
     ox (2.1.1)
     pg (0.17.1)
-    polyglot (0.3.4)
-    pry (0.9.12.6)
-      coderay (~> 1.0)
-      method_source (~> 0.8)
+    polyglot (0.3.5)
+    pry (0.10.0)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
       slop (~> 3.4)
     pry-rails (0.3.2)
       pry (>= 0.9.10)
@@ -183,10 +167,6 @@ GEM
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
-    ractive-rails (0.0.1)
-      execjs (>= 1.3)
-      sprockets (>= 2.0)
-      tilt (>= 1.3)
     rails (4.1.1)
       actionmailer (= 4.1.1)
       actionpack (= 4.1.1)
@@ -203,35 +183,25 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.3.2)
-    rb-fsevent (0.9.4)
-    rb-readline (0.5.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rspec (2.14.1)
-      rspec-core (~> 2.14.0)
-      rspec-expectations (~> 2.14.0)
-      rspec-mocks (~> 2.14.0)
-    rspec-core (2.14.8)
-    rspec-expectations (2.14.5)
+    rspec-collection_matchers (1.0.0)
+      rspec-expectations (>= 2.99.0.beta1)
+    rspec-core (2.99.0)
+    rspec-expectations (2.99.0)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.14.6)
-    rspec-rails (2.14.2)
+    rspec-mocks (2.99.0)
+    rspec-rails (2.99.0)
       actionpack (>= 3.0)
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
-      rspec-core (~> 2.14.0)
-      rspec-expectations (~> 2.14.0)
-      rspec-mocks (~> 2.14.0)
-    rspec-rerun (0.1.3)
-      rspec (>= 2.11.0)
+      rspec-collection_matchers
+      rspec-core (~> 2.99.0)
+      rspec-expectations (~> 2.99.0)
+      rspec-mocks (~> 2.99.0)
     ruby-prof (0.15.1)
-    sass (3.2.19)
-    sass-rails (4.0.3)
-      railties (>= 4.0.0, < 5.0)
-      sass (~> 3.2.0)
-      sprockets (~> 2.8, <= 2.11.0)
-      sprockets-rails (~> 2.0)
+    sass (3.3.8)
     seed_dump (3.1.0)
       activerecord
       activesupport
@@ -249,7 +219,7 @@ GEM
     spring (1.1.3)
     spring-commands-rspec (1.0.2)
       spring (>= 0.9.1)
-    sprockets (2.8.0)
+    sprockets (2.12.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
@@ -258,10 +228,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
-    sshkit (1.4.0)
-      net-scp (>= 1.1.2)
-      net-ssh (>= 2.8.0)
-      term-ansicolor
     stackprof (0.2.6)
     stretcher (1.21.1)
       excon (>= 0.16)
@@ -278,7 +244,7 @@ GEM
       eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
     thor (0.19.1)
-    thread_safe (0.3.3)
+    thread_safe (0.3.4)
     tilt (1.4.1)
     tins (1.3.0)
     treetop (1.4.15)
@@ -286,7 +252,7 @@ GEM
       polyglot (>= 0.3.1)
     turbolinks (2.2.2)
       coffee-rails
-    tzinfo (1.1.0)
+    tzinfo (1.2.1)
       thread_safe (~> 0.1)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
@@ -302,14 +268,11 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
-  activerecord-session_store
   acts_as_votable
   annotate
   arxivsync!
-  bcrypt-ruby
+  bcrypt (~> 3.1.7)
   bourbon
-  capistrano (~> 3.1.0)
-  capistrano-rvm
   capybara
   capybara-webkit
   chronic
@@ -331,14 +294,9 @@ DEPENDENCIES
   pry-rails
   puma
   quiet_assets
-  ractive-rails
-  rails (~> 4.1.0)
-  rb-fsevent
-  rb-readline
-  rspec-rails
-  rspec-rerun
+  rails (= 4.1.1)
+  rspec-rails (~> 2.9)
   ruby-prof
-  sass-rails
   seed_dump
   shoulda-matchers
   slim

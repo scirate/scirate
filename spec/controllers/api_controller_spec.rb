@@ -5,7 +5,7 @@ describe ApiController do
   let(:feed) { FactoryGirl.create(:feed) }
   let(:paper) { FactoryGirl.create(:paper) }
 
-  before { sign_in user }
+  before { become user }
 
   describe "sciting a paper" do
     before do
@@ -72,19 +72,19 @@ describe ApiController do
 
       it "throws a 403" do
         expect(response).to_not be_success
-        expect(comment.reload.hidden_from_recent).to be_false
+        expect(comment.reload.hidden_from_recent).to be_falsey
       end
     end
 
     context "as a moderator" do
       before do
-        sign_in moderator
+        become moderator
         xhr :post, :hide_from_recent, comment_id: comment.id
       end
 
       it "hides the comment" do
         expect(response).to be_success
-        expect(comment.reload.hidden_from_recent).to be_true
+        expect(comment.reload.hidden_from_recent).to be_truthy
       end
     end
   end

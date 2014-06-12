@@ -81,14 +81,16 @@ def sign_out
   click_link "Sign out"
 end
 
+def become(user)
+  cookies[:remember_token] = user.remember_token
+end
+
 def sign_in(user)
   visit login_path
   fill_in "Email",    with: user.email
   fill_in "Password", with: user.password
   click_button "Sign in"
-
-  # Sign in when not using Capybara as well.
-  cookies[:remember_token] = user.remember_token
+  become user
 end
 
 def sign_in_with_google

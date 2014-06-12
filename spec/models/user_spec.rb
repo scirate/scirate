@@ -26,13 +26,14 @@ require 'spec_helper'
 
 describe User do
 
-  let(:user) { FactoryGirl.build(:user) }
+  let(:user) { FactoryGirl.create(:user) }
 
   subject { user }
 
   it { should validate_presence_of(:fullname) }
   it { should ensure_length_of(:fullname).is_at_most(50) }
   it { should validate_presence_of(:email) }
+  it { should validate_uniqueness_of(:email) }
 
   describe "when email format is invalid" do
     invalid_addresses = %w[user@foo,com user_at_foo.org example.user@foo.]
@@ -48,15 +49,6 @@ describe User do
       before { user.email = valid_address }
       it { should be_valid }
     end
-  end
-
-  describe "when email is a duplicate" do
-    before do
-      user_with_same_email = user.dup
-      user_with_same_email.save
-    end
-
-    it { should_not be_valid }
   end
 
   describe "when password is not present" do
@@ -92,23 +84,7 @@ describe User do
 
   describe "remember token" do
     before { user.save }
-    its(:remember_token) { should_not be_blank }
-  end
-
-  describe "sciting" do
-    let (:paper) { FactoryGirl.create(:paper) }
-    before do
-      user.save
-      user.scite!(paper)
-    end
-
-    it { should be_scited(paper) }
-    its(:scited_papers) { should include(paper) }
-
-    describe "and unsciting" do
-      before { user.unscite!(paper) }
-      its(:scited_papers) { should_not include(paper) }
-    end
+    specify { expect(user.remember_token).to_not be_blank }
   end
 
   describe "comments" do
@@ -135,17 +111,12 @@ describe User do
 
   describe "subscribing to a feed" do
     let (:feed) { FactoryGirl.create(:feed) }
-    before do
-      user.save
-      user.subscribe!(feed)
-    end
-
-    it { should be_subscribed(feed) }
-    its(:feeds) { should include(feed) }
+    before { user.subscribe!(feed) }
+    specify { expect(feed.users.pluck(:id)).to include(user.id) }
 
     describe "and unsubscribing" do
       before { user.unsubscribe!(feed) }
-      its(:feeds) { should_not include(feed) }
+      specify { expect(feed.users.pluck(:id)).to_not include(user.id) }
     end
   end
 
