@@ -60,77 +60,75 @@ html lang="en"
 
     = javascript_include_tag "application"
 
-body.main
-  header.navbar.navbar-inverse role="banner"
+  body.main
+    header.navbar.navbar-inverse role="banner"
+      .container
+        - cache :header do
+          .navbar-header
+            button.navbar-toggle.collapsed data-target=".navbar-collapse" data-toggle="collapse" type="button"
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.header-brand href="/"
+              img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAV4QAAFeEBXxPO3AAAAAd0SU1FB94CHAMTFhOSJiIAAAQ/SURBVFjD7VZNaFxVFD7vzWSSqTaglioKWtGairroRhQLFbMRI6i4MosKBbsSUVEQf4qLLsToRqkugkK7UClU2tDSVKHESpPWUBNrYmKYJBOTzE9m5s28v/vufe/ec1xk3vAmnclfWxDpWc3M/e53vvPNvecegJvxX48j/aM3lF9bFyreHQOiGNAGmGM67j3QJX853L021mJc90TQVrLcxPSiEQt//3MmDwAADhMHEVEiIiEirRZVjOJ+cGRr1yFtYHQWInx6seImbCbamAhqeaBksd0OE5cZ90s2E6eKprvvrS/PtESduvW5T+KDY//srNjeAeHLfJgsjEAqYbr8g/HZ/KP7e04mV7pbNN3nLVd8x3iQNV2espl4obb4+1RWL5lee8X2eomIlELleH7vlalc7PTQ1FWOjc0uPa4UEhHVFCwUrHebOWy6/H2pFCcicjxxqWzz29KZcqwONDlXAJuJJwOpqCqC5pfMZwEA3vn6bA334/kJIKIE9wMetf6n4dT9jZLny85DIpBB6Fih4r7a9CwYFnsskKqCVW8dT6QBAIjqTx8XQSKQKhOxn4io9djAeA3z9ldnQ86j1eQolSLLFU+v5KvFUtnZFUi1FK2sfzi1ayUua9gJm4lsiHE9nwyLJRtxchFEzwmaDn/qxQ+/r63rUbDj+YBYr273A3ftWUmqpAJErH1HIpB4dVVD4/MPtybiQNWSkQg8P4ATh15pLOCO9i08HtNFXQuI6x2N24e2ZkO5e9vWDgAATdM0AIC4rvP2W1rr+OsEeL5EJFJ1AmL6nZvtcsmWeN1eAsJAKtVUgGF5HhF4K3i2b7rN6lrdXiLwuFBeUwEnL0xaAGRT5JhqAPctvwkjGxag69q99QLIcriwV93kMHE82laVwjnYvj8exSwsmQnT4bVbYDNBhYp71S2wXP5r9Eb5gbz4xfGLiaYOAADYzD9TVUvVs7MlNdKzY6PVP/Pm0ZZka8uOKhUAADAhR954+Ql/zc0eD/xQtVKIJZvt26gDuZK9Vyl0qj0NFSL1DU4+uGri3lOXAQBgOmN0KoUqTMBFMJMt2TsBAE4PTTUV0PPDBQAASOeMbR4PzoUvBSJSruS8BwBwaWJh9erTucpyBYbTLavvAiJSxfEGDn5zrn09DuQM+1u5/FgRIpJhsY8atfSmsVCwAADg/B9zHYbFfp7JljvDtbUcCJP8lS48UrZZ//hsvmtTd/jKdL7pWsliCSaC6chfRLYr2prhUwul6zfDHT7xGzAetAhfTkSuFxFRYnhy8cYNj6991lf7PJEu3FNNGr60lFos1f6mz48NXr/EOaO+cc1mynscT4yFmcOxjIvAWCiYLzXqLdccmaL5OuP+tPCljI5hjQZSqZR0mMgUK86neufHa07d8fUIMGze5/BglAgUIq1KqmkAMV3XJGLh9mSSitda/d/zRbgZ/+v4FyB1DwhrhIoTAAAAAElFTkSuQmCC"
+              |  SciRate
+              - if Settings::STAGING || Rails.env == 'development'
+                span.staging title="This site is used to test new SciRate features. If you want to use SciRate, please head to https://scirate.com/ instead. Data preservation here is not guaranteed."
+                  |  dev
+              - else
+                span.staging title="We're currently adding lots of new features. Please report any issues to bugs@scirate.com"
+                  |  beta
+        nav.collapse.navbar-collapse role="navigation"
+          = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
+            = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
+          ul.nav.navbar-nav.navbar-right
+            - cache [:header, current_user] do
+              - if signed_in?
+                li= link_to "Home", root_path
+                - if current_user.is_admin?
+                  li
+                    a href="/admin" Admin
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown"
+                    = current_user.fullname
+                    b.caret
+                  ul.dropdown-menu
+                    li= link_to "Profile", url_for(current_user)
+                    li= link_to "Settings", settings_path
+                    li= link_to "Feeds", feeds_path
+                    li= link_to "Sign out", logout_path
+              - else
+                li= link_to "Sign in", login_path
+                li= link_to "Sign up", signup_path
     .container
-      - cache :header do
-        .navbar-header
-          button.navbar-toggle.collapsed data-target=".navbar-collapse" data-toggle="collapse" type="button"
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.header-brand href="/"
-            img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAV4QAAFeEBXxPO3AAAAAd0SU1FB94CHAMTFhOSJiIAAAQ/SURBVFjD7VZNaFxVFD7vzWSSqTaglioKWtGairroRhQLFbMRI6i4MosKBbsSUVEQf4qLLsToRqkugkK7UClU2tDSVKHESpPWUBNrYmKYJBOTzE9m5s28v/vufe/ec1xk3vAmnclfWxDpWc3M/e53vvPNvecegJvxX48j/aM3lF9bFyreHQOiGNAGmGM67j3QJX853L021mJc90TQVrLcxPSiEQt//3MmDwAADhMHEVEiIiEirRZVjOJ+cGRr1yFtYHQWInx6seImbCbamAhqeaBksd0OE5cZ90s2E6eKprvvrS/PtESduvW5T+KDY//srNjeAeHLfJgsjEAqYbr8g/HZ/KP7e04mV7pbNN3nLVd8x3iQNV2espl4obb4+1RWL5lee8X2eomIlELleH7vlalc7PTQ1FWOjc0uPa4UEhHVFCwUrHebOWy6/H2pFCcicjxxqWzz29KZcqwONDlXAJuJJwOpqCqC5pfMZwEA3vn6bA334/kJIKIE9wMetf6n4dT9jZLny85DIpBB6Fih4r7a9CwYFnsskKqCVW8dT6QBAIjqTx8XQSKQKhOxn4io9djAeA3z9ldnQ86j1eQolSLLFU+v5KvFUtnZFUi1FK2sfzi1ayUua9gJm4lsiHE9nwyLJRtxchFEzwmaDn/qxQ+/r63rUbDj+YBYr273A3ftWUmqpAJErH1HIpB4dVVD4/MPtybiQNWSkQg8P4ATh15pLOCO9i08HtNFXQuI6x2N24e2ZkO5e9vWDgAATdM0AIC4rvP2W1rr+OsEeL5EJFJ1AmL6nZvtcsmWeN1eAsJAKtVUgGF5HhF4K3i2b7rN6lrdXiLwuFBeUwEnL0xaAGRT5JhqAPctvwkjGxag69q99QLIcriwV93kMHE82laVwjnYvj8exSwsmQnT4bVbYDNBhYp71S2wXP5r9Eb5gbz4xfGLiaYOAADYzD9TVUvVs7MlNdKzY6PVP/Pm0ZZka8uOKhUAADAhR954+Ql/zc0eD/xQtVKIJZvt26gDuZK9Vyl0qj0NFSL1DU4+uGri3lOXAQBgOmN0KoUqTMBFMJMt2TsBAE4PTTUV0PPDBQAASOeMbR4PzoUvBSJSruS8BwBwaWJh9erTucpyBYbTLavvAiJSxfEGDn5zrn09DuQM+1u5/FgRIpJhsY8atfSmsVCwAADg/B9zHYbFfp7JljvDtbUcCJP8lS48UrZZ//hsvmtTd/jKdL7pWsliCSaC6chfRLYr2prhUwul6zfDHT7xGzAetAhfTkSuFxFRYnhy8cYNj6991lf7PJEu3FNNGr60lFos1f6mz48NXr/EOaO+cc1mynscT4yFmcOxjIvAWCiYLzXqLdccmaL5OuP+tPCljI5hjQZSqZR0mMgUK86neufHa07d8fUIMGze5/BglAgUIq1KqmkAMV3XJGLh9mSSitda/d/zRbgZ/+v4FyB1DwhrhIoTAAAAAElFTkSuQmCC"
-            |  SciRate
-            - if Settings::STAGING || Rails.env == 'development'
-              span.staging title="This site is used to test new SciRate features. If you want to use SciRate, please head to https://scirate.com/ instead. Data preservation here is not guaranteed."
-                |  dev
-            - else
-              span.staging title="We're currently adding lots of new features. Please report any issues to bugs@scirate.com"
-                |  beta
-      nav.collapse.navbar-collapse role="navigation"
-        = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
-          = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
-        ul.nav.navbar-nav.navbar-right
-          - cache [:header, current_user] do
-            - if signed_in?
-              li= link_to "Home", root_path
-              - if current_user.is_admin?
-                li
-                  a href="/admin" Admin
-              li.dropdown
-                a.dropdown-toggle data-toggle="dropdown"
-                  = current_user.fullname
-                  b.caret
-                ul.dropdown-menu
-                  li= link_to "Profile", url_for(current_user)
-                  li= link_to "Settings", settings_path
-                  li= link_to "Feeds", feeds_path
-                  li= link_to "Sign out", logout_path
-            - else
-              li= link_to "Sign in", login_path
-              li= link_to "Sign up", signup_path
-  .container
-    - unless System.alert.empty?
-      div class="alert alert-warning"
-        button.close type="button" data-dismiss="alert" &times;
-        p= raw System.alert
+      - unless System.alert.empty?
+        div class="alert alert-warning"
+          button.close type="button" data-dismiss="alert" &times;
+          p= raw System.alert
 
-    = render 'sessions/flash'
-    - if signed_in? && !current_user.email_confirmed?
-      .welcome-banner
-        .pull-right
-          button#resend-confirm-email.btn.btn-default
-            | Resend Confirmation
-        | Welcome to SciRate! A confirmation message was sent to <b>#{current_user.email}</b>.
-  = yield
+      = render 'sessions/flash'
+      - if signed_in? && !current_user.email_confirmed?
+        .welcome-banner
+          .pull-right
+            button#resend-confirm-email.btn.btn-default
+              | Resend Confirmation
+          | Welcome to SciRate! A confirmation message was sent to <b>#{current_user.email}</b>.
+    = yield
 
-  - if Settings::ENABLE_MATHJAX
-    script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    - if Settings::ENABLE_MATHJAX
+      script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 
-  javascript:
-    SciRate.current_user = #{raw (current_user ? current_user.to_js : false)};
-    SciRate.scited_by_uid = #{raw @scited_by_uid.to_json};
+    javascript:
+      SciRate.current_user = #{raw (current_user ? current_user.to_js : false)};
+      SciRate.scited_by_uid = #{raw @scited_by_uid.to_json};
 
-    // Bind scite toggles
-    $('.scite-toggle').each(function() {
-      new View.SciteToggle({el: this})
-    });
+      // Bind scite toggles
+      $('.scite-toggle').each(function() {
+        new View.SciteToggle({el: this})
+      });
 
-
-
-  - cache :footer do
-    .container
-      = render 'layouts/footer'
+    - cache :footer do
+      .container
+        = render 'layouts/footer'
 

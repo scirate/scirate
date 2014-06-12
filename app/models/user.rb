@@ -250,9 +250,7 @@ class User < ActiveRecord::Base
     doc = Nokogiri(open(url))
     doc.css('entry id').each do |el|
       uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]
-      if m = uid.match(/(.+)v\d+/) # Strip version if needed
-        uid = m[1]
-      end
+      uid = Arxiv.strip_version(uid)
       unless authorships.where(paper_uid: uid).exists?
         puts "New paper published by #{username}: arxiv/#{uid}"
         authorships.create(paper_uid: uid)

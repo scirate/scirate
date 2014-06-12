@@ -1,4 +1,13 @@
-module Arxiv; end
+module Arxiv
+  # Remove trailing version from an arXiv paper uid
+  def self.strip_version(uid)
+    if m = uid.match(/(.+)v\d+/)
+      m[1]
+    else
+      uid
+    end
+  end
+end
 
 module Arxiv::Import
   def self.papers(models, opts={})
