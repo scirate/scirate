@@ -185,6 +185,8 @@ $(document).on 'ready', ->
     if err == "Unauthorized"
       SciRate.login()
 
+  Turbolinks.enableTransitionCache()
+
   setupPageLoad()
 
 $(document).on 'page:load', ->
