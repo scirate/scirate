@@ -143,6 +143,7 @@ class FeedsController < ApplicationController
              .where(deleted: false, hidden: false, hidden_from_recent: false)
     else
       Comment.joins(:user, paper: :categories)
+             .where(deleted: false, hidden: false, hidden_from_recent: false)
              .where(categories: { feed_uid: feed_uids })
     end
 

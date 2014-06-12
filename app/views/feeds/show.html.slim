@@ -65,7 +65,7 @@
               - elsif @papers.count == 0
                   p No papers found!
               - else
-                - cache [:papers, @papers.map { |paper| "#{paper.uid}/#{paper.scites_count}/#{paper.comments_count}" }] do
+                - cache [:feed_papers, @papers.map { |paper| "#{paper.uid}/#{paper.scites_count}/#{paper.comments_count}" }] do
                   = render partial: "papers/es_paper", collection: @papers, as: :paper
                 = will_paginate @pagination
 
