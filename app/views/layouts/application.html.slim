@@ -102,6 +102,7 @@ html lang="en"
                 li= link_to "Sign in", login_path
                 li= link_to "Sign up", signup_path
     .container
+      - System.reload
       - unless System.alert.empty?
         div class="alert alert-warning"
           button.close type="button" data-dismiss="alert" &times;
