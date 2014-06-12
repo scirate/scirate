@@ -7,5 +7,9 @@ class System < ActiveRecord::Base
       @system ||= System.first_or_create
       @system.send(meth, *args, &block)
     end
+
+    def reload
+      @system = System.first_or_create
+    end
   end
 end

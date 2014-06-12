@@ -6,7 +6,7 @@ describe PapersController do
   before { sign_in user }
 
   describe 'GET show' do
-    before { get :show, uid: paper.uid }
+    before { get :show, paper_uid: paper.uid }
 
     specify do
       expect(assigns(:paper).uid).to eq paper.uid
@@ -15,7 +15,7 @@ describe PapersController do
     end
 
     context 'when params[:id] contains versioning' do
-      before { get :show, uid: "#{paper.uid}v1" }
+      before { get :show, paper_uid: "#{paper.uid}v1" }
 
       specify do
         expect(assigns(:paper).uid).to eq paper.uid
