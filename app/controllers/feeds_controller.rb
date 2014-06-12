@@ -106,6 +106,12 @@ class FeedsController < ApplicationController
         current_user.feed_preferences.where(feed_id: params[:feed]).first_or_create
       end
 
+      if @preferences.last_visited.at_end_of_day < end_of_today - 1.day
+        @preferences.previous_last_visited = @preferences.last_visited
+        @preferences.last_visited = Time.now.utc
+        @preferences.save!
+      end
+
       @since_last = end_of_today - @preferences.previous_last_visited.at_end_of_day
       @range = [1, (@since_last / 1.day).round].max
     elsif @range == :since_last && !signed_in?
