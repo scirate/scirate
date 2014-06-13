@@ -45,7 +45,7 @@
               .categories
                 | Subjects:
                 - @feeds.each do |feed|
-                  a> href="/arxiv/#{feed.uid}" = feed.uid
+                  a< href="/arxiv/#{feed.uid}" = feed.uid
             - [:author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy].each do |field|
               - unless @paper.send(field).nil?
                 = field.to_s.gsub('_', ' ').capitalize
