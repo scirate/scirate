@@ -5,7 +5,7 @@
 
 script
   | window.FromServer = {
-  |   feeds: #{raw Feed.all.map(&:uid).to_json},
+  |   feeds: #{raw Rails.cache.fetch(:all_feed_uids) { Feed.all.map(&:uid).to_json }},
   |   advanced: #{raw @search.advanced.to_json}
   | }
 
@@ -112,7 +112,7 @@ script
         - if @papers.empty?
           | No papers found.
         - else
-          - @papers.each do |paper|
-            - cache [paper, @scited_by_uid && @scited_by_uid[paper]] do
-              = render 'papers/paper', paper: paper
+          = cache [:search_papers, @papers.map { |paper| "#{paper.uid}/#{paper.scites_count}/#{paper.comments_count}" }] do
+            - @papers.each do |paper|
+              = render partial: "papers/es_paper", collection: @papers, as: :paper
     = will_paginate @pagination

@@ -42,13 +42,7 @@ class PapersController < ApplicationController
     per_page = 70
 
     if !@search.query.empty?
-      paper_uids = @search.run(from: (page-1)*per_page, size: per_page).documents.map(&:_id)
-
-      @papers = Paper.includes(:authors, :feeds)
-                     .where(uid: paper_uids)
-                     .index_by(&:uid)
-                     .slice(*paper_uids)
-                     .values
+      @papers = @search.run(from: (page-1)*per_page, size: per_page).documents
 
       @pagination = WillPaginate::Collection.new(page, per_page, @search.results.raw.hits.total)
 
