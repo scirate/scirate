@@ -35,7 +35,7 @@ li.paper.tex2jax
           | PDF
         - if paper.comments_count > 0
           div
-            = link_to pluralize(paper.comments_count, 'comment'), paper
+            a href="/arxiv/#{paper.uid}" = pluralize(paper.comments_count, 'comment')
 
   .abstract class=("hidden" unless showabs) class=("hideable" unless cool_paper)
     = paper.abstract
