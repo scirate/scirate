@@ -187,6 +187,7 @@ $(document).on 'ready', ->
       SciRate.login()
 
   Turbolinks.enableTransitionCache()
+  NProgress.configure(showSpinner: false, minimum: 0.6, speed: 300)
 
   MathJax.Hub.Config({
     jax: ["input/TeX", "output/HTML-CSS"],
@@ -216,3 +217,7 @@ $(document).on 'ready', ->
 
 $(document).on 'page:load', ->
   setupPageLoad()
+
+$(document).on 'page:fetch', -> NProgress.start()
+$(document).on 'page:change', -> NProgress.done()
+$(document).on 'page:restore', -> NProgress.remove()
