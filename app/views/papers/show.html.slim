@@ -70,23 +70,23 @@
               textarea.bibtex= @paper.to_bibtex
               button#copyButton.btn.btn-default Copy Citation
 
-        .comments
-          a name="comments"
-          h4= pluralize(@comments.size, "comment")
-          - if flash[:comment]
-            div class="alert alert-#{flash[:comment][:status]}"
-              button.close data-dismiss="alert" type="button"
-              = raw flash[:comment][:raw]
-              = flash[:comment][:content]
-          .comment-list
-            - cache [:paper_comments, @comments, current_user]
-              = render @comments
+      .comments
+        a name="comments"
+        h4= pluralize(@comments.size, "comment")
+        - if flash[:comment]
+          div class="alert alert-#{flash[:comment][:status]}"
+            button.close data-dismiss="alert" type="button"
+            = raw flash[:comment][:raw]
+            = flash[:comment][:content]
+        .comment-list
+          - cache [:paper_comments, @comments, current_user]
+            = render @comments
 
-            - if current_user && current_user.is_moderator?
-              - @deleted_comments = Comment.where(paper_uid: @paper.uid, deleted: true)
-              - if @deleted_comments.length > 0
-                h4= status_warning + ' ' + pluralize(@deleted_comments.length, "deleted comment")
-                = render partial: "comments/deleted_comment", collection: @deleted_comments
+          - if current_user && current_user.is_moderator?
+            - @deleted_comments = Comment.where(paper_uid: @paper.uid, deleted: true)
+            - if @deleted_comments.length > 0
+              h4= status_warning + ' ' + pluralize(@deleted_comments.length, "deleted comment")
+              = render partial: "comments/deleted_comment", collection: @deleted_comments
 
       .comment-form
         - if signed_in?
