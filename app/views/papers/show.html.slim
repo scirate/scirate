@@ -1,5 +1,13 @@
 - provide :title, @paper.title
 - provide :description, @paper.abstract
+- provide :meta do
+  / Highwire Press metadata for Google Scholar
+  meta name="citation_title" content=(@paper.title)
+  - @authors.each do |author|
+    meta name="citation_author" content=(author.surname_first)
+  meta name="citation_publication_date" content=(@paper.pubdate.strftime("%Y/%m/%d"))
+  meta name="citation_pdf_url" content=(@paper.pdf_url)
+  meta name="citation_arxiv_id" content=(@paper.uid)
 
 #paperPage.container
   .paper.row

@@ -49,4 +49,10 @@ class Author < ActiveRecord::Base
 
     term.mb_chars.normalize(:kd).to_ascii.to_s.gsub('-', '_')
   end
+
+  def surname_first
+    fullname.split.tap do |spl|
+      return spl[-1] + ", " + spl[0..-2].join(' ')
+    end
+  end
 end

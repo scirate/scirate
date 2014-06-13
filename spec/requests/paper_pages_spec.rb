@@ -2,7 +2,17 @@ require 'spec_helper'
 
 describe "Paper pages" do
   before(:all) do
-    @paper = FactoryGirl.create(:paper_with_authors)
+    @paper = FactoryGirl.create(:paper,
+      uid: "1404.5997",
+      title: "One weird trick for parallelizing convolutional neural networks",
+      pdf_url: "http://arxiv.org/pdf/1404.5997.pdf",
+      pubdate: Chronic.parse("25 Apr 2014")
+    )
+    FactoryGirl.create(:author, paper: @paper,
+      fullname: "Alex Krizhevsky",
+      searchterm: "Krizhevsky_A"
+    )
+    FactoryGirl.create(:author, paper: @paper)
     FactoryGirl.create(:category, paper: @paper)
     FactoryGirl.create(:comment, paper: @paper)
     @paper.reload
@@ -11,6 +21,19 @@ describe "Paper pages" do
   describe "paper page" do
     before do
       visit paper_path(@paper)
+    end
+
+    it "has Google Scholar metadata" do
+      expect(find('meta[name="citation_title"]', visible: false)['content'])
+        .to eq "One weird trick for parallelizing convolutional neural networks"
+      expect(find('meta[name="citation_author"]', match: :first, visible: false)['content'])
+        .to eq "Krizhevsky, Alex"
+      expect(find('meta[name="citation_publication_date"]', visible: false)['content'])
+        .to eq "2014/04/25"
+      expect(find('meta[name="citation_pdf_url"]', visible: false)['content'])
+        .to eq "http://arxiv.org/pdf/1404.5997.pdf"
+      expect(find('meta[name="citation_arxiv_id"]', visible: false)['content'])
+        .to eq "1404.5997"
     end
 
     it "has the paper data" do
