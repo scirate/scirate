@@ -9,6 +9,7 @@ describe CommentsController do
   describe "posting a comment" do
     before do
       become user
+      expect(Net::HTTP).to receive(:start).once.and_return(double(code: 200))
       xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
       response.should be_redirect
     end

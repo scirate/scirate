@@ -1,3 +1,5 @@
+require 'data_helpers'
+
 module Arxiv
   # Remove trailing version from an arXiv paper uid
   def self.strip_version(uid)
@@ -29,14 +31,13 @@ module Arxiv::Import
     ### First pass: Add new Feeds.
     feed_uids = models.map { |m| m.categories }.flatten.uniq
     Feed.arxiv_import(feed_uids, opts)
-    feeds_by_uid = Feed.map_uids
+    feeds_by_uid = Rails.cache.fetch(:feeds_by_uid) { map_models :uid, Feed.all }
 
     ### Second pass: Add new papers and handle updates.
 
     # Need to find and update existing papers, then bulk import new ones
     uids = models.map(&:id)
-    existing_papers = Paper.where(uid: uids)
-    existing_by_uid = Hash[existing_papers.map { |paper| [paper.uid, paper] }]
+    existing_by_uid = map_models :uid, Paper.where(uid: uids).select('uid', 'update_date', 'pubdate')
 
     paper_columns = [:uid, :submitter, :title, :author_str, :abstract, :author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :pubdate, :abs_url, :pdf_url]
     paper_values = []

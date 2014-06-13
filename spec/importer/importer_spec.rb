@@ -44,7 +44,7 @@ describe "arxiv importer" do
       allow(Search::Paper).to receive(:index_by_uids) # stub out indexer
       expect(SciRate).to receive(:notify_error).once
 
-      Arxiv::Import.papers(@models)
+      Arxiv::Import.papers(@models[0..9])
     end
   end
 
@@ -53,7 +53,7 @@ describe "arxiv importer" do
       allow(Version).to receive(:import).and_return(double(failed_instances: ['failed']))
       expect(SciRate).to receive(:notify_error).once
 
-      Arxiv::Import.papers(@models)
+      Arxiv::Import.papers(@models[0..9])
     end
   end
 
@@ -62,7 +62,7 @@ describe "arxiv importer" do
       allow(Author).to receive(:import).and_return(double(failed_instances: ['failed']))
       expect(SciRate).to receive(:notify_error).once
 
-      Arxiv::Import.papers(@models)
+      Arxiv::Import.papers(@models[0..9])
     end
   end
 
@@ -71,29 +71,29 @@ describe "arxiv importer" do
       allow(Category).to receive(:import).and_return(double(failed_instances: ['failed']))
       expect(SciRate).to receive(:notify_error).once
 
-      Arxiv::Import.papers(@models)
+      Arxiv::Import.papers(@models[0..9])
     end
   end
 
   it "updates existing papers correctly" do
-    Arxiv::Import.papers(@models)
+    Arxiv::Import.papers(@models[0..9])
 
-    paper = Paper.find_by_uid("0811.3648")
+    paper = Paper.find_by_uid(@models[0].id)
     user = FactoryGirl.create(:user)
     FactoryGirl.create(:comment, paper: paper, user: user)
     user.scite!(paper)
     paper.reload
 
-    paper.scites_count.should == 1
-    paper.comments_count.should == 1
-    paper.update_date = paper.update_date - 1.days
+    expect(paper.scites_count).to eq 1
+    expect(paper.comments_count).to eq 1
+    paper.update_date -= 1.day
     paper.save!
 
-    Arxiv::Import.papers(@models)
+    Arxiv::Import.papers(@models[0..9])
 
-    paper = Paper.find_by_uid("0811.3648")
-    paper.scites_count.should == 1
-    paper.comments_count.should == 1
+    paper = Paper.find_by_uid(@models[0].id)
+    expect(paper.scites_count).to eq 1
+    expect(paper.comments_count).to eq 1
   end
 
   it "imports papers into the database" do

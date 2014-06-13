@@ -49,4 +49,27 @@ class Comment < ActiveRecord::Base
   def restore
     self.update(deleted: false)
   end
+
+  def submit_trackback
+    trackback_url = "http://arxiv.org/trackback/#{paper_uid}"
+
+    title = "#{user.fullname}: #{self.content[0..99]}"
+    title += "..." if self.content.length > 100
+
+    data = {
+      title: title,
+      excerpt: self.content,
+      url: "https://scirate.com/arxiv/#{paper.uid}##{self.id}",
+      blog_name: "SciRate"
+    }
+
+    u = URI.parse(trackback_url)
+    res = Net::HTTP.start(u.host, u.port) do |http|
+      http.post(u.request_uri, URI.encode(data), { 'Content-Type' => 'application/x-www-  form-urlencoded; charset=utf-8' })
+    end
+
+    if res.code != 200
+      SciRate.notify_error("Error from arXiv trackback: #{res.code} #{res.body}")
+    end
+  end
 end

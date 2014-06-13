@@ -42,14 +42,13 @@ class CommentsController < ApplicationController
   end
 
   def create
+    comment_params = params.require(:comment).permit(:paper_uid, :content)
+
     @comment = current_user.comments.build(comment_params)
+    @comment.save!
+    @comment.submit_trackback
 
-    if @comment.save
-      flash[:comment] = { status: :success, content: "Comment posted." }
-    else
-      flash[:comment] = { status: :error, content: "Error posting comment." }
-    end
-
+    flash[:comment] = { status: :success, content: "Comment posted." }
     redirect_to @comment.paper
   end
 
@@ -140,10 +139,6 @@ class CommentsController < ApplicationController
 
     def find_comment
       @comment = Comment.find(params[:id])
-    end
-
-    def comment_params
-      params.require(:comment).permit(:paper_uid, :content)
     end
 
     def find_feed_ids(feed)
