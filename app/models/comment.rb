@@ -65,10 +65,10 @@ class Comment < ActiveRecord::Base
 
     u = URI.parse(trackback_url)
     res = Net::HTTP.start(u.host, u.port) do |http|
-      http.post(u.request_uri, URI.encode_www_form(data), { 'Content-Type' => 'application/x-www-  form-urlencoded; charset=utf-8' })
+      http.post(u.request_uri, URI.encode_www_form(data), { 'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8' })
     end
 
-    if res.code != 200
+    if res.code != '200'
       SciRate.notify_error("Error from arXiv trackback: #{res.code} #{res.body}")
     end
   end
