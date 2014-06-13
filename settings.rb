@@ -12,9 +12,6 @@ module Settings
   # Hostname to put in emails and such
   HOST = "scirate.com"
 
-  # Whether to use Mathjax rendering for tex
-  ENABLE_MATHJAX = true
-
   # This toggle should do very little, as the staging site
   # is meant to match production as closely as possible.
   STAGING = false

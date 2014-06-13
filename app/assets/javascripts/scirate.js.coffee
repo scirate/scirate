@@ -178,9 +178,6 @@ setupPageLoad = ->
 
   MathJax.Hub.Queue(["Typeset",MathJax.Hub])
 
-
-
-
 $(document).on 'ready', ->
   $(document).ajaxError (ev, jqxhr, settings, err) ->
     if err == "Unauthorized"
@@ -201,6 +198,7 @@ $(document).on 'ready', ->
     showProcessingMessages: false,
     messageStyle: "none",
     showMathMenu: false,
+    skipStartupTypeset: true,
     errorSettings: {
       style: { color: "black" },
     },

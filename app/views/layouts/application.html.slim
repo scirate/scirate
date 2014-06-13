@@ -117,7 +117,7 @@ html lang="en"
           | Welcome to SciRate! A confirmation message was sent to <b>#{current_user.email}</b>.
     = yield
 
-    - if Settings::ENABLE_MATHJAX
+    - unless @search
       script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 
     javascript:
