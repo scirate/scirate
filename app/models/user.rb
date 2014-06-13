@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
   end
 
   def unscite!(paper)
-    scites.find_by_paper_uid(paper.uid).destroy
+    scites.where(paper: paper.uid).destroy_all
   end
 
   def refresh_scites_count!
