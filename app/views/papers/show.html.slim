@@ -70,6 +70,10 @@
               textarea.bibtex= @paper.to_bibtex
               button#copyButton.btn.btn-default Copy Citation
 
+        a.share-button.twitter> data-title=(@paper.title) data-url="https://scirate.com/arxiv/#{@paper.uid}"
+        a.share-button.google> data-title=(@paper.title) data-url="https://scirate.com/arxiv/#{@paper.uid}"
+        a.share-button.facebook> data-title=(@paper.title) data-url="https://scirate.com/arxiv/#{@paper.uid}"
+
       .comments
         a name="comments"
         h4= pluralize(@comments.size, "comment")

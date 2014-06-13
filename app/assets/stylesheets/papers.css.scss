@@ -1,0 +1,15 @@
+.share-button {
+  cursor: pointer;
+}
+
+.share-button.facebook { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button.png')) -32px 0px no-repeat }
+.share-button.google { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button.png')) -16px -32px no-repeat }
+.share-button.tumblr { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button.png')) -32px -48px no-repeat }
+.share-button.twitter { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button.png')) -48px -48px no-repeat }
+
+@media only screen and (-webkit-device-pixel-ratio: 2) {
+  .share-button.facebook { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button@2x.png')) -32px 0px no-repeat; background-size:80px 64px; }
+  .share-button.google { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button@2x.png')) -16px -32px no-repeat; background-size:80px 64px; }
+  .share-button.tumblr { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button@2x.png')) -32px -48px no-repeat; background-size:80px 64px; }
+  .share-button.twitter { display:inline-block; width: 16px; height: 16px; background: url(image-path('social-share-button@2x.png')) -48px -48px no-repeat; background-size:80px 64px; }
+}
