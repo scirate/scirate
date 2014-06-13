@@ -215,9 +215,16 @@ $(document).on 'ready', ->
 
   setupPageLoad()
 
-$(document).on 'page:load', ->
-  setupPageLoad()
+lastCached = false
 
-$(document).on 'page:fetch', -> NProgress.start()
-$(document).on 'page:change', -> NProgress.done()
-$(document).on 'page:restore', -> NProgress.remove()
+$(document).on 'page:load', ->
+  setupPageLoad() unless lastCached
+
+$(document).on 'page:fetch', ->
+  NProgress.start() unless lastCached
+$(document).on 'page:change', ->
+  lastCached = false
+  NProgress.done()
+$(document).on 'page:restore', ->
+  lastCached = true
+  NProgress.remove()
