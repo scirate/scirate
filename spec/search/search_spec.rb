@@ -5,7 +5,9 @@ describe "search fields" do
     paper1 = FactoryGirl.create(:paper)
     paper2 = FactoryGirl.create(:paper)
 
+    Search::Paper.index(paper1, paper2)
     Search.refresh
+
     uids = Search::Paper.query_uids(paper1.uid)
     expect(uids).to eq [paper1.uid]
   end
@@ -16,9 +18,10 @@ describe "search fields" do
     paper2 = FactoryGirl.create(:paper)
     paper1.categories.create(feed_uid: feed.uid, position: paper1.categories.length+1)
     paper1.reload
-    Search::Paper.index(paper1)
 
+    Search::Paper.index(paper1, paper2)
     Search.refresh
+
     uids = Search::Paper.query_uids("in:#{feed.uid}")
     expect(uids).to eq [paper1.uid]
     uids = Search::Paper.query_uids("in:#{feed.uid.split('.')[0]}")
@@ -33,9 +36,10 @@ describe "search fields" do
 
     user.scite!(paper1)
     paper1.reload
-    Search::Paper.index(paper1)
 
+    Search::Paper.index(paper1, paper2)
     Search.refresh
+
     uids = Search::Paper.query_uids("scited_by:#{user.username}")
     expect(uids).to eq [paper1.uid]
 

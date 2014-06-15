@@ -94,6 +94,20 @@ ActiveRecord::Schema.define(version: 20140611210128) do
   add_index "comments", ["parent_id"], name: "index_comments_on_parent_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
+  create_table "down_votes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "downvotes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "feed_preferences", force: true do |t|
     t.integer  "user_id"
     t.integer  "feed_id"
@@ -187,6 +201,20 @@ ActiveRecord::Schema.define(version: 20140611210128) do
     t.text     "alert",      default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "up_votes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "upvotes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: true do |t|

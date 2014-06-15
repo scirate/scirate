@@ -51,10 +51,6 @@ class Paper < ActiveRecord::Base
 
   validate :update_date_is_after_submit_date
 
-  after_save do
-    ::Search::Paper.index(self)
-  end
-
   # Given when a paper was submitted, estimate the
   # time at which the arXiv was likely to have published it
   def self.estimate_pubdate(submit_date)

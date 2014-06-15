@@ -103,6 +103,9 @@ group :test do
 
   # Javascript testing
   gem 'capybara-webkit'
+
+  # Manipulating time during tests
+  gem 'timecop'
 end
 
 group :profile do

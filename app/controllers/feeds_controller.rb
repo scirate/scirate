@@ -9,7 +9,7 @@ class FeedsController < ApplicationController
       @date = Rails.cache.fetch [:last_paper_date, end_of_today] do
         Feed.order("last_paper_date DESC")
             .limit(1).pluck(:last_paper_date).first
-      end
+      end.at_end_of_day
     end
 
     @backdate = @date - @range.days
