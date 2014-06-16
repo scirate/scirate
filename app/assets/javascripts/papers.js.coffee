@@ -26,6 +26,7 @@ setupPaperPage = ->
 
 setupBibtex = ->
   return unless $('.bibtex')
+  ZeroClipboard.config(moviePath: asset_path("ZeroClipboard.swf"), cacheBust: false)
 
   $('.bibtex').each ->
     $bibtex = $(this)
@@ -40,8 +41,6 @@ setupBibtex = ->
 
     if hasFlash
       $('.bibtex').each ->
-
-        ZeroClipboard.config(moviePath: asset_path("ZeroClipboard.swf"), cacheBust: false)
         window.clip = new ZeroClipboard($bibtex.find('a').get(0))
 
         clip.on 'mouseover', ->
