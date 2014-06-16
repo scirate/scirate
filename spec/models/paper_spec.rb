@@ -63,7 +63,7 @@ describe Paper do
     it "generates bibtex correctly" do
      expect(paper.to_bibtex).to eq %Q{@misc{1404.6949,
   author = {Susanta K.~Khan and Madhumangal Pal},
-  title = {Interval-Valued Intuitionistic Fuzzy Matrices},
+  title = {{I}nterval-{V}alued {I}ntuitionistic {F}uzzy {M}atrices},
   year = {2014},
   eprint = {1404.6949},
   howpublished = {Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27},

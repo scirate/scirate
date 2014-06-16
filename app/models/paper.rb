@@ -100,12 +100,13 @@ class Paper < ActiveRecord::Base
   def to_bibtex
     props = {
       author: author_str.gsub(/\. /, ".~"), # unbreakable space
-      title: title,
+      title: title.gsub(/([A-Z]+)/, "{\\1}"),
       year: pubdate.year,
       eprint: uid
     }
 
     props[:howpublished] = journal_ref unless journal_ref.nil?
+    props[:doi] = doi unless doi.nil?
     props[:note] = "arXiv:#{uid}v#{versions.length}"
 
     props = props.map { |k,v| "#{k} = {#{v}}" }
