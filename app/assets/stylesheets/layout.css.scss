@@ -698,13 +698,15 @@ li.paper {
   position: relative;
 }
 
+.bibtex > a {
+}
+
 .bibtex .card {
   position: absolute;
   width: 300px;
   right: 0px;
   top: 34px;
   z-index: 1;
-
 }
 
 .bibtex .card textarea {

@@ -39,7 +39,8 @@
                   button.btn.btn-default.count= @paper.scites_count
 
             div.bibtex>
-              a.btn.btn-default title="Get BibTeX citation" C
+              a.btn.btn-default title="Get BibTeX citation"
+                i.fa.fa-bookmark-o
               .card.hidden
                 textarea.bibtex= @paper.to_bibtex
                 button#copyButton.btn.btn-default Copy Citation
