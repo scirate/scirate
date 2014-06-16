@@ -11,18 +11,18 @@ nav.timenav
   h3 Date Published
   p style="text-align: center;"
     - if @range > 1
-      = @backdate.strftime("%b %d %Y") + "&mdash;"
-      = @date.strftime("%b %d %Y")
+      | #{@backdate.strftime("%b %d %Y")} &mdash;
+      =< @date.strftime("%b %d %Y")
     - else
       = @date.strftime("%a %e %b %Y")
 
   table cellspacing="0"
     tr
       td.btn-default.half.top.left
-        a href=(url_for(params.merge(date: @prev_date)))
+        a href=(url_for(params.merge(date: @prev_date.to_date, range: @range)))
           = "Prev #{@range == 1 ? 'day' : @range.to_s + ' days'}"
       td.btn-default.half.top.right
-        a href=(url_for(params.merge(date: @next_date)))
+        a href=(url_for(params.merge(date: @next_date.to_date, range: @range)))
           = "Next #{@range == 1 ? 'day' : @range.to_s + ' days'}"
 
     tr

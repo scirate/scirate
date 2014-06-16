@@ -12,7 +12,7 @@ class FeedsController < ApplicationController
       end.at_end_of_day
     end
 
-    @backdate = @date - @range.days
+    @backdate = _backdate(@date, @range)
     @recent_comments = _recent_comments
     @papers, @pagination = _range_query(nil, @backdate, @date, @page)
 
@@ -27,16 +27,16 @@ class FeedsController < ApplicationController
     end
 
     if @date.nil? # No date specified
-      if feed_uids.empty? # User has no subscriptions; just default to today
-        @date = end_of_today
-      else
-        @date = Rails.cache.fetch [:last_paper_date, feed_uids, end_of_today] do
-          Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
-        end
+      @date = Rails.cache.fetch [:last_paper_date, feed_uids, end_of_today] do
+        Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
       end
     end
 
-    @backdate = @date - @range.days
+    if @range == :since_last
+      @range, @since_last = _since_last_visit(@date)
+    end
+
+    @backdate = _backdate(@date, @range)
     @recent_comments = _recent_comments(feed_uids)
 
     if feed_uids.empty?
@@ -62,7 +62,7 @@ class FeedsController < ApplicationController
       @date = @feed.last_paper_date.at_end_of_day
     end
 
-    @backdate = @date.at_end_of_day - @range.days
+    @backdate = _backdate(@date, @range)
     @recent_comments = _recent_comments(feed_uids)
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
 
@@ -85,7 +85,11 @@ class FeedsController < ApplicationController
       @date = @feed.last_paper_date.at_end_of_day
     end
 
-    @backdate = @date - @range.days
+    if @range == :since_last
+      @range, @since_last = _since_last_visit(@date)
+    end
+
+    @backdate = _backdate(@date, @range)
 
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
     @scited_by_uid = current_user.scited_by_uid(@papers)
@@ -100,21 +104,7 @@ class FeedsController < ApplicationController
     @range = _parse_range(params) || :since_last
     @page = params[:page] || 1
 
-    if @range == :since_last && signed_in?
-      # Define time range based on when they last visited this page
-      @preferences = Rails.cache.fetch [:feed_preferences, current_user, params[:feed]] do
-        current_user.feed_preferences.where(feed_id: params[:feed]).first_or_create
-      end
-
-      if @preferences.last_visited.at_end_of_day < end_of_today - 1.day
-        @preferences.previous_last_visited = @preferences.last_visited
-        @preferences.last_visited = Time.now.utc
-        @preferences.save!
-      end
-
-      @since_last = end_of_today - @preferences.previous_last_visited.at_end_of_day
-      @range = [1, (@since_last / 1.day).round].max
-    elsif @range == :since_last && !signed_in?
+    if @range == :since_last && !signed_in?
       # We don't know when the last value was here
       @range = 1
     end
@@ -135,6 +125,28 @@ class FeedsController < ApplicationController
     range = 0 if range < 0
 
     return range
+  end
+
+  # Calculate time range based on when they last visited this page
+  def _since_last_visit(date)
+    preferences = current_user.feed_preferences.where(feed_uid: params[:feed]).first_or_create
+
+    if preferences.last_visited.at_end_of_day < end_of_today - 1.day
+      preferences.previous_last_visited = preferences.last_visited
+      preferences.last_visited = Time.now.utc
+      preferences.save!
+    end
+
+    to_date = [@date, end_of_today].min
+    since_last = to_date - preferences.previous_last_visited.at_end_of_day
+    range = [1, (since_last / 1.day).round].max
+
+    [range, since_last]
+  end
+
+  # Go range days back from a given date
+  def _backdate(date, range)
+    (date - (range-1).days).at_beginning_of_day
   end
 
   def _recent_comments(feed_uids=nil)
