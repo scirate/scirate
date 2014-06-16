@@ -119,7 +119,7 @@ class Paper < ActiveRecord::Base
 
     props[:howpublished] = journal_ref unless journal_ref.nil?
     props[:doi] = doi unless doi.nil?
-    props[:note] = "arXiv:#{uid}v#{versions.length}"
+    props[:note] = "arXiv:#{uid}v#{versions_count}"
 
     props = props.map { |k,v| "#{k} = {#{v}}" }
 
