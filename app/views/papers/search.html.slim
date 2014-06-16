@@ -113,5 +113,5 @@ script
           | No papers found.
         - else
           = cache [:search_papers, @papers.map { |paper| "#{paper.uid}/#{paper.scites_count}/#{paper.comments_count}" }] do
-            = render partial: "papers/es_paper", collection: @papers, as: :paper
+            = render partial: "papers/paper", collection: @papers, as: :paper
     = will_paginate @pagination

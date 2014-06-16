@@ -214,6 +214,7 @@ class FeedsController < ApplicationController
     }
 
     res = Search::Paper.es_find(query)
+    res.documents.each { |doc| doc.pubdate = Time.parse(doc.pubdate) }
 
     pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
 

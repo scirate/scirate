@@ -43,6 +43,7 @@ class PapersController < ApplicationController
 
     if !@search.query.empty?
       @papers = @search.run(from: (page-1)*per_page, size: per_page).documents
+      @papers.each { |doc| doc.pubdate = Time.parse(doc.pubdate) }
 
       @pagination = WillPaginate::Collection.new(page, per_page, @search.results.raw.hits.total)
 

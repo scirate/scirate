@@ -9,14 +9,15 @@ li.paper.tex2jax
       .title
         a href="/arxiv/#{paper.uid}" = paper.title
       .authors
-        - paper.authors[0..19].each do |author|
-          => author_link_to(author, paper) + (author != paper.authors[-1] ? "," : ' ')
-        - if paper.authors.length > 20
-          = link_to "et al (#{paper.authors.length - 20})", paper
+        - paper.authors_searchterm[0..19].each_with_index do |searchterm, i|
+          a> href="/search?q=au:#{searchterm}+in:#{paper.feed_uids[0].split('.')[0]}"
+            = paper.authors_fullname[i] + (i == paper.authors_searchterm.length - 1 ? ' ' : ',')
+        - if paper.authors_searchterm.length > 20
+          = link_to "et al (#{paper.authors_searchterm.length - 20})", paper
       .uid
         => paper.pubdate.strftime("%b %d %Y")
-        - paper.feeds.each do |feed|
-          => link_to feed.uid, feed
+        - paper.feed_uids.each do |feed_uid|
+          a> href=(feed_uid) = feed_uid
     .col-md-3
       .pull-right
         div.scite-toggle> data-paper-uid=(paper.uid)
@@ -34,8 +35,7 @@ li.paper.tex2jax
           | PDF
         - if paper.comments_count > 0
           div
-            a href="/arxiv/#{paper.uid}"
-              = pluralize(paper.comments_count, 'comment')
+            a href="/arxiv/#{paper.uid}" = pluralize(paper.comments_count, 'comment')
 
   .abstract class=("hidden" unless showabs) class=("hideable" unless cool_paper)
     = paper.abstract

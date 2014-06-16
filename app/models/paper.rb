@@ -116,6 +116,19 @@ class Paper < ActiveRecord::Base
 }}
   end
 
+  # For compatibility with search document papers
+  def authors_fullname
+    @authors_fullname ||= authors.map(&:fullname)
+  end
+
+  def authors_searchterm
+    @authors_searchterm ||= authors.map(&:searchterm)
+  end
+
+  def feed_uids
+    @feed_uids ||= categories.map(&:feed_uid)
+  end
+
   private
     def update_date_is_after_submit_date
       return unless submit_date and update_date
