@@ -53,7 +53,9 @@ class Paper < ActiveRecord::Base
 
   # Re-index after a scite or comment
   after_save do
-    ::Search::Paper.index(self)
+    if scites_count_changed? || comments_count_changed?
+      ::Search::Paper.index(self)
+    end
   end
 
   # Given when a paper was submitted, estimate the
