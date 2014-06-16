@@ -31,7 +31,7 @@ nav.timenav
     - if signed_in?
       tr
         td.btn-default colspan="2" class=("btn-primary" if @since_last)
-          a href=(url_for) title="Shows papers you probably haven't seen before today, based on how often you use the site." Recently
+          a href=(url_for) title="Shows papers you probably haven't seen before today, based on when you last visited." Recently
 
     tr
       td.btn-default colspan="1" class=("btn-primary" if !@since_last && !params['date'] && @range == 1)
