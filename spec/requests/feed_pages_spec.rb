@@ -27,8 +27,8 @@ describe "Feed pages" do
     end
 
     it "shows today's papers" do
-      expect(page).to have_content new_paper1.title
-      expect(page).to have_content new_paper2.title
+      expect(page).to have_selector("li.paper:nth-child(1)", text: new_paper1.title)
+      expect(page).to have_selector("li.paper:nth-child(2)", text: new_paper2.title)
       expect(page).to_not have_content old_paper1.title
       expect(page).to_not have_content old_paper2.title
     end
@@ -52,9 +52,9 @@ describe "Feed pages" do
       end
 
       it "shows the last two days of papers" do
-        expect(page).to have_content new_paper1.title
+        expect(page).to have_selector("li.paper:nth-child(1)", text: new_paper1.title)
+        expect(page).to have_selector("li.paper:nth-child(2)", text: old_paper1.title)
         expect(page).to_not have_content new_paper2.title
-        expect(page).to have_content old_paper1.title
         expect(page).to_not have_content old_paper2.title
 
         prefs.reload
@@ -72,14 +72,30 @@ describe "Feed pages" do
       end
 
       it "still shows the last two days of papers" do
-        expect(page).to have_content new_paper1.title
+        expect(page).to have_selector("li.paper:nth-child(1)", text: new_paper1.title)
+        expect(page).to have_selector("li.paper:nth-child(2)", text: old_paper1.title)
         expect(page).to_not have_content new_paper2.title
-        expect(page).to have_content old_paper1.title
         expect(page).to_not have_content old_paper2.title
 
         prefs.reload
         expect(prefs.previous_last_visited).to eq(time-2.days)
         expect(prefs.last_visited).to eq(time)
+      end
+    end
+
+    context "changing order by sciting a paper" do
+      before do
+        prefs.previous_last_visited = time-2.days
+        prefs.last_visited = time
+        prefs.save!
+        user.scite!(old_paper1)
+        Search.refresh
+        visit root_path
+      end
+
+      it "shows the older paper first" do
+        expect(page).to have_selector("li.paper:nth-child(1)", text: old_paper1.title)
+        expect(page).to have_selector("li.paper:nth-child(2)", text: new_paper1.title)
       end
     end
   end
