@@ -128,6 +128,7 @@ describe "arxiv importer" do
     paper.pubdate.should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
     paper.abs_url.should == "http://arxiv.org/abs/0811.3648"
     paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
+    expect(paper.versions_count).to eq 2
 
     # Ensure last_paper_date is updated on all feeds including parents
     paper.feeds.each do |feed|

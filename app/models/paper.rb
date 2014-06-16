@@ -89,6 +89,11 @@ class Paper < ActiveRecord::Base
     save!
   end
 
+  def refresh_versions_count!
+    self.versions_count = Version.where(paper_uid: uid).count
+    save!
+  end
+
   def to_param
     uid
   end

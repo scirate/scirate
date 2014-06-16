@@ -16,4 +16,12 @@ class Version < ActiveRecord::Base
   validates :size, presence: true
 
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid
+
+  after_save do
+    paper.refresh_versions_count!
+  end
+
+  after_destroy do
+    paper.refresh_versions_count!
+  end
 end

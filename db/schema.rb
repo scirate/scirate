@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140616022543) do
+ActiveRecord::Schema.define(version: 20140616061056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 20140616022543) do
     t.integer  "comments_count",  default: 0, null: false
     t.datetime "pubdate"
     t.text     "author_str",                  null: false
+    t.integer  "versions_count",  default: 1, null: false
   end
 
   add_index "papers", ["abs_url"], name: "index_papers_on_abs_url", unique: true, using: :btree
