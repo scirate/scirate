@@ -6,10 +6,7 @@ class FeedsController < ApplicationController
   # No user, and no feed specified: show all papers
   def index_nouser
     if @date.nil?
-      @date = Rails.cache.fetch [:last_paper_date, end_of_today] do
-        Feed.order("last_paper_date DESC")
-            .limit(1).pluck(:last_paper_date).first
-      end.at_end_of_day
+      @date = Feed.order("last_paper_date DESC").limit(1).pluck(:last_paper_date).first
     end
 
     @backdate = _backdate(@date, @range)
@@ -31,9 +28,7 @@ class FeedsController < ApplicationController
         # No subscriptions, this is fairly meaningless
         @date = end_of_today
       else
-        @date = Rails.cache.fetch [:last_paper_date, feed_uids, end_of_today] do
-          Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
-        end
+        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
       end
     end
 
