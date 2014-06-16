@@ -214,10 +214,21 @@ class FeedsController < ApplicationController
     }
 
     res = Search::Paper.es_find(query)
-    res.documents.each { |doc| doc.pubdate = Time.parse(doc.pubdate) }
+
+    papers_by_uid = map_models :uid, Paper.where(uid: res.documents.map(&:_id))
+
+    papers = res.documents.map do |doc|
+      paper = papers_by_uid[doc[:_id]]
+
+      paper.authors_fullname = doc.authors_fullname
+      paper.authors_searchterm = doc.authors_searchterm
+      paper.feed_uids = doc.feed_uids
+
+      paper
+    end
 
     pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
 
-    return [res.documents, pagination]
+    return [papers, pagination]
   end
 end

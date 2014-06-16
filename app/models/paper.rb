@@ -117,6 +117,8 @@ class Paper < ActiveRecord::Base
   end
 
   # For compatibility with search document papers
+  attr_accessor :authors_fullname, :authors_searchterm, :feed_uids
+
   def authors_fullname
     @authors_fullname ||= authors.map(&:fullname)
   end
