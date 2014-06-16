@@ -8,6 +8,16 @@
   meta name="citation_publication_date" content=(@paper.pubdate.strftime("%Y/%m/%d"))
   meta name="citation_pdf_url" content=(@paper.pdf_url)
   meta name="citation_arxiv_id" content=(@paper.uid)
+  
+  / Metadata for Twitter summary cards, as described in detail
+  / at https://dev.twitter.com/docs/cards/types/summary-card.
+  meta name="twitter:card" content="summary"
+  meta name="twitter:site" content="@scirate3"
+  / Might be nice to also link to lead author on Twitter?
+  meta name="twitter:title" content=(@paper.title[0...70])
+  meta name="twitter:description" content=(@paper.abstract[0...200])
+  / Might also be nice to put the psi logo here.
+  / meta name="twitter:image" content=""
 
 #paperPage.container
   .paper.row
