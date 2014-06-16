@@ -8,7 +8,7 @@
   meta name="citation_publication_date" content=(@paper.pubdate.strftime("%Y/%m/%d"))
   meta name="citation_pdf_url" content=(@paper.pdf_url)
   meta name="citation_arxiv_id" content=(@paper.uid)
-  
+
   / Metadata for Twitter summary cards, as described in detail
   / at https://dev.twitter.com/docs/cards/types/summary-card.
   meta name="twitter:card" content="summary"
@@ -24,9 +24,9 @@
     .col-md-12
       - cache [:paper_title, @paper] do
         .row.title-row.tex2jax
-          .col-md-10
+          .col-md-9
             h1.title= @paper.title
-          .col-md-2
+          .col-md-3
             div.scite-toggle> data-paper-uid=(@paper.uid)
               button.btn.unscite.btn-success title="Unscite this paper"
                 | Scited
@@ -37,6 +37,13 @@
               .scites-count
                 a href="/arxiv/#{@paper.uid}/scites" title="Number of Scites"
                   button.btn.btn-default.count= @paper.scites_count
+
+            div.bibtex>
+              a.btn.btn-default title="Get BibTeX citation" C
+              .card.hidden
+                textarea.bibtex= @paper.to_bibtex
+                button#copyButton.btn.btn-default Copy Citation
+
             a.paper-download.btn.btn-success href=(@paper.pdf_url) title="Download PDF" PDF
 
       hr
@@ -80,13 +87,6 @@
                     a< href="/#{user.username}" = user.fullname
                     - if i != @paper.scites_count-1
                       | ,
-          .col-md-3
-            .reference
-              ul.nav.nav-tabs
-                li.active
-                  a BibTeX
-              textarea.bibtex= @paper.to_bibtex
-              button#copyButton.btn.btn-default Copy Citation
 
         a.share-button.twitter> data-title=(@paper.title) data-url="https://scirate.com/arxiv/#{@paper.uid}"
         a.share-button.google> data-title=(@paper.title) data-url="https://scirate.com/arxiv/#{@paper.uid}"

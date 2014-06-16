@@ -319,7 +319,6 @@ a.header-brand {
       height: 22px;
     }
   }
-
 }
 
 // Welcome banner displayed on all pages
@@ -348,6 +347,10 @@ div.paper {
       margin-top: 0;
       margin-bottom: 4px;
       font-size: 28px;
+    }
+
+    .col-md-3 {
+      text-align: right;
     }
 
     .scite-toggle {
@@ -379,21 +382,6 @@ div.paper {
 
   div.scites {
     margin-top: 10px;
-  }
-
-  .reference textarea {
-    width: 100%;
-    height: 150px;
-  }
-
-  .reference .btn {
-    width: 100%;
-    position: relative;
-  }
-
-  .reference .btn.zeroclipboard-is-hover:not(.btn-success) {
-    background-color: #ebebeb;
-    border-color: #adadad;
   }
 }
 
@@ -703,18 +691,32 @@ li.paper {
     font-size: 12px;
     min-height: 72px;
   }
+}
 
-  .abs-toggle {
-    font-size: 10px;
-    color: #ccc;
-    cursor: pointer;
-    line-height: 10px;
-  }
+.bibtex {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+}
 
-  .expand-authors {
-    cursor: pointer;
-    color: #3c63af;
-  }
+.bibtex .card {
+  position: absolute;
+  width: 300px;
+  right: 0px;
+  top: 34px;
+  z-index: 1;
+
+}
+
+.bibtex .card textarea {
+  width: 100%;
+  height: 150px;
+  background: #eee;
+}
+
+.bibtex .card button {
+  border-radius: 0px 0px 4px 4px;
+  width: 100%;
 }
 
 li.paper:hover {

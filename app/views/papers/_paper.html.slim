@@ -5,7 +5,7 @@
 
 li.paper.tex2jax
   .row
-    .col-md-9
+    .col-md-8
       .title
         a href="/arxiv/#{paper.uid}" = paper.title
       .authors
@@ -18,7 +18,7 @@ li.paper.tex2jax
         => paper.pubdate.strftime("%b %d %Y")
         - paper.feed_uids.each do |feed_uid|
           a> href=(feed_uid) = feed_uid
-    .col-md-3
+    .col-md-4
       .pull-right
         div.scite-toggle> data-paper-uid=(paper.uid)
           button.btn.unscite.btn-success title="Unscite this paper"
@@ -30,6 +30,15 @@ li.paper.tex2jax
           .scites-count
             a href="/arxiv/#{paper.uid}/scites" title="Number of Scites"
               button.btn.btn-default.count= paper.scites_count
+
+        div.bibtex>
+          a.btn.btn-default title="Get BibTeX citation" C
+          .card.hidden
+            textarea.bibtex= paper.to_bibtex
+            button#copyButton.btn.btn-default Copy Citation
+
+
+
 
         a.paper-download.btn.btn-success title="Download PDF" href=(paper.pdf_url)
           | PDF

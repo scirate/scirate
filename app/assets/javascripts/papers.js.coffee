@@ -23,31 +23,55 @@ setupPaperPage = ->
     else if $(el).hasClass('google')
       window.open("https://plus.google.com/share?url=#{url}")
 
-  if hasFlash
-    ZeroClipboard.config(moviePath: asset_path("ZeroClipboard.swf"), cacheBust: false)
-    window.clip = new ZeroClipboard($('#copyButton').get(0))
 
-    clip.on 'mouseover', ->
-      $(this).attr('data-clipboard-text', $('.reference textarea').text())
+setupBibtex = ->
+  return unless $('.bibtex')
 
-    clip.on 'complete', (event) ->
-      $(".reference textarea").focus()
-      $(".reference textarea").select()
-      $(this).addClass("btn-success")
-      $(this).text("Copied to clipboard")
+  $('.bibtex').each ->
+    $bibtex = $(this)
 
-    clip.on 'mouseover', ->
-      $(this).removeClass("btn-success")
-      $(this).text("Copy Citation")
-  else
-    $('#copyButton').on 'click', ->
-      $(".reference textarea").focus()
-      $(".reference textarea").select()
+    remove = (ev) ->
+      if $(ev.target).closest('.bibtex').length
+        $(window).one 'click', remove
+      else
+        $bibtex.find('a').removeClass('btn-success')
+        $bibtex.find('.card').addClass('hidden')
 
-$(document).on "ready", setupPaperPage
+
+    if hasFlash
+      $('.bibtex').each ->
+
+        ZeroClipboard.config(moviePath: asset_path("ZeroClipboard.swf"), cacheBust: false)
+        window.clip = new ZeroClipboard($bibtex.find('a').get(0))
+
+        clip.on 'mouseover', ->
+          $(this).attr('data-clipboard-text', $bibtex.find('textarea').text())
+
+        clip.on 'complete', (event) ->
+          $bibtex.find('.card').removeClass('hidden')
+          $bibtex.find('textarea').focus()
+          $bibtex.find('textarea').select()
+          $(this).addClass("btn-success")
+          $bibtex.find('button').addClass("btn-success")
+          $bibtex.find('button').text("BibTeX copied to clipboard")
+          $(window).one 'click', remove
+    else
+      $bibtex.find('a').on 'click', ->
+        $bibtex.find('a').addClass('btn-success')
+        $bibtex.find('.card').removeClass('hidden')
+        $bibtex.find('textarea').focus()
+        $bibtex.find('textarea').select()
+        $bibtex.find('button').remove()
+        $(window).one 'click', remove
+
+$(document).on "ready", ->
+  setupBibtex()
+  setupPaperPage()
+
 $(document).on "page:load", ->
-  $('#copyButton').removeClass('zeroclipboard-js-hover')
+  $('.bibtex a').removeClass('zeroclipboard-js-hover')
   ZeroClipboard.destroy()
+  setupBibtex()
   setupPaperPage()
 
 window.SocialShareButton =

@@ -48,5 +48,5 @@ SciRate::Application.configure do
 
   WillPaginate.per_page = 100
 
-  config.cache_store = :memory_store
+  config.cache_store = :null_store # :memory_store
 end

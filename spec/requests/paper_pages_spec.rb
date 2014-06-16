@@ -65,6 +65,7 @@ describe "Paper pages" do
   end
 end
 
+=begin
 describe "Paper page javascript", js: true do
   let(:paper) { FactoryGirl.create(:paper, :with_categories) }
 
@@ -81,3 +82,4 @@ describe "Paper page javascript", js: true do
     expect(test).to eq "reference"
   end
 end
+=end
