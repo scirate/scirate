@@ -27,8 +27,13 @@ class FeedsController < ApplicationController
     end
 
     if @date.nil? # No date specified
-      @date = Rails.cache.fetch [:last_paper_date, feed_uids, end_of_today] do
-        Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
+      if feed_uids.empty?
+        # No subscriptions, this is fairly meaningless
+        @date = end_of_today
+      else
+        @date = Rails.cache.fetch [:last_paper_date, feed_uids, end_of_today] do
+          Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
+        end
       end
     end
 
