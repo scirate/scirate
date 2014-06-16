@@ -13,8 +13,12 @@ nav.timenav
     - if @range > 1
       | #{@backdate.strftime("%b %d %Y")} &mdash;
       =< @date.strftime("%b %d %Y")
+      br
+      | UTC
     - else
       = @date.strftime("%a %e %b %Y")
+      br
+      | UTC
 
   table cellspacing="0"
     tr
