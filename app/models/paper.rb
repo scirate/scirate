@@ -106,6 +106,7 @@ class Paper < ActiveRecord::Base
     }
 
     props[:howpublished] = journal_ref unless journal_ref.nil?
+    props[:note] = "arXiv:#{uid}v#{versions.length}"
 
     props = props.map { |k,v| "#{k} = {#{v}}" }
 

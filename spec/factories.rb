@@ -31,6 +31,13 @@ FactoryGirl.define do
     sequence(:position) { |n| n }
   end
 
+  factory :version do
+    paper
+    date { Date.today }
+    size "16kB"
+    sequence(:position) { |n| n }
+  end
+
   factory :paper do |p|
     sequence(:title)       { |n| "On Hilbert's #{n}th Problem" }
     sequence(:abstract)    { |n| "We solve Hilbert's #{n}th problem." }
@@ -56,12 +63,20 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_versions do
+      after(:create) do |paper, evaluator|
+        create_list(:version, 3, paper: paper)
+      end
+    end
+
+
     factory :paper_with_authors do
       after(:create) do |paper, evaluator|
         create_list(:author, 3, paper: paper)
       end
     end
 
+    factory :paper_with_versions, traits: [:with_versions]
     factory :paper_with_comments, traits: [:with_comments]
     factory :paper_with_categories, traits: [:with_categories]
     factory :paper_with_comments_and_categories, traits: [:with_comments, :with_categories]

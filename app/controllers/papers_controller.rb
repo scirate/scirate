@@ -4,7 +4,7 @@ class PapersController < ApplicationController
   include PapersHelper
 
   def show
-    @paper = Paper.where(uid: Arxiv.strip_version(params[:paper_uid]))
+    @paper = Paper.includes(:versions).where(uid: Arxiv.strip_version(params[:paper_uid]))
       .select('id', 'uid', 'title', 'abstract', 'scites_count', 'abs_url', 'pdf_url', 'update_date', 'submit_date', 'pubdate', 'author_comments', 'msc_class', 'report_no', 'journal_ref', 'doi', 'proxy', 'updated_at', 'author_str')
       .first!
 

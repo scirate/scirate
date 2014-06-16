@@ -51,7 +51,7 @@ describe Paper do
 
   describe "#to_bibtex" do
     let(:paper) do
-      FactoryGirl.create(:paper,
+      FactoryGirl.create(:paper_with_versions,
         author_str: "Susanta K. Khan and Madhumangal Pal",
         title: "Interval-Valued Intuitionistic Fuzzy Matrices",
         pubdate: "2014-05-12 01:00:00 UTC",
@@ -66,7 +66,8 @@ describe Paper do
   title = {Interval-Valued Intuitionistic Fuzzy Matrices},
   year = {2014},
   eprint = {1404.6949},
-  howpublished = {Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27}
+  howpublished = {Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27},
+  note = {arXiv:1404.6949v3}
 }}
     end
   end
