@@ -2,6 +2,44 @@ SciRate.login = -> redirect("/login")
 
 class window.View extends Backbone.View
 
+# Modal for selecting a custom date range
+SciRate.customDateRange = (callback) ->
+  html = """
+         <div id="datepicker" class="modal">
+           <div class="modal-dialog">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <button class="close" type="button" data-dismiss="modal">
+                   &times;
+                 </button>
+                 <h4 class="modal-title">Custom date range</h4>
+               </div>
+               <div class="modal-body">
+                 <label for="dateRangeFrom">From</label>
+                 <input id="dateRangeFrom" class="form-control" type="date">
+                 <br>
+                 <label for="dateRangeTo">To</label>
+                 <input id="dateRangeTo" class="form-control" type="date">
+               </div>
+               <div class="modal-footer">
+                 <button id="submitCustomDate" class="btn btn-default">Go</button>
+               </div>
+             </div>
+           </div>
+         </div>
+         """
+
+  $modal = $(html)
+
+  $modal.modal()
+
+  $('#submitCustomDate').on 'click', ->
+    start = moment($('#dateRangeFrom').val())
+    end = moment($('#dateRangeTo').val())
+    callback(start, end)
+    $modal.modal('hide')
+
+
 class View.SciteToggle extends View
   events:
     'click .scite': "scite"

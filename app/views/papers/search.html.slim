@@ -12,21 +12,6 @@ script
 #searchPage.container
   h1 Search SciRate
 
-  #datepicker.modal
-    .modal-dialog
-      .modal-content
-        .modal-header
-          button.close type="button" data-dismiss="modal" &times;
-          h4 class="modal-title" Custom date range
-        .modal-body
-          label for="dateRangeFrom" From
-          input.form-control#dateRangeFrom type="date"
-          br
-          label for="dateRangeTo" To
-          input.form-control#dateRangeTo type="date"
-        .modal-footer
-          button.btn.btn-default#submitCustomDate Go
-
   #searchForm
     = form_tag(papers_search_path+'#results', method: :get) do |f|
       .form-group

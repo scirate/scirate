@@ -34,7 +34,6 @@ class View.Search extends Backbone.View
     'keyup input': 'compileQuery'
     'change #date': 'changeDate'
     'change #order': 'compileQuery'
-    'click #submitCustomDate': 'changeCustomDate'
 
   # XXX (Mispy): This is a bit messy and redundant
   # with the server-side code. Perhaps refactor so
@@ -120,21 +119,16 @@ class View.Search extends Backbone.View
 
   changeDate: ->
     if @$('#date').val() == 'custom'
-      @$('#datepicker').modal()
+      SciRate.customDateRange (start, end) =>
+        @ranges.custom = @compileDateRange(start, end)
+
+        if @ranges.custom == null
+          @$('#date').val('any')
+
+        @compileQuery()
     else
       @ranges.custom = null
       @compileQuery()
-
-  changeCustomDate: ->
-    start = moment(@$('#dateRangeFrom').val())
-    end = moment(@$('#dateRangeTo').val())
-    @ranges.custom = @compileDateRange(start, end)
-
-    if @ranges.custom == null
-      @$('#date').val('any')
-
-    @$('#datepicker').modal('hide')
-    @compileQuery()
 
   escape: (s) ->
     if s.indexOf(' ') != -1
