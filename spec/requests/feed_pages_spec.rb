@@ -59,14 +59,14 @@ describe "Feed pages" do
 
         prefs.reload
         expect(prefs.previous_last_visited).to eq(time-2.days)
-        expect(prefs.last_visited).to eq(time)
+        expect(prefs.last_visited).to eq(feed1.last_paper_date)
       end
     end
 
     context "visiting again in the same day" do
       before do
         prefs.previous_last_visited = time-2.days
-        prefs.last_visited = time
+        prefs.last_visited = feed1.last_paper_date
         prefs.save!
         visit root_path
       end
@@ -79,14 +79,14 @@ describe "Feed pages" do
 
         prefs.reload
         expect(prefs.previous_last_visited).to eq(time-2.days)
-        expect(prefs.last_visited).to eq(time)
+        expect(prefs.last_visited).to eq(feed1.last_paper_date)
       end
     end
 
     context "visiting two days in a row" do
       before do
-        prefs.previous_last_visited = Chronic.parse("2015-01-03 10:00 UTC")
-        prefs.last_visited = Chronic.parse("2015-01-04 10:00 UTC")
+        prefs.previous_last_visited = Chronic.parse("2015-01-03 23:59 UTC")
+        prefs.last_visited = Chronic.parse("2015-01-04 23:59 UTC")
         prefs.save!
         visit root_path
       end
@@ -98,8 +98,8 @@ describe "Feed pages" do
         expect(page).to_not have_content old_paper2.title
 
         prefs.reload
-        expect(prefs.previous_last_visited).to eq Chronic.parse("2015-01-04 10:00 UTC")
-        expect(prefs.last_visited).to eq(time)
+        expect(prefs.previous_last_visited).to eq Chronic.parse("2015-01-04 23:59 UTC")
+        expect(prefs.last_visited).to eq(feed1.last_paper_date)
       end
     end
 

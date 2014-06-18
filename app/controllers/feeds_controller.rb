@@ -28,7 +28,7 @@ class FeedsController < ApplicationController
         # No subscriptions, this is fairly meaningless
         @date = end_of_today
       else
-        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first.at_end_of_day
+        @date = Feed.where(uid: feed_uids).order("last_paper_date DESC").pluck(:last_paper_date).first
       end
     end
 
@@ -59,7 +59,7 @@ class FeedsController < ApplicationController
     end
 
     if @date.nil?
-      @date = @feed.last_paper_date.at_end_of_day
+      @date = @feed.last_paper_date
     end
 
     @backdate = _backdate(@date, @range)
@@ -82,7 +82,7 @@ class FeedsController < ApplicationController
     # If no date is specified, default to the last date
     # with available papers
     if @date.nil?
-      @date = @feed.last_paper_date.at_end_of_day
+      @date = @feed.last_paper_date
     end
 
     if @range == :since_last
@@ -111,7 +111,7 @@ class FeedsController < ApplicationController
   end
 
   def _parse_date(params)
-    date = params[:date] ? Chronic.parse(params[:date]).at_end_of_day : nil
+    date = params[:date] ? Chronic.parse(params[:date]) : nil
     return date
   end
 
@@ -129,16 +129,15 @@ class FeedsController < ApplicationController
 
   # Calculate time range based on when they last visited this page
   def _since_last_visit(date)
-    preferences = current_user.feed_preferences.where(feed_uid: params[:feed]).first_or_create
+    preferences = current_user.feed_preferences.where(feed_uid: params[:feed]).first_or_create(last_visited: date, previous_last_visited: date)
 
-    if preferences.last_visited.at_end_of_day <= end_of_today - 1.day
+    if preferences.last_visited.end_of_day <= date.end_of_day - 1.day
       preferences.previous_last_visited = preferences.last_visited
-      preferences.last_visited = Time.now.utc
+      preferences.last_visited = date
       preferences.save!
     end
 
-    to_date = [@date, end_of_today].min
-    since_last = to_date - preferences.previous_last_visited.at_end_of_day
+    since_last = date.end_of_day - preferences.previous_last_visited.end_of_day
     range = [1, (since_last / 1.day).round].max
 
     [range, since_last]
@@ -146,7 +145,7 @@ class FeedsController < ApplicationController
 
   # Go range days back from a given date
   def _backdate(date, range)
-    (date - (range-1).days).at_beginning_of_day
+    (date - (range-1).days)
   end
 
   def _recent_comments(feed_uids=nil)
@@ -186,8 +185,8 @@ class FeedsController < ApplicationController
       {
         range: {
           pubdate: {
-           from: backdate,
-           to: date
+           from: backdate.beginning_of_day,
+           to: date.end_of_day
           }
         }
       },
@@ -202,7 +201,8 @@ class FeedsController < ApplicationController
         { scites_count: 'desc' },
         { comments_count: 'desc' },
         { pubdate: 'desc' },
-        { submit_date: 'desc' }
+        { submit_date: 'desc' },
+        { _id: 'desc' }
       ],
       query: {
         filtered: {

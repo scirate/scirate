@@ -13,10 +13,4 @@
 #
 
 class FeedPreference < ActiveRecord::Base
-  before_create :set_defaults
-  def set_defaults
-    self.last_visited = Time.now
-    self.previous_last_visited = self.last_visited
-    self.selected_range = nil
-  end
 end
