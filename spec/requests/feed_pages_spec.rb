@@ -83,6 +83,27 @@ describe "Feed pages" do
       end
     end
 
+    context "visiting two days in a row" do
+      before do
+        prefs.previous_last_visited = Chronic.parse("2015-01-03 10:00 UTC")
+        prefs.last_visited = Chronic.parse("2015-01-04 10:00 UTC")
+        prefs.save!
+        visit root_path
+      end
+
+      it "shows only a single day of papers" do
+        expect(page).to have_selector("li.paper:nth-child(1)", text: new_paper1.title)
+        expect(page).to_not have_selector("li.paper:nth-child(2)", text: old_paper1.title)
+        expect(page).to_not have_content new_paper2.title
+        expect(page).to_not have_content old_paper2.title
+
+        prefs.reload
+        expect(prefs.previous_last_visited).to eq Chronic.parse("2015-01-04 10:00 UTC")
+        expect(prefs.last_visited).to eq(time)
+      end
+    end
+
+
     context "changing order by sciting a paper" do
       before do
         prefs.previous_last_visited = time-2.days

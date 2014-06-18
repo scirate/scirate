@@ -131,7 +131,7 @@ class FeedsController < ApplicationController
   def _since_last_visit(date)
     preferences = current_user.feed_preferences.where(feed_uid: params[:feed]).first_or_create
 
-    if preferences.last_visited.at_end_of_day < end_of_today - 1.day
+    if preferences.last_visited.at_end_of_day <= end_of_today - 1.day
       preferences.previous_last_visited = preferences.last_visited
       preferences.last_visited = Time.now.utc
       preferences.save!
