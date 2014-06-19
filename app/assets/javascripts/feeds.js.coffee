@@ -1,11 +1,4 @@
-$ ->
-  # Expand author lists with >20 authors
-  $('li.paper .expand-authors').click ->
-    $paper = $(this).closest('li.paper')
-
-    $paper.find('.more-authors').toggleClass('hidden')
-    $paper.find('.expand-authors').remove()
-
+setupFeedPage = ->
   # Feed sidebar tree expansion
   $('.feed-folder i').click ->
     $(this).toggleClass('fa-chevron-right')
@@ -19,3 +12,8 @@ $ ->
     $.post "/api/hide_from_recent/#{id}", ->
       $comment.fadeOut()
 
+$(document).on 'ready', ->
+  setupFeedPage()
+
+$(document).on 'page:load', ->
+  setupFeedPage()
