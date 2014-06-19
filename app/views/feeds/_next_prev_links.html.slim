@@ -55,3 +55,6 @@ nav.timenav
     tr
       td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 365)
         a href=(url_for(range: 365)) 1 Year
+    tr
+      td.btn-default colspan="2" class=("btn-primary" if false)
+        a#customDate Custom
