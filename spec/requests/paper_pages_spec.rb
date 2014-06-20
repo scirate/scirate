@@ -66,19 +66,40 @@ describe "Paper pages" do
 end
 
 describe "Commenting on a paper", js: true do
-  let(:paper) { FactoryGirl.create(:paper, :with_categories) }
-  let(:user) { FactoryGirl.create(:user) }
+  let!(:paper) { FactoryGirl.create(:paper, :with_categories) }
+  let!(:comment) { FactoryGirl.create(:comment, paper: paper) }
+  let!(:user) { FactoryGirl.create(:user) }
 
   before do
     sign_in user
-    visit paper_path(paper)
-    fill_in "wmd-input", with: "A spiffy comment"
-    click_button "Leave Comment"
   end
 
-  it "posts the comment" do
-    expect(page).to have_success_message
-    expect(page).to have_comment "A spiffy comment"
+  describe "Posting a new comment" do
+    before do
+      visit paper_path(paper)
+      fill_in "wmd-input", with: "A spiffy comment"
+      click_button "Leave Comment"
+    end
+
+    it "posts the comment" do
+      expect(page).to have_success_message
+      expect(page).to have_comment "A spiffy comment"
+    end
+  end
+
+  describe "Replying to a comment" do
+    before do
+      visit paper_path(paper)
+      find('a.reply').click
+      fill_in "wmd-input-reply", with: "A spiffy reply"
+      click_button "Leave Reply"
+    end
+
+    it "posts a reply" do
+      expect(page).to have_success_message
+      expect(page).to have_comment "A spiffy reply"
+      expect(page).to have_content "in reply to #{comment.user.fullname}"
+    end
   end
 end
 

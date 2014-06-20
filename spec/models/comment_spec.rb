@@ -30,4 +30,14 @@ describe Comment do
   it { should validate_presence_of(:user) }
   it { should validate_presence_of(:paper) }
   it { should validate_presence_of(:content) }
+
+  describe "email alerts" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:parent_comment) { FactoryGirl.create(:comment, user: user) }
+
+    it "sends an email on creating a comment" do
+      FactoryGirl.create(:comment, parent: parent_comment)
+      expect(last_email.to).to include(user.email)
+    end
+  end
 end

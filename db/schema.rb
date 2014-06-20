@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140616061056) do
+ActiveRecord::Schema.define(version: 20140620083606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,26 +194,29 @@ ActiveRecord::Schema.define(version: 20140616061056) do
     t.text     "fullname"
     t.text     "email"
     t.text     "remember_token"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.text     "password_digest"
-    t.integer  "scites_count",           default: 0
+    t.integer  "scites_count",                     default: 0
     t.text     "password_reset_token"
     t.datetime "password_reset_sent_at"
     t.text     "confirmation_token"
-    t.boolean  "active",                 default: false
-    t.integer  "comments_count",         default: 0
+    t.boolean  "active",                           default: false
+    t.integer  "comments_count",                   default: 0
     t.datetime "confirmation_sent_at"
-    t.integer  "subscriptions_count",    default: 0
-    t.boolean  "expand_abstracts",       default: false
-    t.text     "account_status",         default: "user"
-    t.text     "username",                                null: false
-    t.text     "organization",           default: "",     null: false
-    t.text     "about",                  default: "",     null: false
-    t.text     "url",                    default: "",     null: false
-    t.text     "location",               default: "",     null: false
-    t.text     "author_identifier",      default: "",     null: false
-    t.integer  "papers_count",           default: 0,      null: false
+    t.integer  "subscriptions_count",              default: 0
+    t.boolean  "expand_abstracts",                 default: false
+    t.text     "account_status",                   default: "user"
+    t.text     "username",                                          null: false
+    t.text     "organization",                     default: "",     null: false
+    t.text     "about",                            default: "",     null: false
+    t.text     "url",                              default: "",     null: false
+    t.text     "location",                         default: "",     null: false
+    t.text     "author_identifier",                default: "",     null: false
+    t.integer  "papers_count",                     default: 0,      null: false
+    t.boolean  "email_about_replies",              default: true
+    t.boolean  "email_about_comments_on_authored", default: true
+    t.boolean  "email_about_comments_on_scited",   default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

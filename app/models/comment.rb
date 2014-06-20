@@ -32,6 +32,22 @@ class Comment < ActiveRecord::Base
 
   scope :visible, -> { where(hidden: false, deleted: false) }
 
+  after_create do
+    # Email on comment replies
+    if parent && parent.user.email_about_replies
+      UserMailer.comment_alert(parent.user, self)
+    end
+
+    # Email people who claim this paper via their arXiv author identifier
+    paper.claimants.each do |author|
+      if author.email_about_comments_on_authored
+        UserMailer.comment_Alert(author, self)
+      end
+    end
+
+    # Email any sciters who have opted in to alerts on scited papers
+  end
+
   after_save do
     paper.refresh_comments_count!
   end

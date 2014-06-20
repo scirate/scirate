@@ -34,6 +34,10 @@ class Paper < ActiveRecord::Base
   has_many  :authors, -> { order("position ASC") }, dependent: :delete_all,
             foreign_key: :paper_uid, primary_key: :uid
 
+  has_many :authorships, dependent: :destroy,
+            foreign_key: :paper_uid, primary_key: :uid
+  has_many :claimants, through: :authorships, source: :user
+
   has_many  :feeds, through: :categories
 
   has_many  :scites, dependent: :delete_all,
