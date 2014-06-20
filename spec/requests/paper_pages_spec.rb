@@ -65,6 +65,23 @@ describe "Paper pages" do
   end
 end
 
+describe "Commenting on a paper", js: true do
+  let(:paper) { FactoryGirl.create(:paper, :with_categories) }
+  let(:user) { FactoryGirl.create(:user) }
+
+  before do
+    sign_in user
+    visit paper_path(paper)
+    fill_in "wmd-input", with: "A spiffy comment"
+    click_button "Leave Comment"
+  end
+
+  it "posts the comment" do
+    expect(page).to have_success_message
+    expect(page).to have_comment "A spiffy comment"
+  end
+end
+
 =begin
 describe "Paper page javascript", js: true do
   let(:paper) { FactoryGirl.create(:paper, :with_categories) }
