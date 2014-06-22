@@ -1,7 +1,9 @@
-<%= @comment.content %>
+<blockquote>
+  <%= strip_tags(@comment.content) %>
+</blockquote>
 
-----
-
+<p style="font-size:small;color:#666">—
+<br>
 View this comment on SciRate: <a href="https://scirate.com/arxiv/<%= @comment.paper.uid %>#<%= @comment.id %>">https://scirate.com/arxiv/<%= @comment.paper.uid %>#<%= @comment.id %></a>
-
-<p style="font-size:small;color:#666">If you'd prefer not to receive these emails, they can be disabled in your <a href="https://scirate.com/settings">settings</a>.</p>
+<br>
+If you'd prefer not to receive these emails, they can be disabled in your <a href="https://scirate.com/settings">settings</a>.</p>
