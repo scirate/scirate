@@ -12,6 +12,8 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
+Delayed::Worker.delay_jobs = false
+
 # http://stackoverflow.com/questions/8774227/why-not-use-shared-activerecord-connections-for-rspec-selenium
 class ActiveRecord::Base
   mattr_accessor :shared_connection

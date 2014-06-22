@@ -39,6 +39,16 @@
           - desc = "Some descriptive text about yourself"
           td= f.label :about
           td= f.text_area :about, class: 'form-control', title: desc, placeholder: desc
+
+    .checkbox
+      = f.check_box :email_about_replies
+      | Email me about replies to my comments
+    .checkbox
+      = f.check_box :email_about_comments_on_authored
+      | Email me about comments on papers I've written (needs author identifier)
+    .checkbox
+      = f.check_box :email_about_comments_on_scited
+      | Email me about comments on papers I've scited
     = f.submit "Save changes", class: "btn btn-default"
 
   p.google

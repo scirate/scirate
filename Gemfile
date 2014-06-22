@@ -48,6 +48,9 @@ gem 'dalli'
 # SCSS mixins for CSS3 browser compatibility
 gem 'bourbon'
 
+# Delayed job for async tasks (email)
+gem 'delayed_job_active_record'
+
 group :development, :test do
   gem 'rspec-rails', '~> 2.9'
 

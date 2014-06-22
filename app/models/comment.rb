@@ -33,19 +33,30 @@ class Comment < ActiveRecord::Base
   scope :visible, -> { where(hidden: false, deleted: false) }
 
   after_create do
+    # Track who we've emailed so we don't send twice for the same comment
+    emailed_users = []
+
     # Email on comment replies
     if parent && parent.user.email_about_replies
-      UserMailer.comment_alert(parent.user, self)
+      UserMailer.delay.comment_alert(parent.user, self)
+      emailed_users[parent.user.id] = true
     end
 
     # Email people who claim this paper via their arXiv author identifier
     paper.claimants.each do |author|
       if author.email_about_comments_on_authored
-        UserMailer.comment_Alert(author, self)
+        UserMailer.delay.comment_alert(author, self) unless emailed_users[author.id]
+        emailed_users[author.id] = true
       end
     end
 
     # Email any sciters who have opted in to alerts on scited papers
+    paper.sciters.each do |sciter|
+      if sciter.email_about_comments_on_scited
+        UserMailer.delay.comment_alert(sciter, self) unless emailed_users[sciter.id]
+        emailed_users[sciter.id] = true
+      end
+    end
   end
 
   after_save do

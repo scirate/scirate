@@ -34,4 +34,5 @@ cd ~/scirate3
 rake assets:precompile
 sudo service scirate restart
 sudo service memcached restart
+./bin/delayed_job restart
 END

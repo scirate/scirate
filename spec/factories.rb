@@ -69,6 +69,11 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_claimants do
+      after(:create) do |paper, evaluator|
+        create_list(:authorship, 3, paper: paper)
+      end
+    end
 
     factory :paper_with_authors do
       after(:create) do |paper, evaluator|
@@ -87,6 +92,11 @@ FactoryGirl.define do
     sequence(:position) { |n| n }
     fullname   "Lucrezia Mongfish"
     searchterm "Mongfish_L"
+  end
+
+  factory :authorship do
+    paper
+    user
   end
 
   factory :comment do

@@ -32,12 +32,63 @@ describe Comment do
   it { should validate_presence_of(:content) }
 
   describe "email alerts" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:parent_comment) { FactoryGirl.create(:comment, user: user) }
+    describe "email_about_replies" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:comment) { FactoryGirl.create(:comment, user: user) }
 
-    it "sends an email on creating a comment" do
-      FactoryGirl.create(:comment, parent: parent_comment)
-      expect(last_email.to).to include(user.email)
+      it "sends reply alerts by default" do
+        FactoryGirl.create(:comment, parent: comment)
+        expect(last_email.to).to include(user.email)
+      end
+
+      it "doesn't send them when disabled" do
+        user.email_about_replies = false
+        user.save!
+        FactoryGirl.create(:comment, parent: comment)
+        expect(last_email).to be_nil
+      end
+    end
+
+    describe "email_about_comments_on_authored" do
+      let(:paper) { FactoryGirl.create(:paper) }
+      let(:user) { FactoryGirl.create(:user) }
+
+      before do
+        Authorship.create(user: user, paper: paper)
+      end
+
+      it "sends alerts to claimants of papers by default" do
+        FactoryGirl.create(:comment, paper: paper)
+        expect(last_email.to).to include(user.email)
+      end
+
+      it "doesn't send them when disabled" do
+        user.email_about_comments_on_authored = false
+        user.save!
+        FactoryGirl.create(:comment, paper: paper)
+        expect(last_email).to be_nil
+      end
+    end
+
+    describe "email_about_comments_on_scited" do
+      let(:paper) { FactoryGirl.create(:paper) }
+      let(:user) { FactoryGirl.create(:user) }
+
+      before do
+        user.scite!(paper)
+      end
+
+      it "doesn't send alerts to sciters by default" do
+        FactoryGirl.create(:comment, paper: paper)
+        expect(last_email).to be_nil
+      end
+
+      it "sends them when enabled" do
+        user.email_about_comments_on_scited = true
+        user.save!
+        FactoryGirl.create(:comment, paper: paper)
+        expect(last_email.to).to include(user.email)
+      end
     end
   end
 end

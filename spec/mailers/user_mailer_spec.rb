@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe UserMailer do
-
   subject { mail }
 
   describe 'signup confirmation email' do
