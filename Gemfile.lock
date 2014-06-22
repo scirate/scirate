@@ -289,6 +289,7 @@ DEPENDENCIES
   chronic
   coffee-rails
   coveralls
+  daemons
   dalli
   database_cleaner
   delayed_job_active_record
