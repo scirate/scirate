@@ -1,6 +1,4 @@
-<blockquote>
-  <%= strip_tags(@comment.content) %>
-</blockquote>
+<%= simple_format(strip_tags(@comment.content)) %>
 
 <p style="font-size:small;color:#666">—
 <br>
