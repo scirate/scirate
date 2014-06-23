@@ -12,7 +12,7 @@ describe UserMailer do
     end
 
     it 'renders the sender email' do
-      mail.from.should == ['no-reply@scirate.com']
+      mail.from.should == ['notifications@scirate.com']
     end
 
     it 'has the right body content' do
@@ -42,7 +42,7 @@ describe UserMailer do
     end
 
     it 'has the right sender' do
-      mail.from.should == ['no-reply@scirate.com']
+      mail.from.should == ['notifications@scirate.com']
     end
 
     it 'has the right body content' do
@@ -72,7 +72,7 @@ describe UserMailer do
     end
 
     it 'has the right sender' do
-      mail.from.should == ['no-reply@scirate.com']
+      mail.from.should == ['notifications@scirate.com']
     end
 
     it 'has the right body content' do
