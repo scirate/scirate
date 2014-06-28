@@ -17,7 +17,7 @@ li.paper.tex2jax
       .uid
         => paper.pubdate.strftime("%b %d %Y")
         - paper.feed_uids.each do |feed_uid|
-          a> href=(feed_uid) = feed_uid
+          a> href="/arxiv/#{feed_uid}" = feed_uid
         => "arXiv:#{paper.uid}v#{paper.versions_count}"
     .col-md-4
       .pull-right
