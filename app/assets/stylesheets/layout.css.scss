@@ -25,7 +25,13 @@ textarea {
   resize: none;
 }
 
-.timeago { color: rgba(0, 0, 0, 0.5); }
+// Needed for jquery.timeago oddness
+abbr.timeago {
+  cursor: text;
+  color: rgba(0, 0, 0, 0.5);
+  border-bottom: none;
+}
+
 .username { font-weight: bold; }
 .hidden { display: none !important; }
 .transparent { opacity: 0.0 !important; }
@@ -1014,7 +1020,7 @@ div.feed-rightbar {
     padding-bottom: 1em;
   }
 
-  .event time {
+  .event abbr.timeago {
     font-size: 12px;
     color: #bbb;
   }

@@ -32,7 +32,8 @@
           a href="/#{user.username}" = user.fullname
         td= user.username
         td= user.email
-        td width="20%" = time_ago_in_words(user.created_at) + ' ago'
+        td width="20%"
+          = timeago(user.created_at)
         td= user.scites_count
         td= user.comments_count
         td

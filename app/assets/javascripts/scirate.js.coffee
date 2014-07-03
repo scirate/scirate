@@ -214,6 +214,9 @@ setupPageLoad = ->
   $('li.paper').on 'mouseout', (ev) ->
     $(this).find('.links').addClass('hidden')
 
+  # Show timestamps as e.g. "12 minutes ago"
+  $('.timeago').timeago()
+
   MathJax.Hub.Queue(["Typeset",MathJax.Hub])
 
 $(document).on 'ready', ->

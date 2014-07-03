@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require underscore
 //= require bootstrap
-//= require jquery.pagedown-bootstrap.combined.min.js
+//= require jquery.pagedown-bootstrap.combined.js
 //= require moment.min.js
 //= require typeahead.bundle.js
 //= require backbone
@@ -22,4 +22,5 @@
 //= require ZeroClipboard.js
 //= require turbolinks
 //= require nprogress.js
+//= require jquery.timeago.js
 //= require_tree .

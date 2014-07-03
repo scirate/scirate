@@ -13,7 +13,7 @@ div.comment data-id=(comment.id) data-markup=(comment.content)
     - if comment.parent
       |  in reply to #{link_to comment.parent.user.fullname, comment.parent.user}
     span.timeago
-      = " #{time_ago_in_words(comment.created_at)} ago"
+      =< timeago(comment.created_at)
       - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
         |  (<span class="score">#{comment.cached_votes_up-comment.cached_votes_down}</span> points)
     .body.tex2jax

@@ -10,9 +10,7 @@
   span.username
     a href="/#{abbr_comment.user_username}"
       = abbr_comment.user_fullname
-  span.timeago
-    =< time_ago_in_words(abbr_comment.created_at)
-    |  ago
+  =< timeago(abbr_comment.created_at)
   blockquote.tex2jax style="margin-top: 5px;"
     = strip_tags(abbr_comment.content[0..299])
     - if abbr_comment.content.length > 300
