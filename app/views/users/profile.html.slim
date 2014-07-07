@@ -82,7 +82,7 @@
       - cache [:profile_papers, @user] do
         = render partial: 'users/papers'
     - elsif @tab == :scites
-      - cache [:profile_scites, @user] do
+      - cache [:profile_scites, @user, params[:page]] do
         = render partial: 'users/scites'
     - elsif @tab == :comments
       = render partial: 'users/comments'
