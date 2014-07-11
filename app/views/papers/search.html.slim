@@ -16,7 +16,7 @@ script
     = form_tag(papers_search_path+'#results', method: :get) do |f|
       .form-group
         = label_tag :q, "Search query", class: 'sr-only'
-        = text_field_tag :q, @search.basic, class: 'form-control'
+        = text_field_tag :q, @search.basic, class: 'form-control', autofocus: true
 
         button.btn.btn-primary.btn-right type="submit"
           i.fa.fa-search.fa-lg
