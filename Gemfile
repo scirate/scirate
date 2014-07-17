@@ -119,7 +119,6 @@ end
 
 group :production do
   # Sends us emails when stuff breaks in production
-  gem 'exception_notification', github: 'sunkencity/exception_notification'
-
+  gem 'exception_notification'
   gem 'puma'
 end

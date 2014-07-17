@@ -19,12 +19,6 @@ GIT
       faraday
       faraday_middleware
 
-GIT
-  remote: git://github.com/sunkencity/exception_notification.git
-  revision: b54ba10cea78f62758d3d71aa5f114cea658db3a
-  specs:
-    exception_notification (1.0.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -103,6 +97,9 @@ GEM
     docile (1.1.4)
     erubis (2.7.0)
     eventmachine (1.0.3)
+    exception_notification (4.0.1)
+      actionmailer (>= 3.0.4)
+      activesupport (>= 3.0.4)
     excon (0.37.0)
     execjs (2.2.0)
     factory_girl (4.4.0)
@@ -293,7 +290,7 @@ DEPENDENCIES
   dalli
   database_cleaner
   delayed_job_active_record
-  exception_notification!
+  exception_notification
   factory_girl_rails
   faraday (= 0.8.9)
   jquery-rails

@@ -17,8 +17,8 @@ module SciRate
     exception = exception.with_details(message) if message
     puts exception.inspect
     puts exception.backtrace.join("\n") if exception.backtrace
-    if defined?(ExceptionNotifier)
-      ExceptionNotifier::Notifier.background_exception_notification(exception)
+    if Rails.env == 'production'
+      ExceptionNotifier.notify_exception(exception)
     end
   end
 end
