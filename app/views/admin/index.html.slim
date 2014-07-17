@@ -14,6 +14,33 @@
 
   hr
 
+  h2 Statistics
+
+  table.table
+    thead
+      tr
+        th Week
+        th Scites
+        th Papers
+        th Comments
+        th Active Users
+        th New Users
+    - @weeks.each_with_index do |week, i|
+      tr
+        td
+          - if i == 0
+            | Last 7 Days
+          - else
+            = pluralize(i, 'Week') + " Ago"
+        td= week[:scites].count
+        td= week[:papers].count
+        td= week[:comments].count
+        td= week[:active_users].count
+        td= week[:new_users].count
+
+
+  hr
+
   h2= "Users (#{User.count})"
 
   table.table

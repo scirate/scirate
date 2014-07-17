@@ -8,7 +8,23 @@ class Admin::BaseController < ApplicationController
     end
   end
 
+  def _site_data(from, to)
+    data = {}
+    data[:scites] = Scite.where("created_at > ? AND created_at < ?", from, to).includes(:user)
+    data[:papers] = Paper.where("pubdate > ? AND pubdate < ?", from, to)
+    data[:comments] = Comment.where("created_at > ? AND created_at < ?", from, to)
+    data[:active_users] = data[:scites].map(&:user)
+    data[:new_users] = User.where("created_at > ? AND created_at < ?", from, to)
+    data
+  end
+
   def index
+    now = Time.now
+
+    @weeks = 0.upto(5).map do |i|
+      _site_data(now - (7*i+1).days, now - (7*i).days)
+    end
+
     render 'admin/index'
   end
 
