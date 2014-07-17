@@ -2,7 +2,8 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'net/http'
-require 'exception_notifier'
+
+require File.expand_path('../../lib/exception_notification',  __FILE__)
 
 if defined?(Bundler)
   ActiveSupport::Deprecation.silence do
@@ -10,18 +11,7 @@ if defined?(Bundler)
   end
 end
 
-class Exception
-  # From http://stackoverflow.com/questions/2823748/how-do-i-add-information-to-an-exception-message-without-changing-its-class-in-r
-  def with_details(extra)
-    begin
-      raise self, "#{message} - #{extra}", backtrace
-    rescue Exception => e
-      return e
-    end
-  end
-end
-
-module SciRate3
+module SciRate
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -49,7 +39,7 @@ module SciRate3
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    # config.filter_parameters += [:password]
 
     # Use SQL instead of Active Record's schema dumper when creating the database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
@@ -62,35 +52,9 @@ module SciRate3
     # parameters by using an attr_accessible or attr_protected declaration.
     # config.active_record.whitelist_attributes = true
 
-    # Enable the asset pipeline
-    config.assets.enabled = true
-
-    # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
-
-    config.assets.initialize_on_precompile = false
+    config.assets.paths << Rails.root.join('app', 'assets', 'flash')
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
 
     config.action_mailer.default_url_options = { :host => Settings::HOST }
-
-    config.cache_store = :memory_store
-  end
-
-  SciRate3::Application.config.middleware.use ::ExceptionNotifier,
-    email_prefix: "[SciRate Error] ",
-    sender_address: "notifier@scirate.com",
-    exception_recipients: %w{scirate@mispy.me}
-
-  class << self
-    def notify_error(exception, message=nil)
-      if exception.is_a?(String)
-        exception = RuntimeError.new(exception)
-      end
-      exception = exception.with_details(message) if message
-      puts exception.inspect
-      puts exception.backtrace.join("\n") if exception.backtrace
-      if Rails.env == "production"
-        ::ExceptionNotifier::Notifier.background_exception_notification(exception)
-      end
-    end
   end
 end

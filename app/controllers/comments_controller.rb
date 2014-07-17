@@ -1,108 +1,111 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, :only => [:edit, :delete, :restore, :upvote, :downvote, :unvote, :report, :unreport, :reply]
+  before_filter :find_comment, only: [:edit, :delete, :restore, :upvote, :downvote, :unvote, :report, :unreport, :reply]
+
+  before_filter :check_moderation_permission, only: [:edit, :delete, :restore]
 
   def index
-    if params[:feed]
-      @feed = Feed.find_by_uid!(params[:feed])
-      feed_uids = [@feed.uid] + @feed.children.map(&:uid)
-      comments = Comment.find_by_feed_uids(feed_uids)
+    @page = params.fetch(:page, 1).to_i
+    @per_page = 50
+
+    feed_uids = if params[:feed]
+      # Comments on papers in a particular feed
+      feed_uids = Feed.find_related_uids([params[:feed]])
     elsif signed_in?
-      feeds = current_user.feeds.includes(:children)
-      feed_uids = feeds.map(&:uid) + feeds.map(&:children).flatten.map(&:uid)
-      comments = Comment.find_by_feed_uids(feed_uids)
-    else
-      comments = Comment.where(deleted: false, hidden: false)
+      # Comments on papers in the user's home timeline
+      sub_uids = current_user.subscriptions.pluck(:feed_uid)
+      feed_uids = Feed.find_related_uids(sub_uids)
     end
 
-    @comments = comments.order("created_at DESC").paginate(page: params[:page]||1)
+    query = if feed_uids.nil?
+      Comment.joins(:user, :paper)
+             .where(deleted: false, hidden: false, hidden_from_recent: false)
+    else
+      Comment.joins(:user, paper: :categories)
+             .where(deleted: false, hidden: false, hidden_from_recent: false)
+             .where(categories: { feed_uid: feed_uids })
+    end
+
+
+    @pagination = WillPaginate::Collection.new(@page, @per_page, query.count)
+
+    @comments = query.order('comments.id DESC')
+                     .limit(@per_page)
+                     .offset((@page-1)*@per_page)
+                     .select('DISTINCT ON (comments.id) comments.id',
+                             'comments.content',
+                             'comments.created_at',
+                             'comments.updated_at',
+                             'papers.uid AS paper_uid',
+                             'papers.title AS paper_title',
+                             'users.username AS user_username',
+                             'users.fullname AS user_fullname')
   end
 
   def create
-    @comment = current_user.comments.build(
-      paper_uid: params[:comment][:paper_uid],
-      content: params[:comment][:content]
-    )
-    
-    if @comment.save
-      flash[:comment] = { status: :success, content: "Comment posted." }
-    else
-      flash[:comment] = { status: :error, content: "Error posting comment." }
-    end
+    comment_params = params.require(:comment).permit(:paper_uid, :content)
 
+    @comment = current_user.comments.build(comment_params)
+    @comment.save!
+    @comment.submit_trackback
+
+    flash[:comment] = { status: :success, content: "Comment posted." }
     redirect_to @comment.paper
   end
 
   def edit
-    if @comment.user_id == current_user.id || current_user.is_moderator?
-      @comment.content = params[:content]
-      @comment.save
-      render :text => 'success'
-    else
-      render :status => :forbidden
-    end
+    @comment.content = params[:content]
+    @comment.save!
+    render text: 'success'
   end
 
-  # "delete" a comment
-  # We do not fully delete anything yet, just hide it
   def delete
-    paper = @comment.paper
-    if @comment.user_id == current_user.id || current_user.is_moderator?
-      # We don't fully delete anything yet, just hide it
-      @comment.deleted = true
-      @comment.save
+    # soft delete - hide
+    @comment.soft_delete
 
-      flash[:comment] = { status: 'success', raw: "Comment deleted. <a data-method='post' href='#{restore_comment_path(@comment.id)}'>(undo)</a>" }
-      redirect_to request.referer || paper
-    else
-      render :status => :forbidden
-    end
+    flash[:comment] = { status: 'success', raw: "Comment deleted. <a data-method='post' href='#{restore_comment_path(@comment.id)}'>(undo)</a>" }
+
+    redirect_to request.referer || @comment.paper
   end
 
   # Restore a deleted comment
   def restore
-    paper = @comment.paper
-    if @comment.user_id == current_user.id || current_user.is_moderator?
-      @comment.deleted = false
-      @comment.save
+    @comment.restore
 
-      flash[:comment] = { status: 'success', content: "Comment restored." }
-      redirect_to request.referer || paper
-    else
-      render :status => :forbidden
-    end
+    flash[:comment] = { status: 'success', content: "Comment restored." }
+    redirect_to request.referer || @comment.paper
   end
 
   def upvote
-    if current_user.id != @comment.user_id
+    unless comment_owner?
       @comment.upvote_from(current_user)
-      render :text => 'success'
+      render text: 'success'
     else
-      render :text => "can't upvote own comment"
+      render text: "can't upvote own comment"
     end
   end
 
   def downvote
-    if current_user.id != @comment.user_id
+    unless comment_owner?
       @comment.downvote_from(current_user)
-      render :text => 'success'
+      render text: 'success'
     else
-      render :text => "can't downvote own comment"
+      render text: "can't downvote own comment"
     end
   end
 
   def unvote
     @comment.unvote(voter: current_user)
-    render :text => 'success'
+    render text: 'success'
   end
 
   def report
-    @comment.reports.create(:user_id => current_user.id)
-    render :text => 'success'
+    @comment.reports.create(user_id: current_user.id)
+    render text: 'success'
   end
 
   def unreport
     @comment.reports.where(user_id: current_user.id).destroy_all
-    render :text => 'success'
+    render text: 'success'
   end
 
   def reply
@@ -113,19 +116,32 @@ class CommentsController < ApplicationController
       content: params[:content]
     )
 
-    @reply.save!
-
     if @reply.save
       flash[:comment] = { status: 'success', content: "Comment posted." }
     else
-      flash[:comment] = { status: 'success', content: "Error posting comment." }
+      flash[:comment] = { status: 'error', content: "Error posting comment." }
     end
 
     redirect_to @reply.paper
   end
 
-  protected
+  private
+
+    def check_moderation_permission
+      if !comment_owner? && !current_user.is_moderator?
+        render status: :forbidden and return
+      end
+    end
+
+    def comment_owner?
+      @comment.user_id == current_user.id
+    end
+
     def find_comment
       @comment = Comment.find(params[:id])
+    end
+
+    def find_feed_ids(feed)
+      feed.children.pluck(:uid) + [feed.uid]
     end
 end

@@ -1,31 +1,98 @@
-- provide :body
+- @description = content_for?(:description) && (yield :description)
+- @title = content_for(:title) && (yield :title)
+- @image = content_for(:image) && (yield :image)
+
+doctype html
+html lang="en"
+  head
+    javascript:
+      window.SciRate = {};
+
+    - cache [@description, @title, @image] do
+      - if title = yield(:title)
+        title= title + " | SciRate"
+      - else
+        title SciRate
+
+      / General meta tags
+
+      meta charset="utf-8"
+
+      - if @description
+        meta name="description" content=(@description)
+
+      meta name="viewport" content="width=device-width, initial-scale=1.0"
+
+      / Open Graph meta tags suggested by Facebook crawler
+      / https://developers.facebook.com/tools/debug/
+
+      meta property="og:site_name" content="SciRate"
+      meta property="og:url" content=(request.original_url)
+      meta property="og:title" content=(@title)
+
+      / This affects the image preview displayed when you
+      / post a Facebook link to a SciRate page
+      - if @image
+        meta property="og:image" content=(@image)
+      - else
+        meta property="og:image" content=(asset_url 'scirate-logo-white-on-blue.png')
+
+      meta property="og:locale" content="en_US"
+      meta property="og:description" content=(@description)
+
+      = yield :meta
+
+      <!--[if lt IE 9]>
+          <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+
+      javascript:
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-40148633-2', '#{Settings::HOST}');
+        ga('send', 'pageview');
+
+      = favicon_link_tag 'favicon.png'
+
+    = stylesheet_link_tag "application", media: "all"
+    = csrf_meta_tags
+
+    = javascript_include_tag "application"
+
   body.main
     header.navbar.navbar-inverse role="banner"
       .container
-        .navbar-header
-          button.navbar-toggle.collapsed data-target=".navbar-collapse" data-toggle="collapse" type="button"
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.header-brand href="/"
-            = image_tag "scirate-logo-32x32-white.png"
-            |  SciRate
-            - if Settings::STAGING || Rails.env == 'development'
-              span.staging title="This site is used to test new SciRate features. If you want to use SciRate, please head to https://scirate.com/ instead. Data preservation here is not guaranteed."
-                |  dev
-            - else
-              span.staging title="We're currently adding lots of new features. Please report any issues to bugs@scirate.com"
-                |  beta
+        - cache :header do
+          .navbar-header
+            button.navbar-toggle.collapsed data-target=".navbar-collapse" data-toggle="collapse" type="button"
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.header-brand href="/"
+              img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAV4QAAFeEBXxPO3AAAAAd0SU1FB94CHAMTFhOSJiIAAAQ/SURBVFjD7VZNaFxVFD7vzWSSqTaglioKWtGairroRhQLFbMRI6i4MosKBbsSUVEQf4qLLsToRqkugkK7UClU2tDSVKHESpPWUBNrYmKYJBOTzE9m5s28v/vufe/ec1xk3vAmnclfWxDpWc3M/e53vvPNvecegJvxX48j/aM3lF9bFyreHQOiGNAGmGM67j3QJX853L021mJc90TQVrLcxPSiEQt//3MmDwAADhMHEVEiIiEirRZVjOJ+cGRr1yFtYHQWInx6seImbCbamAhqeaBksd0OE5cZ90s2E6eKprvvrS/PtESduvW5T+KDY//srNjeAeHLfJgsjEAqYbr8g/HZ/KP7e04mV7pbNN3nLVd8x3iQNV2espl4obb4+1RWL5lee8X2eomIlELleH7vlalc7PTQ1FWOjc0uPa4UEhHVFCwUrHebOWy6/H2pFCcicjxxqWzz29KZcqwONDlXAJuJJwOpqCqC5pfMZwEA3vn6bA334/kJIKIE9wMetf6n4dT9jZLny85DIpBB6Fih4r7a9CwYFnsskKqCVW8dT6QBAIjqTx8XQSKQKhOxn4io9djAeA3z9ldnQ86j1eQolSLLFU+v5KvFUtnZFUi1FK2sfzi1ayUua9gJm4lsiHE9nwyLJRtxchFEzwmaDn/qxQ+/r63rUbDj+YBYr273A3ftWUmqpAJErH1HIpB4dVVD4/MPtybiQNWSkQg8P4ATh15pLOCO9i08HtNFXQuI6x2N24e2ZkO5e9vWDgAATdM0AIC4rvP2W1rr+OsEeL5EJFJ1AmL6nZvtcsmWeN1eAsJAKtVUgGF5HhF4K3i2b7rN6lrdXiLwuFBeUwEnL0xaAGRT5JhqAPctvwkjGxag69q99QLIcriwV93kMHE82laVwjnYvj8exSwsmQnT4bVbYDNBhYp71S2wXP5r9Eb5gbz4xfGLiaYOAADYzD9TVUvVs7MlNdKzY6PVP/Pm0ZZka8uOKhUAADAhR954+Ql/zc0eD/xQtVKIJZvt26gDuZK9Vyl0qj0NFSL1DU4+uGri3lOXAQBgOmN0KoUqTMBFMJMt2TsBAE4PTTUV0PPDBQAASOeMbR4PzoUvBSJSruS8BwBwaWJh9erTucpyBYbTLavvAiJSxfEGDn5zrn09DuQM+1u5/FgRIpJhsY8atfSmsVCwAADg/B9zHYbFfp7JljvDtbUcCJP8lS48UrZZ//hsvmtTd/jKdL7pWsliCSaC6chfRLYr2prhUwul6zfDHT7xGzAetAhfTkSuFxFRYnhy8cYNj6991lf7PJEu3FNNGr60lFos1f6mz48NXr/EOaO+cc1mynscT4yFmcOxjIvAWCiYLzXqLdccmaL5OuP+tPCljI5hjQZSqZR0mMgUK86neufHa07d8fUIMGze5/BglAgUIq1KqmkAMV3XJGLh9mSSitda/d/zRbgZ/+v4FyB1DwhrhIoTAAAAAElFTkSuQmCC"
+              |  SciRate
+              - if Settings::STAGING || Rails.env == 'development'
+                span.staging title="This site is used to test new SciRate features. If you want to use SciRate, please head to https://scirate.com/ instead. Data preservation here is not guaranteed."
+                  |  dev
+              - else
+                span.staging title="We're currently adding lots of new features. Please report any issues to bugs@scirate.com"
+                  |  beta
         nav.collapse.navbar-collapse role="navigation"
           = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
             = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
           ul.nav.navbar-nav.navbar-right
-            - cache current_user do
+            - cache [:header, current_user] do
               - if signed_in?
                 li= link_to "Home", root_path
+                - if current_user.is_admin?
+                  li
+                    a href="/admin" Admin
                 li.dropdown
-                  a.dropdown-toggle data-toggle="dropdown" 
+                  a.dropdown-toggle data-toggle="dropdown"
                     = current_user.fullname
                     b.caret
                   ul.dropdown-menu
@@ -37,16 +104,33 @@
                 li= link_to "Sign in", login_path
                 li= link_to "Sign up", signup_path
     .container
+      - System.reload
+      - unless System.alert.empty?
+        div class="alert alert-warning"
+          button.close type="button" data-dismiss="alert" &times;
+          p= raw System.alert
+
       = render 'sessions/flash'
-      - if signed_in? && !current_user.active?
+      - if signed_in? && !current_user.email_confirmed?
         .welcome-banner
           .pull-right
             button#resend-confirm-email.btn.btn-default
               | Resend Confirmation
           | Welcome to SciRate! A confirmation message was sent to <b>#{current_user.email}</b>.
     = yield
-    .container
-      = render 'layouts/footer'
-    = render 'layouts/javascript'
 
-= render template: 'layouts/head'
+    script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+
+    javascript:
+      SciRate.current_user = #{raw (current_user ? current_user.to_js : false)};
+      SciRate.scited_by_uid = #{raw @scited_by_uid.to_json};
+
+      // Bind scite toggles
+      $('.scite-toggle').each(function() {
+        new View.SciteToggle({el: this})
+      });
+
+    - cache :footer do
+      .container
+        = render 'layouts/footer'
+

@@ -2,12 +2,53 @@ SciRate.login = -> redirect("/login")
 
 class window.View extends Backbone.View
 
+# Modal for selecting a custom date range
+SciRate.customDateRange = (callback) ->
+  html = """
+         <div id="datepicker" class="modal">
+           <div class="modal-dialog">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <button class="close" type="button" data-dismiss="modal">
+                   &times;
+                 </button>
+                 <h4 class="modal-title">Custom date range</h4>
+               </div>
+               <div class="modal-body">
+                 <label for="dateRangeFrom">From</label>
+                 <input id="dateRangeFrom" class="form-control" type="date">
+                 <br>
+                 <label for="dateRangeTo">To</label>
+                 <input id="dateRangeTo" class="form-control" type="date">
+               </div>
+               <div class="modal-footer">
+                 <button id="submitCustomDate" class="btn btn-default">Go</button>
+               </div>
+             </div>
+           </div>
+         </div>
+         """
+
+  $modal = $(html)
+
+  $modal.modal()
+
+  $('#submitCustomDate').on 'click', ->
+    start = moment($('#dateRangeFrom').val())
+    end = moment($('#dateRangeTo').val())
+    callback(start, end)
+    $modal.modal('hide')
+
+
 class View.SciteToggle extends View
   events:
     'click .scite': "scite"
     'click .unscite': "unscite"
     'click .expand': "expand"
     'click .collapse': "collapse"
+
+  initialize: ->
+    @$el.addClass('active') if SciRate.scited_by_uid && SciRate.scited_by_uid[@$el.attr('data-paper-uid')]
 
   scite: ->
     return SciRate.login() unless SciRate.current_user
@@ -16,6 +57,10 @@ class View.SciteToggle extends View
     @expand()
     @$el.addClass('active')
     @$el.closest('.paper').find('.abstract').removeClass('hideable')
+
+    @$el.find('.scites-count .btn').text(
+      parseInt(@$el.find('.scites-count').text()) + 1
+    )
 
     # We don't wait for the post to come back before updating UI
     # May want error handling here at some stage
@@ -35,6 +80,10 @@ class View.SciteToggle extends View
     @collapse() unless scites_count > 0 || SciRate.current_user.expand_abstracts
 
     @$el.removeClass('active')
+
+    @$el.find('.scites-count .btn').text(
+      parseInt(@$el.find('.scites-count').text()) - 1
+    )
 
     $.post "/api/unscite/#{paper_uid}"
     return false
@@ -77,7 +126,7 @@ class View.SubscribeToggle extends View
       else
         -1
     ).appendTo(".my-feeds .tree")
-    
+
 
   unsubscribe: ->
     @$el.removeClass('active')
@@ -133,19 +182,11 @@ class View.AbstractToggle extends View
       SciRate.current_user.expand_abstracts = true
       $.post '/api/settings', { expand_abstracts: true }
 
-$ ->
-  $(document).ajaxError (ev, jqxhr, settings, err) ->
-    if err == "Unauthorized"
-      SciRate.login()
-
+setupPageLoad = ->
   # Setup generic dropdowns
   $('.dropdown').each ->
     $(this).mouseenter -> $(this).find('.dropdown-toggle').dropdown('toggle')
     $(this).mouseleave -> $(this).find('.dropdown-toggle').dropdown('hide')
-
-  # Bind scite toggles
-  $('.scite-toggle').each ->
-    new View.SciteToggle(el: this)
 
   # Feed subscription toggles
   $('.subscribe-toggle').each ->
@@ -172,3 +213,57 @@ $ ->
 
   $('li.paper').on 'mouseout', (ev) ->
     $(this).find('.links').addClass('hidden')
+
+  # Show timestamps as e.g. "12 minutes ago"
+  $('.timeago').timeago()
+
+  MathJax.Hub.Queue(["Typeset",MathJax.Hub])
+
+$(document).on 'ready', ->
+  $(document).ajaxError (ev, jqxhr, settings, err) ->
+    if err == "Unauthorized"
+      SciRate.login()
+
+  Turbolinks.enableTransitionCache()
+  NProgress.configure(showSpinner: false, minimum: 0.4, speed: 300)
+
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true,
+      ignoreClass: 'container',
+      processClass: 'tex2jax',
+    },
+    showProcessingMessages: false,
+    messageStyle: "none",
+    showMathMenu: false,
+    skipStartupTypeset: true,
+    errorSettings: {
+      style: { color: "black" },
+    },
+    TeX: {
+      noUndefined: {
+        attributes: {
+          mathcolor: 'black',
+        }
+      }
+    }
+  })
+
+  setupPageLoad()
+
+lastCached = false
+
+$(document).on 'page:load', ->
+  setupPageLoad() unless lastCached
+
+$(document).on 'page:fetch', ->
+  NProgress.start() unless lastCached
+$(document).on 'page:change', ->
+  lastCached = false
+  NProgress.done()
+$(document).on 'page:restore', ->
+  lastCached = true
+  NProgress.remove()

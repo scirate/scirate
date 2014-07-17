@@ -9,7 +9,7 @@
   .row
     .col-md-2.feedbar
       ul.nav.nav-list.tree-sidebar
-        = cache current_user do
+        = cache [:my_feeds, current_user, params.except(:feed, :page)] do
           - if signed_in?
             li.feed-folder.my-feeds
               label.nav-header
@@ -22,63 +22,64 @@
                 - else
                   - current_user.feeds.order(:fullname).each do |feed|
                     li.leaf title=(feed.uid)
-                      = link_to(feed.fullname, feed)
+                      = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page)))
 
-        = cache (@feed.nil? ? 'index' : @feed.uid) do
+        = cache [:sidebar, params] do
           li.source-heading arXiv.org
           - Feed.in_order(Settings::ARXIV_FOLDERS).each do |parent|
             li.feed-folder class=(@feed == parent ? 'active' : '') title=(parent.uid)
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               label.nav-header
                 i class=(expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right') class=(parent.children.length > 0 ? '' : 'transparent')
-                = link_to parent.fullname.gsub("High Energy Physics", "HEP"), parent
+                = link_to parent.fullname.gsub("High Energy Physics", "HEP"), feed_path(parent, params.except(:feed, :page))
               ul.nav.nav-list.tree style=(expanded ? '' : 'display: none;')
                 - parent.children.each do |feed|
-                  li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid) 
-                    = link_to(feed.fullname, feed)
+                  li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid)
+                    = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page)))
 
     .col-md-10.feed-center
-      header.feed-header class=(@feed ? '' : 'home')
-        .row
-          - if @feed
-            .col-md-10
-              h1
-                = @feed.fullname
-                |  (#{@feed.uid})
-            .col-md-2
-              = render 'feeds/subscribe', feed: @feed, subscribed: signed_in? && @feed.subscriptions.exists?(user_id: current_user.id)
-          - else
-            .col-md-10
-              h1= title
-              - if signed_in?
-                = link_to "edit subscriptions", feeds_path, class: 'view-subs'
-              - else
-                = link_to "sign in to customize", login_path, class: 'view-subs'
+      - cache [:feed, @feed, current_user] do
+        header.feed-header class=(@feed ? '' : 'home')
+          .row
+            - if @feed
+              .col-md-10
+                h1
+                  = @feed.fullname
+                  |  (#{@feed.uid})
+              .col-md-2
+                = render 'feeds/subscribe', feed: @feed, subscribed: signed_in? && @feed.subscriptions.exists?(user_id: current_user.id)
+            - else
+              .col-md-10
+                h1= title
+                - if signed_in?
+                  = link_to "edit subscriptions", feeds_path, class: 'view-subs'
+                - else
+                  = link_to "sign in to customize", login_path, class: 'view-subs'
       .row
         .col-md-9
           .paperlist
             ul.papers
               - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
-                p.description 
+                p.description
                   | New papers from all your subscribed feeds will appear here. You can find feeds to subscribe to using the links on the left, or by visiting the <a href="#{feeds_path}">my feeds</a> page.
               - elsif @papers.count == 0
                   p No papers found!
               - else
-                - @papers.each do |paper|
-                  = cache [paper, @scited_ids && @scited_ids.include?(paper.id)] do
-                    = render partial: "papers/paper", object: paper
+                - cache [:feed_papers, @papers.map { |paper| "#{paper.uid}/#{paper.scites_count}/#{paper.comments_count}" }] do
+                  = render partial: "papers/paper", collection: @papers, as: :paper
                 = will_paginate @pagination
 
         .col-md-3.feed-rightbar
-          - cache (current_user && current_user.expand_abstracts)
+          - cache [:abstoggle, current_user && current_user.expand_abstracts]
             = render 'papers/abstract_toggle'
-          - cache [current_user, @feed, @date, @range, @backdate, @since_last]
+          - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
-          - unless @recent_comments.empty?
-            h3 
-              - if @feed.nil?
-                a href=(comments_path) Recent comments
-              - else
-                a href=(feed_comments_path(@feed)) Recent comments
-            = render :partial => "comments/abbr_comment", :collection => @recent_comments
+          - cache [:recent_comments, @recent_comments, current_user && current_user.is_moderator?] do
+            - unless @recent_comments.length == 0
+              h3
+                - if @feed.nil?
+                  a href=(comments_path) Recent comments
+                - else
+                  a href=(feed_comments_path(@feed)) Recent comments
+              = render :partial => "comments/abbr_comment", :collection => @recent_comments
 

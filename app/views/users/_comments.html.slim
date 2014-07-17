@@ -1,0 +1,7 @@
+#profileComments
+  - if @user.comments_count == 0
+    .well
+      | No comments posted.
+  - else
+    = render @comments
+    = will_paginate @comments

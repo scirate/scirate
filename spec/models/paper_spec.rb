@@ -29,11 +29,9 @@
 require 'spec_helper'
 
 describe Paper do
-  before do
-    @paper = FactoryGirl.create(:paper)
-  end
+  let(:paper) { FactoryGirl.create(:paper) }
 
-  subject { @paper }
+  subject { paper }
 
   it { should respond_to(:title) }
   it { should respond_to(:authors) }
@@ -48,57 +46,69 @@ describe Paper do
   it { should respond_to(:comments) }
   it { should respond_to(:categories) }
 
+  it { should validate_uniqueness_of(:uid) }
   it { should be_valid }
 
-  describe "when update_date is older than submit_date" do
-    before { @paper.update_date = @paper.submit_date - 1.day }
-    it { should_not be_valid }
-  end
+  describe "#to_bibtex" do
+    let(:paper) do
+      FactoryGirl.create(:paper_with_versions,
+        author_str: "Susanta K. Khan and Madhumangal Pal",
+        title: "Interval-Valued Intuitionistic Fuzzy Matrices",
+        pubdate: "2014-05-12 01:00:00 UTC",
+        uid: "1404.6949",
+        journal_ref: "Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27"
+      )
+    end
 
-  it "should check uid uniqueness" do
-    paper_with_same_uid = @paper.dup
-    paper_with_same_uid.should_not be_valid
+    it "generates bibtex correctly" do
+     expect(paper.to_bibtex).to eq %Q{@misc{1404.6949,
+  author = {Susanta K.~Khan and Madhumangal Pal},
+  title = {{I}nterval-{V}alued {I}ntuitionistic {F}uzzy {M}atrices},
+  year = {2014},
+  eprint = {1404.6949},
+  howpublished = {Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27},
+  note = {arXiv:1404.6949v3}
+}}
+    end
   end
 
   describe "sciting" do
     let (:user) { FactoryGirl.create(:user) }
-    before do
-      @paper.save
-      user.scite!(@paper)
-    end
+    before { user.scite!(paper) }
 
-    its(:sciters) { should include(user) }
+    it "scites the paper" do
+      expect(paper.sciters.pluck(:id)).to include(user.id)
+    end
   end
 
   describe "authors" do
-    let (:author1) { FactoryGirl.create(:author, paper: @paper, position: 0) }
-    let (:author2) { FactoryGirl.create(:author, paper: @paper, position: 1) }
+    let (:author1) { FactoryGirl.create(:author, paper: paper, position: 0) }
+    let (:author2) { FactoryGirl.create(:author, paper: paper, position: 1) }
 
     it "should have the authors in the right order" do
-      @paper.reload.authors.should == [author1, author2]
+      expect(paper.reload.authors).to eq [author1, author2]
     end
   end
 
   describe "comments" do
     let (:user) { FactoryGirl.create(:user) }
-
     before { user.save }
 
     let!(:old_comment) do
       FactoryGirl.create(:comment,
-                         user: user, paper: @paper, created_at: 1.day.ago)
+                         user: user, paper: paper, created_at: 1.day.ago)
     end
     let!(:new_comment) do
       FactoryGirl.create(:comment,
-                         user: user, paper: @paper, created_at: 1.minute.ago)
+                         user: user, paper: paper, created_at: 1.minute.ago)
     end
     let!(:med_comment) do
       FactoryGirl.create(:comment,
-                         user: user, paper: @paper, created_at: 1.hour.ago)
+                         user: user, paper: paper, created_at: 1.hour.ago)
     end
 
-    it "should have the right comments in the right order" do
-      @paper.comments.should == [old_comment, med_comment, new_comment]
+    it "has the right comments in the right order" do
+      expect(paper.comments).to eq [old_comment, med_comment, new_comment]
     end
   end
 end

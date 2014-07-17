@@ -1,0 +1,49 @@
+- cool_paper = paper.scites_count > 0 || @search
+
+- unless defined?(showabs)
+  - showabs = cool_paper || (current_user && current_user.expand_abstracts)
+
+li.paper.tex2jax
+  .row
+    .col-md-8
+      .title
+        a href="/arxiv/#{paper.uid}" = paper.title
+      .authors
+        - paper.authors_searchterm[0..19].each_with_index do |searchterm, i|
+          a> href="/search?q=au:#{searchterm}+in:#{paper.feed_uids[0].split('.')[0]}"
+            = paper.authors_fullname[i] + (i == paper.authors_searchterm.length - 1 ? ' ' : ',')
+        - if paper.authors_searchterm.length > 20
+          = link_to "et al (#{paper.authors_searchterm.length - 20})", paper
+      .uid
+        => paper.pubdate.strftime("%b %d %Y")
+        - paper.feed_uids.each do |feed_uid|
+          a> href="/arxiv/#{feed_uid}" = feed_uid
+        => "arXiv:#{paper.uid}v#{paper.versions_count}"
+    .col-md-4
+      .pull-right
+        div.scite-toggle> data-paper-uid=(paper.uid)
+          button.btn.unscite.btn-success title="Unscite this paper"
+            | Scited
+
+          button.btn.btn-default.scite title="Scite this paper if you find it interesting"
+            | Scite!
+
+          .scites-count
+            a href="/arxiv/#{paper.uid}/scites" title="Number of Scites"
+              button.btn.btn-default.count= paper.scites_count
+
+        div.bibtex>
+          a.btn.btn-default title="Get BibTeX citation"
+            i.fa.fa-bookmark-o
+          .card.hidden
+            textarea.bibtex= paper.to_bibtex
+            button#copyButton.btn.btn-default Copy Citation
+
+        a.paper-download.btn.btn-success title="Download PDF" href=(paper.pdf_url)
+          | PDF
+        - if paper.comments_count > 0
+          div
+            a href="/arxiv/#{paper.uid}" = pluralize(paper.comments_count, 'comment')
+
+  .abstract class=("hidden" unless showabs) class=("hideable" unless cool_paper)
+    = paper.abstract

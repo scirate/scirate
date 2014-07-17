@@ -1,0 +1,7 @@
+<%= simple_format(strip_tags(@comment.content)) %>
+
+<p style="font-size:small;color:#666">—
+<br>
+View this comment on SciRate: <a href="https://scirate.com/arxiv/<%= @comment.paper.uid %>#<%= @comment.id %>">https://scirate.com/arxiv/<%= @comment.paper.uid %>#<%= @comment.id %></a>
+<br>
+If you'd prefer not to receive these emails, they can be disabled in your <a href="https://scirate.com/settings">settings</a>.</p>

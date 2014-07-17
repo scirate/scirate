@@ -1,0 +1,30 @@
+- provide :title, "All Feeds"
+
+- cache [:feeds, @subscribed_ids] do
+  div id="subscriptions" class="container"
+    h1 My Feeds
+
+    | Please choose one or more feeds to subscribe to. Papers from subscribed feeds will appear on your <a href="/">home feed</a>.
+
+    h2 Physics
+    - Feed.in_order(['gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph']).each do |feed|
+      div.feed-card
+        => feed.fullname
+        | [<a href="#{url_for(feed)}">#{feed.uid}</a>]
+        = render 'feeds/subscribe', feed: feed,
+                 subscribed: @subscribed_ids.include?(feed.uid)
+
+    - Feed.in_order(['astro-ph', 'cond-mat', 'physics', 'math', 'stat', 'cs', 'q-bio', 'q-fin', 'nlin']).each do |feed|
+      h2= feed.fullname
+      div.feed-card
+        => feed.fullname
+        | [<a href="#{url_for(feed)}">#{feed.uid}</a>]
+        = render 'feeds/subscribe', feed: feed,
+                 subscribed: @subscribed_ids.include?(feed.uid)
+
+      - feed.children.order(:fullname).each do |feed|
+        div.feed-card
+          => feed.fullname
+          | [<a href="#{url_for(feed)}">#{feed.uid}</a>]
+          = render 'feeds/subscribe', feed: feed,
+                   subscribed: @subscribed_ids.include?(feed.uid)

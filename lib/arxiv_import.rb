@@ -1,4 +1,15 @@
-module Arxiv; end
+require 'data_helpers'
+
+module Arxiv
+  # Remove trailing version from an arXiv paper uid
+  def self.strip_version(uid)
+    if m = uid.match(/(.+)v\d+/)
+      m[1]
+    else
+      uid
+    end
+  end
+end
 
 module Arxiv::Import
   def self.papers(models, opts={})
@@ -9,7 +20,7 @@ module Arxiv::Import
     end
 
     # Ensure Elasticsearch knows about these new/updated papers
-    Search::Paper.index_by_uids(paper_uids)
+    Search::Paper.index_by_uids(paper_uids) unless paper_uids.empty?
 
     paper_uids
   end
@@ -20,16 +31,15 @@ module Arxiv::Import
     ### First pass: Add new Feeds.
     feed_uids = models.map { |m| m.categories }.flatten.uniq
     Feed.arxiv_import(feed_uids, opts)
-    feeds_by_uid = Feed.map_uids
+    feeds_by_uid = Rails.cache.fetch(:feeds_by_uid) { map_models :uid, Feed.all }
 
     ### Second pass: Add new papers and handle updates.
 
     # Need to find and update existing papers, then bulk import new ones
     uids = models.map(&:id)
-    existing_papers = Paper.where(uid: uids)
-    existing_by_uid = Hash[existing_papers.map { |paper| [paper.uid, paper] }]
+    existing_by_uid = map_models :uid, Paper.where(uid: uids).select('uid', 'update_date', 'pubdate')
 
-    paper_columns = [:uid, :submitter, :title, :author_str, :abstract, :author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :pubdate, :abs_url, :pdf_url]
+    paper_columns = [:uid, :submitter, :title, :author_str, :abstract, :author_comments, :msc_class, :report_no, :journal_ref, :doi, :proxy, :license, :submit_date, :update_date, :versions_count, :pubdate, :abs_url, :pdf_url]
     paper_values = []
 
     version_columns = [:paper_uid, :position, :date, :size]
@@ -83,6 +93,7 @@ module Arxiv::Import
 
         model.versions[0].date,
         model.versions[-1].date,
+        model.versions.length,
         pubdate,
         "http://arxiv.org/abs/#{model.id}",
         "http://arxiv.org/pdf/#{model.id}.pdf",
@@ -114,11 +125,7 @@ module Arxiv::Import
           pubdate
         ]
 
-        feed = feeds_by_uid[feed_uid]
-        if feed.last_paper_date.nil? || pubdate.to_date > feed.last_paper_date.to_date
-          feed.last_paper_date = pubdate
-          feed.save
-        end
+        feeds_by_uid[feed_uid].new_paper_date!(pubdate)
       end
     end
 
@@ -132,25 +139,31 @@ module Arxiv::Import
     puts "Read #{models.length} items: #{new_uids.length} new, #{updated_uids.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(paper_columns, paper_values, opts)
     unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing papers: #{result.failed_instances.inspect}")
+      SciRate.notify_error("Error importing papers: #{result.failed_instances.inspect}")
     end
 
     puts "Importing #{version_values.length} versions" unless version_values.empty?
     result = Version.import(version_columns, version_values, opts)
     unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing versions #{result.failed_instances.inspect}")
+      SciRate.notify_error("Error importing versions #{result.failed_instances.inspect}")
     end
 
     puts "Importing #{author_values.length} authors" unless author_values.empty?
     result = Author.import(author_columns, author_values, opts)
     unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing authors: #{result.failed_instances.inspect}")
+      SciRate.notify_error("Error importing authors: #{result.failed_instances.inspect}")
     end
 
     puts "Importing #{category_values.length} categories" unless category_values.empty?
     result = Category.import(category_columns, category_values, opts)
     unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing categories: #{result.failed_instances.inspect}")
+      SciRate.notify_error("Error importing categories: #{result.failed_instances.inspect}")
+    end
+
+    # Ensure counter caches are recreated for updated papers
+    Paper.where(uid: updated_uids).each do |paper|
+      paper.refresh_comments_count!
+      paper.refresh_scites_count!
     end
 
     # Return uids of the papers we imported/updated

@@ -1,8 +1,12 @@
 # SciRate 3
 
+[![Build Status](https://travis-ci.org/draftable/scirate3.svg?branch=master)](https://travis-ci.org/draftable/scirate3)
+[![Coverage Status](https://coveralls.io/repos/draftable/scirate3/badge.png?branch=master)](https://coveralls.io/r/draftable/scirate3?branch=master)
+[![Code Climate](https://codeclimate.com/github/draftable/scirate3.png)](https://codeclimate.com/github/draftable/scirate3)
+
 A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon, [Bill Rosgen](http://intractable.ca/bill/) and [Aram Harrow](http://www.mit.edu/~aram/). Currently being expanded upon by [Draftable](https://draftable.com/).
 
-The production site is deployed at [https://scirate.com/](https://scirate.com/). A staging instance which copies the live database every day can be found at [http://scirate-dev.draftable.com/](https://scirate-dev.draftable.com/).
+The production site is deployed at [https://scirate.com/](https://scirate.com/).
 
 ## Contributing
 
@@ -19,7 +23,7 @@ We encourage contributions!
 Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
 ```shell
-sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1
+sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev
 ```
 
 You will also need to download and install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/). Bundler should take care of the rest.
@@ -32,19 +36,21 @@ bundle install
 
 ## Setting up the database
 
-If you've just installed postgres, you'll need a new database user:
+If you've just installed postgres, it'll be easiest to use the default 'peer' authentication method.  Create a postgres role for your user account:
 
 ```shell
-sudo -u postgres createuser --superuser --pwprompt scirate
+sudo -u postgres createuser --superuser $USER
 ```
 
-Note that the 'peer' auth method of postgres is incompatible with sphinxsearch, so you do need a password. Copy the example database configuration file:
+Copy the example database configuration file:
 
 ```
 cp config/database.yml.example config/database.yml
 ```
 
-Edit the new file and enter your auth details for the development database. Then initialize the database and Elasticsearch, download the basic feed layout, and start the server:
+Edit the new file and remove both pairs of `username` and `password` settings.
+
+Then, initialize the database and Elasticsearch, download the basic feed layout, and start the server:
 
 ```shell
 rake db:setup

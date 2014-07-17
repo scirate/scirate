@@ -14,6 +14,12 @@ class Category < ActiveRecord::Base
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid
   belongs_to :feed, foreign_key: :feed_uid, primary_key: :uid
 
-  validates :paper_uid, presence: true
-  validates :feed_uid, presence: true
+  validates :paper_uid, :feed_uid, presence: true
+
+  # To allow assigning feeds directly in tests
+  before_create do
+    if position.nil?
+      self.position = paper.categories.length
+    end
+  end
 end

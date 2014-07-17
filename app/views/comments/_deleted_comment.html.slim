@@ -13,19 +13,18 @@ div.comment data-id=(comment.id) data-markup=(comment.content)
     - if comment.parent
       |  in reply to #{link_to comment.parent.user.fullname, comment.parent.user}
     span.timeago
-      = " #{time_ago_in_words(comment.created_at)} ago"
+      =< timeago(comment.created_at)
       - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
         |  (<span class="score">#{comment.cached_votes_up-comment.cached_votes_down}</span> points)
     .body.tex2jax
       = simple_format(strip_tags(comment.content))
-    - if @paper && current_user
-      .actions
-        a.permalink href="##{comment.id}" permalink
-        - if current_user.id == comment.user_id
-          a.edit edit
-          = link_to 'restore', restore_comment_path(comment), method: :post
+    .actions
+      a.permalink href="##{comment.id}" permalink
+      - if current_user.id == comment.user_id || current_user.is_moderator?
+        a.edit edit
+        = link_to 'restore', restore_comment_path(comment), method: :post
+      - else
+        - if comment.reports.exists?(user_id: current_user.id)
+            a.unreport reported (undo)
         - else
-          - if comment.reports.exists?(user_id: current_user.id)
-              a.unreport reported (undo)
-          - else
-            a.report report
+          a.report report

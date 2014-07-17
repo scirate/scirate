@@ -34,7 +34,6 @@ class View.Search extends Backbone.View
     'keyup input': 'compileQuery'
     'change #date': 'changeDate'
     'change #order': 'compileQuery'
-    'click #submitCustomDate': 'changeCustomDate'
 
   # XXX (Mispy): This is a bit messy and redundant
   # with the server-side code. Perhaps refactor so
@@ -66,6 +65,7 @@ class View.Search extends Backbone.View
     title = ""
     abstract = ""
     category = ""
+    scited_by = ""
     date = null
     order = null
 
@@ -80,6 +80,7 @@ class View.Search extends Backbone.View
         when 'ti' then title = content
         when 'abs' then abstract = content
         when 'in' then category = content
+        when 'scited_by' then scited_by = content
         when 'date'
           date = switch content
             when @ranges.week then 'week'
@@ -95,6 +96,7 @@ class View.Search extends Backbone.View
     @$('#title').val title
     @$('#abstract').val abstract
     @$('#category').val category
+    @$('#scited_by').val scited_by
     @$('#date').val date if date?
     @$('#order').val order if order?
 
@@ -117,21 +119,16 @@ class View.Search extends Backbone.View
 
   changeDate: ->
     if @$('#date').val() == 'custom'
-      @$('#datepicker').modal()
+      SciRate.customDateRange (start, end) =>
+        @ranges.custom = @compileDateRange(start, end)
+
+        if @ranges.custom == null
+          @$('#date').val('any')
+
+        @compileQuery()
     else
       @ranges.custom = null
       @compileQuery()
-
-  changeCustomDate: ->
-    start = moment(@$('#dateRangeFrom').val())
-    end = moment(@$('#dateRangeTo').val())
-    @ranges.custom = @compileDateRange(start, end)
-
-    if @ranges.custom == null
-      @$('#date').val('any')
-
-    @$('#datepicker').modal('hide')
-    @compileQuery()
 
   escape: (s) ->
     if s.indexOf(' ') != -1
@@ -164,20 +161,25 @@ class View.Search extends Backbone.View
     category = @$('#category').val()
     query.push("in:#{@escape(category)}") if category.length > 0
 
+    scited_by = @$('#scited_by').val()
+    query.push("scited_by:#{@escape(scited_by)}") if scited_by.length > 0
+
     date = @$('#date').val()
     if date != 'any' && @ranges[date]?
       query.push "date:#{@ranges[date]}"
 
     order = @$('#order').val()
-    if order != "scites"
+    if order != "recency"
       query.push("order:#{order}")
 
     query_text = query.join(' ')
     $('input#advanced').val(query_text)
     $('#advancedPreview').text(@$('#q').val() + ' ' + query_text)
 
+$(document).on 'ready', ->
+  $('#searchPage').each ->
+    new View.Search(el: this)
 
-
-$ ->
+$(document).on 'page:load', ->
   $('#searchPage').each ->
     new View.Search(el: this)

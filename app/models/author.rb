@@ -21,16 +21,13 @@
 #
 # Instead, we should choose the assumptions we want to make for
 # unifying different authors at the point of retrieval. This also
-# makes queries and sphinx indexing faster, as we only have to go
+# makes queries and indexing faster, as we only have to go
 # through a single association to get most of the data.
 #
 class Author < ActiveRecord::Base
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid
 
-  validates :paper_uid, presence: true
-  validates :position, presence: true
-  validates :fullname, presence: true
-  validates :searchterm, presence: true
+  validates :paper_uid, :position, :fullname, :searchterm, presence: true
 
   # Makes a searchterm of the form e.g.
   # "Biagini_M" from "Maria Enrica Biagini"
@@ -51,5 +48,11 @@ class Author < ActiveRecord::Base
     end
 
     term.mb_chars.normalize(:kd).to_ascii.to_s.gsub('-', '_')
+  end
+
+  def surname_first
+    fullname.split.tap do |spl|
+      return spl[-1] + ", " + spl[0..-2].join(' ')
+    end
   end
 end

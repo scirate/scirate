@@ -1,41 +1,66 @@
 require 'spec_helper'
 
-describe "Change Password" do
+describe "Password Settings" do
   subject { page }
-  let(:user) { FactoryGirl.create(:user) }
+  context "as user signed up with google" do
+    let(:user) { google_user }
 
-  before do
-    sign_in(user)
-    visit settings_password_path
-  end
-
-  describe "with incorrect previous password" do
     before do
-      fill_in "current_password",  with: 'password'
-      fill_in "new_password", with: 'iamsleethacker'
-      fill_in "confirm_password",  with: 'iamsleethacker'
+      sign_up_with_google
+      visit settings_password_path
+
+      expect(page).to have_content "does not require a password"
+      fill_in "new_password", with: 'newpass'
+      fill_in "confirm_password", with: 'newpass'
       click_button "Save changes"
     end
 
-    it { should have_error_message }
-    specify { user.reload.authenticate('iamsleethacker').should be_false }
+    it "changes the password" do
+      expect(page).to have_selector('.alert-success')
+      expect(user.reload.authenticate('newpass')).to be_truthy
+    end
   end
 
-  describe "with correct previous password" do
+  context "as a normal user" do
+    let(:user) { FactoryGirl.create(:user) }
+
     before do
-      fill_in "current_password",  with: user.password
-      fill_in "new_password", with: user.password+'new'
-      fill_in "confirm_password",  with: user.password+'new'
-      click_button "Save changes"
+      sign_in(user)
+      visit settings_password_path
     end
 
-    it { should have_selector('.alert-success') }
-    specify { user.reload.authenticate(user.password+'new').should be_true }
+    context "with incorrect previous password" do
+      before do
+        fill_in "current_password", with: 'password'
+        fill_in "new_password", with: 'iamsleethacker'
+        fill_in "confirm_password", with: 'iamsleethacker'
+        click_button "Save changes"
+      end
 
-    it "should send an email notification" do
-      last_email.should_not be_nil
-      last_email.to.should include(user.email)
-      last_email.subject.should include("password has been changed")
+      it "throws an error" do
+        expect(page).to have_error_message
+        expect(user.reload.authenticate('iamsleethacker')).to be_falsey
+      end
+    end
+
+    context "with correct previous password" do
+      before do
+        fill_in "current_password",  with: user.password
+        fill_in "new_password", with: user.password+'new'
+        fill_in "confirm_password",  with: user.password+'new'
+        click_button "Save changes"
+      end
+
+      it "changes the password" do
+        expect(page).to have_selector('.alert-success')
+        expect(user.reload.authenticate(user.password+'new')).to be_truthy
+      end
+
+      it "sends an email notification" do
+        expect(last_email).to_not be_nil
+        expect(last_email.to).to include(user.email)
+        expect(last_email.subject).to include("password has been changed")
+      end
     end
   end
 end

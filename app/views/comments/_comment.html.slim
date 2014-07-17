@@ -17,10 +17,10 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
         div= link_to comment.paper.title, comment.paper
       = link_to comment.user.fullname, comment.user
       - if comment.parent
-        |  in reply to 
-        a href="##{comment.parent.id}" = comment.parent.user.fullname
+        |  in reply to
+        a< href="##{comment.parent.id}" = comment.parent.user.fullname
       span.timeago
-        = " #{time_ago_in_words(comment.created_at)} ago"
+        =< timeago(comment.created_at)
         - if comment.cached_votes_up > 0 || comment.cached_votes_down > 0
           |  (<span class="score">#{comment.cached_votes_up-comment.cached_votes_down}</span> points)
       .body.tex2jax
@@ -39,6 +39,6 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
           a.reply reply
           - if current_user.is_moderator?
             .moderate
-              | #{status_warning} <a class="edit">edit</a> 
-              = link_to 'delete', delete_comment_path(comment), method: :post
+              | #{status_warning} <a class="edit">edit</a>
+              =< link_to 'delete', delete_comment_path(comment), method: :post
   div style="clear: both;"

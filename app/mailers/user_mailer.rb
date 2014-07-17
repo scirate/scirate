@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default :from => "no-reply@#{Settings::HOST}"
+  default from: "SciRate <notifications@#{Settings::HOST}>"
 
   def signup_confirmation(user)
     @user = user
@@ -21,5 +21,12 @@ class UserMailer < ActionMailer::Base
     @old_email = old_email
 
     mail to: old_email, subject: "Your email address has been changed"
+  end
+
+  def comment_alert(user, comment)
+    @user = user
+    @comment = comment
+
+    mail from: "#{comment.user.fullname} <notifications@scirate.com>", to: user.email, subject: "[SciRate] Re: #{comment.paper.title}"
   end
 end

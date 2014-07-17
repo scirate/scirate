@@ -1,0 +1,74 @@
+- provide :title, "Admin"
+
+.container
+  h1 SciRate Admin
+
+  hr
+
+  h2 Global Alert
+
+  = form_tag "/admin/alert", class: 'form' do
+    .form-group
+      = text_area_tag :alert, System.alert, class: 'form-control'
+    = submit_tag "Save", class: 'btn btn-default'
+
+  hr
+
+  h2 Statistics
+
+  table.table
+    thead
+      tr
+        th Week
+        th Scites
+        th Papers
+        th Comments
+        th Active Users
+        th New Users
+        th Best Paper
+    - @weeks.each_with_index do |week, i|
+      tr
+        td
+          - if i == 0
+            | Last 7 Days
+          - else
+            = pluralize(i, 'Week') + " Ago"
+        td= week[:scites]
+        td= week[:papers]
+        td= week[:comments]
+        td= week[:active_users]
+        td= week[:new_users]
+        td
+          - if week[:best_paper].nil?
+            | None
+          - else
+            a href=(paper_url week[:best_paper].uid) = week[:best_paper].title
+
+
+  hr
+
+  h2= "Users (#{User.count})"
+
+  table.table
+    thead
+      tr
+        th Fullname
+        th Username
+        th Email
+        th Joined
+        th Scites
+        th Comments
+        th Actions
+    - User.order('created_at DESC').each do |user|
+      tr
+        td
+          a href="/#{user.username}" = user.fullname
+        td= user.username
+        td= user.email
+        td width="20%"
+          = timeago(user.created_at)
+        td= user.scites_count
+        td= user.comments_count
+        td
+          a href="/admin/users/#{user.username}/edit" Edit
+

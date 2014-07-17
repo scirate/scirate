@@ -1,9 +1,5 @@
 module ApplicationHelper
 
-  def logo
-      image_tag("scirate.png", alt: "SciRate", class: "round")
-  end
-
   # Returns the full title on a per-page basis.
   def full_title(page_title)
     base_title = "SciRate"
@@ -28,5 +24,10 @@ module ApplicationHelper
 
   def status_warning
     raw "<span class=\"warning\">#{current_user.account_status}:</span>"
+  end
+
+  def timeago(dt)
+    dt = Time.parse(dt) if dt.is_a? String
+    raw "<abbr class=\"timeago\" title=\"#{dt.iso8601}\">#{dt.strftime("%b %d %Y %R UTC")}</abbr>"
   end
 end

@@ -1,43 +1,70 @@
+require 'open-uri'
+require 'data_helpers'
+
 class UsersController < ApplicationController
   before_filter :signed_in_user,
            only: [:feeds, :edit, :update, :destroy, :settings, :settings_password]
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  def profile
-    @user = User.find_by_username!(params[:username])
+  before_filter :profile_data, only: [:activity, :papers, :scites, :comments]
 
-    if params[:scite_order] == 'published'
-      @scite_order = :published
-      scited_papers = @user.scited_papers.order("submit_date DESC")
-    else
-      @scite_order = :scited
-      scited_papers = @user.scited_papers.order("scites.created_at DESC")
-    end
+  def profile_data
+    @user = User.where("lower(username) = lower(?)", params[:username]).first!
+  end
 
-    @scited_ids = current_user.scited_papers.pluck(:id) if current_user
+  def activity
+    @tab = :activity
+    @activities = @user.activity_feed(25)
 
-    @scited_papers = scited_papers
+    render 'users/profile'
+  end
+
+  def papers
+    @tab = :papers
+
+    @authored_papers = @user.authored_papers.includes(:feeds, :authors).paginate(page: params[:page])
+    @scited_by_uid = current_user.scited_by_uid(@authored_papers) if current_user
+
+    render 'users/profile'
+  end
+
+  def scites
+    @tab = :scites
+
+    @scited_papers = @user.scited_papers
+      .order("scites.created_at DESC")
       .includes(:feeds, :authors)
-      .paginate(page: params[:scite_page], per_page: 10)
+      .paginate(page: params[:page], per_page: 10)
+
+    @scited_by_uid = current_user.scited_by_uid(@scited_papers) if current_user
+
+    render 'users/profile'
+  end
+
+  def comments
+    @tab = :comments
+
     @comments = @user.comments
       .where(hidden: false, deleted: false)
       .includes(:user, :paper)
-      .paginate(page: params[:comment_page], per_page: 20)
+      .paginate(page: params[:page], per_page: 20)
+
+    render 'users/profile'
   end
 
   def new
     if !signed_in?
       @user = User.new
     else
-      flash[:error] = "Sign out to create a new user!"
+      #flash[:error] = "Sign out to create a new user!"
       redirect_to root_path
     end
   end
 
   def create
     if !signed_in?
-      default_username = User.default_username(params[:user][:fullname]) + "-#{User.count}"
+      default_username = User.default_username(params[:user][:fullname])
       @user = User.new(params.required(:user).permit(:fullname, :email, :password).merge(username: default_username, password_confirmation: params[:user][:password]))
       if @user.save
         @user.send_signup_confirmation
@@ -70,7 +97,7 @@ class UsersController < ApplicationController
   def activate
     user = User.find_by_id(params[:id])
 
-    if user && !user.active? && user.confirmation_token == params[:confirmation_token]
+    if user && !user.email_confirmed? && user.confirmation_token == params[:confirmation_token]
 
       if user.confirmation_sent_at > 2.days.ago
         user.activate
@@ -94,15 +121,6 @@ class UsersController < ApplicationController
     @subscribed_ids = @user.subscriptions.pluck(:feed_uid)
   end
 
-  def scited_papers
-    @user = User.find(params[:id])
-    @papers = @user.scited_papers.paginate(page: params[:page]).includes(:feed)
-  end
-
-  def comments
-    @user = User.includes(comments: :paper).find(params[:id])
-  end
-
   def settings
     @user = current_user
     return unless request.post?
@@ -110,18 +128,30 @@ class UsersController < ApplicationController
     old_email = @user.email
 
     user_params = params.required(:user)
-                        .permit(:fullname, :email, :username, :expand_abstracts)
+                        .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about, :email_about_replies, :email_about_comments_on_authored, :email_about_comments_on_scited)
 
-    if @user.update_attributes(user_params)
-      if old_email != @user.email
-        @user.send_email_change_confirmation(old_email)
+    # Handle some varying input forms of author identifiers
+    # e.g. https://twitter.com/fishcorn/status/476046077733261313
+    aid = user_params[:author_identifier]
+    if m = aid.match(/\/([^\/]+)\/?\Z/)
+      aid = m[1]
+    end
+    user_params[:author_identifier] = aid.downcase
+
+    begin
+      if @user.update_attributes(user_params)
+        if old_email != @user.email
+          @user.send_email_change_confirmation(old_email)
+          sign_in @user
+        end
+
         sign_in @user
+        flash[:success] = "Profile updated"
+      else
+        flash[:error] = @user.errors.full_messages
       end
-
-      sign_in @user
-      flash[:success] = "Profile updated"
-    else
-      flash[:error] = @user.errors.full_messages
+    rescue OpenURI::HTTPError
+      flash[:error] = "The arXiv doesn't seem to have that author identifier, please double check"
     end
   end
 
@@ -129,7 +159,7 @@ class UsersController < ApplicationController
     @user = current_user
     return unless request.post?
 
-    if @user.authenticate(params[:current_password])
+    if @user.password_digest.nil? || @user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
         if @user.change_password(params[:new_password])
           sign_in @user

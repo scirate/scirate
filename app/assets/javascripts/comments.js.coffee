@@ -61,7 +61,7 @@ class Comment
     @votestate = 'downvote'
 
     $.post "/comments/#{@cid}/downvote"
-  
+
   unvote: ->
     """Undo an existing downvote or upvote."""
     if @votestate == 'upvote'
@@ -173,8 +173,12 @@ class Comment
     @setupVoting()
     @setupActions()
 
-$ ->
+$(document).on 'ready', ->
   $('a.has-tooltip').tooltip()
   return unless ($('.comments').length || $('.comment').length)
   Comment.setupComments()
 
+$(document).on 'page:load', ->
+  $('a.has-tooltip').tooltip()
+  return unless ($('.comments').length || $('.comment').length)
+  Comment.setupComments()

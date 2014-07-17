@@ -1,44 +1,46 @@
-ruby '2.1.0'
+ruby '2.1.2'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', "~> 4.0.0"
-gem 'bcrypt-ruby'
-
-# Sends us emails when stuff breaks in production
-gem 'exception_notification',
-    git: 'git://github.com/sunkencity/exception_notification'
+gem 'rails', '4.1.1'
+gem 'bcrypt', '~> 3.1.7'
 
 # Database stuff
 gem 'pg' # Postgres support
-gem 'squeel' # XXX (Mispy): Can we remove this?
 gem 'activerecord-import' # For bulk importing papers
 gem 'acts_as_votable' # Comment votes (not scites)
-gem 'unidecoder', "~> 1.1.2" # For making ascii author searchterms
+gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
+
+# Ruby futures
+#gem 'futuroscope', require: 'futuroscope/convenience'
 
 # Frontend stuff
 gem 'will_paginate' # Displaying pages of results
 gem 'chronic' # Natural language date parsing
+gem 'turbolinks' # Speeds up links
+
+# Authentication
+gem 'omniauth' # For google
+gem 'omniauth-google-oauth2'
 
 # For interfacing with the arxiv OAI to
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
-gem 'oai', git: 'git://github.com/code4lib/ruby-oai'
-gem 'arxivsync', git: 'git://github.com/mispy/arxivsync'
-gem 'nokogiri', "= 1.5.9"
+gem 'oai', github: 'mispy/ruby-oai' # For Rails 4.1 compatibility
+gem 'arxivsync', github: 'mispy/arxivsync'
+gem 'nokogiri', '1.5.9'
 
-# Elasticsearch searchkick gem
+# Elasticsearch API gem
 gem 'stretcher'
+gem 'faraday', '0.8.9' # 0.9.0 breaks faraday_middleware-multi_json
 
 # Asset preprocessors
-gem 'sass-rails'
+gem 'sass-rails', '4.0.3'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
-gem 'haml'
 gem 'slim'
-gem 'ractive-rails'
 
 # Memcached gem
 gem 'dalli'
@@ -46,9 +48,20 @@ gem 'dalli'
 # SCSS mixins for CSS3 browser compatibility
 gem 'bourbon'
 
+# Delayed job for async tasks (email)
+gem 'delayed_job_active_record'
+gem 'daemons'
+
 group :development, :test do
-  gem 'rspec-rails'
-  gem 'rspec-rerun'
+  gem 'rspec-rails', '~> 2.9'
+
+  # An improved IRB alternative for rails console
+  gem 'pry'
+  gem 'pry-rails'
+end
+
+group :production, :profile do
+  gem 'newrelic_rpm'
 end
 
 group :development do
@@ -59,10 +72,6 @@ group :development do
   # reflect the database schema into helpful
   # comments in the model code
   gem 'annotate'
-
-  # An improved IRB alternative for rails console
-  gem 'pry'
-  gem 'pry-rails'
 
   # Suppresses annoying asset pipeline logs
   gem 'quiet_assets'
@@ -86,16 +95,30 @@ group :test do
   # browser for integration tests
   gem 'capybara'
 
+  # Extensions to rspec syntax
+  gem 'shoulda-matchers'
+
   # So we can truncate the database properly
   # before each test suite is run
   gem 'database_cleaner'
 
-  # OS X specific?
-  gem 'rb-fsevent', :require => false
-  gem 'rb-readline'
+  # Code coverage
+  gem 'coveralls', require: false
+
+  # Javascript testing
+  gem 'capybara-webkit'
+
+  # Manipulating time during tests
+  gem 'timecop'
+end
+
+group :profile do
+  gem 'stackprof'
+  gem 'ruby-prof'
 end
 
 group :production do
-  # XXX (Mispy): Not sure we're using this atm
-  gem 'newrelic_rpm'
+  # Sends us emails when stuff breaks in production
+  gem 'exception_notification'
+  gem 'puma'
 end

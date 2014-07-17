@@ -1,0 +1,60 @@
+- @next_date = @date + @range.days
+- @prev_date = @date - @range.days
+
+- if @range == 1
+  - @next_date += 2.days if @next_date.wday == 6
+  - @next_date += 1.day if @next_date.wday == 0
+  - @prev_date -= 2.days if @prev_date.wday == 0
+  - @prev_date -= 1.day if @prev_date.wday == 6
+
+nav.timenav
+  h3 Date Published
+  p style="text-align: center;"
+    - if @range > 1
+      | #{@backdate.strftime("%b %d %Y")} &mdash;
+      =< @date.strftime("%b %d %Y")
+      br
+      | UTC
+    - else
+      = @date.strftime("%a %e %b %Y")
+      br
+      | UTC
+
+  table cellspacing="0"
+    tr
+      td.btn-default.half.top.left
+        a href=(url_for(params.merge(date: @prev_date.to_date, range: @range)))
+          = "Prev #{@range == 1 ? 'day' : @range.to_s + ' days'}"
+      td.btn-default.half.top.right
+        a href=(url_for(params.merge(date: @next_date.to_date, range: @range)))
+          = "Next #{@range == 1 ? 'day' : @range.to_s + ' days'}"
+
+    tr
+      td.underline
+
+    - if signed_in?
+      tr
+        td.btn-default colspan="2" class=("btn-primary" if @since_last)
+          a href=(url_for) title="Shows papers you probably haven't seen before today, based on when you last visited." Recently
+
+    tr
+      td.btn-default colspan="1" class=("btn-primary" if !@since_last && !params['date'] && @range == 1)
+        a href=(url_for(range: 1)) 1 Day
+
+    tr
+      td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 3)
+        a href=(url_for(range: 3)) 3 Days
+
+    tr
+      td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 7)
+        a href=(url_for(range: 7)) 1 Week
+
+    tr
+      td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 31)
+        a href=(url_for(range: 31)) 1 Month
+    tr
+      td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 365)
+        a href=(url_for(range: 365)) 1 Year
+    tr
+      td.btn-default colspan="2" class=("btn-primary" if false)
+        a#customDate Custom

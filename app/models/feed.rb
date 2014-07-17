@@ -15,7 +15,7 @@
 class Feed < ActiveRecord::Base
   belongs_to :parent, foreign_key: :parent_uid,
              primary_key: :uid, class_name: "Feed"
-  has_many :children, foreign_key: :parent_uid, 
+  has_many :children, foreign_key: :parent_uid,
            primary_key: :uid, class_name: 'Feed'
   has_many :subscriptions, dependent: :destroy,
            foreign_key: :feed_uid, primary_key: :uid
@@ -27,8 +27,6 @@ class Feed < ActiveRecord::Base
   validates :uid, presence: true, uniqueness: true
   validates :fullname, presence: true
   validates :source, presence: true
-
-  default_scope { order(:position) }
 
   # Returns toplevel arxiv categories for sidebar
   def self.arxiv_folders
@@ -52,7 +50,7 @@ class Feed < ActiveRecord::Base
 
     result = Feed.import(columns, values, opts)
     unless result.failed_instances.empty?
-      SciRate3.notify_error("Error importing feeds: #{result.failed_instances.inspect}")
+      SciRate.notify_error("Error importing feeds: #{result.failed_instances.inspect}")
     end
   end
 
@@ -78,6 +76,12 @@ class Feed < ActiveRecord::Base
     mapping
   end
 
+  def self.find_related_uids(uids)
+    Rails.cache.fetch [:related_uids, uids] do
+      uids + Feed.where(parent_uid: uids).pluck(:uid)
+    end
+  end
+
   # Grab a set of feeds in order by uid
   def self.in_order(uids)
     Feed.where(uid: uids).includes(:children).index_by(&:uid).slice(*uids).values
@@ -87,7 +91,20 @@ class Feed < ActiveRecord::Base
     uid
   end
 
-  def update_last_paper_date
+  # Update last_paper_date to the given timestamp if applicable
+  # Also update parent
+  def new_paper_date!(dt)
+    if self.last_paper_date.nil? || dt.to_date > self.last_paper_date.to_date
+      self.last_paper_date = dt
+      self.save!
+
+      unless self.parent_uid.nil?
+        self.parent.new_paper_date!(dt)
+      end
+    end
+  end
+
+  def update_last_paper_date!
     uids = [self.uid] + self.children.pluck(:uid)
     category = Category.where(feed_uid: uids).order("crosslist_date ASC").last
     unless category.nil?

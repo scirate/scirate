@@ -1,0 +1,14 @@
+<%
+assets = {}
+Dir.chdir("#{Rails.root}/app/assets/") do
+  Dir["**/*"].sort.each do |path|
+    filename = path.split('/')[-1]
+    unless path.include?("javascript") || path.include?("css") || !filename.include?('.')
+      assets[filename] = asset_path(filename)
+    end
+  end
+end
+%>
+
+window.asset_path = (name) ->
+  <%= assets.to_json %>[name]

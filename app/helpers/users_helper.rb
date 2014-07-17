@@ -8,6 +8,6 @@ module UsersHelper
   end
 
   def gravatar_for(user, options = { size: 50 })
-    image_tag(gravatar_url(user), alt: user.fullname, class: "gravatar")
+    image_tag(gravatar_url(user, options), alt: user.fullname, class: "gravatar")
   end
 end

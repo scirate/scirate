@@ -1,13 +1,28 @@
-SciRate3::Application.routes.draw do
-  root to: 'feeds#index'
+require 'sessions_helper'
+
+class NeedsUserConstraint
+  def self.matches?(request)
+    request.cookies.key?("remember_token")
+  end
+end
+
+SciRate::Application.routes.draw do
+  get '/', to: 'feeds#index', constraints: NeedsUserConstraint
+  get '/', to: 'feeds#index_nouser', as: 'root'
 
   get '/search', to: 'papers#search', as: 'papers_search'
 
-  match '/api/scite/:paper_uid', to: 'api#scite', via: [:get, :post], as: :scite, paper_uid: /.+/
-  match '/api/unscite/:paper_uid', to: 'api#unscite', via: [:get, :post], as: :unscite, paper_uid: /.+/
-  match '/api/subscribe/:feed_uid', to: 'api#subscribe', via: [:get, :post], as: :subscribe, feed_uid: /.+/
-  match '/api/unsubscribe/:feed_uid', to: 'api#unsubscribe', via: [:get, :post], as: :unsubscribe, feed_uid: /.+/
-  match '/api/settings', to: 'api#settings', via: [:get, :post]
+  post '/api/scite/:paper_uid', to: 'api#scite',
+       as: :scite, paper_uid: /.+/
+  post '/api/unscite/:paper_uid', to: 'api#unscite',
+       as: :unscite, paper_uid: /.+/
+  post '/api/subscribe/:feed_uid', to: 'api#subscribe',
+       as: :subscribe, feed_uid: /.+/
+  post '/api/unsubscribe/:feed_uid', to: 'api#unsubscribe',
+       as: :unsubscribe, feed_uid: /.+/
+  post '/api/hide_from_recent/:comment_id', to: 'api#hide_from_recent',
+       as: :hide_from_recent
+  post '/api/settings', to: 'api#settings'
 
   post '/api/resend_confirm', to: 'api#resend_confirm', as: :resend_confirm
 
@@ -26,16 +41,22 @@ SciRate3::Application.routes.draw do
   end
   get '/comments', to: 'comments#index'
 
+  get '/auth/:provider/callback', to: 'sessions#omniauth_callback'
+  get '/auth/:provider/disconnect',
+    to: 'sessions#omniauth_disconnect', as: 'omniauth_disconnect'
+  get '/auth/failure', to: 'sessions#omniauth_failure', as: 'omniauth_failure'
+  post '/auth/create', to: 'sessions#omniauth_create', as: 'omniauth_create'
+
   get '/signup',   to: 'users#new', as: 'signup'
   post '/signup',  to: 'users#create'
   get '/login',    to: 'sessions#new'
   post '/login',   to: 'sessions#create'
   get '/logout',   to: 'sessions#destroy'
-  get '/about',    to: 'static_pages#about'
-  get '/legal',    to: 'static_pages#legal'
-
   get '/signin',   to: redirect('/login')
   get '/signout',  to: redirect('/logout')
+
+  get '/about',    to: 'static_pages#about'
+  get '/legal',    to: 'static_pages#legal'
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'
@@ -49,23 +70,29 @@ SciRate3::Application.routes.draw do
   get '/settings/password', to: 'users#settings_password'
   post '/settings/password', to: 'users#settings_password'
 
-
-
   #resources :users, only: [:new, :create, :edit, :update, :destroy, :admin]
-  get '/users/:id/scites', to: 'users#scited_papers', as: 'scites_user'
-  get '/users/:id/comments', to: 'users#comments', as: 'comments_user'
   get '/users/:id/subscriptions', to: 'users#subscriptions', as: 'subscriptions_user'
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: 'activate_user'
   get '/feeds', to: 'users#feeds', as: 'feeds'
 
-  get '/arxiv/:id/scites', to: 'papers#scites', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper_scites'
+  get '/arxiv/:paper_uid/scites', to: 'papers#scites', paper_uid: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper_scites'
   get '/arxiv/:feed/comments', to: 'comments#index', feed: /.+/, as: 'feed_comments'
-  get '/arxiv/:id', to: 'papers#show', id: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
-  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'
+  get '/arxiv/:paper_uid', to: 'papers#show', paper_uid: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
 
-  get '/admin/users/:username', to: 'admin#edit_user', as: 'admin_edit_user'
-  post '/admin/users/:username', to: 'admin#update_user', as: 'admin_update_user'
-  get '/:username', to: 'users#profile', username: /.+/, as: 'user'
+  get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, constraints: NeedsUserConstraint
+  get '/arxiv/:feed', to: 'feeds#show_nouser', feed: /.+/, as: 'feed'
+
+  get '/admin', to: 'admin/base#index', as: 'admin'
+  post '/admin/alert', to: 'admin/base#alert', as: 'admin_alert'
+
+  get '/admin/users/:username/edit', to: 'admin/users#edit', as: 'admin_edit_user'
+  post '/admin/users/:username/update', to: 'admin/users#update', as: 'admin_update_user'
+  post '/admin/users/:username/become', to: 'admin/users#become', as: 'admin_become_user'
+
+  get '/:username/scites', to: 'users#scites', username: /.+/, as: 'user_scites'
+  get '/:username/comments', to: 'users#comments', username: /.+/, as: 'user_comments'
+  get '/:username/papers', to: 'users#papers', username: /.+/, as: 'user_papers'
+  get '/:username', to: 'users#activity', username: /.+/, as: 'user'
 
 
   # The priority is based upon order of creation:

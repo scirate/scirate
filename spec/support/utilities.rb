@@ -47,14 +47,9 @@ RSpec::Matchers.define :have_paper do |paper|
   end
 end
 
-#custom matcher to determine if paper index page lists a recent comment
-#  currently checks: first 500 chars of content, links to paper and user, and date
-RSpec::Matchers.define :have_comment do |comment|
+RSpec::Matchers.define :have_comment do |content|
   match do |page|
-    page.should have_content comment.content[0..499]
-    page.should have_link comment.paper.title
-    page.should have_link comment.user.fullname
-    page.should have_content comment.created_at.to_date.to_formatted_s(format = :short)
+    page.should have_selector('.comment', text: content)
   end
 end
 
@@ -77,8 +72,12 @@ def update
   click_button "Update"
 end
 
-def signout
+def sign_out
   click_link "Sign out"
+end
+
+def become(user)
+  cookies[:remember_token] = user.remember_token
 end
 
 def sign_in(user)
@@ -86,9 +85,24 @@ def sign_in(user)
   fill_in "Email",    with: user.email
   fill_in "Password", with: user.password
   click_button "Sign in"
+  become user
+end
 
-  # Sign in when not using Capybara as well.
-  cookies[:remember_token] = user.remember_token
+def sign_in_with_google
+  OmniAuth.config.mock_auth[:google_oauth2] = MockAuth.google
+
+  visit login_path
+  click_link "Sign in with Google"
+end
+
+def sign_up_with_google
+  sign_in_with_google
+
+  #click_button "Confirm And Create This Account"
+end
+
+def google_user
+  User.where(email: MockAuth.google.info.email).first
 end
 
 def last_email
@@ -97,4 +111,21 @@ end
 
 def reset_email
   ActionMailer::Base.deliveries = []
+end
+
+class MockAuth
+  def self.google
+    OmniAuth::AuthHash.new({
+      provider: 'google',
+      uid: 'some_uid',
+      info: {
+        name: "Jaiden Mispy",
+        email: "jaiden@contextualsystems.com"
+      },
+      credentials: {
+        token: "some_token",
+        expires_at: (Date.today+1.day).to_time.to_i
+      }
+    })
+  end
 end

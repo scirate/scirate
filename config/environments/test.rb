@@ -1,4 +1,4 @@
-SciRate3::Application.configure do
+SciRate::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # The test environment is used exclusively to run your application's
@@ -13,7 +13,7 @@ SciRate3::Application.configure do
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  config.action_controller.perform_caching = true
 
   # Raise exceptions instead of rendering exception templates
   config.action_dispatch.show_exceptions = false
@@ -30,6 +30,8 @@ SciRate3::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.eager_load = false
+
+  config.cache_store = :memory_store
 
   # Speed up test by lowering BCrypt's cost function.
   require 'bcrypt'

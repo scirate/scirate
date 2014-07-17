@@ -1,0 +1,9 @@
+#papersTab
+  .well
+    | Showing all papers from arXiv author <strong>#{@user.author_identifier}</strong>
+  hr
+  ul.papers
+    = render partial: "papers/paper", collection: @authored_papers, locals: { showabs: false }
+    = will_paginate @authored_papers
+
+

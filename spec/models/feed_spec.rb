@@ -15,15 +15,9 @@
 require 'spec_helper'
 
 describe Feed do
+  let(:feed) { FactoryGirl.create(:feed) }
 
-  before do
-    @feed = Feed.new(uid: "test-feed",
-                     fullname: "Test Feed",
-                     source: "arxiv",
-                     last_paper_date: Date.today)
-  end
-
-  subject { @feed }
+  subject { feed }
 
   it { should respond_to(:uid) }
   it { should respond_to(:fullname) }
@@ -34,19 +28,17 @@ describe Feed do
 
   it { should be_valid }
 
-  describe "user subscribing to a feed" do
-    let (:user) { FactoryGirl.create(:user) }
-    before do
-      @feed.save
-      user.save
-      user.subscribe!(@feed)
+  describe "subscribing" do
+    let(:user) { FactoryGirl.create(:user) }
+    before { user.subscribe!(feed) }
+
+    it "can be subscribed to" do
+      expect(feed.users.where(id: user.id)).to_not be_empty
     end
 
-    its(:users) { should include(user) }
-
-    describe "and unsubscribing" do
-      before { user.unsubscribe!(@feed) }
-      its(:users) { should_not include(user) }
+    it "can be unsubscribed from" do
+      user.unsubscribe!(feed)
+      expect(feed.users.where(id: user.id)).to be_empty
     end
   end
 

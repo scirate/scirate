@@ -1,0 +1,65 @@
+- provide :title, "Settings"
+
+#settingsPage.container
+  h1 Settings
+  ul.nav.nav-tabs
+    li.active
+      a href=settings_path General
+    li
+      a href=settings_password_path Password
+  = form_for(@user, url: settings_path, method: :post) do |f|
+    table.table.table-striped.table-form
+      tr
+        td= f.label :fullname, "Name"
+        td= f.text_field :fullname, class: 'form-control'
+      tr
+        td= f.label :username, "Username"
+        td= f.text_field :username, class: 'form-control'
+      tr
+        td= f.label :email, "Email"
+        td= f.email_field :email, class: 'form-control'
+      tr
+        - desc = "A personal website or other url"
+        td= f.label :url, "URL"
+        td= f.text_field :url, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "Primary group you are affiliated with"
+        td= f.label :organization, "Organization"
+        td= f.text_field :organization, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "Where you are in the world"
+        td= f.label :location, "Location"
+        td= f.text_field :location, class: 'form-control', title: desc, placeholder: desc
+      tr
+        - desc = "arXiv author identifier will be used to display papers on your profile"
+        td= f.label :author_identifier, "Author Identifier"
+        td= f.text_field :author_identifier, class: 'form-control', title: desc, placeholder: desc
+      /
+        tr
+          - desc = "Some descriptive text about yourself"
+          td= f.label :about
+          td= f.text_area :about, class: 'form-control', title: desc, placeholder: desc
+
+    .checkbox
+      = f.check_box :email_about_replies
+      | Email me about replies to my comments
+    .checkbox
+      = f.check_box :email_about_comments_on_authored
+      | Email me about comments on papers I've written (needs author identifier)
+    .checkbox
+      = f.check_box :email_about_comments_on_scited
+      | Email me about comments on papers I've scited
+    = f.submit "Save changes", class: "btn btn-default"
+
+  p.google
+    i> class="fa fa-google-plus-square"
+    - if @user.auth_links.empty?
+      = link_to "Enable Google login", "/auth/google_oauth2", id: "sign_in"
+    - else
+      | Connected to Google (#{@user.auth_links[0].auth.info.email})
+      br
+      = link_to "disconnect", omniauth_disconnect_path("google_oauth2")
+
+  .gravatar
+    => gravatar_for(@user)
+    = link_to "change", "http://gravatar.com/emails", target: "_blank"

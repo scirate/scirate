@@ -1,5 +1,45 @@
 require 'spec_helper'
 
+describe "google signup" do
+  let(:mock_auth) { MockAuth.google }
+
+  before do
+    OmniAuth.config.mock_auth[:google_oauth2] = mock_auth
+  end
+
+  it "should allow signup via google" do
+    visit login_path
+    click_link "Sign in with Google"
+    #expect(page).to have_content "about to create a new SciRate account"
+    #expect(page).to have_content "Google"
+    #expect(page).to have_content mock_auth.info.email
+
+    #click_button "Confirm And Create This Account"
+    expect(page).to have_content "Sign out"
+
+    user = User.where(email: mock_auth.info.email).first
+    expect(user.active?).to be_truthy
+  end
+
+  it "should handle the case when email is taken" do
+    FactoryGirl.create(:user, email: mock_auth.info.email)
+
+    visit login_path
+    click_link "Sign in with Google"
+    p page.text
+    expect(page).to have_error_message "please visit your settings page"
+  end
+
+  it "should allow login after account creation" do
+    AuthLink.from_omniauth(mock_auth).create_user!
+
+    visit login_path
+    click_link "Sign in with Google"
+
+    expect(page).to have_content "Sign out"
+  end
+end
+
 describe "Authentication" do
 
   subject { page }
@@ -7,34 +47,31 @@ describe "Authentication" do
   describe "signin" do
     before { visit login_path }
 
-    describe "with invalid information" do
-      before { click_button "Sign in" }
+    it "shouldn't allow invalid information" do
+      click_button "Sign in"
 
-      it { should have_error_message 'Invalid' }
+      page.should have_error_message "Invalid"
     end
 
-    describe "with valid information" do
-      let(:user) { FactoryGirl.create(:user) }
-      before { sign_in(user) }
+    it "should sign in and out correctly" do
+      user = FactoryGirl.create(:user)
+      sign_in(user)
 
-      it { should have_title user.fullname }
-      it { should have_link('Profile', href: user_path(user)) }
-      it { should have_link('Settings', href: settings_path) }
-      it { should have_link('Sign out', href: logout_path) }
-      it { should_not have_link('Sign in', href: login_path) }
+      page.should have_title "Home feed"
+      page.should have_link('Profile', href: user_path(user))
+      page.should have_link('Settings', href: settings_path)
+      page.should have_link('Sign out', href: logout_path)
+      page.should_not have_link('Sign in', href: login_path)
 
-      describe "followed by signout" do
-        before { signout }
-        it { should have_title('Top arXiv papers') }
-        it { should_not have_link('Sign out', href: logout_path) }
-        it { should_not have_link('Profile', href: user_path(user)) }
-        it { should_not have_link('Settings', href: settings_path) }
-      end
+      sign_out
+      page.should have_title('Top arXiv papers')
+      page.should_not have_link('Sign out', href: logout_path)
+      page.should_not have_link('Profile', href: user_path(user))
+      page.should_not have_link('Settings', href: settings_path)
     end
   end
 
   describe "authorization" do
-
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
 
@@ -46,7 +83,7 @@ describe "Authentication" do
         end
 
         describe "submitting to the update action" do
-          before { post admin_edit_user_path(user) }
+          before { post admin_update_user_path(user) }
           specify { response.should redirect_to(login_path) }
         end
       end
@@ -63,9 +100,9 @@ describe "Authentication" do
         it { should have_title '' }
       end
 
-      describe "submitting a POST request to the Users#update action" do
+      describe "submitting to the Users#update action" do
         before do
-          post admin_edit_user_path(wrong_user)
+          post admin_update_user_path(wrong_user)
         end
 
         specify { response.should redirect_to(root_path) }
@@ -74,7 +111,7 @@ describe "Authentication" do
 
     describe "as signed-in user" do
       let(:user) { FactoryGirl.create(:user) }
-      before { sign_in user }
+      before { become user }
 
       describe "submitting a GET request to the Users#new action" do
         before do
@@ -92,7 +129,6 @@ describe "Authentication" do
         specify { response.should redirect_to(root_path) }
       end
     end
-
 
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
@@ -115,8 +151,8 @@ describe "Authentication" do
         describe "when signing in again" do
           before { sign_in user }
 
-          it "should render the default (profile) page" do
-            page.should have_title user.fullname
+          it "should render the (default) home feed" do
+            page.should have_title "Home feed"
           end
         end
       end

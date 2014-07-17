@@ -12,25 +12,21 @@
 require 'spec_helper'
 
 describe Author do
-  before do
-    @author = FactoryGirl.create(:author)
-  end
+  it { should validate_presence_of(:paper_uid) }
+  it { should validate_presence_of(:position) }
+  it { should validate_presence_of(:fullname) }
+  it { should validate_presence_of(:searchterm) }
 
-  subject { @author }
+  describe '#make_searchterm' do
+    it 'generates searchterms correctly' do
+      term = Author.make_searchterm('Ben Toner (CWI)')
+      expect(term).to eq 'Toner_B'
 
-  it { should respond_to(:fullname) }
-  it { should respond_to(:searchterm) }
+      term = Author.make_searchterm('Ben Toner [CWI]')
+      expect(term).to eq 'Toner_B'
 
-  it { should be_valid }
-
-  it "Should generate searchterms correctly" do
-    term = Author.make_searchterm("Ben Toner (CWI)")
-    term.should == "Toner_B"
-
-    term = Author.make_searchterm("Ben Toner [CWI]")
-    term.should == "Toner_B"
-
-    term = Author.make_searchterm("BABAR Collaboration")
-    term.should == "Collaboration_BABAR"
+      term = Author.make_searchterm('BABAR Collaboration')
+      expect(term).to eq 'Collaboration_BABAR'
+    end
   end
 end
