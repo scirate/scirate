@@ -88,6 +88,17 @@ class SessionsController < ApplicationController
     end
   end
 
+  def omniauth_failure
+    auth = session['omniauth.auth']
+    session['omniauth.auth'] = nil
+
+    SciRate.notify_error("Omniauth failed\n\n#{params}\n\n#{auth}")
+
+    flash[:error] = "Sorry, we were unable to authenticate you. This error has been reported. Please sign in without using Google for now."
+
+    redirect_to login_path
+  end
+
   # Confirm creation of a new account from omniauth data
   def omniauth_create
     auth = session['omniauth.auth']

@@ -44,7 +44,7 @@ SciRate::Application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#omniauth_callback'
   get '/auth/:provider/disconnect',
     to: 'sessions#omniauth_disconnect', as: 'omniauth_disconnect'
-  get '/auth/failure', to: redirect('/login')
+  get '/auth/failure', to: 'sessions#omniauth_failure', as: 'omniauth_failure'
   post '/auth/create', to: 'sessions#omniauth_create', as: 'omniauth_create'
 
   get '/signup',   to: 'users#new', as: 'signup'
