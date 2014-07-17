@@ -33,11 +33,11 @@
             | Last 7 Days
           - else
             = pluralize(i, 'Week') + " Ago"
-        td= week[:scites].count
-        td= week[:papers].count
-        td= week[:comments].count
-        td= week[:active_users].count
-        td= week[:new_users].count
+        td= week[:scites]
+        td= week[:papers]
+        td= week[:comments]
+        td= week[:active_users]
+        td= week[:new_users]
         td
           - if week[:best_paper].nil?
             | None

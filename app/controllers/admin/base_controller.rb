@@ -12,11 +12,12 @@ class Admin::BaseController < ApplicationController
 
   def _site_data(from, to)
     data = {}
-    data[:scites] = Scite.where("created_at > ? AND created_at < ?", from, to).includes(:user)
-    data[:papers] = Paper.where("pubdate > ? AND pubdate < ?", from, to)
-    data[:comments] = Comment.visible.where("created_at > ? AND created_at < ?", from, to)
-    data[:active_users] = data[:scites].map(&:user).uniq
-    data[:new_users] = User.where("created_at > ? AND created_at < ?", from, to)
+    scites = Scite.where("created_at > ? AND created_at < ?", from, to).includes(:user)
+    data[:scites] = scites.count
+    data[:papers] = Paper.where("pubdate > ? AND pubdate < ?", from, to).count
+    data[:comments] = Comment.visible.where("created_at > ? AND created_at < ?", from, to).count
+    data[:active_users] = scites.map(&:user).uniq.count
+    data[:new_users] = User.where("created_at > ? AND created_at < ?", from, to).count
     data[:best_paper] = Paper.where("pubdate > ? AND pubdate < ?", from, to).order("scites_count DESC")[0]
     data
   end
