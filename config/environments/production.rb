@@ -97,7 +97,7 @@ SciRate::Application.configure do
   WillPaginate.per_page = 100
 
   # ExceptionNotifier
-  config.middleware.use ExceptionNotifier,
+  config.middleware.use ExceptionNotification::Rack,
     email: {
       email_prefix: "[#{Settings::STAGING ? 'scirate-dev' : 'scirate'} error] ",
       sender_address: "notifier@scirate.com",
