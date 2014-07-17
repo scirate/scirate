@@ -13,7 +13,7 @@ class Admin::BaseController < ApplicationController
     data[:scites] = Scite.where("created_at > ? AND created_at < ?", from, to).includes(:user)
     data[:papers] = Paper.where("pubdate > ? AND pubdate < ?", from, to)
     data[:comments] = Comment.where("created_at > ? AND created_at < ?", from, to)
-    data[:active_users] = data[:scites].map(&:user)
+    data[:active_users] = data[:scites].map(&:user).uniq
     data[:new_users] = User.where("created_at > ? AND created_at < ?", from, to)
     data
   end
