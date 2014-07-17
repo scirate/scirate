@@ -50,22 +50,27 @@ class SessionsController < ApplicationController
     if signed_in?
       if link.user.nil?
         # Link existing user to omniauth data
+        logger.info("Linking user '#{current_user.username}' to '#{auth.info.email}'")
         _omniauth_link_to_existing(link)
       elsif link.user.id == current_user.id
         # Already linked, pretend we did something useful
+        logger.info("User '#{current_user.username}' already linked to '#{auth.info.email}', redirecting")
         flash[:success] = "Your account was linked to Google successfully."
         redirect_to settings_path
       else
         # Already linked to another user
+        logger.info("Failed to link user '#{current_user.username}' to '#{auth.info.email}': already linked to another user")
         flash[:error] = "This Google account is already linked to another user. Please sign in with Google and disconnect the link."
         redirect_to settings_path
       end
     else
       if link.user.nil?
         # Create a new user with omniauth data
+        logger.info("Creating new account via omniauth for '#{auth.info.email}'")
         _omniauth_confirm_new(link)
       else
         # Matched existing link, sign them in
+        logger.info("Matched omniauth '#{auth.info.email}' to user '#{link.user.username}', signing in")
         sign_in link.user
         redirect_back_or root_path
       end
