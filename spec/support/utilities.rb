@@ -98,7 +98,7 @@ end
 def sign_up_with_google
   sign_in_with_google
 
-  click_button "Confirm And Create This Account"
+  #click_button "Confirm And Create This Account"
 end
 
 def google_user
