@@ -1,3 +1,5 @@
+require 'data_helpers'
+
 class Admin::BaseController < ApplicationController
   before_filter :signed_in_user, :require_admin
 
@@ -22,8 +24,10 @@ class Admin::BaseController < ApplicationController
   def index
     now = Time.now
 
-    @weeks = 0.upto(10).map do |i|
-      _site_data(now - (7*(i+1)).days, now - (7*i).days)
+    @weeks = Rails.cache.fetch [:admin_stats, end_of_today] do
+      0.upto(10).map do |i|
+        _site_data(now - (7*(i+1)).days, now - (7*i).days)
+      end
     end
 
     render 'admin/index'
