@@ -15,6 +15,7 @@ class Admin::BaseController < ApplicationController
     data[:comments] = Comment.visible.where("created_at > ? AND created_at < ?", from, to)
     data[:active_users] = data[:scites].map(&:user).uniq
     data[:new_users] = User.where("created_at > ? AND created_at < ?", from, to)
+    data[:best_paper] = Paper.where("pubdate > ? AND pubdate < ?", from, to).order("scites_count DESC")[0]
     data
   end
 

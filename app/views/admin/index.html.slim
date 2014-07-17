@@ -25,6 +25,7 @@
         th Comments
         th Active Users
         th New Users
+        th Best Paper
     - @weeks.each_with_index do |week, i|
       tr
         td
@@ -37,6 +38,11 @@
         td= week[:comments].count
         td= week[:active_users].count
         td= week[:new_users].count
+        td
+          - if week[:best_paper].nil?
+            | None
+          - else
+            a href=(paper_url week[:best_paper].uid) = week[:best_paper].title
 
 
   hr
