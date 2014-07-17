@@ -22,7 +22,7 @@ class Admin::BaseController < ApplicationController
   def index
     now = Time.now
 
-    @weeks = 0.upto(5).map do |i|
+    @weeks = 0.upto(10).map do |i|
       _site_data(now - (7*(i+1)).days, now - (7*i).days)
     end
 
