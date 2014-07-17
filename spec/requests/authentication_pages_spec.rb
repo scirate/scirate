@@ -10,11 +10,11 @@ describe "google signup" do
   it "should allow signup via google" do
     visit login_path
     click_link "Sign in with Google"
-    expect(page).to have_content "about to create a new SciRate account"
-    expect(page).to have_content "Google"
-    expect(page).to have_content mock_auth.info.email
+    #expect(page).to have_content "about to create a new SciRate account"
+    #expect(page).to have_content "Google"
+    #expect(page).to have_content mock_auth.info.email
 
-    click_button "Confirm And Create This Account"
+    #click_button "Confirm And Create This Account"
     expect(page).to have_content "Sign out"
 
     user = User.where(email: mock_auth.info.email).first

@@ -38,7 +38,7 @@ class SessionsController < ApplicationController
     end
 
     # Preserve this while we wait for the user
-    session['omniauth.auth'] = link.auth
+    #session['omniauth.auth'] = link.auth
 
     render 'sessions/omniauth_confirm_new'
   end
@@ -67,7 +67,10 @@ class SessionsController < ApplicationController
       if link.user.nil?
         # Create a new user with omniauth data
         logger.info("Creating new account via omniauth for '#{auth.info.email}'")
-        _omniauth_confirm_new(link)
+        # XXX (Mispy): confirmation seems to be causing issues, removing for now
+        # Presumably related to storing auth data in the session
+        #_omniauth_confirm_new(link)
+        _omniauth_create(link)
       else
         # Matched existing link, sign them in
         logger.info("Matched omniauth '#{auth.info.email}' to user '#{link.user.username}', signing in")
@@ -99,16 +102,26 @@ class SessionsController < ApplicationController
     redirect_to login_path
   end
 
+  def _omniauth_create(link)
+    if User.where(email: link.auth.info.email).exists?
+      # Account with this email already created, but
+      # using a different auth method.
+      flash[:error] = "The email address #{link.auth.info.email} is already associated with a SciRate account. To connect your account to Google please visit your settings page."
+      return redirect_to login_path
+    end
+
+    user = link.create_user!
+    sign_in user, remember_me: (params[:remember_me] == "1")
+    redirect_back_or root_path
+  end
+
   # Confirm creation of a new account from omniauth data
   def omniauth_create
     auth = session['omniauth.auth']
     session['omniauth.auth'] = nil
-
     link = AuthLink.from_omniauth(auth)
-    user = link.create_user!
 
-    sign_in user, remember_me: (params[:remember_me] == "1")
-    redirect_back_or root_path
+    _omniauth_create(link)
   end
 
   def destroy
