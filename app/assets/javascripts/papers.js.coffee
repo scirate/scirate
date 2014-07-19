@@ -64,10 +64,17 @@ setupBibtex = ->
         $(window).one 'click', remove
 
 $(document).on "ready", ->
+  console.log 'ready'
   setupBibtex()
   setupPaperPage()
 
 $(document).on "page:load", ->
+  $('.bibtex a').removeClass('zeroclipboard-js-hover')
+  ZeroClipboard.destroy()
+  setupBibtex()
+  setupPaperPage()
+
+$(document).on 'page:restore', ->
   $('.bibtex a').removeClass('zeroclipboard-js-hover')
   ZeroClipboard.destroy()
   setupBibtex()
