@@ -32,7 +32,11 @@
         td= f.text_field :location, class: 'form-control', title: desc, placeholder: desc
       tr
         - desc = "arXiv author identifier will be used to display papers on your profile"
-        td= f.label :author_identifier, "Author Identifier"
+        td
+          = f.label :author_identifier, "Author Identifier"
+          a href="http://arxiv.org/help/author_identifiers"
+            sup
+              | ?
         td= f.text_field :author_identifier, class: 'form-control', title: desc, placeholder: desc
       /
         tr
