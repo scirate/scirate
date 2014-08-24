@@ -2,7 +2,7 @@ require 'nokogiri'
 require 'open-uri'
 
 def make_feed(uid, fullname, parent=nil)
-  feed = Feed.find_or_create_by_uid(uid)
+  feed = Feed.find_or_create_by(uid: uid)
   feed.source = 'arxiv'
 
   if uid == "cs" # HACK (Mispy)
