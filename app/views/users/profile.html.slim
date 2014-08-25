@@ -3,43 +3,44 @@
 
 #profilePage.container
   #details.col-md-3
-    div#profileImage
-      - if @user == current_user
-        a href="https://gravatar.com/emails"
-          div.overlay
-            i.fa.fa-pencil
-            div.darken
+    .profile-header
+      div#profileImage
+        - if @user == current_user
+          a href="https://gravatar.com/emails"
+            div.overlay
+              i.fa.fa-pencil
+              div.darken
+            = gravatar_for(@user, size: 230)
+        - else
           = gravatar_for(@user, size: 230)
-      - else
-        = gravatar_for(@user, size: 230)
-    h1
-      span.fullname= @user.fullname
-      span.username = @user.username
-    ul.user-info
-      - if @user.is_admin?
-        li.admin
-          i.fa.fa-fw.fa-sun-o
-          span Admin
-      - elsif @user.is_moderator?
-        li.moderator
-          i.fa.fa-fw.fa-star
-          span Moderator
+      h1
+        span.fullname= @user.fullname
+        span.username = @user.username
+      ul.user-info
+        - if @user.is_admin?
+          li.admin
+            i.fa.fa-fw.fa-sun-o
+            span Admin
+        - elsif @user.is_moderator?
+          li.moderator
+            i.fa.fa-fw.fa-star
+            span Moderator
 
-      - unless @user.organization.empty?
+        - unless @user.organization.empty?
+          li
+            i.fa.fa-fw.fa-group
+            span= @user.organization
+        - unless @user.location.empty?
+          li
+            i.fa.fa-fw.fa-map-marker
+            span= @user.location
+        - unless @user.url.empty?
+          li
+            i.fa.fa-fw.fa-link
+            = link_to @user.url, @user.url
         li
-          i.fa.fa-fw.fa-group
-          span= @user.organization
-      - unless @user.location.empty?
-        li
-          i.fa.fa-fw.fa-map-marker
-          span= @user.location
-      - unless @user.url.empty?
-        li
-          i.fa.fa-fw.fa-link
-          = link_to @user.url, @user.url
-      li
-        i.fa.fa-fw.fa-clock-o
-        span Joined #{@user.created_at.to_date.to_formatted_s(:rfc822)}
+          i.fa.fa-fw.fa-clock-o
+          span Joined #{@user.created_at.to_date.to_formatted_s(:rfc822)}
     ul.subscriptions
       - @user.subscriptions.order('feed_uid ASC').includes(:feed).each do |sub|
         li.badge
