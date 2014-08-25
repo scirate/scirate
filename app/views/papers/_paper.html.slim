@@ -1,7 +1,7 @@
 - cool_paper = paper.scites_count > 0 || @search
 
 - unless defined?(showabs)
-  - showabs = cool_paper || (current_user && current_user.expand_abstracts)
+  - showabs = cool_paper || (!current_user || current_user.expand_abstracts)
 
 li.paper.tex2jax
   .row
