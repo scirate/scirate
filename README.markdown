@@ -26,7 +26,7 @@ Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrai
 sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev
 ```
 
-You will also need to download and install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/). Bundler should take care of the rest.
+You will also need to download and install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/). Note that if you're on Ubuntu and install Elasticsearch via the `.deb` package, it won't start automatically. Follow the instructions [here](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service.html). Bundler should take care of the rest.
 
 ```shell
 git clone git@github.com:draftable/scirate3
