@@ -32,29 +32,24 @@ nav.timenav
     tr
       td.underline
 
-    - if signed_in?
-      tr
-        td.btn-default colspan="2" class=("btn-primary" if @since_last)
-          a href=(url_for) title="Shows papers you probably haven't seen before today, based on when you last visited." Recently
 
+  table cellspacing="0"
     tr
       td.btn-default colspan="1" class=("btn-primary" if !@since_last && !params['date'] && @range == 1)
-        a href=(url_for(range: 1)) 1 Day
-
-    tr
+        a href=(url_for(range: 1)) 1d
       td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 3)
-        a href=(url_for(range: 3)) 3 Days
-
-    tr
+        a href=(url_for(range: 3)) 3d
       td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 7)
-        a href=(url_for(range: 7)) 1 Week
-
-    tr
+        a href=(url_for(range: 7)) 1w
       td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 31)
-        a href=(url_for(range: 31)) 1 Month
-    tr
+        a href=(url_for(range: 31)) 1m
       td.btn-default colspan="2" class=("btn-primary" if !@since_last && !params['date'] && @range == 365)
-        a href=(url_for(range: 365)) 1 Year
+        a href=(url_for(range: 365)) 1y
+
+  table
     tr
+    - if signed_in?
+      td.btn-default colspan="2" class=("btn-primary" if @since_last)
+        a href=(url_for) title="Shows papers you probably haven't seen before today, based on when you last visited." Recent
       td.btn-default colspan="2" class=("btn-primary" if false)
         a#customDate Custom

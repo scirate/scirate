@@ -70,8 +70,6 @@
                 = will_paginate @pagination
 
         .col-md-3.feed-rightbar
-          - cache [:abstoggle, current_user && current_user.expand_abstracts]
-            = render 'papers/abstract_toggle'
           - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
           - cache [:recent_comments, @recent_comments, current_user && current_user.is_moderator?] do

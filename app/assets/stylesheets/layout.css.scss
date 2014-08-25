@@ -757,58 +757,66 @@ div.feed-rightbar {
     text-align: center;
   }
 
-  .timenav {
-    p {
-      text-align: center;
-    }
+  .timenav p {
+    text-align: center;
+  }
 
-    table {
-      width: 100%;
-      text-align: center;
-      border-collapse: separate;
+  .timenav table td {
+    border-left: 0 !important;
+  }
 
-      td {
-        a {
-          display: block;
-          width: 100%;
-          height: 100%;
-          padding: 10px 0;
-          text-decoration: none;
-          color: inherit;
+  .timenav table td:first-child {
+    border-left: 1px solid #ccc !important;
+  }
+
+  .timenav table {
+    width: 100%;
+    text-align: center;
+    border-collapse: separate;
+    table-layout: fixed;
+
+    td {
+      width: 20%;
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 10px 0;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      font-size: 13px;
+      cursor: pointer;
+
+      &.half {
+        width: 50%;
+      }
+
+      border: 1px solid #ccc;
+      border-top: none;
+
+      &.top {
+        border-top: 1px solid #ccc;
+        &.left {
+          border-top-left-radius: 5px;
         }
 
-        font-size: 13px;
-        cursor: pointer;
-
-        &.half {
-          width: 50%;
+        &.right {
+          border-top-right-radius: 5px;
         }
+      }
 
-        border: 1px solid #ccc;
-        border-top: none;
+      &.bottom {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
 
-        &.top {
-          border-top: 1px solid #ccc;
-          &.left {
-            border-top-left-radius: 5px;
-            border-right: none;
-          }
-
-          &.right {
-            border-top-right-radius: 5px;
-          }
-        }
-
-        &.bottom {
-          border-bottom-left-radius: 5px;
-          border-bottom-right-radius: 5px;
-        }
-
-        &.underline {
-          border: none;
-          background-color: #1e95f9;
-          height: 5px;
-        }
+      &.underline {
+        border: none;
+        background-color: #1e95f9;
+        height: 5px;
       }
     }
   }
