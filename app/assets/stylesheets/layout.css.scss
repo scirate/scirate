@@ -1093,6 +1093,35 @@ div.feed-rightbar {
       padding-top: 0;
       padding-bottom: 0;
     }
+
+    .col-md-9 {
+      padding: 0;
+    }
+
+    .nav-tabs {
+      background-color: #f5f5f5;
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .nav-tabs li {
+      width: 25%;
+      font-size: 12px;
+      display: table-cell;
+      white-space: nowrap;
+    }
+
+    .nav-tabs li a {
+      width: 100%;
+      text-align: center;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .nav-tabs .pull-right {
+      display: none;
+    }
   }
 }
 
