@@ -287,6 +287,11 @@ header.navbar {
     width: 100%;
     padding: 0;
   }
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 a.header-brand {
@@ -1143,6 +1148,7 @@ div.feed-rightbar {
 
   .icon {
     width: 5%;
+    padding-right: 20px;
   }
 
   .event > .icon i {
@@ -1176,6 +1182,12 @@ div.feed-rightbar {
 
   .authorship .title {
     font-size: 22px;
+  }
+
+  @media (max-width: 768px) {
+    .event > .col-xs-11 {
+      width: 90%;
+    }
   }
 }
 
