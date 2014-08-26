@@ -277,6 +277,16 @@ header.navbar {
 
   li.paper {
     font-size: 80%;
+    border-bottom: 1px solid #ccc;
+  }
+
+  li.paper:first-child {
+    border-top: 1px solid #ccc;
+  }
+
+
+  li.paper .pull-right {
+    display: none;
   }
 
   li.paper .abstract {
