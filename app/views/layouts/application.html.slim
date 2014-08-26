@@ -123,7 +123,7 @@ html lang="en"
           | Welcome to SciRate! A confirmation message was sent to <b>#{current_user.email}</b>.
     = yield
 
-    script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 
     javascript:
       SciRate.current_user = #{raw (current_user ? current_user.to_js : false)};
