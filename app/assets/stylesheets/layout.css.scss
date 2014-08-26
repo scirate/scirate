@@ -242,7 +242,19 @@ header.navbar {
   }
 }
 
+.mobile {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .mobile {
+    display: inherit;
+  }
+
+  .desktop {
+    display: none;
+  }
+
   header.navbar {
     .searchbox {
       background: #202226 !important;
@@ -280,11 +292,6 @@ header.navbar {
     border-bottom: 1px solid #ccc;
   }
 
-  li.paper:first-child {
-    border-top: 1px solid #ccc;
-  }
-
-
   li.paper .pull-right {
     display: none;
   }
@@ -301,6 +308,27 @@ header.navbar {
   .row {
     margin-left: 0;
     margin-right: 0;
+  }
+
+  ul.nav-tabs {
+    background-color: #f5f5f5;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  ul.nav-tabs li {
+    width: 25%;
+    font-size: 12px;
+    display: table-cell;
+    white-space: nowrap;
+  }
+
+  ul.nav-tabs li a {
+    width: 100%;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -773,6 +801,16 @@ li.paper:hover {
   }
 }
 
+@media (max-width: 768px) {
+  .feed-center {
+    padding: 0;
+
+    .col-md-9 {
+      padding: 0;
+    }
+  }
+}
+
 // Feed right-hand sidebar
 
 div.feed-rightbar {
@@ -924,23 +962,27 @@ div.feed-rightbar {
     margin-bottom: 20px;
   }
 
-  .nav-tabs a {
+  .nav-tabs a, #profileActions a {
     color: #666;
     padding-left: 10px;
     padding-top: 8px;
     padding-bottom: 8px;
   }
 
-  .nav-tabs .pull-right .btn {
+  #profileActions {
+    float: right;
+  }
+
+  #profileActions .btn {
     margin-top: 2px;
     padding: 4px 8px;
   }
 
-  .nav-tabs .pull-right .btn i {
+  #profileActions .btn i {
     padding-right: 3px;
   }
 
-  .nav-tabs .pull-right .btn-danger {
+  #profileActions .btn-danger {
     margin-right: 5px;
     color: white;
   }
@@ -1113,29 +1155,22 @@ div.feed-rightbar {
       padding: 0;
     }
 
-    .nav-tabs {
-      background-color: #f5f5f5;
-      display: table;
-      table-layout: fixed;
-      width: 100%;
-    }
-
-    .nav-tabs li {
-      width: 25%;
-      font-size: 12px;
-      display: table-cell;
-      white-space: nowrap;
-    }
-
-    .nav-tabs li a {
+    #profileActions {
+      float: none !important;
       width: 100%;
       text-align: center;
-      padding-left: 0;
-      padding-right: 0;
+      margin-top: 10px;
     }
 
-    .nav-tabs .pull-right {
-      display: none;
+    #profileActions:after {
+      content: '';
+      display: inline-block;
+      width: 100%;
+      height: 0;
+    }
+
+    #profileActions a {
+      display: inline-block;
     }
   }
 }

@@ -57,6 +57,13 @@
                   = link_to "sign in to customize", login_path, class: 'view-subs'
       .row
         .col-md-9
+          ul.nav.nav-tabs.mobile
+            li.active
+              a href="/"
+                | Papers
+            li
+              a href="/comments"
+                | Comments
           .paperlist
             ul.papers
               - if @feed.nil? && signed_in? && !current_user.has_subscriptions?
@@ -69,7 +76,7 @@
                   = render partial: "papers/paper", collection: @papers, as: :paper
                 = will_paginate @pagination
 
-        .col-md-3.feed-rightbar
+        .col-md-3.feed-rightbar.desktop
           - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
           - cache [:recent_comments, @recent_comments, current_user && current_user.is_moderator?] do

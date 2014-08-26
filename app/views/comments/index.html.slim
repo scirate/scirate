@@ -1,11 +1,37 @@
 - if @feed
-  - @title = "Recent comments from #{@feed.uid}"
+  - title = @feed.fullname
 - else
-  - @title = "Recent comments from #{signed_in? ? 'home feed' : 'SciRate'}"
-- provide :title, @title
+  - title = signed_in? ? "Home feed" : "Top arXiv papers"
 
-.container
-  h1
-    = @title
-  = render partial: "comments/abbr_comment", collection: @comments
-  = will_paginate @pagination
+- provide :title, title
+
+.col-md-10.feed-center
+  - cache [:feed, @feed, current_user] do
+    header.feed-header class=(@feed ? '' : 'home')
+      .row
+        - if @feed
+          .col-md-10
+            h1
+              = @feed.fullname
+              |  (#{@feed.uid})
+          .col-md-2
+            = render 'feeds/subscribe', feed: @feed, subscribed: signed_in? && @feed.subscriptions.exists?(user_id: current_user.id)
+        - else
+          .col-md-10
+            h1= title
+            - if signed_in?
+              = link_to "edit subscriptions", feeds_path, class: 'view-subs'
+            - else
+              = link_to "sign in to customize", login_path, class: 'view-subs'
+  .row
+    .col-md-9
+      ul.nav.nav-tabs.mobile
+        li
+          a href="/"
+            | Papers
+        li.active
+          a href="/comments"
+            | Comments
+      = render partial: "comments/abbr_comment", collection: @comments
+      = will_paginate @pagination
+                = will_paginate @pagination

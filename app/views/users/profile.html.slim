@@ -46,7 +46,16 @@
         li.badge
           a href=(feed_url sub.feed) title=(sub.feed.fullname)
             = sub.feed.uid
-  .col-md-9
+  .col-md-9#profileMain
+    #profileActions
+      - if current_user && current_user.is_moderator?
+        a.btn.btn-danger href=(admin_edit_user_path(@user))
+          i.fa.fa-fw.fa-gear
+          | Admin
+      - if @user == current_user
+        a.btn.btn-default href=(settings_path)
+          i.fa.fa-fw.fa-pencil
+          | Edit profile
     ul.nav.nav-tabs
       li class=('active' if @tab == :activity)
         a href=(user_path @user)
@@ -65,16 +74,6 @@
         a href=(user_scites_path @user)
           i.fa.fa-fw.fa-star>
           | Scites (#{@user.scites_count})
-      .pull-right
-        - if current_user && current_user.is_moderator?
-          a.btn.btn-danger href=(admin_edit_user_path(@user))
-            i.fa.fa-fw.fa-gear
-            | Admin
-        - if @user == current_user
-          a.btn.btn-default href=(settings_path)
-            i.fa.fa-fw.fa-pencil
-            | Edit profile
-
 
     - if @tab == :activity
       - cache [:profile_activity, @user] do
