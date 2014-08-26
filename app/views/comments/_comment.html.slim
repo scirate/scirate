@@ -8,9 +8,9 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
     | (hidden comment)
   - else
     .votes
-      div.upvote class=('active' if @voted == true)
+      div.upvote class=('active' if @voted == true) title="Upvote this comment"
         i.fa.fa-arrow-up
-      div.downvote class=('active' if @voted == false)
+      div.downvote class=('active' if @voted == false) title="Downvote this comment"
         i.fa.fa-arrow-down
     .nonvotes
       - if @user
