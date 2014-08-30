@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-web1 = 'web1.scirate.com'
-web2 = 'web2.scirate.com'
+web = 'web.scirate.com'
 
 def run(hosts, commands)
   pids = []
@@ -16,8 +15,8 @@ def run(hosts, commands)
   end
 end
 
-run [web1, web2], <<END
-cd ~/scirate3
+run [web], <<END
+cd ~/scirate
 git fetch -f
 git reset --hard origin/master
 ln -sf ~/database.yml config/database.yml
@@ -25,12 +24,12 @@ ln -sf ~/local_settings.rb local_settings.rb
 bundle install --without="development test"
 END
 
-run [web1], <<END
-cd ~/scirate3 && rake db:migrate
+run [web], <<END
+cd ~/scirate && rake db:migrate
 END
 
-run [web1, web2], <<END
-cd ~/scirate3
+run [web], <<END
+cd ~/scirate
 rake assets:precompile
 sudo service scirate restart
 sudo service memcached restart
