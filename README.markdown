@@ -1,4 +1,4 @@
-# SciRate 3
+# SciRate
 
 [![Build Status](https://travis-ci.org/scirate/scirate.svg?branch=master)](https://travis-ci.org/scirate/scirate)
 [![Coverage Status](https://coveralls.io/repos/scirate/scirate/badge.png?branch=master)](https://coveralls.io/r/scirate/scirate?branch=master)
@@ -16,11 +16,11 @@ We encourage contributions!
 
 * You can contribute to the code by sending a pull request on Github to the [canonical repository](https://github.com/scirate/scirate).
 
-* You can talk about scirate on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate) and about scirate development on the [development mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate-dev).
+* You can talk about SciRate on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate) and about SciRate development on the [development mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate-dev).
 
 ## Dependencies
 
-Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
+SciRate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
 ```shell
 sudo apt-get install git postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-6-jre
@@ -30,7 +30,7 @@ You will also need to download and install [Elasticsearch](http://www.elasticsea
 
 ```shell
 git clone git@github.com:scirate/scirate
-cd scirate3
+cd scirate
 bundle install
 ```
 
