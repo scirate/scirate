@@ -1,8 +1,8 @@
 # SciRate 3
 
-[![Build Status](https://travis-ci.org/draftable/scirate3.svg?branch=master)](https://travis-ci.org/draftable/scirate3)
-[![Coverage Status](https://coveralls.io/repos/draftable/scirate3/badge.png?branch=master)](https://coveralls.io/r/draftable/scirate3?branch=master)
-[![Code Climate](https://codeclimate.com/github/draftable/scirate3.png)](https://codeclimate.com/github/draftable/scirate3)
+[![Build Status](https://travis-ci.org/scirate/scirate.svg?branch=master)](https://travis-ci.org/scirate/scirate)
+[![Coverage Status](https://coveralls.io/repos/scirate/scirate/badge.png?branch=master)](https://coveralls.io/r/scirate/scirate?branch=master)
+[![Code Climate](https://codeclimate.com/github/scirate/scirate.png)](https://codeclimate.com/github/scirate/scirate)
 
 A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon, [Bill Rosgen](http://intractable.ca/bill/) and [Aram Harrow](http://www.mit.edu/~aram/). Currently being expanded upon by [Draftable](https://draftable.com/).
 
@@ -12,9 +12,9 @@ The production site is deployed at [https://scirate.com/](https://scirate.com/).
 
 We encourage contributions!
 
-* You can submit a bug report [here](https://github.com/draftable/scirate3/issues).
+* You can submit a bug report [here](https://github.com/scirate/scirate/issues).
 
-* You can contribute to the code by sending a pull request on Github to the [canonical repository](https://github.com/draftable/scirate3).
+* You can contribute to the code by sending a pull request on Github to the [canonical repository](https://github.com/scirate/scirate).
 
 * You can talk about scirate on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate) and about scirate development on the [development mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate-dev).
 
@@ -23,13 +23,13 @@ We encourage contributions!
 Scirate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
 
 ```shell
-sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev
+sudo apt-get install postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-6-jre
 ```
 
 You will also need to download and install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/). Note that if you're on Ubuntu and install Elasticsearch via the `.deb` package, it won't start automatically. Follow the instructions [here](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service.html). Bundler should take care of the rest.
 
 ```shell
-git clone git@github.com:draftable/scirate3
+git clone git@github.com:scirate/scirate
 cd scirate3
 bundle install
 ```
