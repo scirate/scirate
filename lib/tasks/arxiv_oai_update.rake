@@ -17,6 +17,9 @@ namespace :arxiv do
       bulk_papers += papers
     end
 
-    Arxiv::Import.papers(bulk_papers, syncdate: Time.now.utc.change(hour: 1))
+
+    syncdate = Time.now.utc.change(hour: Settings::ARXIV_UPDATE_HOUR)
+    Arxiv::Import.papers(bulk_papers, syncdate: syncdate)
+    System.update_all(arxiv_sync_dt: syncdate)
   end
 end

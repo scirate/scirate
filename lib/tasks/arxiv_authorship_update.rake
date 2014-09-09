@@ -3,7 +3,7 @@ require 'arxivsync'
 namespace :arxiv do
   desc "Update authorship for users with author_identifiers"
   task authorship_update: :environment do
-    threads = []
+    time = Time.now.utc
 
     User.where("author_identifier <> ''").each do |user|
       begin
@@ -16,5 +16,7 @@ namespace :arxiv do
 
       $stderr.puts "Synced authorship for #{user.username}"
     end
+
+    System.update_all(arxiv_author_sync_dt: time)
   end
 end

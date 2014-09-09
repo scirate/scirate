@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140622150016) do
+ActiveRecord::Schema.define(version: 20140909185604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -201,9 +201,11 @@ ActiveRecord::Schema.define(version: 20140622150016) do
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
   create_table "system", force: true do |t|
-    t.text     "alert",      default: "", null: false
+    t.text     "alert",                default: "",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "arxiv_sync_dt",        default: '2014-09-08 00:00:00', null: false
+    t.datetime "arxiv_author_sync_dt", default: '2014-09-08 00:00:00', null: false
   end
 
   create_table "users", force: true do |t|
