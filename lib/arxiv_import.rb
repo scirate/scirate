@@ -13,16 +13,17 @@ end
 
 module Arxiv::Import
   def self.papers(models, opts={})
-    paper_uids = []
-
+    new_uids = []
+    updated_uids = []
     ActiveRecord::Base.transaction do
-      paper_uids = self._import_papers(models, opts)
+      new_uids, updated_uids = self._import_papers(models, opts)
     end
 
     # Ensure Elasticsearch knows about these new/updated papers
+    paper_uids = new_uids+updated_uids
     Search::Paper.index_by_uids(paper_uids) unless paper_uids.empty?
 
-    paper_uids
+    [new_uids, updated_uids]
   end
 
   def self._import_papers(models, opts)
@@ -167,6 +168,6 @@ module Arxiv::Import
     end
 
     # Return uids of the papers we imported/updated
-    new_uids+updated_uids
+    [new_uids, updated_uids]
   end
 end

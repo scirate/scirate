@@ -3,7 +3,8 @@ require 'arxivsync'
 namespace :arxiv do
   desc "Update database with yesterday's papers"
   task oai_update: :environment do
-    last_paper = Paper.order("pubdate asc").last
+    time = Time.now.utc
+    last_paper = Paper.order("submit_date desc").first
 
     if last_paper.nil?
       date = Time.now-1.days
@@ -17,9 +18,12 @@ namespace :arxiv do
       bulk_papers += papers
     end
 
+    syncdate = time.change(hour: Settings::ARXIV_UPDATE_HOUR)
+    new_uids, updated_uids = Arxiv::Import.papers(bulk_papers, syncdate: syncdate)
 
-    syncdate = Time.now.utc.change(hour: Settings::ARXIV_UPDATE_HOUR)
-    Arxiv::Import.papers(bulk_papers, syncdate: syncdate)
-    System.update_all(arxiv_sync_dt: syncdate)
+    # Only consider it a successful update if we actually got new papers
+    unless new_uids.empty?
+      System.update_all(arxiv_sync_dt: time)
+    end
   end
 end

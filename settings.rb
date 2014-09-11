@@ -10,7 +10,7 @@ module Settings
   ARXIV_FOLDERS = ['astro-ph', 'cond-mat', 'gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nlin', 'nucl-ex', 'nucl-th', 'physics', 'quant-ph', 'math', 'cs', 'q-bio', 'q-fin', 'stat']
 
   # Which hour of the day in UTC we expect the arxiv to update
-  ARXIV_UPDATE_HOUR = 1
+  ARXIV_UPDATE_HOUR = 2
 
   # Hostname to put in emails and such
   HOST = "scirate.com"
