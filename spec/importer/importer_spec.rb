@@ -101,7 +101,7 @@ describe "arxiv importer" do
     Search.migrate
 
     puts "Starting test"
-    paper_uids = Arxiv::Import.papers(@models)
+    paper_uids, updated_uids = Arxiv::Import.papers(@models)
 
     paper_uids.length.should == 1000
 
