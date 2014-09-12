@@ -1,9 +1,10 @@
 require 'arxivsync'
 
 namespace :arxiv do
-  desc "Update database with yesterday's papers"
+  desc "Update database with recent papers"
   task oai_update: :environment do
     time = Time.now.utc
+
     last_paper = Paper.order("submit_date desc").first
 
     if last_paper.nil?
@@ -19,10 +20,17 @@ namespace :arxiv do
     end
 
     syncdate = time.change(hour: Settings::ARXIV_UPDATE_HOUR)
+    if time < syncdate
+      # arxiv hasn't updated yet, we're actually syncing from yesterday
+      syncdate = syncdate - 1.days
+    end
+
     new_uids, updated_uids = Arxiv::Import.papers(bulk_papers, syncdate: syncdate)
 
-    # Only consider it a successful update if we actually got new papers
-    unless new_uids.empty?
+    # Only consider it a successful update if either:
+    # - we got new papers
+    # - it's a weekend
+    if syncdate.saturday? || syncdate.sunday? || !new_uids.empty?
       System.update_all(arxiv_sync_dt: time)
     end
   end
