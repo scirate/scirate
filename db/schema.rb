@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140909185604) do
+ActiveRecord::Schema.define(version: 20140916211924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,19 @@ ActiveRecord::Schema.define(version: 20140909185604) do
   add_index "categories", ["paper_uid", "feed_uid", "crosslist_date"], name: "index_categories_on_paper_uid_and_feed_uid_and_crosslist_date", using: :btree
   add_index "categories", ["paper_uid"], name: "index_categories_on_paper_uid", using: :btree
   add_index "categories", ["position", "paper_uid"], name: "index_categories_on_position_and_paper_uid", unique: true, using: :btree
+
+  create_table "comment_changes", force: true do |t|
+    t.integer  "comment_id",              null: false
+    t.integer  "user_id",                 null: false
+    t.text     "event",                   null: false
+    t.text     "reason",     default: "", null: false
+    t.text     "content",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comment_changes", ["comment_id"], name: "index_comment_changes_on_comment_id", using: :btree
+  add_index "comment_changes", ["user_id"], name: "index_comment_changes_on_user_id", using: :btree
 
   create_table "comment_reports", force: true do |t|
     t.integer  "user_id"

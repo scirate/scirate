@@ -2,24 +2,33 @@
 #
 # Table name: users
 #
-#  id                     :integer          not null, primary key
-#  fullname               :text
-#  email                  :text
-#  remember_token         :text
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  password_digest        :text
-#  scites_count           :integer          default(0)
-#  password_reset_token   :text
-#  password_reset_sent_at :datetime
-#  confirmation_token     :text
-#  active                 :boolean          default(FALSE)
-#  comments_count         :integer          default(0)
-#  confirmation_sent_at   :datetime
-#  subscriptions_count    :integer          default(0)
-#  expand_abstracts       :boolean          default(FALSE)
-#  account_status         :text             default("user")
-#  username               :text             not null
+#  id                               :integer          not null, primary key
+#  fullname                         :text
+#  email                            :text
+#  remember_token                   :text
+#  created_at                       :datetime         not null
+#  updated_at                       :datetime         not null
+#  password_digest                  :text
+#  scites_count                     :integer          default(0)
+#  password_reset_token             :text
+#  password_reset_sent_at           :datetime
+#  confirmation_token               :text
+#  active                           :boolean          default(FALSE)
+#  comments_count                   :integer          default(0)
+#  confirmation_sent_at             :datetime
+#  subscriptions_count              :integer          default(0)
+#  expand_abstracts                 :boolean          default(FALSE)
+#  account_status                   :text             default("user")
+#  username                         :text             not null
+#  organization                     :text             default(""), not null
+#  about                            :text             default(""), not null
+#  url                              :text             default(""), not null
+#  location                         :text             default(""), not null
+#  author_identifier                :text             default(""), not null
+#  papers_count                     :integer          default(0), not null
+#  email_about_replies              :boolean          default(TRUE)
+#  email_about_comments_on_authored :boolean          default(TRUE)
+#  email_about_comments_on_scited   :boolean          default(FALSE)
 #
 
 require 'spec_helper'

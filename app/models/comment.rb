@@ -30,9 +30,14 @@ class Comment < ActiveRecord::Base
   has_many :reports, class_name: "CommentReport"
   has_many :children, foreign_key: 'parent_id', class_name: 'Comment'
 
+  has_many :history, class_name: "CommentChange"
+
   scope :visible, -> { where(hidden: false, deleted: false) }
 
   after_create do
+    # Record initial creation event
+    record_change!(CommentChange::CREATED, self.user_id)
+
     # Track who we've emailed so we don't send twice for the same comment
     emailed_users = []
 
@@ -69,12 +74,28 @@ class Comment < ActiveRecord::Base
 
   acts_as_votable
 
-  def soft_delete
-    self.update(deleted: true)
+  def record_change!(event, user_id)
+    CommentChange.create!(
+      comment_id: self.id,
+      user_id: user_id,
+      event: event,
+      content: self.content
+    )
   end
 
-  def restore
-    self.update(deleted: false)
+  def soft_delete!(user_id)
+    update!(deleted: true)
+    record_change!(CommentChange::DELETED, user_id)
+  end
+
+  def restore!(user_id)
+    update!(deleted: false)
+    record_change!(CommentChange::RESTORED, user_id)
+  end
+
+  def edit!(content, user_id)
+    update!(content: content)
+    record_change!(CommentChange::EDITED, user_id)
   end
 
   def submit_trackback

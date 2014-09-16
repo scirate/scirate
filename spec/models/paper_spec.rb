@@ -24,6 +24,7 @@
 #  comments_count  :integer          default(0), not null
 #  pubdate         :datetime
 #  author_str      :text             not null
+#  versions_count  :integer          default(1), not null
 #
 
 require 'spec_helper'

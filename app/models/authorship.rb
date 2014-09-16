@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: authorships
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  paper_uid  :text             not null
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class Authorship < ActiveRecord::Base
   belongs_to :user, touch: true
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, touch: true
