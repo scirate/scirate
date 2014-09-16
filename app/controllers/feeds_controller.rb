@@ -16,8 +16,10 @@ class FeedsController < ApplicationController
     render 'feeds/show'
   end
 
-  # Aggregated index feed for a user
+  # Aggregated index feed
   def index
+    return index_nouser unless signed_in?
+
     feed_uids = Rails.cache.fetch [:index_uids, current_user] do
       uids = current_user.subscriptions.pluck(:feed_uid)
       uids.concat Feed.where(parent_uid: uids).pluck(:uid)
@@ -69,8 +71,10 @@ class FeedsController < ApplicationController
     render 'feeds/show'
   end
 
-  # Showing a feed normally
+  # Showing a feed
   def show
+    return show_nouser unless signed_in?
+
     @feed = Feed.find_by_uid!(params[:feed])
 
     feed_uids = Rails.cache.fetch [:feed_uids, @feed] do
