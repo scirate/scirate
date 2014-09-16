@@ -3,4 +3,6 @@ class StaticPagesController < ApplicationController
   end
   def legal
   end
+  def moderation
+  end
 end

@@ -57,6 +57,7 @@ SciRate::Application.routes.draw do
 
   get '/about',    to: 'static_pages#about'
   get '/legal',    to: 'static_pages#legal'
+  get '/moderation',    to: 'static_pages#moderation'
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'
