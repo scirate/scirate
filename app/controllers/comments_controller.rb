@@ -53,14 +53,13 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    @comment.content = params[:content]
-    @comment.save!
+    @comment.edit!(params[:content], current_user.id)
     render text: 'success'
   end
 
   def delete
     # soft delete - hide
-    @comment.soft_delete!
+    @comment.soft_delete!(current_user.id)
 
     flash[:comment] = { status: 'success', raw: "Comment deleted. <a data-method='post' href='#{restore_comment_path(@comment.id)}'>(undo)</a>" }
 
@@ -69,7 +68,7 @@ class CommentsController < ApplicationController
 
   # Restore a deleted comment
   def restore
-    @comment.restore!
+    @comment.restore!(current_user.id)
 
     flash[:comment] = { status: 'success', content: "Comment restored." }
     redirect_to request.referer || @comment.paper
