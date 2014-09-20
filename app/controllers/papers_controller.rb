@@ -139,21 +139,27 @@ class PapersController < ApplicationController
   # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
   def find_top_level_comments
     total_votes = %Q{ NULLIF(cached_votes_up + cached_votes_down, 0) }
-    Comment.find_by_sql([
-      %Q{
-        SELECT *, COALESCE(
+    Comment.select(%Q{
+        comments.*, COALESCE(
           ((cached_votes_up + 1.9208) / #{total_votes} - 1.96 * SQRT((cached_votes_up * cached_votes_down) / #{total_votes} + 0.9604) / #{total_votes} ) / (1 + 3.8416 / #{total_votes})
         , 0) AS ci_lower_bound
-        FROM comments
-        WHERE paper_uid = ? AND ancestor_id IS NULL AND deleted = FALSE
-        AND (hidden = FALSE OR user_id = ?)
-        ORDER BY ci_lower_bound DESC, created_at ASC;
-      }, @paper.uid, current_user.try(:id)])
+    })
+    .where("paper_uid = ? AND ancestor_id IS NULL AND deleted = FALSE
+            AND (hidden = FALSE OR user_id = ?)",
+            @paper.uid, current_user.try(:id))
+    .order("ci_lower_bound DESC, created_at ASC")
+    .includes(:history)
   end
 
+  # We don't use voting information to order reply chains
   def find_comments_with_ancestors(ancestors)
-    ancestor_ids = ancestors.map(&:id)
-    @paper.comments.where(ancestor_id: ancestor_ids, deleted: false).order('created_at ASC')
+    Comment.where(
+      %Q{
+        paper_uid = ? AND ancestor_id IN (?) AND deleted = FALSE
+        AND (hidden = FALSE OR user_id = ?)
+      }, @paper.uid, ancestors.map(&:id), current_user.try(:id))
+    .order("created_at ASC")
+    .includes(:history)
   end
 
   def find_comments_sorted_by_rating
