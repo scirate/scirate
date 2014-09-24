@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, only: [:edit, :delete, :restore, :upvote, :downvote, :unvote, :report, :unreport, :reply]
+  before_filter :find_comment, only: [:edit, :delete, :restore, :upvote, :downvote, :unvote, :report, :unreport, :reply, :history]
 
   before_filter :check_moderation_permission, only: [:edit, :delete, :restore]
 
@@ -39,6 +39,10 @@ class CommentsController < ApplicationController
                              'papers.title AS paper_title',
                              'users.username AS user_username',
                              'users.fullname AS user_fullname')
+  end
+
+  def history
+
   end
 
   def create

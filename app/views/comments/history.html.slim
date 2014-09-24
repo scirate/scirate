@@ -1,54 +1,23 @@
-#commentHistory
+#commentHistory.container
+  h1
+    | Revision history for comment #{@comment.id}
   - @comment.history.each do |change|
-    .row.event class=(change.event)
-  - @activities.each do |activity|
-    - if activity.event == 'scite'
-      .row.event class=(activity.event)
-        .icon.col-md-1
-          i.fa.fa-star
-        .col-md-11
-          = timeago(activity.created_at)
-          .title
-            | #{@user.fullname} scited #{link_to activity.paper.title, activity.paper}
+    - if change.event == CommentChange::CREATED
+      .row.event class=(change.event)
+        | #{user_link(change.user)} commented on <a href="/#{@comment.paper_uid}">#{@comment.paper.title}</a> #{timeago(change.created_at)}
+        .content.well.tex2jax
+          = simple_format(strip_tags(change.content))
 
-    - elsif activity.event == 'subscribe'
-      .row.event class=(activity.event)
-        .col-md-1.icon
-          i.fa.fa-list
-        .col-md-11
-          = timeago(activity.created_at)
-          .title
-            | #{@user.fullname} subscribed to #{link_to activity.feed.fullname, activity.feed}
+    - elsif change.event == CommentChange::EDITED
+      .row.event class=(change.event)
+        | Edited by #{user_link(change.user)} #{timeago(change.created_at)}
+        .content.well.tex2jax
+          = simple_format(strip_tags(change.content))
 
-    - elsif activity.event == 'comment'
-      .row.event class=(activity.event) data-markup=(activity.comment.content)
-        .col-md-1.icon
-          i.fa.fa-comment
-        .col-md-11
-          = timeago(activity.created_at)
-          .title
-              | #{@user.fullname} commented on <a href="#{paper_url(activity.comment.paper)}##{activity.comment.id}">#{activity.comment.paper.title}</a>
-          .content.well.tex2jax
-            .body
-              = simple_format(strip_tags(activity.comment.content))
+    - elsif change.event == CommentChange::DELETED
+      .row.event class=(change.event)
+        | Deleted by #{user_link(change.user)} #{timeago(change.created_at)}
 
-    - elsif activity.event == 'authorship'
-      .row.event class=(activity.event)
-        .col-md-1.icon
-          i.fa.fa-pencil
-        .col-md-11
-          = timeago(activity.created_at)
-          .authorship
-            .title
-              | #{@user.fullname} published #{link_to activity.paper.title, activity.paper}
-            .content.well
-              = activity.paper.abstract
-
-    - elsif activity.event == 'signup'
-      .row.event class=(activity.event)
-        .col-md-1.icon
-          i.fa.fa-user
-        .col-md-11
-          = timeago(activity.created_at)
-          .title
-            | #{@user.fullname} joined SciRate
+    - elsif change.event == CommentChange::RESTORED
+      .row.event class=(change.event)
+        | Restored by #{user_link(change.user)} #{timeago(change.created_at)}

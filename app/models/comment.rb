@@ -32,6 +32,8 @@ class Comment < ActiveRecord::Base
 
   has_many :history, class_name: "CommentChange"
 
+  belongs_to :last_edit, class_name: "CommentChange" # Last user who altered this comment
+
   scope :visible, -> { where(hidden: false, deleted: false) }
 
   after_create do
@@ -75,12 +77,14 @@ class Comment < ActiveRecord::Base
   acts_as_votable
 
   def record_change!(event, user_id)
-    CommentChange.create!(
+    cc = CommentChange.create!(
       comment_id: self.id,
       user_id: user_id,
       event: event,
       content: self.content
     )
+
+    update!(last_edit_id: cc.id) if event == CommentChange::EDITED
   end
 
   def soft_delete!(user_id)

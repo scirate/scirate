@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916211924) do
+ActiveRecord::Schema.define(version: 20140922112937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20140916211924) do
     t.boolean  "deleted",            default: false, null: false
     t.text     "paper_uid",          default: "",    null: false
     t.boolean  "hidden_from_recent", default: false, null: false
+    t.integer  "last_edit_id"
   end
 
   add_index "comments", ["ancestor_id"], name: "index_comments_on_ancestor_id", using: :btree
@@ -103,6 +104,7 @@ ActiveRecord::Schema.define(version: 20140916211924) do
   add_index "comments", ["hidden"], name: "index_comments_on_hidden", using: :btree
   add_index "comments", ["hidden_from_recent"], name: "index_comments_on_hidden_from_recent", using: :btree
   add_index "comments", ["id", "paper_uid", "deleted", "hidden", "hidden_from_recent"], name: "index_comments_for_recent", using: :btree
+  add_index "comments", ["last_edit_id"], name: "index_comments_on_last_edit_id", using: :btree
   add_index "comments", ["paper_uid"], name: "index_comments_on_paper_uid", using: :btree
   add_index "comments", ["parent_id"], name: "index_comments_on_parent_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
@@ -122,6 +124,20 @@ ActiveRecord::Schema.define(version: 20140916211924) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "down_votes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "downvotes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "feed_preferences", force: true do |t|
     t.integer  "user_id"
@@ -217,8 +233,22 @@ ActiveRecord::Schema.define(version: 20140916211924) do
     t.text     "alert",                default: "",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "arxiv_sync_dt",        default: '2014-09-08 00:00:00', null: false
-    t.datetime "arxiv_author_sync_dt", default: '2014-09-08 00:00:00', null: false
+    t.datetime "arxiv_sync_dt",        default: '2014-09-10 00:00:00', null: false
+    t.datetime "arxiv_author_sync_dt", default: '2014-09-10 00:00:00', null: false
+  end
+
+  create_table "up_votes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "upvotes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: true do |t|

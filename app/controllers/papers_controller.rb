@@ -148,7 +148,7 @@ class PapersController < ApplicationController
             AND (hidden = FALSE OR user_id = ?)",
             @paper.uid, current_user.try(:id))
     .order("ci_lower_bound DESC, created_at ASC")
-    .includes(:history)
+    .includes(:last_edit)
   end
 
   # We don't use voting information to order reply chains
@@ -159,7 +159,7 @@ class PapersController < ApplicationController
         AND (hidden = FALSE OR user_id = ?)
       }, @paper.uid, ancestors.map(&:id), current_user.try(:id))
     .order("created_at ASC")
-    .includes(:history)
+    .includes(:last_edit)
   end
 
   def find_comments_sorted_by_rating

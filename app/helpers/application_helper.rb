@@ -30,4 +30,8 @@ module ApplicationHelper
     dt = Time.parse(dt) if dt.is_a? String
     raw "<abbr class=\"timeago\" title=\"#{dt.iso8601}\">#{dt.strftime("%b %d %Y %R UTC")}</abbr>"
   end
+
+  def user_link(user)
+    raw "<a href='/#{h(user.username)}'>#{h(user.fullname)}</a>"
+  end
 end

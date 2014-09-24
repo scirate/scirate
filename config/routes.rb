@@ -33,6 +33,7 @@ SciRate::Application.routes.draw do
     end
   end
   get '/comments', to: 'comments#index'
+  get '/comments/:id/history', to: 'comments#history', as: 'comment_history'
 
   get '/auth/:provider/callback', to: 'sessions#omniauth_callback'
   get '/auth/:provider/disconnect',

@@ -21,6 +21,8 @@ describe CommentChange do
     expect(change.event).to eq(CommentChange::EDITED)
     expect(change.user_id).to eq(user.id)
     expect(change.content).to eq("waffles")
+
+    expect(comment.last_edit_id).to eq(change.id)
   end
 
   it "records deletions" do
