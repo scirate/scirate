@@ -4,7 +4,7 @@
   - @comment.history.each do |change|
     - if change.event == CommentChange::CREATED
       .row.event class=(change.event)
-        | #{user_link(change.user)} commented on <a href="/#{@comment.paper_uid}">#{@comment.paper.title}</a> #{timeago(change.created_at)}
+        | #{user_link(change.user)} commented on <a href="/arxiv/#{@comment.paper_uid}##{@comment.id}">#{@comment.paper.title}</a> #{timeago(change.created_at)}
         .content.well.tex2jax
           = simple_format(strip_tags(change.content))
 

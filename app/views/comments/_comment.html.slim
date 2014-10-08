@@ -26,8 +26,8 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
       .body.tex2jax
         = simple_format(strip_tags(comment.content))
       p
-        - unless comment.last_edit.nil?
-          | Last edited <a href="/comments/#{comment.id}/history">#{timeago(comment.last_edit.created_at)}</a> by #{comment.last_edit.user.fullname}
+        - unless comment.last_change.nil?
+          | #{comment.last_change.event.capitalize} <a class="timeago-link" href="/comments/#{comment.id}/history">#{timeago(comment.last_change.created_at)}</a> by #{user_link(comment.last_change.user)}
       - if @paper && current_user
         .actions
           a.permalink href="##{comment.id}" permalink

@@ -106,7 +106,7 @@
             = render @comments
 
           - if current_user && current_user.is_moderator?
-            - @deleted_comments = Comment.where(paper_uid: @paper.uid, deleted: true)
+            - @deleted_comments = Comment.where(paper_uid: @paper.uid, deleted: true).includes(:last_change)
             - if @deleted_comments.length > 0
               h4= status_warning + ' ' + pluralize(@deleted_comments.length, "deleted comment")
               = render partial: "comments/deleted_comment", collection: @deleted_comments

@@ -32,6 +32,15 @@ abbr.timeago {
   border-bottom: none;
 }
 
+// Except when it is in a link
+a.timeago-link abbr.timeago {
+  cursor: inherit;
+}
+
+a.timeago-link:hover {
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .username { font-weight: bold; }
 .hidden { display: none !important; }
 .transparent { opacity: 0.0 !important; }

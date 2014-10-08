@@ -32,7 +32,7 @@ class Comment < ActiveRecord::Base
 
   has_many :history, class_name: "CommentChange"
 
-  belongs_to :last_edit, class_name: "CommentChange" # Last user who altered this comment
+  belongs_to :last_change, class_name: "CommentChange" # Last user who altered this comment
 
   scope :visible, -> { where(hidden: false, deleted: false) }
 
@@ -84,7 +84,7 @@ class Comment < ActiveRecord::Base
       content: self.content
     )
 
-    update!(last_edit_id: cc.id) if event == CommentChange::EDITED
+    update!(last_change_id: cc.id)
   end
 
   def soft_delete!(user_id)

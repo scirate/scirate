@@ -1,3 +1,6 @@
+/ TODO: this could be refactored with _comment.html.slim, it's just
+/ a little fiddly to do so
+
 - comment = deleted_comment
 
 div.comment data-id=(comment.id) data-markup=(comment.content)
@@ -18,6 +21,9 @@ div.comment data-id=(comment.id) data-markup=(comment.content)
         |  (<span class="score">#{comment.cached_votes_up-comment.cached_votes_down}</span> points)
     .body.tex2jax
       = simple_format(strip_tags(comment.content))
+    p
+      - unless comment.last_change.nil?
+        | #{comment.last_change.event.capitalize} <a class="timeago-link" href="/comments/#{comment.id}/history">#{timeago(comment.last_change.created_at)}</a> by #{user_link(last_change.user)}
     .actions
       a.permalink href="##{comment.id}" permalink
       - if current_user.id == comment.user_id || current_user.is_moderator?
