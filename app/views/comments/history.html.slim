@@ -1,6 +1,9 @@
+- provide :title, "Comment #{@comment.id}: Revision history"
+
 #commentHistory.container
-  h1
-    | Revision history for comment #{@comment.id}
+  .row
+    h1
+      | Revision history for comment #{@comment.id}
   - @comment.history.each do |change|
     - if change.event == CommentChange::CREATED
       .row.event class=(change.event)
