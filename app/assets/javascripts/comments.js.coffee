@@ -5,11 +5,11 @@
 class Comment
   @setupComments: ->
     @converter = Markdown.getSanitizingConverter()
-    if $('#comment_form').length
+    if $('#commentForm').length
       @bindEditor() # Setup the main commenting form
       # Grab the inline editor html
-      @editor_html = $('#comment_editor').removeClass('hidden').remove()[0].outerHTML
-      @reply_html = $('#comment_reply').removeClass('hidden').remove()[0].outerHTML
+      @editor_html = $('#commentEditor').removeClass('hidden').remove()[0].outerHTML
+      @reply_html = $('#commentReply').removeClass('hidden').remove()[0].outerHTML
 
     # Render markup and setup interface for individual comments
     $('.comment:not(.deleted)').each -> new Comment($(this))
@@ -127,7 +127,7 @@ class Comment
       return false
 
   stopEditing: ->
-    $('#comment_editor').remove()
+    $('#commentEditor').remove()
     @renderMarkup()
     @editing = false
 
@@ -147,7 +147,7 @@ class Comment
     @$el.find('.wmd-input').focus()
 
   stopReply: ->
-    @$el.find('#comment_reply').remove()
+    @$el.find('#commentReply').remove()
     @replying = false
 
   toggleReply: ->

@@ -440,11 +440,11 @@ div.comments {
   color: rgb(255, 56, 56);
 }
 
-#comment_reply {
+#commentReply {
   margin-top: 10px;
 }
 
-#comment_form, #comment_editor, #comment_reply {
+#commentForm, #commentEditor, #commentReply {
   #wmd-button-bar {
     margin: 5px 0;
   }
@@ -509,6 +509,14 @@ div.abbr_comment {
 
   textarea {
     display: block;
+  }
+}
+
+#commentHistory .event {
+  margin-bottom: 20px;
+
+  .well {
+    margin-bottom: 0;
   }
 }
 

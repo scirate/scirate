@@ -84,7 +84,7 @@ class Comment < ActiveRecord::Base
       content: self.content
     )
 
-    update!(last_change_id: cc.id)
+    update!(last_change_id: cc.id) unless event == CommentChange::CREATED
   end
 
   def soft_delete!(user_id)

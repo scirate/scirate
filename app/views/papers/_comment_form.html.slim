@@ -1,4 +1,4 @@
-#comment_form
+#commentForm
   = form_for(current_user.comments.build(paper_uid: @paper.uid)) do |f|
     = render 'shared/error_messages', object: f.object
     div= f.hidden_field :paper_uid
@@ -11,7 +11,7 @@
       #wmd-preview.wmd-panel.wmd-preview.well.hidden
     = f.submit "Leave Comment", :class => "btn btn-large btn-primary leave-comment"
 
-= form_tag('', :id => 'comment_editor', :class => 'hidden') do
+= form_tag('', :id => 'commentEditor', :class => 'hidden') do
   div= hidden_field_tag :paper_uid
   .wmd-panel
     #wmd-button-bar-edit
@@ -19,7 +19,7 @@
   #wmd-preview-edit.wmd-panel.wmd-preview.well.hidden
   input.save.leave-comment.btn.btn-success type="submit" value="Save Changes"
 
-= form_tag('', :id => 'comment_reply', :class => 'hidden') do
+= form_tag('', :id => 'commentReply', :class => 'hidden') do
   div= hidden_field_tag :paper_uid
   .wmd-panel
     #wmd-button-bar-reply
