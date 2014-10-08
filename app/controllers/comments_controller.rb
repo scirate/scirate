@@ -57,7 +57,9 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    @comment.edit!(params[:content], current_user.id)
+    unless @comment.content == params[:content] # Don't record edit if same
+      @comment.edit!(params[:content], current_user.id)
+    end
     render text: 'success'
   end
 
