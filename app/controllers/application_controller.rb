@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_https
 
   def not_found
-    raise ActionController::RoutingError.new('Not Found')
+    render file: "#{Rails.root}/public/404", layout: false, status: 404
   end
 
   def redirect_https

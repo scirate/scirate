@@ -125,6 +125,20 @@ ActiveRecord::Schema.define(version: 20141008043049) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "down_votes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "downvotes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "feed_preferences", force: true do |t|
     t.integer  "user_id"
     t.datetime "last_visited"
@@ -219,8 +233,22 @@ ActiveRecord::Schema.define(version: 20141008043049) do
     t.text     "alert",                default: "",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "arxiv_sync_dt",        default: '2014-09-08 00:00:00', null: false
-    t.datetime "arxiv_author_sync_dt", default: '2014-09-08 00:00:00', null: false
+    t.datetime "arxiv_sync_dt",        default: '2014-09-10 00:00:00', null: false
+    t.datetime "arxiv_author_sync_dt", default: '2014-09-10 00:00:00', null: false
+  end
+
+  create_table "up_votes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "upvotes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: true do |t|

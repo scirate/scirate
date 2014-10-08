@@ -42,7 +42,7 @@ class CommentsController < ApplicationController
   end
 
   def history
-
+    return check_moderation_permission if @comment.deleted
   end
 
   def create
@@ -133,8 +133,8 @@ class CommentsController < ApplicationController
   private
 
     def check_moderation_permission
-      if !comment_owner? && !current_user.is_moderator?
-        render status: :forbidden and return
+      if !signed_in? || (!comment_owner? && !current_user.is_moderator?)
+        not_found
       end
     end
 

@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "Comment revision history", js: true do
   let!(:comment) { FactoryGirl.create(:comment, content: 'this is original comment') }
   let!(:user) { FactoryGirl.create(:user) }
+  let!(:moderator) { FactoryGirl.create(:user, :moderator) }
 
   before do
     comment.edit!("this is edited comment", user.id)
@@ -24,6 +25,23 @@ describe "Comment revision history", js: true do
       expect(page).to have_content "this is edited comment"
       expect(page).to have_content "Deleted by"
       expect(page).to have_content "Restored by"
+    end
+  end
+
+  describe "Deleted revision history page" do
+    before do
+      comment.soft_delete!(user.id)
+    end
+
+    it "doesn't allow access from non-moderators" do
+      visit comment_history_path(comment)
+      expect(page.status_code).to eq(404)
+    end
+
+    it "does allow access from moderators" do
+      sign_in moderator
+      visit comment_history_path(comment)
+      expect(page.status_code).to_not eq(404)
     end
   end
 end
