@@ -9,11 +9,9 @@ script:
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-  - "export DEBIAN_FRONTEND=noninteractive"
-  - sudo apt-get remove elasticsearch
-  - sudo rm -rf /etc/elasticsearch
+  - sudo apt-get purge elasticsearch
   - wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.0.deb
-  - sudo dpkg --force-overwrite -i /tmp/elasticsearch.deb
+  - sudo dpkg -i /tmp/elasticsearch.deb
   - sudo service elasticsearch start
   - cp config/database.yml.travis config/database.yml
   - psql -c 'create database scirate_test;' -U postgres
