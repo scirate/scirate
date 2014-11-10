@@ -1,4 +1,4 @@
-ruby '2.1.2'
+ruby '2.1.4'
 source 'http://rubygems.org'
 
 # Rails
