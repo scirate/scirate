@@ -42,15 +42,15 @@ If you've just installed postgres, it'll be easiest to use the default 'peer' au
 sudo -u postgres createuser --superuser $USER
 ```
 
-Copy the example database configuration file:
+Copy the example database configuration file (:
 
 ```
 cp config/database.yml.example config/database.yml
 ```
 
-Edit the new file and remove both pairs of `username` and `password` settings.
+If using peer authentication, you won't need to edit this file.
 
-Then, initialize the database and Elasticsearch, download the basic feed layout, and start the server:
+Then:
 
 ```shell
 rake db:setup
@@ -58,6 +58,7 @@ rake es:migrate
 rake arxiv:feed_import
 rails server
 ```
+This will initialize the database and Elasticsearch, download the basic feed layout, and start the server.
 
 You should now have a working local copy of SciRate! However, you'll also want some papers to fiddle with.
 
