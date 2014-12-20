@@ -37,6 +37,8 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 Capybara.javascript_driver = :webkit
 
 RSpec.configure do |config|
+  config.infer_spec_type_from_file_location!
+
   config.include Capybara::DSL
   config.include Capybara::RSpecMatchers
 

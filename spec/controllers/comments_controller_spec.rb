@@ -59,7 +59,7 @@ describe CommentsController do
 
     it "restores the comment" do
       flash[:comment][:status].should == 'success'
-      expect(comment.reload.deleted).to be_false
+      expect(comment.reload.deleted).to be(false)
     end
   end
 

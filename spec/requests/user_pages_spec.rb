@@ -83,10 +83,9 @@ describe "email confirmation" do
 
   context "with invalid confirmation" do
     it "doesn't activate the user" do
-      expect do
-        visit activate_user_path(@user.id, "bogus")
-        @user.reload
-      end.to_not change(@user, :active).to(true)
+      visit activate_user_path(@user.id, "bogus")
+      @user.reload
+      expect(@user.active).to be(false)
 
       page.should have_content("link is invalid")
     end
@@ -99,10 +98,9 @@ describe "email confirmation" do
     end
 
     it "doesn't activate and sends a new email" do
-      expect do
-        visit activate_user_path(@user.id, @user.confirmation_token)
-        @user.reload
-      end.to_not change(@user, :active).to(true)
+      visit activate_user_path(@user.id, @user.confirmation_token)
+      @user.reload
+      expect(@user.active).to be(false)
 
       page.should have_content("link has expired")
       page.should have_content("email has been sent")
