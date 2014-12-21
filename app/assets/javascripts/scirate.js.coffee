@@ -224,7 +224,7 @@ $(document).on 'ready', ->
     if err == "Unauthorized"
       SciRate.login()
 
-  Turbolinks.enableTransitionCache()
+  #Turbolinks.enableTransitionCache()
   NProgress.configure(showSpinner: false, minimum: 0.4, speed: 300)
 
   MathJax.Hub.Config({
