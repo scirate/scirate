@@ -6,8 +6,8 @@ describe "Feed pages" do
 
   let!(:feed1) { FactoryGirl.create(:feed, last_paper_date: time) }
   let!(:feed2) { FactoryGirl.create(:feed, last_paper_date: time) }
-  let!(:new_paper1) { FactoryGirl.create(:paper, title: "New Paper 1", feeds: [feed1], pubdate: time) }
-  let!(:new_paper2) { FactoryGirl.create(:paper, title: "New Paper 2", feeds: [feed2], pubdate: time) }
+  let!(:new_paper1) { FactoryGirl.create(:paper, uid: "1001.1001", title: "New Paper 1", feeds: [feed1], pubdate: time) }
+  let!(:new_paper2) { FactoryGirl.create(:paper, uid: "1001.1002", title: "New Paper 2", feeds: [feed2], pubdate: time) }
   let!(:old_paper1) { FactoryGirl.create(:paper, title: "Old Paper 1", feeds: [feed1], pubdate: time-1.day) }
   let!(:old_paper2) { FactoryGirl.create(:paper, title: "Old Paper 2", feeds: [feed2], pubdate: time-1.day) }
 
