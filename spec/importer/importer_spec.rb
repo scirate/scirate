@@ -108,7 +108,7 @@ describe "arxiv importer" do
     paper = Paper.find_by_uid(paper_uids[0])
 
     # Primary imports
-    paper.uid.should == "0811.3648"
+    paper.uid.should == "0811.36489"
     paper.submitter.should == "Jelani Nelson"
     paper.versions[0].date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 GMT")
     paper.versions[0].size.should == "90kb"
@@ -126,8 +126,8 @@ describe "arxiv importer" do
     paper.submit_date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
     paper.update_date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
     paper.pubdate.should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
-    paper.abs_url.should == "http://arxiv.org/abs/0811.3648"
-    paper.pdf_url.should == "http://arxiv.org/pdf/0811.3648.pdf"
+    paper.abs_url.should == "http://arxiv.org/abs/0811.36489"
+    paper.pdf_url.should == "http://arxiv.org/pdf/0811.36489.pdf"
     expect(paper.versions_count).to eq 2
 
     # Ensure last_paper_date is updated on all feeds including parents
@@ -141,7 +141,7 @@ describe "arxiv importer" do
     Search::Paper.es_basic("*").raw.hits.total.should == 1000
 
     doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
-    doc._id.should == "0811.3648"
+    doc._id.should == "0811.36489"
     doc.title.should == "Revisiting Norm Estimation in Data Streams"
     doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
     doc.authors_searchterm.should == ["Kane_D", "Nelson_J", "Woodruff_D"]
@@ -159,7 +159,7 @@ describe "arxiv importer" do
     Search::Paper.es_basic("*").raw.hits.total.should == 1000
 
     doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
-    doc._id.should == "0811.3648"
+    doc._id.should == "0811.36489"
     doc.title.should == "Revisiting Norm Estimation in Data Streams"
     doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
     doc.authors_searchterm.should == ["Kane_D", "Nelson_J", "Woodruff_D"]

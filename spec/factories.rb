@@ -42,12 +42,12 @@ FactoryGirl.define do
     sequence(:title)       { |n| "On Hilbert's #{n}th Problem" }
     sequence(:abstract)    { |n| "We solve Hilbert's #{n}th problem." }
     submitter              'Hilbert N. Grande'
-    sequence(:uid)         { |n| "#{1000+n}/#{1000+n}.#{1000+n}" }
+    sequence(:uid)         { |n| "#{1000+n}/#{1000+n}.#{10000+n}" }
     submit_date            { Date.today }
     update_date            { Date.today }
     pubdate                { Paper.estimate_pubdate(Date.today) }
-    sequence(:abs_url)     { |n| "http://arxiv.org/abs/#{1000+n}/#{1000+n}.#{1000+n}" }
-    sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}/#{1000+n}.#{1000+n}" }
+    sequence(:abs_url)     { |n| "http://arxiv.org/abs/#{1000+n}/#{1000+n}.#{10000+n}" }
+    sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}/#{1000+n}.#{10000+n}" }
     author_str             'Hilbert N. Grande, Lucrezia Mongfish'
 
     trait :with_comments do

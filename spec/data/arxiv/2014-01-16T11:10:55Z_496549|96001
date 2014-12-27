@@ -5,13 +5,13 @@
 <ListRecords>
 <record>
 <header>
- <identifier>oai:arXiv.org:0811.3648</identifier>
+ <identifier>oai:arXiv.org:0811.36489</identifier>
  <datestamp>2009-04-09</datestamp>
  <setSpec>cs</setSpec>
 </header>
 <metadata>
  <arXivRaw xsi:schemaLocation='http://arxiv.org/OAI/arXivRaw/ http://arxiv.org/OAI/arXivRaw.xsd' xmlns='http://arxiv.org/OAI/arXivRaw/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
- <id>0811.3648</id><submitter>Jelani Nelson</submitter><version version='v1'><date>Fri, 21 Nov 2008 22:55:07 GMT</date><size>90kb</size></version><version version='v2'><date>Thu, 9 Apr 2009 02:45:30 GMT</date><size>71kb</size></version><title>Revisiting Norm Estimation in Data Streams</title><authors>Daniel M. Kane, Jelani Nelson, David P. Woodruff</authors><categories>cs.DS cs.CC</categories><comments>added content; modified L_0 algorithm -- ParityLogEstimator in
+ <id>0811.36489</id><submitter>Jelani Nelson</submitter><version version='v1'><date>Fri, 21 Nov 2008 22:55:07 GMT</date><size>90kb</size></version><version version='v2'><date>Thu, 9 Apr 2009 02:45:30 GMT</date><size>71kb</size></version><title>Revisiting Norm Estimation in Data Streams</title><authors>Daniel M. Kane, Jelani Nelson, David P. Woodruff</authors><categories>cs.DS cs.CC</categories><comments>added content; modified L_0 algorithm -- ParityLogEstimator in
   version 1 contained an error, and the new algorithm uses slightly more space</comments><license>http://arxiv.org/licenses/nonexclusive-distrib/1.0/</license><abstract>  The problem of estimating the pth moment F_p (p nonnegative and real) in data
 streams is as follows. There is a vector x which starts at 0, and many updates
 of the form x_i &lt;-- x_i + v come sequentially in a stream. The algorithm also
