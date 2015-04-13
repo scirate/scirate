@@ -25,7 +25,7 @@ namespace :arxiv do
     feeds = []
 
     doc.css('li').each do |li|
-      break if li.text.include?("See our help pages")
+      break if li.text.include?("General information")
       fullname = li.css('a')[0].text
       uid = li.css('a')[1].attr('href').split('/')[2]
       parent = make_feed(uid, fullname)
@@ -51,7 +51,7 @@ namespace :arxiv do
     print "Import this feed data? [y/N]: "
     return unless STDIN.gets.strip.downcase == 'y'
 
-    feeds.each_with_index do |feed, i| 
+    feeds.each_with_index do |feed, i|
       feed.position = i
       feed.save!
     end
