@@ -5,18 +5,30 @@ describe "profile page" do
     @user = FactoryGirl.create(:user)
   end
 
-  it "should display profile if you're logged in" do
+  it "displays profile if you're logged in" do
     other_user = FactoryGirl.create(:user)
     sign_in(other_user)
     visit user_path(@user)
-    page.should have_heading @user.fullname
-    page.should have_title @user.fullname
+    expect(page).to have_heading @user.fullname
+    expect(page).to have_title @user.fullname
   end
 
-  it "should display profile if you're logged out" do
+  it "displays profile if you're logged out" do
     visit user_path(@user)
-    page.should have_heading @user.fullname
-    page.should have_title @user.fullname
+    expect(page).to have_heading @user.fullname
+    expect(page).to have_title @user.fullname
+  end
+
+  it "updates the activity feed when a comment is deleted" do
+    comment = FactoryGirl.create(:comment, content: "good comment", user: @user)
+    comment2 = FactoryGirl.create(:comment, content: "kinda sucky comment", user: @user)
+    visit user_path(@user)
+    expect(page).to have_selector('.comment', comment.content)
+    expect(page).to have_content(comment2.content)
+    comment2.soft_delete!(@user.id)
+    visit user_path(@user)
+    expect(page).to have_selector('.comment', comment.content)
+    expect(page).to_not have_content(comment2.content)
   end
 end
 

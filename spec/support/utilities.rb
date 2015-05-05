@@ -44,7 +44,7 @@ end
 
 RSpec::Matchers.define :have_comment do |content|
   match do |page|
-    page.should have_selector('.comment', text: content)
+    have_selector('.comment', text: content)
   end
 end
 
