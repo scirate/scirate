@@ -5,6 +5,13 @@ require 'net/http'
 
 require File.expand_path('../../lib/exception_notification',  __FILE__)
 
+if defined?(Bundler)
+  ActiveSupport::Deprecation.silence do
+    Bundler.require(:default, Rails.env)
+  end
+end
+
+
 module SciRate
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

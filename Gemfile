@@ -53,7 +53,7 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.9'
+  gem 'rspec-rails'
 
   # An improved IRB alternative for rails console
   gem 'pry'

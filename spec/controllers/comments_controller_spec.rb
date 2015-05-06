@@ -11,7 +11,7 @@ describe CommentsController do
       become user
       expect(Net::HTTP).to receive(:start).once.and_return(double(code: '200'))
       xhr :post, :create, comment: { paper_uid: paper.uid, content: "fishies" }
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     it "creates a comment" do
@@ -42,7 +42,7 @@ describe CommentsController do
     end
 
     it "marks comment as deleted" do
-      flash[:comment][:status].should == 'success'
+      expect(flash[:comment][:status]).to eq 'success'
 
       expect(comment.reload.deleted).to be_truthy
     end
@@ -54,11 +54,11 @@ describe CommentsController do
       comment.deleted = true
       comment.save
       xhr :post, :restore, id: comment.id
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     it "restores the comment" do
-      flash[:comment][:status].should == 'success'
+      expect(flash[:comment][:status]).to eq 'success'
       expect(comment.reload.deleted).to be(false)
     end
   end
@@ -67,11 +67,11 @@ describe CommentsController do
     before do
       become user
       xhr :post, :reply, id: comment.id, content: "snuffles"
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     it "creates a new comment in reply" do
-      flash[:comment][:status].should == 'success'
+      expect(flash[:comment][:status]).to eq 'success'
       reply = comment.reload.children[0]
       expect(reply.content).to eq "snuffles"
       expect(reply.paper_uid).to eq paper.uid
