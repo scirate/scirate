@@ -12,6 +12,6 @@
 require 'spec_helper'
 
 describe Scite do
-  it { should validate_presence_of(:user) }
-  it { should validate_presence_of(:paper) }
+  it { is_expected.to validate_presence_of(:user) }
+  it { is_expected.to validate_presence_of(:paper) }
 end

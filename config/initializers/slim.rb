@@ -1,1 +1,1 @@
-Slim::Engine.set_default_options sort_attrs: false
+Slim::Engine.set_options sort_attrs: false

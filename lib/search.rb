@@ -264,7 +264,7 @@ module Search::Paper
   # Add/update papers in the search index
   # Should be called after papers are modified (e.g. scited)
   def self.index(*papers)
-    puts "Updating search index for #{papers.map(&:title)}"
+    #puts "Updating search index for #{papers.map(&:title)}"
     res = Search.index.bulk_index(papers.map { |paper| make_doc(paper) })
     raise res if res.errors
   end

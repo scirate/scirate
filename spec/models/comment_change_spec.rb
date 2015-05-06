@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe CommentChange do
-  it { should belong_to(:user) }
-  it { should belong_to(:comment) }
+  it { is_expected.to belong_to(:user) }
+  it { is_expected.to belong_to(:comment) }
 
   let(:user) { FactoryGirl.create(:user) }
   let(:comment) { FactoryGirl.create(:comment) }

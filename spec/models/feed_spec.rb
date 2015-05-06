@@ -19,14 +19,14 @@ describe Feed do
 
   subject { feed }
 
-  it { should respond_to(:uid) }
-  it { should respond_to(:fullname) }
-  it { should respond_to(:source) }
-  it { should respond_to(:subscriptions) }
-  it { should respond_to(:users) }
-  it { should respond_to(:categories) }
+  it { is_expected.to respond_to(:uid) }
+  it { is_expected.to respond_to(:fullname) }
+  it { is_expected.to respond_to(:source) }
+  it { is_expected.to respond_to(:subscriptions) }
+  it { is_expected.to respond_to(:users) }
+  it { is_expected.to respond_to(:categories) }
 
-  it { should be_valid }
+  it { is_expected.to be_valid }
 
   describe "subscribing" do
     let(:user) { FactoryGirl.create(:user) }

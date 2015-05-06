@@ -21,15 +21,15 @@
 require 'spec_helper'
 
 describe Comment do
-  it { should belong_to(:user) }
-  it { should belong_to(:paper) }
-  it { should belong_to(:parent).class_name('Comment') }
-  it { should belong_to(:ancestor).class_name('Comment') }
-  it { should have_many(:reports).class_name('CommentReport') }
-  it { should have_many(:children).class_name('Comment') }
-  it { should validate_presence_of(:user) }
-  it { should validate_presence_of(:paper) }
-  it { should validate_presence_of(:content) }
+  it { is_expected.to belong_to(:user) }
+  it { is_expected.to belong_to(:paper) }
+  it { is_expected.to belong_to(:parent).class_name('Comment') }
+  it { is_expected.to belong_to(:ancestor).class_name('Comment') }
+  it { is_expected.to have_many(:reports).class_name('CommentReport') }
+  it { is_expected.to have_many(:children).class_name('Comment') }
+  it { is_expected.to validate_presence_of(:user) }
+  it { is_expected.to validate_presence_of(:paper) }
+  it { is_expected.to validate_presence_of(:content) }
 
   describe "email alerts" do
     describe "email_about_replies" do
