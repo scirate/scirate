@@ -149,8 +149,9 @@ module Search
       old_settings = es.index(old_index).get_settings[old_index]['settings']
       new_settings = es.index(new_index).get_settings[new_index]['settings']
 
-      # uuid always varies
+      # uuid and creation date always vary
       old_settings['index']['uuid'] = new_settings['index']['uuid']
+      old_settings['index']['creation_date'] = new_settings['index']['creation_date']
 
       old_mappings = es.index(old_index).get_mapping[old_index]['mappings']
       new_mappings = es.index(new_index).get_mapping[new_index]['mappings']
@@ -473,7 +474,6 @@ class Search::Paper::Query
         @es_query << "feed_uids:" + tstrip(term)
       elsif term.start_with?('scited_by:')
         name = full_tstrip(term)
-        p name
 
         # Prioritize username over fullname
         ids = User.where(username: name).pluck(:id)
@@ -511,8 +511,6 @@ class Search::Paper::Query
   end
 
   def run(opts={})
-    p @es_query.join(' ')
-
     filter = if @date_range
       {
         range: {
