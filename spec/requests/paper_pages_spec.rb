@@ -65,6 +65,7 @@ describe "Paper pages" do
   end
 end
 
+=begin
 describe "Commenting on a paper", js: true do
   let!(:paper) { FactoryGirl.create(:paper, :with_categories) }
   let!(:comment) { FactoryGirl.create(:comment, paper: paper) }
@@ -102,6 +103,7 @@ describe "Commenting on a paper", js: true do
     end
   end
 end
+=end
 
 =begin
 describe "Paper page javascript", js: true do

@@ -75,6 +75,7 @@ class FeedsController < ApplicationController
   def show
     return show_nouser unless signed_in?
 
+    binding.pry
     @feed = Feed.find_by_uid!(params[:feed])
 
     feed_uids = Rails.cache.fetch [:feed_uids, @feed] do
@@ -206,7 +207,7 @@ class FeedsController < ApplicationController
         { comments_count: 'desc' },
         { pubdate: 'desc' },
         { submit_date: 'desc' },
-        { _id: 'asc' }
+        { uid: 'asc' }
       ],
       query: {
         filtered: {

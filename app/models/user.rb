@@ -238,7 +238,7 @@ class User < ActiveRecord::Base
     self.password = new_password
     self.password_confirmation = new_password
     saved = self.save
-    UserMailer.password_change(self).deliver if saved
+    UserMailer.password_change(self).deliver_later if saved
     saved
   end
 

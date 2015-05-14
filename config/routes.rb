@@ -70,10 +70,9 @@ SciRate::Application.routes.draw do
   get '/users/:id/activate/:confirmation_token', to: 'users#activate', as: 'activate_user'
   get '/feeds', to: 'users#feeds', as: 'feeds'
 
-  get '/arxiv/:paper_uid/scites', to: 'papers#scites', paper_uid: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper_scites'
+  get '/arxiv/:paper_uid/scites', to: 'papers#scites', paper_uid: /(.+\/.+|\d+.\d+)(v\d)?/, as: 'paper_scites'
   get '/arxiv/:feed/comments', to: 'comments#index', feed: /.+/, as: 'feed_comments'
-  get '/arxiv/:paper_uid', to: 'papers#show', paper_uid: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
-
+  get '/arxiv/*paper_uid', to: 'papers#show', paper_uid: /.+\/.+|\d+.\d+(v\d)?/, as: 'paper'
   get '/arxiv/:feed', to: 'feeds#show', feed: /.+/, as: 'feed'#, constraints: NeedsUserConstraint
 
   get '/admin', to: 'admin/base#index', as: 'admin'

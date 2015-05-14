@@ -158,3 +158,17 @@ class Paper < ActiveRecord::Base
     end
 end
 
+# HACK (Mispy): Rails 3.2 changed to uri encode slashes in the
+# output of to_param before constructing a path. Legacy arxiv
+# paper ids contain a slash and we don't want to have to special
+# case path generation all over the place, so ... this.
+
+Rails.application.routes.url_helpers.send(
+  :alias_method, :orig_paper_path, :paper_path
+)
+
+Rails.application.routes.url_helpers.send(
+  :define_method, :paper_path, proc { |paper|
+    orig_paper_path(paper).gsub("%2F", '/')
+  }
+)
