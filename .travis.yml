@@ -1,7 +1,7 @@
 language: ruby
 cache: bundler
 rvm:
-  - 2.1.4
+  - 2.2.1
 bundler_args: -j4 --without development production --quiet
 script:
   - RAILS_ENV=test bundle exec rake db:setup
@@ -10,7 +10,7 @@ before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sudo apt-get purge elasticsearch
-  - wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb
+  - wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb
   - sudo dpkg -i /tmp/elasticsearch.deb
   - sudo service elasticsearch start
   - cp config/database.yml.travis config/database.yml
