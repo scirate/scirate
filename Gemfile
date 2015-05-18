@@ -52,6 +52,9 @@ gem 'bourbon'
 gem 'delayed_job_active_record'
 gem 'daemons'
 
+# Frontend stuff
+gem 'font-awesome-rails'
+
 group :development, :test do
   gem 'rspec-rails'
 

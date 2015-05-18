@@ -128,6 +128,8 @@ GEM
     faraday_middleware-multi_json (0.0.6)
       faraday_middleware
       multi_json
+    font-awesome-rails (4.3.0.0)
+      railties (>= 3.2, < 5.0)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     hashie (3.4.1)
@@ -329,6 +331,7 @@ DEPENDENCIES
   exception_notification
   factory_girl_rails
   faraday (= 0.8.9)
+  font-awesome-rails
   jquery-rails
   newrelic_rpm
   nokogiri
