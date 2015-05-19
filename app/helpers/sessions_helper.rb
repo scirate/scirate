@@ -1,14 +1,6 @@
 module SessionsHelper
   def sign_in(user, options = {})
-    if options[:remember_me] == true
-      cookies.permanent[:remember_token] = user.remember_token
-    else
-      cookies[:remember_token] = user.remember_token
-    end
-
-    if session[:api_action]
-
-    end
+    session[:remember_token] = user.remember_token
 
     self.current_user = user
   end
@@ -37,7 +29,7 @@ module SessionsHelper
   end
 
   def sign_out
-    cookies.delete(:remember_token)
+    session.delete(:remember_token)
   end
 
   def redirect_back_or(default)
@@ -51,7 +43,7 @@ module SessionsHelper
 
   private
     def user_from_remember_token
-      remember_token = cookies[:remember_token]
+      remember_token = session[:remember_token]
       User.find_by_remember_token(remember_token) unless remember_token.nil?
     end
 

@@ -333,6 +333,8 @@ class User < ActiveRecord::Base
     def generate_token(column)
       self[column] = SecureRandom.urlsafe_base64
 
+      self[column] += self.id.to_s
+
       column_split = column.to_s.split('_')
 
       if column_split[-1] == "token"

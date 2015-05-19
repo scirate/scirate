@@ -23,10 +23,6 @@
     .row
       .col-md-6
         = submit_tag "Sign in", class: 'btn btn-default'
-        .checkbox
-          label
-            = check_box_tag :remember_me, 1, params[:remember_me]
-            | Remember me
         p= link_to "Forgot password?", reset_password_path
 
     .row
