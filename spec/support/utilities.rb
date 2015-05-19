@@ -72,7 +72,7 @@ def sign_out
 end
 
 def become(user)
-  cookies[:remember_token] = user.remember_token
+  session[:remember_token] = user.remember_token
 end
 
 def sign_in(user)
