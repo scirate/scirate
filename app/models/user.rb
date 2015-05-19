@@ -255,7 +255,8 @@ class User < ActiveRecord::Base
   # authored by this user and makes corresponding Authorship
   # connections
   def update_authorship!(saving=false)
-    url = "http://export.arxiv.org/fb/feed/#{author_identifier}/?format=xml"
+    domain = ENV['ARXIV_EXPORT_DOMAIN'] || 'export.arxiv.org'
+    url = "http://#{domain}/fb/feed/#{author_identifier}/?format=xml"
     doc = Nokogiri(open(url))
     doc.css('entry id').each do |el|
       uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]
