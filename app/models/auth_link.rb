@@ -19,12 +19,13 @@ class AuthLink < ActiveRecord::Base
   serialize :auth # Keep around the original auth hash from provider
 
   def self.from_omniauth(auth)
-    where(auth.permit(:provider, :uid)).first_or_initialize.tap do |link|
-      link.provider = auth.provider
-      link.uid = auth.uid
-      link.oauth_token = auth.credentials.token
-      link.oauth_expires_at = Time.at(auth.credentials.expires_at)
-      link.auth = auth
+    where(provider: auth[:provider], uid: auth[:uid])
+      .first_or_initialize.tap do |link|
+        link.provider = auth.provider
+        link.uid = auth.uid
+        link.oauth_token = auth.credentials.token
+        link.oauth_expires_at = Time.at(auth.credentials.expires_at)
+        link.auth = auth
     end
   end
 

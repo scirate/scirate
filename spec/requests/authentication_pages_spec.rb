@@ -31,12 +31,13 @@ describe "google signup" do
   end
 
   it "should allow login after account creation" do
-    AuthLink.from_omniauth(mock_auth).create_user!
+    user = AuthLink.from_omniauth(mock_auth).create_user!
 
     visit login_path
     click_link "Sign in with Google"
 
     expect(page).to have_content "Sign out"
+    expect(page).to have_content user.fullname
   end
 end
 
