@@ -16,6 +16,7 @@ namespace :arxiv do
       puts "Papers up to date, no syncing needed."
     end
 
+=begin
     last_author_update = System.pluck(:arxiv_author_sync_dt).first
     if last_author_update < daily_update
       puts "Last author id sync was at #{last_author_update}, running update..."
@@ -23,5 +24,6 @@ namespace :arxiv do
     else
       puts "Author identifiers up to date, no syncing needed."
     end
+=end
   end
 end
