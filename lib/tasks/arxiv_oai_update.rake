@@ -8,14 +8,14 @@ namespace :arxiv do
     last_paper = Paper.order("submit_date desc").first
 
     if last_paper.nil?
-      date = Time.now-1.days
+      fromdate = Time.now-1.days
     else
-      date = last_paper.submit_date
+      fromdate = last_paper.pubdate
     end
 
     # Do this in a single transaction to avoid any database consistency issues
     bulk_papers = []
-    ArxivSync.get_metadata(from: date.to_date) do |resp, papers|
+    ArxivSync.get_metadata(from: fromdate.to_date) do |resp, papers|
       bulk_papers += papers
     end
 
