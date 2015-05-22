@@ -56,7 +56,7 @@
     - if @user.can_moderate?
       .checkbox
         = f.check_box :email_about_reported_comments
-        i.moderator.fa.fa-fw.fa-star title="Special moderator function"
+        i.moderator.fa.fa-fw.fa-certificate title="Special moderator function"
         | Email me about reported comments
     = f.submit "Save changes", class: "btn btn-default"
 
