@@ -181,6 +181,11 @@ class User < ActiveRecord::Base
     save!
   end
 
+  def refresh_comments_count!
+    self.comments_count = Comment.where(deleted: false, user_id: id).count
+    save!
+  end
+
   # Given a collection of papers, map uids to scite status
   def scited_by_uid(papers)
     map_exists :paper_uid, scites.where(paper_uid: papers.map(&:uid))

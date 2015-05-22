@@ -68,14 +68,17 @@ class Comment < ActiveRecord::Base
 
   after_save do
     paper.refresh_comments_count!
+    user.refresh_comments_count!
   end
 
   after_destroy do
     paper.refresh_comments_count!
+    user.refresh_comments_count!
   end
 
   acts_as_votable
 
+  # Records a comment change and the user who was responsible
   def record_change!(event, user_id)
     cc = CommentChange.create!(
       comment_id: self.id,

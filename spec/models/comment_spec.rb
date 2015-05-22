@@ -31,6 +31,21 @@ describe Comment do
   it { is_expected.to validate_presence_of(:paper) }
   it { is_expected.to validate_presence_of(:content) }
 
+  describe "counters" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:comment) { FactoryGirl.create(:comment, user: user) }
+
+    it "updates comment count on save" do
+      comment.save!
+      expect(user.comments_count).to eq(1)
+    end
+
+    it "updates comment count on soft delete" do
+      comment.soft_delete!(user.id)
+      expect(user.comments_count).to eq(0)
+    end
+  end
+
   describe "email alerts" do
     describe "email_about_replies" do
       let(:user) { FactoryGirl.create(:user) }
