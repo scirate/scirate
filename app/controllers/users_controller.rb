@@ -128,7 +128,7 @@ class UsersController < ApplicationController
     old_email = @user.email
 
     user_params = params.required(:user)
-                        .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about, :email_about_replies, :email_about_comments_on_authored, :email_about_comments_on_scited)
+                        .permit(:fullname, :email, :username, :url, :organization, :location, :author_identifier, :about, :email_about_replies, :email_about_comments_on_authored, :email_about_comments_on_scited, :email_about_reported_comments)
 
     # Handle some varying input forms of author identifiers
     # e.g. https://twitter.com/fishcorn/status/476046077733261313

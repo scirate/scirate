@@ -25,6 +25,14 @@ textarea {
   resize: none;
 }
 
+.admin {
+  color: orange !important;
+}
+
+.moderator {
+  color: #1e95f9 !important;
+}
+
 // Needed for jquery.timeago oddness
 abbr.timeago {
   cursor: text;
@@ -1014,16 +1022,6 @@ div.feed-rightbar {
   ul.user-info li {
     padding-top: 2px;
     padding-bottom: 2px;
-  }
-
-  ul.user-info li.admin,
-  ul.user-info li.admin i {
-    color: orange;
-  }
-
-  ul.user-info li.moderator,
-  ul.user-info li.moderator i {
-    color: #1e95f9;
   }
 
   ul.user-info i {

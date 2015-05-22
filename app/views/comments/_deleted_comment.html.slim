@@ -26,7 +26,7 @@ div.comment data-id=(comment.id) data-markup=(comment.content)
         | #{comment.last_change.event.capitalize} <a class="timeago-link" href="/comments/#{comment.id}/history">#{timeago(comment.last_change.created_at)}</a> by #{user_link(comment.last_change.user)}
     .actions
       a.permalink href="##{comment.id}" permalink
-      - if current_user.id == comment.user_id || current_user.is_moderator?
+      - if current_user.id == comment.user_id || current_user.can_moderate?
         a.edit edit
         = link_to 'restore', restore_comment_path(comment), method: :post
       - else

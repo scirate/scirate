@@ -78,7 +78,7 @@ class ApiController < ApplicationController
     end
 
     def needs_moderator
-      unless signed_in? && current_user.is_moderator?
+      unless signed_in? && current_user.can_moderate?
         render json: { error: 'unauthorized' }, status: 403
       end
     end

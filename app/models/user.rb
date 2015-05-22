@@ -245,11 +245,11 @@ class User < ActiveRecord::Base
     save!
   end
 
-  def is_moderator?
+  def can_moderate?
     account_status == STATUS_MODERATOR || account_status == STATUS_ADMIN
   end
 
-  def is_admin?
+  def can_admin?
     account_status == STATUS_ADMIN
   end
 

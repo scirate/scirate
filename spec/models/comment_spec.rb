@@ -105,5 +105,23 @@ describe Comment do
         expect(last_email.to).to include(user.email)
       end
     end
+
+    describe "email_about_reported_comments" do
+      let(:moderator) { FactoryGirl.create(:user, account_status: User::STATUS_MODERATOR) }
+      let(:user) { FactoryGirl.create(:user) }
+      let(:comment) { FactoryGirl.create(:comment) }
+
+      it "doesn't send alerts by default" do
+        comment.reports.create(user_id: user)
+        expect(last_email).to be_nil
+      end
+
+      it "sends them when enabled" do
+        moderator.email_about_reported_comments = true
+        moderator.save!
+        comment.reports.create(user_id: user)
+        expect(last_email.to).to include(moderator.email)
+      end
+    end
   end
 end

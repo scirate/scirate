@@ -11,23 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141008043049) do
+ActiveRecord::Schema.define(version: 20150522132433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "auth_links", force: true do |t|
-    t.string   "provider",         null: false
-    t.string   "uid",              null: false
-    t.string   "oauth_token",      null: false
-    t.datetime "oauth_expires_at", null: false
-    t.integer  "user_id",          null: false
+  create_table "auth_links", force: :cascade do |t|
+    t.string   "provider",         limit: 255, null: false
+    t.string   "uid",              limit: 255, null: false
+    t.string   "oauth_token",      limit: 255, null: false
+    t.datetime "oauth_expires_at",             null: false
+    t.integer  "user_id",                      null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "auth",             null: false
+    t.text     "auth",                         null: false
   end
 
-  create_table "authors", force: true do |t|
+  create_table "authors", force: :cascade do |t|
     t.integer "position",   null: false
     t.text    "fullname",   null: false
     t.text    "searchterm", null: false
@@ -38,14 +38,14 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "authors", ["position", "paper_uid"], name: "index_authors_on_position_and_paper_uid", unique: true, using: :btree
   add_index "authors", ["searchterm"], name: "index_authors_on_searchterm", using: :btree
 
-  create_table "authorships", force: true do |t|
+  create_table "authorships", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.text     "paper_uid",  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "categories", force: true do |t|
+  create_table "categories", force: :cascade do |t|
     t.integer  "position",                                       null: false
     t.text     "feed_uid",                                       null: false
     t.text     "paper_uid"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "categories", ["paper_uid"], name: "index_categories_on_paper_uid", using: :btree
   add_index "categories", ["position", "paper_uid"], name: "index_categories_on_position_and_paper_uid", unique: true, using: :btree
 
-  create_table "comment_changes", force: true do |t|
+  create_table "comment_changes", force: :cascade do |t|
     t.integer  "comment_id",              null: false
     t.integer  "user_id",                 null: false
     t.text     "event",                   null: false
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "comment_changes", ["comment_id"], name: "index_comment_changes_on_comment_id", using: :btree
   add_index "comment_changes", ["user_id"], name: "index_comment_changes_on_user_id", using: :btree
 
-  create_table "comment_reports", force: true do |t|
+  create_table "comment_reports", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "comment_id"
     t.datetime "created_at", null: false
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
 
   add_index "comment_reports", ["user_id", "comment_id"], name: "index_comment_reports_on_user_id_and_comment_id", unique: true, using: :btree
 
-  create_table "comments", force: true do |t|
+  create_table "comments", force: :cascade do |t|
     t.integer  "user_id",                            null: false
     t.integer  "score",              default: 0,     null: false
     t.integer  "cached_votes_up",    default: 0,     null: false
@@ -109,23 +109,23 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "comments", ["parent_id"], name: "index_comments_on_parent_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
-  create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",   default: 0, null: false
-    t.integer  "attempts",   default: 0, null: false
-    t.text     "handler",                null: false
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",               default: 0, null: false
+    t.integer  "attempts",               default: 0, null: false
+    t.text     "handler",                            null: false
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
+    t.string   "locked_by",  limit: 255
+    t.string   "queue",      limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
-  create_table "feed_preferences", force: true do |t|
+  create_table "feed_preferences", force: :cascade do |t|
     t.integer  "user_id"
     t.datetime "last_visited"
     t.datetime "previous_last_visited"
@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
     t.text     "feed_uid"
   end
 
-  create_table "feeds", force: true do |t|
+  create_table "feeds", force: :cascade do |t|
     t.text     "uid",                             null: false
     t.text     "source",                          null: false
     t.text     "fullname",                        null: false
@@ -149,7 +149,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "feeds", ["uid", "last_paper_date"], name: "index_feeds_on_uid_and_last_paper_date", order: {"uid"=>:desc, "last_paper_date"=>:desc}, using: :btree
   add_index "feeds", ["uid"], name: "index_feeds_on_uid", unique: true, using: :btree
 
-  create_table "papers", force: true do |t|
+  create_table "papers", force: :cascade do |t|
     t.text     "uid",                         null: false
     t.text     "submitter"
     t.text     "title",                       null: false
@@ -183,7 +183,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "papers", ["submit_date"], name: "index_papers_on_submit_date", using: :btree
   add_index "papers", ["uid"], name: "index_papers_on_uid", unique: true, using: :btree
 
-  create_table "scites", force: true do |t|
+  create_table "scites", force: :cascade do |t|
     t.integer  "user_id",                 null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -194,8 +194,8 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "scites", ["paper_uid"], name: "index_scites_on_paper_uid", using: :btree
   add_index "scites", ["user_id"], name: "index_scites_on_user_id", using: :btree
 
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
+  create_table "sessions", force: :cascade do |t|
+    t.string   "session_id", limit: 255, null: false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -204,7 +204,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
-  create_table "subscriptions", force: true do |t|
+  create_table "subscriptions", force: :cascade do |t|
     t.integer  "user_id"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
@@ -215,15 +215,15 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "subscriptions", ["feed_uid"], name: "index_subscriptions_on_feed_uid", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
-  create_table "system", force: true do |t|
+  create_table "system", force: :cascade do |t|
     t.text     "alert",                default: "",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "arxiv_sync_dt",        default: '2014-12-19 00:00:00', null: false
-    t.datetime "arxiv_author_sync_dt", default: '2014-12-19 00:00:00', null: false
+    t.datetime "arxiv_sync_dt",        default: '2015-04-12 00:00:00', null: false
+    t.datetime "arxiv_author_sync_dt", default: '2015-04-12 00:00:00', null: false
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.text     "fullname"
     t.text     "email"
     t.text     "remember_token"
@@ -250,6 +250,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
     t.boolean  "email_about_replies",              default: true
     t.boolean  "email_about_comments_on_authored", default: true
     t.boolean  "email_about_comments_on_scited",   default: false
+    t.boolean  "email_about_reported_comments",    default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
@@ -257,7 +258,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
-  create_table "versions", force: true do |t|
+  create_table "versions", force: :cascade do |t|
     t.integer  "position",  null: false
     t.datetime "date",      null: false
     t.text     "size"
@@ -267,7 +268,7 @@ ActiveRecord::Schema.define(version: 20141008043049) do
   add_index "versions", ["paper_uid"], name: "index_versions_on_paper_uid", using: :btree
   add_index "versions", ["position", "paper_uid"], name: "index_versions_on_position_and_paper_uid", unique: true, using: :btree
 
-  create_table "votes", force: true do |t|
+  create_table "votes", force: :cascade do |t|
     t.integer  "votable_id"
     t.text     "votable_type"
     t.integer  "voter_id"
