@@ -19,7 +19,7 @@ class AuthLink < ActiveRecord::Base
   serialize :auth # Keep around the original auth hash from provider
 
   def self.from_omniauth(auth)
-    where(provider: auth[:provider], uid: auth[:uid])
+    where(provider: auth.provider, uid: auth.uid)
       .first_or_initialize.tap do |link|
         link.provider = auth.provider
         link.uid = auth.uid

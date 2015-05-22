@@ -136,11 +136,28 @@ class User < ActiveRecord::Base
     User.where("lower(username) = ?", username.downcase).first
   end
 
+  # Make an appropriate username from a user's full name
+  # if this is at all possible
   def self.default_username(fullname)
-    if User.where(username: fullname.parameterize).exists?
-      "#{fullname.parameterize}" + "-#{User.count}"
+    name = fullname.parameterize
+
+    name = if User.where(username: name).exists?
+      "#{name}" + "-#{User.count}"
     else
-      fullname.parameterize
+      name
+    end
+
+    # Check to make sure this is valid
+    tmp = User.new
+    tmp.username = name
+    tmp.validate
+
+    if tmp.errors.messages[:username]
+      fallback_name = "user-#{User.count}"
+      logger.warn("Invalid username generated from '#{fullname}': #{name}. Falling back to #{fallback_name}.".light_red)
+      return fallback_name
+    else
+      return name
     end
   end
 

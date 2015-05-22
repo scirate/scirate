@@ -137,4 +137,14 @@ describe User do
       expect(activities[-1].created_at).to eq user.created_at
     end
   end
+
+  describe "User#default_username" do
+    it "handles various names correctly" do
+      user.username = User.default_username("Ærøskøbing")
+      expect(user).to be_valid
+
+      user.username = User.default_username("日本語")
+      expect(user).to be_valid
+    end
+  end
 end
