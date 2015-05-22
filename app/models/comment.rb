@@ -45,14 +45,14 @@ class Comment < ActiveRecord::Base
 
     # Email on comment replies
     if parent && parent.user.email_about_replies
-      UserMailer.delay.comment_alert(parent.user, self)
+      UserMailer.comment_alert(parent.user, self).deliver_later
       emailed_users[parent.user.id] = true
     end
 
     # Email people who claim this paper via their arXiv author identifier
     paper.claimants.each do |author|
       if author.email_about_comments_on_authored
-        UserMailer.delay.comment_alert(author, self) unless emailed_users[author.id]
+        UserMailer.comment_alert(author, self).deliver_later unless emailed_users[author.id]
         emailed_users[author.id] = true
       end
     end
@@ -60,7 +60,7 @@ class Comment < ActiveRecord::Base
     # Email any sciters who have opted in to alerts on scited papers
     paper.sciters.each do |sciter|
       if sciter.email_about_comments_on_scited
-        UserMailer.delay.comment_alert(sciter, self) unless emailed_users[sciter.id]
+        UserMailer.comment_alert(sciter, self).deliver_later unless emailed_users[sciter.id]
         emailed_users[sciter.id] = true
       end
     end

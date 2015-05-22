@@ -194,13 +194,13 @@ class User < ActiveRecord::Base
   def send_signup_confirmation
     generate_token(:confirmation_token)
     save!
-    UserMailer.signup_confirmation(self).deliver
+    UserMailer.signup_confirmation(self).deliver_later
   end
 
   def send_password_reset
     generate_token(:password_reset_token)
     save!
-    UserMailer.password_reset(self).deliver
+    UserMailer.password_reset(self).deliver_now
   end
 
   def clear_password_reset
@@ -209,7 +209,7 @@ class User < ActiveRecord::Base
   end
 
   def send_email_change_confirmation(address)
-    UserMailer.email_change(self, address).deliver
+    UserMailer.email_change(self, address).deliver_later
   end
 
   def email_confirmed?

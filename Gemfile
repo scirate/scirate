@@ -56,6 +56,7 @@ gem 'daemons'
 gem 'font-awesome-rails'
 
 group :development, :test do
+  gem 'colorize'
   gem 'rspec-rails'
 
   # An improved IRB alternative for rails console

@@ -36,5 +36,7 @@ module SciRate
     config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
 
     config.action_mailer.default_url_options = { :host => Settings::HOST }
+
+    config.active_job.queue_adapter = :delayed_job
   end
 end

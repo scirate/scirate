@@ -323,6 +323,7 @@ DEPENDENCIES
   capybara-webkit
   chronic
   coffee-rails
+  colorize
   coveralls
   daemons
   dalli

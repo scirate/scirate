@@ -1,6 +1,10 @@
 class UserMailer < ActionMailer::Base
   default from: "SciRate <notifications@#{Settings::HOST}>"
 
+  def mail(*args)
+    super
+  end
+
   def signup_confirmation(user)
     @user = user
     mail to: user.email, subject: "Welcome to SciRate!"

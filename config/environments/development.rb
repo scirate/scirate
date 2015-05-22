@@ -53,6 +53,10 @@ Rails.application.configure do
     :password => Settings::GMAIL_SMTP_PASSWORD
   }
 
+  if Settings::GMAIL_SMTP_USER.empty? || Settings::GMAIL_SMTP_PASSWORD.empty?
+    logger.warn("No SMTP user configured. If you want to receive actual email in development, set GMAIL_SMTP_USER and GMAIL_SMTP_PASSWORD in local_settings.rb.".light_red)
+  end
+
   WillPaginate.per_page = 100
 
   config.cache_store = :null_store # :memory_store
