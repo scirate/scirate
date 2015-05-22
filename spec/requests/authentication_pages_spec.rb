@@ -48,27 +48,27 @@ describe "Authentication" do
   describe "signin" do
     before { visit login_path }
 
-    it "shouldn't allow invalid information" do
+    it "disallows invalid information" do
       click_button "Sign in"
 
-      page.should have_error_message "Invalid"
+      expect(page).to have_error_message "Invalid"
     end
 
-    it "should sign in and out correctly" do
+    it "signs in and out correctly" do
       user = FactoryGirl.create(:user)
       sign_in(user)
 
-      page.should have_title "Home feed"
-      page.should have_link('Profile', href: user_path(user))
-      page.should have_link('Settings', href: settings_path)
-      page.should have_link('Sign out', href: logout_path)
-      page.should_not have_link('Sign in', href: login_path)
+      expect(page).to have_title "Home feed"
+      expect(page).to have_link('Profile', href: user_path(user))
+      expect(page).to have_link('Settings', href: settings_path)
+      expect(page).to have_link('Sign out', href: logout_path)
+      expect(page).to_not have_link('Sign in', href: login_path)
 
       sign_out
-      page.should have_title('Top arXiv papers')
-      page.should_not have_link('Sign out', href: logout_path)
-      page.should_not have_link('Profile', href: user_path(user))
-      page.should_not have_link('Settings', href: settings_path)
+      expect(page).to have_title('Top arXiv papers')
+      expect(page).to_not have_link('Sign out', href: logout_path)
+      expect(page).to_not have_link('Profile', href: user_path(user))
+      expect(page).to_not have_link('Settings', href: settings_path)
     end
   end
 
@@ -98,7 +98,7 @@ describe "Authentication" do
       describe "visiting Users#edit page" do
         before { visit admin_edit_user_path(wrong_user) }
 
-        it { should have_title '' }
+        it { is_expected.to have_title '' }
       end
 
       describe "submitting to the Users#update action" do
@@ -106,20 +106,20 @@ describe "Authentication" do
           post admin_update_user_path(wrong_user)
         end
 
-        specify { response.should redirect_to(root_path) }
+        specify { expect(response).to redirect_to(root_path) }
       end
     end
 
     describe "as signed-in user" do
       let(:user) { FactoryGirl.create(:user) }
-      before { become user }
+      before { sign_in user }
 
       describe "submitting a GET request to the Users#new action" do
         before do
           get signup_path
         end
 
-        specify { response.should redirect_to(root_path) }
+        specify { expect(response).to redirect_to(root_path) }
       end
 
       describe "submitting a POST request to the Users#create action" do
@@ -127,7 +127,7 @@ describe "Authentication" do
           post signup_path
         end
 
-        specify { response.should redirect_to(root_path) }
+        specify { expect(response).to redirect_to(root_path) }
       end
     end
 
@@ -152,8 +152,8 @@ describe "Authentication" do
         describe "when signing in again" do
           before { sign_in user }
 
-          it "should render the (default) home feed" do
-            page.should have_title "Home feed"
+          it "renders the home feed" do
+            expect(page).to have_title "Home feed"
           end
         end
       end
