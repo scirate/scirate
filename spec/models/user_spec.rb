@@ -142,9 +142,11 @@ describe User do
     it "handles various names correctly" do
       user.username = User.default_username("Ærøskøbing")
       expect(user).to be_valid
+      expect(user.username).to eq("aeroskobing")
 
       user.username = User.default_username("日本語")
       expect(user).to be_valid
+      expect(user.username).to eq("user-#{User.count}")
     end
   end
 end
