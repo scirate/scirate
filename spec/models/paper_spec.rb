@@ -52,13 +52,18 @@ describe Paper do
 
   describe "#to_bibtex" do
     let(:paper) do
-      FactoryGirl.create(:paper_with_versions,
+      paper = FactoryGirl.create(:paper_with_versions,
         author_str: "Susanta K. Khan and Madhumangal Pal",
         title: "Interval-Valued Intuitionistic Fuzzy Matrices",
         pubdate: "2014-05-12 01:00:00 UTC",
         uid: "1404.6949",
         journal_ref: "Notes on Intuitionistic Fuzzy Sets, 11(1) (2005)16-27"
       )
+
+      FactoryGirl.create(:author, fullname: "Susanta K. Khan", paper_uid: paper.uid)
+      FactoryGirl.create(:author, fullname: "Madhumangal Pal", paper_uid: paper.uid)
+
+      paper
     end
 
     it "generates bibtex correctly" do
