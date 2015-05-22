@@ -12,6 +12,9 @@ module Settings
   # Which hour of the day in UTC we expect the arxiv to update
   ARXIV_UPDATE_HOUR = 2
 
+  # The domain or IP by which to access the arxiv for author identifier updates
+  ARXIV_HOST = "arxiv.org"
+
   # Hostname to put in emails and such
   HOST = "scirate.com"
 

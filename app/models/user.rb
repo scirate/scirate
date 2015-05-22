@@ -34,6 +34,7 @@
 require 'open-uri'
 require 'ostruct'
 require 'data_helpers'
+require 'arxiv_import'
 
 class Activity < OpenStruct
 end
@@ -272,14 +273,13 @@ class User < ActiveRecord::Base
   # authored by this user and makes corresponding Authorship
   # connections
   def update_authorship!(saving=false)
-    domain = ENV['ARXIV_EXPORT_DOMAIN'] || 'export.arxiv.org'
-    url = "http://#{domain}/fb/feed/#{author_identifier}/?format=xml"
+    url = "http://#{Settings::ARXIV_HOST}/a/#{author_identifier}.atom2"
     doc = Nokogiri(open(url))
     doc.css('entry id').each do |el|
       uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]
       uid = Arxiv.strip_version(uid)
       unless authorships.where(paper_uid: uid).exists?
-        puts "New paper published by #{username}: arxiv/#{uid}"
+        logger.info "New paper published by #{username}: arxiv/#{uid}".light_green
         authorships.create(paper_uid: uid)
       end
     end
