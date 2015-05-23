@@ -8,6 +8,7 @@ namespace :arxiv do
     User.where("author_identifier <> ''").each do |user|
       begin
         user.update_authorship!
+        sleep 1
       rescue OpenURI::HTTPError
         $stderr.puts "Invalid author_identifier for #{user.username}: #{user.author_identifier}"
       rescue Exception => e

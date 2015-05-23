@@ -92,7 +92,7 @@ html lang="en"
             - cache [:header, current_user] do
               - if signed_in?
                 li= link_to "Home", root_path
-                - if current_user.is_admin?
+                - if current_user.can_admin?
                   li
                     a href="/admin" Admin
                 li.dropdown

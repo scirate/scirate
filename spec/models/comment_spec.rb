@@ -21,15 +21,30 @@
 require 'spec_helper'
 
 describe Comment do
-  it { should belong_to(:user) }
-  it { should belong_to(:paper) }
-  it { should belong_to(:parent).class_name('Comment') }
-  it { should belong_to(:ancestor).class_name('Comment') }
-  it { should have_many(:reports).class_name('CommentReport') }
-  it { should have_many(:children).class_name('Comment') }
-  it { should validate_presence_of(:user) }
-  it { should validate_presence_of(:paper) }
-  it { should validate_presence_of(:content) }
+  it { is_expected.to belong_to(:user) }
+  it { is_expected.to belong_to(:paper) }
+  it { is_expected.to belong_to(:parent).class_name('Comment') }
+  it { is_expected.to belong_to(:ancestor).class_name('Comment') }
+  it { is_expected.to have_many(:reports).class_name('CommentReport') }
+  it { is_expected.to have_many(:children).class_name('Comment') }
+  it { is_expected.to validate_presence_of(:user) }
+  it { is_expected.to validate_presence_of(:paper) }
+  it { is_expected.to validate_presence_of(:content) }
+
+  describe "counters" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:comment) { FactoryGirl.create(:comment, user: user) }
+
+    it "updates comment count on save" do
+      comment.save!
+      expect(user.comments_count).to eq(1)
+    end
+
+    it "updates comment count on soft delete" do
+      comment.soft_delete!(user.id)
+      expect(user.comments_count).to eq(0)
+    end
+  end
 
   describe "email alerts" do
     describe "email_about_replies" do
@@ -88,6 +103,24 @@ describe Comment do
         user.save!
         FactoryGirl.create(:comment, paper: paper)
         expect(last_email.to).to include(user.email)
+      end
+    end
+
+    describe "email_about_reported_comments" do
+      let(:moderator) { FactoryGirl.create(:user, account_status: User::STATUS_MODERATOR) }
+      let(:user) { FactoryGirl.create(:user) }
+      let(:comment) { FactoryGirl.create(:comment) }
+
+      it "doesn't send alerts by default" do
+        comment.reports.create(user_id: user)
+        expect(last_email).to be_nil
+      end
+
+      it "sends them when enabled" do
+        moderator.email_about_reported_comments = true
+        moderator.save!
+        comment.reports.create(user_id: user)
+        expect(last_email.to).to include(moderator.email)
       end
     end
   end

@@ -133,7 +133,7 @@ class CommentsController < ApplicationController
   private
 
     def check_moderation_permission
-      if !signed_in? || (!comment_owner? && !current_user.is_moderator?)
+      if !signed_in? || (!comment_owner? && !current_user.can_moderate?)
         not_found
       end
     end

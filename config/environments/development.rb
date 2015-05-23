@@ -1,4 +1,4 @@
-SciRate::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -24,13 +24,20 @@ SciRate::Application.configure do
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
-  # number of complex assets.
-  config.assets.debug = true
+  # number of complex assets
+  config.assets.debug = false
+
+  # Asset digests allow you to set far-future HTTP expiration dates on all assets,
+  # yet still be able to expire them through the digest params.
+  config.assets.digest = true
 
   # Adds additional error checking when serving assets at runtime.
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
+
+  # Raises error for missing translations
+  # config.action_view.raise_on_missing_translations = true
 
   # Debug mail alternative to sendgrid
   ActionMailer::Base.delivery_method = :smtp
@@ -45,6 +52,10 @@ SciRate::Application.configure do
     :user_name => Settings::GMAIL_SMTP_USER,
     :password => Settings::GMAIL_SMTP_PASSWORD
   }
+
+  if Settings::GMAIL_SMTP_USER.empty? || Settings::GMAIL_SMTP_PASSWORD.empty?
+    logger.warn("No SMTP user configured. If you want to receive actual email in development, set GMAIL_SMTP_USER and GMAIL_SMTP_PASSWORD in local_settings.rb.".light_red)
+  end
 
   WillPaginate.per_page = 100
 

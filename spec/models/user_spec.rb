@@ -39,16 +39,16 @@ describe User do
 
   subject { user }
 
-  it { should validate_presence_of(:fullname) }
-  it { should ensure_length_of(:fullname).is_at_most(50) }
-  it { should validate_presence_of(:email) }
-  it { should validate_uniqueness_of(:email) }
+  it { is_expected.to validate_presence_of(:fullname) }
+  it { is_expected.to validate_length_of(:fullname).is_at_most(50) }
+  it { is_expected.to validate_presence_of(:email) }
+  it { is_expected.to validate_uniqueness_of(:email) }
 
   describe "when email format is invalid" do
     invalid_addresses = %w[user@foo,com user_at_foo.org example.user@foo.]
     invalid_addresses.each do |invalid_address|
       before { user.email = invalid_address }
-      it { should_not be_valid }
+      it { is_expected.not_to be_valid }
     end
   end
 
@@ -56,23 +56,23 @@ describe User do
     valid_addresses = %w[user@foo.com A_USER@f.b.org frst.lst@foo.jp a+b@baz.cn]
     valid_addresses.each do |valid_address|
       before { user.email = valid_address }
-      it { should be_valid }
+      it { is_expected.to be_valid }
     end
   end
 
   describe "when password is not present" do
     before { user.password = user.password_confirmation = " " }
-    it { should_not be_valid }
+    it { is_expected.not_to be_valid }
   end
 
   describe "when password doesn't match confirmation" do
     before { user.password_confirmation = "mismatch" }
-    it { should_not be_valid }
+    it { is_expected.not_to be_valid }
   end
 
   describe "with a password that's too short" do
     before { user.password = user.password_confirmation = "a" * 5 }
-    it { should_not be_valid }
+    it { is_expected.not_to be_valid }
   end
 
   describe "return value of authenticate method" do
@@ -80,13 +80,13 @@ describe User do
     let(:found_user) { User.find_by_email(user.email) }
 
     describe "with valid password" do
-      it { should == found_user.authenticate(user.password) }
+      it { is_expected.to eq(found_user.authenticate(user.password)) }
     end
 
     describe "with invalid password" do
       let(:user_for_invalid_password) { found_user.authenticate("invalid") }
 
-      it { should_not == user_for_invalid_password }
+      it { is_expected.not_to eq(user_for_invalid_password) }
       specify { expect(user_for_invalid_password).to be(false) }
     end
   end
@@ -114,7 +114,7 @@ describe User do
     end
 
     it "should have the right comments in the right order" do
-      user.comments.should == [new_comment, med_comment, old_comment]
+      expect(user.comments).to eq([new_comment, med_comment, old_comment])
     end
   end
 
@@ -135,6 +135,18 @@ describe User do
     it "adds a default initial activity" do
       expect(activities[-1].event).to eq 'signup'
       expect(activities[-1].created_at).to eq user.created_at
+    end
+  end
+
+  describe "User#default_username" do
+    it "handles various names correctly" do
+      user.username = User.default_username("Ærøskøbing")
+      expect(user).to be_valid
+      expect(user.username).to eq("aeroskobing")
+
+      user.username = User.default_username("日本語")
+      expect(user).to be_valid
+      expect(user.username).to eq("user-#{User.count}")
     end
   end
 end

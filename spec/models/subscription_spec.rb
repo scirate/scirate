@@ -20,5 +20,5 @@ describe Subscription do
 
   subject { subscription }
 
-  it { should be_valid }
+  it { is_expected.to be_valid }
 end

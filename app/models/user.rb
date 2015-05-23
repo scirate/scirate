@@ -34,6 +34,7 @@
 require 'open-uri'
 require 'ostruct'
 require 'data_helpers'
+require 'arxiv_import'
 
 class Activity < OpenStruct
 end
@@ -136,11 +137,28 @@ class User < ActiveRecord::Base
     User.where("lower(username) = ?", username.downcase).first
   end
 
+  # Make an appropriate username from a user's full name
+  # if this is at all possible
   def self.default_username(fullname)
-    if User.where(username: fullname.parameterize).exists?
-      "#{fullname.parameterize}" + "-#{User.count}"
+    name = fullname.parameterize
+
+    name = if User.where(username: name).exists?
+      "#{name}" + "-#{User.count}"
     else
-      fullname.parameterize
+      name
+    end
+
+    # Check to make sure this is valid
+    tmp = User.new
+    tmp.username = name
+    tmp.validate
+
+    if tmp.errors.messages[:username]
+      fallback_name = "user-#{User.count}"
+      logger.warn("Invalid username generated from '#{fullname}': #{name}. Falling back to #{fallback_name}.".light_red)
+      return fallback_name
+    else
+      return name
     end
   end
 
@@ -160,6 +178,11 @@ class User < ActiveRecord::Base
 
   def refresh_scites_count!
     self.scites_count = Scite.where(user_id: id).count
+    save!
+  end
+
+  def refresh_comments_count!
+    self.comments_count = Comment.where(deleted: false, user_id: id).count
     save!
   end
 
@@ -194,13 +217,13 @@ class User < ActiveRecord::Base
   def send_signup_confirmation
     generate_token(:confirmation_token)
     save!
-    UserMailer.signup_confirmation(self).deliver
+    UserMailer.signup_confirmation(self).deliver_later
   end
 
   def send_password_reset
     generate_token(:password_reset_token)
     save!
-    UserMailer.password_reset(self).deliver
+    UserMailer.password_reset(self).deliver_now
   end
 
   def clear_password_reset
@@ -209,7 +232,7 @@ class User < ActiveRecord::Base
   end
 
   def send_email_change_confirmation(address)
-    UserMailer.email_change(self, address).deliver
+    UserMailer.email_change(self, address).deliver_later
   end
 
   def email_confirmed?
@@ -222,11 +245,11 @@ class User < ActiveRecord::Base
     save!
   end
 
-  def is_moderator?
+  def can_moderate?
     account_status == STATUS_MODERATOR || account_status == STATUS_ADMIN
   end
 
-  def is_admin?
+  def can_admin?
     account_status == STATUS_ADMIN
   end
 
@@ -238,7 +261,7 @@ class User < ActiveRecord::Base
     self.password = new_password
     self.password_confirmation = new_password
     saved = self.save
-    UserMailer.password_change(self).deliver if saved
+    UserMailer.password_change(self).deliver_later if saved
     saved
   end
 
@@ -255,13 +278,13 @@ class User < ActiveRecord::Base
   # authored by this user and makes corresponding Authorship
   # connections
   def update_authorship!(saving=false)
-    url = "http://export.arxiv.org/fb/feed/#{author_identifier}/?format=xml"
+    url = "http://#{Settings::ARXIV_HOST}/a/#{author_identifier}.atom2"
     doc = Nokogiri(open(url))
     doc.css('entry id').each do |el|
       uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]
       uid = Arxiv.strip_version(uid)
       unless authorships.where(paper_uid: uid).exists?
-        puts "New paper published by #{username}: arxiv/#{uid}"
+        logger.info "New paper published by #{username}: arxiv/#{uid}".light_green
         authorships.create(paper_uid: uid)
       end
     end
@@ -331,6 +354,8 @@ class User < ActiveRecord::Base
     # Also puts the time in self[ column - '_token' + '_sent_at' ] if it exists
     def generate_token(column)
       self[column] = SecureRandom.urlsafe_base64
+
+      self[column] += self.id.to_s
 
       column_split = column.to_s.split('_')
 

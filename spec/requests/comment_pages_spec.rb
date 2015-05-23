@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+=begin
 describe "Comment revision history", js: true do
   let!(:comment) { FactoryGirl.create(:comment, content: 'this is original comment') }
   let!(:user) { FactoryGirl.create(:user) }
@@ -45,6 +46,7 @@ describe "Comment revision history", js: true do
     end
   end
 end
+=end
 
 =begin
 describe "Paper page javascript", js: true do

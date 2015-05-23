@@ -3,9 +3,8 @@
 .container
   h1 Reset password
   = form_tag reset_password_path, method: :post do
-    .field
+    .form-group
       = label_tag :email
-      = text_field_tag :email, params[:email]
+      = text_field_tag :email, params[:email], class: 'form-control', autofocus: "autofocus", placeholder: "Enter your email address"
 
-    .actions
-      = submit_tag "Reset password"
+    = submit_tag "Reset password", class: 'btn btn-primary'

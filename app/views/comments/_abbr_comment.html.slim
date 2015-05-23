@@ -16,7 +16,7 @@
     - if abbr_comment.content.length > 300
       a href="/arxiv/#{abbr_comment.paper_uid}##{abbr_comment.id}"
         |  ...(continued)
-  - if signed_in? && current_user.is_moderator?
+  - if signed_in? && current_user.can_moderate?
     .moderate
       | #{status_warning} <a class="hide-from-recent">hide from recent comments</a>
 

@@ -16,13 +16,13 @@
       span.fullname= @user.fullname
       span.username = @user.username
     ul.user-info
-      - if @user.is_admin?
+      - if @user.can_admin?
         li.admin
-          i.fa.fa-fw.fa-sun-o
+          i.admin.fa.fa-fw.fa-sun-o
           span Admin
-      - elsif @user.is_moderator?
+      - elsif @user.can_moderate?
         li.moderator
-          i.fa.fa-fw.fa-star
+          i.moderator.fa.fa-fw.fa-certificate
           span Moderator
 
       - unless @user.organization.empty?
@@ -65,7 +65,7 @@
           i.fa.fa-fw.fa-star>
           | Scites (#{@user.scites_count})
       .pull-right
-        - if current_user && current_user.is_moderator?
+        - if current_user && current_user.can_moderate?
           a.btn.btn-danger href=(admin_edit_user_path(@user))
             i.fa.fa-fw.fa-gear
             | Admin

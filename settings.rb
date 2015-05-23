@@ -12,6 +12,9 @@ module Settings
   # Which hour of the day in UTC we expect the arxiv to update
   ARXIV_UPDATE_HOUR = 2
 
+  # The domain or IP by which to access the arxiv for author identifier updates
+  ARXIV_HOST = "arxiv.org"
+
   # Hostname to put in emails and such
   HOST = "scirate.com"
 
@@ -40,10 +43,8 @@ module Settings
   # Rails secret token for signing cookies
   if ENV['RAILS_ENV'] == 'production'
     SECRET_KEY_BASE = ''
-    SECRET_TOKEN = ''
   else
     SECRET_KEY_BASE = '027d35bd099187fe704c6cb189fced29f1562ff46397d77c8e6cfc3e2e66667b98ecb61fa0809807b80934fde0ac4b874ac6c6a3a78e3dcd8e0d906288d1306f'
-    SECRET_TOKEN = '4b4d948fe0bdde9d1f66af4bcbe15cec68339f7445038032f5313e2f00c36eacb2c8b780fe40e5e9106c9ecbc175893a579f9d138942195eb3fe76e51a767ebe'
   end
 
   # Sendgrid auth details used in production to send UserMailer mail

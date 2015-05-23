@@ -105,7 +105,7 @@
           - cache [:paper_comments, @comments, current_user]
             = render @comments
 
-          - if current_user && current_user.is_moderator?
+          - if current_user && current_user.can_moderate?
             - @deleted_comments = Comment.where(paper_uid: @paper.uid, deleted: true).includes(:last_change)
             - if @deleted_comments.length > 0
               h4= status_warning + ' ' + pluralize(@deleted_comments.length, "deleted comment")

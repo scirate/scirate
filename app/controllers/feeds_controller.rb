@@ -206,7 +206,7 @@ class FeedsController < ApplicationController
         { comments_count: 'desc' },
         { pubdate: 'desc' },
         { submit_date: 'desc' },
-        { _id: 'asc' }
+        { uid: 'asc' }
       ],
       query: {
         filtered: {

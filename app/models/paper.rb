@@ -116,7 +116,7 @@ class Paper < ActiveRecord::Base
 
   def to_bibtex
     props = {
-      author: author_str.gsub(/\. /, ".~"), # unbreakable space
+      author: authors_fullname.join(' and ').gsub(/\. /, ".~"), # unbreakable space
       title: title.gsub(/([A-Z]+)/, "{\\1}"),
       year: pubdate.year,
       eprint: uid
@@ -157,4 +157,3 @@ class Paper < ActiveRecord::Base
       end
     end
 end
-

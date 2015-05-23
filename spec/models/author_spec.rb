@@ -12,10 +12,10 @@
 require 'spec_helper'
 
 describe Author do
-  it { should validate_presence_of(:paper_uid) }
-  it { should validate_presence_of(:position) }
-  it { should validate_presence_of(:fullname) }
-  it { should validate_presence_of(:searchterm) }
+  it { is_expected.to validate_presence_of(:paper_uid) }
+  it { is_expected.to validate_presence_of(:position) }
+  it { is_expected.to validate_presence_of(:fullname) }
+  it { is_expected.to validate_presence_of(:searchterm) }
 
   describe '#make_searchterm' do
     it 'generates searchterms correctly' do

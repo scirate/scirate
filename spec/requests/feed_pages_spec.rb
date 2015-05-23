@@ -27,6 +27,8 @@ describe "Feed pages" do
     end
 
     it "shows today's papers" do
+      p page.find('li.paper:nth-child(1) .title').text
+      p page.find('li.paper:nth-child(2) .title').text
       expect(page).to have_selector("li.paper:nth-child(1) .title", text: new_paper1.title)
       expect(page).to have_selector("li.paper:nth-child(2) .title", text: new_paper2.title)
       expect(page).to_not have_content old_paper1.title

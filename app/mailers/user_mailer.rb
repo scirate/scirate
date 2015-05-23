@@ -1,6 +1,10 @@
 class UserMailer < ActionMailer::Base
   default from: "SciRate <notifications@#{Settings::HOST}>"
 
+  def mail(*args)
+    super
+  end
+
   def signup_confirmation(user)
     @user = user
     mail to: user.email, subject: "Welcome to SciRate!"
@@ -23,10 +27,12 @@ class UserMailer < ActionMailer::Base
     mail to: old_email, subject: "Your email address has been changed"
   end
 
-  def comment_alert(user, comment)
+  def comment_alert(user, comment, subject: nil)
+    subject ||= "[SciRate] Re: #{comment.paper.title}"
+
     @user = user
     @comment = comment
 
-    mail from: "#{comment.user.fullname} <notifications@scirate.com>", to: user.email, subject: "[SciRate] Re: #{comment.paper.title}"
+    mail from: "#{comment.user.fullname} <notifications@scirate.com>", to: user.email, subject: subject
   end
 end

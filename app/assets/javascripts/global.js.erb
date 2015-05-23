@@ -10,5 +10,6 @@ Dir.chdir("#{Rails.root}/app/assets/") do
 end
 %>
 
-window.asset_path = (name) ->
-  <%= assets.to_json %>[name]
+window.asset_path = function(name) {
+  return <%= assets.to_json %>[name];
+}

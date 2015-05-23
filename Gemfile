@@ -1,8 +1,8 @@
-ruby '2.1.4'
+ruby '2.2.1'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', '4.1.1'
+gem 'rails', '4.2.1'
 gem 'bcrypt', '~> 3.1.7'
 
 # Database stuff
@@ -29,7 +29,7 @@ gem 'omniauth-google-oauth2'
 # https://github.com/mispy/arxivsync
 gem 'oai', github: 'mispy/ruby-oai' # For Rails 4.1 compatibility
 gem 'arxivsync', github: 'mispy/arxivsync'
-gem 'nokogiri', '1.5.9'
+gem 'nokogiri'
 
 # Elasticsearch API gem
 gem 'stretcher'
@@ -52,11 +52,16 @@ gem 'bourbon'
 gem 'delayed_job_active_record'
 gem 'daemons'
 
+# Frontend stuff
+gem 'font-awesome-rails'
+
 group :development, :test do
-  gem 'rspec-rails', '~> 2.9'
+  gem 'colorize'
+  gem 'rspec-rails'
 
   # An improved IRB alternative for rails console
   gem 'pry'
+  gem 'pry-byebug'
   gem 'pry-rails'
 end
 

@@ -44,7 +44,7 @@ end
 
 RSpec::Matchers.define :have_comment do |content|
   match do |page|
-    page.should have_selector('.comment', text: content)
+    have_selector('.comment', text: content)
   end
 end
 
@@ -72,7 +72,7 @@ def sign_out
 end
 
 def become(user)
-  cookies[:remember_token] = user.remember_token
+  session[:remember_token] = user.remember_token
 end
 
 def sign_in(user)

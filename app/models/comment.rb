@@ -19,7 +19,7 @@
 #
 
 class Comment < ActiveRecord::Base
-  belongs_to :user, counter_cache: true
+  belongs_to :user, touch: true
   belongs_to :paper, foreign_key: :paper_uid, primary_key: :uid, touch: true
 
   belongs_to :parent, class_name: "Comment" # Immediate reply ancestor
@@ -45,14 +45,14 @@ class Comment < ActiveRecord::Base
 
     # Email on comment replies
     if parent && parent.user.email_about_replies
-      UserMailer.delay.comment_alert(parent.user, self)
+      UserMailer.comment_alert(parent.user, self).deliver_later
       emailed_users[parent.user.id] = true
     end
 
     # Email people who claim this paper via their arXiv author identifier
     paper.claimants.each do |author|
       if author.email_about_comments_on_authored
-        UserMailer.delay.comment_alert(author, self) unless emailed_users[author.id]
+        UserMailer.comment_alert(author, self).deliver_later unless emailed_users[author.id]
         emailed_users[author.id] = true
       end
     end
@@ -60,7 +60,7 @@ class Comment < ActiveRecord::Base
     # Email any sciters who have opted in to alerts on scited papers
     paper.sciters.each do |sciter|
       if sciter.email_about_comments_on_scited
-        UserMailer.delay.comment_alert(sciter, self) unless emailed_users[sciter.id]
+        UserMailer.comment_alert(sciter, self).deliver_later unless emailed_users[sciter.id]
         emailed_users[sciter.id] = true
       end
     end
@@ -68,14 +68,17 @@ class Comment < ActiveRecord::Base
 
   after_save do
     paper.refresh_comments_count!
+    user.refresh_comments_count!
   end
 
   after_destroy do
     paper.refresh_comments_count!
+    user.refresh_comments_count!
   end
 
   acts_as_votable
 
+  # Records a comment change and the user who was responsible
   def record_change!(event, user_id)
     cc = CommentChange.create!(
       comment_id: self.id,

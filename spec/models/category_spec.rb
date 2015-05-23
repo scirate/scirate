@@ -12,8 +12,8 @@
 require 'spec_helper'
 
 describe Category do
-  it { should belong_to(:paper) }
-  it { should belong_to(:feed) }
-  it { should validate_presence_of(:paper_uid) }
-  it { should validate_presence_of(:feed_uid) }
+  it { is_expected.to belong_to(:paper) }
+  it { is_expected.to belong_to(:feed) }
+  it { is_expected.to validate_presence_of(:paper_uid) }
+  it { is_expected.to validate_presence_of(:feed_uid) }
 end

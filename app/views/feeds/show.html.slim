@@ -9,7 +9,7 @@
   .row
     .col-md-2.feedbar
       ul.nav.nav-list.tree-sidebar
-        = cache [:my_feeds, current_user, params.except(:feed, :page)] do
+        = cache [:my_feeds, current_user, params.except(:feed, :page, :controller, :action)] do
           - if signed_in?
             li.feed-folder.my-feeds
               label.nav-header
@@ -22,7 +22,7 @@
                 - else
                   - current_user.feeds.order(:fullname).each do |feed|
                     li.leaf title=(feed.uid)
-                      = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page)))
+                      = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page, :controller, :action)))
 
         = cache [:sidebar, params] do
           li.source-heading arXiv.org
@@ -31,11 +31,11 @@
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               label.nav-header
                 i class=(expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right') class=(parent.children.length > 0 ? '' : 'transparent')
-                = link_to parent.fullname.gsub("High Energy Physics", "HEP"), feed_path(parent, params.except(:feed, :page))
+                = link_to parent.fullname.gsub("High Energy Physics", "HEP"), feed_path(parent, params.except(:feed, :page, :controller, :action))
               ul.nav.nav-list.tree style=(expanded ? '' : 'display: none;')
                 - parent.children.each do |feed|
                   li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid)
-                    = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page)))
+                    = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page, :controller, :action)))
 
     .col-md-10.feed-center
       - cache [:feed, @feed, current_user] do
@@ -72,7 +72,7 @@
         .col-md-3.feed-rightbar
           - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
-          - cache [:recent_comments, @recent_comments, current_user && current_user.is_moderator?] do
+          - cache [:recent_comments, @recent_comments, current_user && current_user.can_moderate?] do
             - unless @recent_comments.length == 0
               h3
                 - if @feed.nil?
