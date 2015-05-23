@@ -65,7 +65,7 @@
           i.fa.fa-fw.fa-star>
           | Scites (#{@user.scites_count})
       .pull-right
-        - if current_user && current_user.can_moderate?
+        - if current_user && current_user.can_admin?
           a.btn.btn-danger href=(admin_edit_user_path(@user))
             i.fa.fa-fw.fa-gear
             | Admin
