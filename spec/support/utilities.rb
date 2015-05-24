@@ -14,13 +14,13 @@ end
 
 RSpec::Matchers.define :have_success_message do |message|
   match do |page|
-    page.should have_selector('.alert-success', text: message)
+    expect(page).to have_selector('.alert-success', text: message)
   end
 end
 
 RSpec::Matchers.define :have_error_message do |message|
   match do |page|
-    page.should have_selector('.alert-danger', text: message)
+    expect(page).to have_selector('.alert-danger', text: message)
   end
 end
 

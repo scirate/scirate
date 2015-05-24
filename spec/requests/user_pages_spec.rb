@@ -36,15 +36,15 @@ describe "signup page" do
   before { visit signup_path }
 
   it "shows the signup page" do
-    page.should have_heading "Join SciRate"
-    page.should have_title "Join SciRate"
+    expect(page).to have_heading "Join SciRate"
+    expect(page).to have_title "Join SciRate"
   end
 
   it "errors on invalid details" do
     expect { click_button "Sign up" }.to_not change(User, :count)
 
-    page.should have_title "Join SciRate"
-    page.should have_error_message
+    expect(page).to have_title "Join SciRate"
+    expect(page).to have_error_message
   end
 
   it "allows proper signup" do
@@ -59,16 +59,16 @@ describe "signup page" do
     expect { click_button "Sign up" }.to change(User, :count).by(1)
 
     user = User.find_by_email(email)
-    user.fullname.should == fullname
+    expect(user.fullname).to eq(fullname)
 
-    page.should have_title "Home feed"
+    expect(page).to have_title "Home feed"
 
     # Test presence of welcome banner
-    page.should have_content "Welcome to SciRate!"
-    page.should have_content user.email
+    expect(page).to have_content "Welcome to SciRate!"
+    expect(page).to have_content user.email
 
     # Make sure it sent a confirmation email
-    last_email.to.should include(user.email)
+    expect(last_email.to).to include(user.email)
   end
 end
 
@@ -89,7 +89,7 @@ describe "email confirmation" do
         @user.reload
       end.to change(@user, :active).to(true)
 
-      page.should have_content("Your account has been activated")
+      expect(page).to have_content("Your account has been activated")
     end
   end
 
@@ -99,7 +99,7 @@ describe "email confirmation" do
       @user.reload
       expect(@user.active).to be(false)
 
-      page.should have_content("link is invalid")
+      expect(page).to have_content("link is invalid")
     end
   end
 
@@ -114,12 +114,12 @@ describe "email confirmation" do
       @user.reload
       expect(@user.active).to be(false)
 
-      page.should have_content("link has expired")
-      page.should have_content("email has been sent")
+      expect(page).to have_content("link has expired")
+      expect(page).to have_content("email has been sent")
 
       @user.reload
-      last_email.to.should include(@user.email)
-      last_email.body.should include(@user.confirmation_token)
+      expect(last_email.to).to include(@user.email)
+      expect(last_email.body).to include(@user.confirmation_token)
     end
   end
 
@@ -128,7 +128,7 @@ describe "email confirmation" do
       visit activate_user_path(@user.id, @user.confirmation_token)
       visit activate_user_path(@user.id, @user.confirmation_token)
 
-      page.should have_content("link is invalid")
+      expect(page).to have_content("link is invalid")
     end
   end
 end
