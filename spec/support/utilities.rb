@@ -62,23 +62,20 @@ def sign_out
 end
 
 def become(user)
-  session[:remember_token] = user.remember_token
+  # In controller specs we can manipulate the context directly
+  request.session[:remember_token] = user.remember_token
 end
 
-def sign_in(user)
-  if defined?(request)
-    # In controller specs we can manipulate the context directly
-    request.session[:remember_token] = user.remember_token
-  else
-    # For capybara
-    visit login_path
-    fill_in "Email",    with: user.email
-    fill_in "Password", with: user.password
-    click_button "Sign in"
 
-    # For functional tests (TODO: distinguish between these two cases)
-    post "/login", email_or_username: user.email, password: user.password
-  end
+def sign_in(user)
+  # For capybara
+  visit login_path
+  fill_in "Email",    with: user.email
+  fill_in "Password", with: user.password
+  click_button "Sign in"
+
+  # For functional tests (TODO: distinguish between these two cases)
+  post "/login", email_or_username: user.email, password: user.password
 end
 
 def sign_in_with_google
