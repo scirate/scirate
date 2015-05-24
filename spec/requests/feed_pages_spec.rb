@@ -27,12 +27,38 @@ describe "Feed pages" do
     end
 
     it "shows today's papers" do
-      p page.find('li.paper:nth-child(1) .title').text
-      p page.find('li.paper:nth-child(2) .title').text
+      #p page.find('li.paper:nth-child(1) .title').text
+      #p page.find('li.paper:nth-child(2) .title').text
       expect(page).to have_selector("li.paper:nth-child(1) .title", text: new_paper1.title)
       expect(page).to have_selector("li.paper:nth-child(2) .title", text: new_paper2.title)
       expect(page).to_not have_content old_paper1.title
       expect(page).to_not have_content old_paper2.title
+    end
+  end
+
+  describe "Individual feed" do
+    context "when signed out" do
+      before do
+        visit feed_path(feed1)
+      end
+
+      it "shows that feed's papers" do
+        expect(page).to have_selector("li.paper:nth-child(1) .title", text: new_paper1.title)
+        expect(page).to_not have_selector("li.paper:nth-child(2) .title", text: new_paper2.title)
+      end
+    end
+
+    context "when signed in" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+        sign_in user
+        visit feed_path(feed1)
+      end
+
+      it "does the same thing" do
+        expect(page).to have_selector("li.paper:nth-child(1) .title", text: new_paper1.title)
+        expect(page).to_not have_selector("li.paper:nth-child(2) .title", text: new_paper2.title)
+      end
     end
   end
 
@@ -104,7 +130,6 @@ describe "Feed pages" do
         expect(prefs.last_visited).to eq(feed1.last_paper_date)
       end
     end
-
 
     context "changing order by sciting a paper" do
       before do
