@@ -1,15 +1,5 @@
 require 'capybara/rspec'
 
-def full_title(page_title = "")
-  base_title = "SciRate"
-  if page_title.empty?
-    base_title
-  else
-    page_title
-  end
-end
-
-
 RSpec::Matchers.define :have_title do |title|
   match do |page|
     page.body.should have_selector('title', text: full_title(title))
