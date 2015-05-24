@@ -1,12 +1,10 @@
 # SciRate
 
 [![Build Status](https://travis-ci.org/scirate/scirate.svg?branch=master)](https://travis-ci.org/scirate/scirate)
-[![Coverage Status](https://coveralls.io/repos/scirate/scirate/badge.png?branch=master)](https://coveralls.io/r/scirate/scirate?branch=master)
+[![Coverage Status](https://coveralls.io/repos/scirate/scirate/badge.svg?branch=master)](https://coveralls.io/r/scirate/scirate?branch=master)
 [![Code Climate](https://codeclimate.com/github/scirate/scirate.png)](https://codeclimate.com/github/scirate/scirate)
 
-A rewrite of [Dave Bacon's](http://dabacon.org) SciRate in Ruby on Rails, previously developed by Dave Bacon, [Bill Rosgen](http://intractable.ca/bill/) and [Aram Harrow](http://www.mit.edu/~aram/). Currently being expanded upon by [Draftable](https://draftable.com/).
-
-The production site is deployed at [https://scirate.com/](https://scirate.com/).
+[SciRate](https://scirate.com/) is an open source rating and commenting system for [arXiv](http://arxiv.org/) preprints. Papers are upvoted and discussed by the community, and we sometimes play host to more [in depth peer review](https://scirate.com/tqc-2014-program-committee).
 
 ## Contributing
 
@@ -18,21 +16,42 @@ We encourage contributions!
 
 * You can talk about SciRate on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate) and about SciRate development on the [development mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate-dev).
 
-## Dependencies
+## Setting up for development
 
-SciRate is based on [Ruby 2.1.0+](http://rvm.io/) and [Rails 4](http://rubyonrails.org/). Under Ubuntu 12.04 (our current deployment environment) the following native packages are needed:
+SciRate runs on [Ubuntu 14.04](http://releases.ubuntu.com/14.04/) in production. Development in other environments is possible, but this guide will assume you are running some variant of Debian.
+
+We currently use Ruby 2.2.1 and Rails 4.2. To install this version of Ruby and [RVM](https://rvm.io/):
+
+```shell
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash -s stable --ruby=2.2.1
+rvm use 2.2.1 --default
+```
+
+You will also need some native packages:
 
 ```shell
 sudo apt-get install git postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-6-jre
 ```
 
-You will also need to download and install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/). Note that if you're on Ubuntu and install Elasticsearch via the `.deb` package, it won't start automatically. Follow the instructions [here](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service.html). Bundler should take care of the rest.
+Our backend depends on [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/) to sort through all the papers:
+
+```shell
+wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb
+sudo dpkg -i /tmp/elasticsearch.deb
+sudo update-rc.d elasticsearch defaults 95 10
+sudo service elasticsearch start
+```
+
+Finally, clone the repository and install the Ruby gem dependencies:
 
 ```shell
 git clone git@github.com:scirate/scirate
 cd scirate
 bundle install
 ```
+
+SciRate is now set up for development! However, you'll also want a database with papers to fiddle with.
 
 ## Setting up the database
 
@@ -60,8 +79,6 @@ rails server
 ```
 This will initialize the database and Elasticsearch, download the basic feed layout, and start the server.
 
-You should now have a working local copy of SciRate! However, you'll also want some papers to fiddle with.
-
 ## Populating the database
 
 ```shell
@@ -73,3 +90,10 @@ When run for the first time, this will download and index paper metadata from th
 ## Testing
 
 There is a fairly comprehensive series of unit and integration tests in `spec`. Running `rspec` in the top-level directory will attempt all of them.
+
+## Acknowledgements
+
+- Original website by [Dave Bacon](http://dabacon.org)
+- [Bill Rosgen](http://intractable.ca/bill/)
+- [Aram Harrow](http://www.mit.edu/~aram/)
+- [Draftable](https://draftable.com/)
