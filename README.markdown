@@ -30,7 +30,7 @@ rvm use 2.2.1 --default
 You will also need some native packages:
 
 ```shell
-sudo apt-get install git postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-6-jre
+sudo apt-get install git postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-6-jre libqt5webkit5-dev
 ```
 
 Our backend depends on [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/) to sort through all the papers:
