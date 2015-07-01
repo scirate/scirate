@@ -13,24 +13,24 @@ describe "Admin tools" do
     it "shows moderation actions and deleted comments" do
       visit paper_path(@paper)
 
-      page.should have_content('moderator:')
-      page.should have_content('edit')
-      page.should have_content('delete')
+      expect(page).to have_content('moderator:')
+      expect(page).to have_content('edit')
+      expect(page).to have_content('delete')
 
-      page.should have_content("this is a deleted comment")
+      expect(page).to have_content("this is a deleted comment")
     end
 
     it "lets moderators edit comments" do
       xhr :post, edit_comment_path(@comment), content: "wubbles"
-      response.should be_success
-      @comment.reload.content.should == "wubbles"
+      expect(response).to be_success
+      expect(@comment.reload.content).to eq("wubbles")
     end
 
     it "lets moderators delete comments" do
       expect do
         xhr :post, delete_comment_path(@comment)
-        response.should be_redirect
-        flash[:comment][:status].should == 'success'
+        expect(response).to be_redirect
+        expect(flash[:comment][:status]).to eq('success')
         @paper.reload
       end.to change(@paper, :comments_count).by(-1)
     end
@@ -38,8 +38,8 @@ describe "Admin tools" do
     it "lets moderators restore comments" do
       expect do
         xhr :post, restore_comment_path(@deleted_comment)
-        response.should be_redirect
-        flash[:comment][:status].should == 'success'
+        expect(response).to be_redirect
+        expect(flash[:comment][:status]).to eq('success')
         @paper.reload
       end.to change(@paper, :comments_count).by(1)
     end

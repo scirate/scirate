@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PapersController do
   let!(:paper) { FactoryGirl.create(:paper) }
   let!(:user) { FactoryGirl.create(:user) }
-  before { sign_in user }
+  before { become user }
 
   describe 'GET show' do
     before { get :show, paper_uid: paper.uid }

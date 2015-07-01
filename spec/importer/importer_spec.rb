@@ -18,9 +18,9 @@ describe "arxiv importer" do
     time1 = zone.parse("Wed Mar 5 15:59 EST 2014")
     time2 = zone.parse("Wed Mar 5 16:01 EST 2014")
     time3 = zone.parse("Thu Mar 6 01:00 EST 2014")
-    Paper.estimate_pubdate(time1).should == zone.parse("Wed Mar 5 20:00 EST 2014")
-    Paper.estimate_pubdate(time2).should == zone.parse("Thu Mar 6 20:00 EST 2014")
-    Paper.estimate_pubdate(time3).should == zone.parse("Thu Mar 6 20:00 EST 2014")
+    expect(Paper.estimate_pubdate(time1)).to eq(zone.parse("Wed Mar 5 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time2)).to eq(zone.parse("Thu Mar 6 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time3)).to eq(zone.parse("Thu Mar 6 20:00 EST 2014"))
 
     time4 = zone.parse("Fri Mar 7 15:59 EST 2014")
     time5 = zone.parse("Fri Mar 7 16:01 EST 2014")
@@ -29,13 +29,13 @@ describe "arxiv importer" do
     time8 = zone.parse("Sun Mar 9 15:59 EST 2014")
     time9 = zone.parse("Sun Mar 9 16:01 EST 2014")
     time10 = zone.parse("Mon Mar 10 15:59 EST 2014")
-    Paper.estimate_pubdate(time4).should == zone.parse("Sun Mar 9 20:00 EST 2014")
-    Paper.estimate_pubdate(time5).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time6).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time7).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time8).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time9).should == zone.parse("Mon Mar 10 20:00 EST 2014")
-    Paper.estimate_pubdate(time10).should == zone.parse("Mon Mar 10 20:00 EST 2014")
+    expect(Paper.estimate_pubdate(time4)).to eq(zone.parse("Sun Mar 9 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time5)).to eq(zone.parse("Mon Mar 10 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time6)).to eq(zone.parse("Mon Mar 10 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time7)).to eq(zone.parse("Mon Mar 10 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time8)).to eq(zone.parse("Mon Mar 10 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time9)).to eq(zone.parse("Mon Mar 10 20:00 EST 2014"))
+    expect(Paper.estimate_pubdate(time10)).to eq(zone.parse("Mon Mar 10 20:00 EST 2014"))
   end
 
   describe 'when importing papers failed' do
@@ -103,70 +103,70 @@ describe "arxiv importer" do
     puts "Starting test"
     paper_uids, updated_uids = Arxiv::Import.papers(@models)
 
-    paper_uids.length.should == 1000
+    expect(paper_uids.length).to eq(1000)
 
     paper = Paper.find_by_uid(paper_uids[0])
 
     # Primary imports
-    paper.uid.should == "0811.36489"
-    paper.submitter.should == "Jelani Nelson"
-    paper.versions[0].date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 GMT")
-    paper.versions[0].size.should == "90kb"
-    paper.versions[1].date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 GMT")
-    paper.versions[1].size.should == "71kb"
-    paper.title.should == "Revisiting Norm Estimation in Data Streams"
-    paper.author_str.should == "Daniel M. Kane, Jelani Nelson, David P. Woodruff"
-    paper.authors.map(&:fullname).should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
-    paper.feeds.map(&:uid).should == ["cs.DS", "cs.CC"]
-    paper.author_comments.should == "added content; modified L_0 algorithm -- ParityLogEstimator in version 1 contained an error, and the new algorithm uses slightly more space"
-    paper.license.should == "http://arxiv.org/licenses/nonexclusive-distrib/1.0/"
-    paper.abstract.should include "The problem of estimating the pth moment F_p"
+    expect(paper.uid).to eq("0811.36489")
+    expect(paper.submitter).to eq("Jelani Nelson")
+    expect(paper.versions[0].date).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 GMT"))
+    expect(paper.versions[0].size).to eq("90kb")
+    expect(paper.versions[1].date).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 GMT"))
+    expect(paper.versions[1].size).to eq("71kb")
+    expect(paper.title).to eq("Revisiting Norm Estimation in Data Streams")
+    expect(paper.author_str).to eq("Daniel M. Kane, Jelani Nelson, David P. Woodruff")
+    expect(paper.authors.map(&:fullname)).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
+    expect(paper.feeds.map(&:uid)).to eq(["cs.DS", "cs.CC"])
+    expect(paper.author_comments).to eq("added content; modified L_0 algorithm -- ParityLogEstimator in version 1 contained an error, and the new algorithm uses slightly more space")
+    expect(paper.license).to eq("http://arxiv.org/licenses/nonexclusive-distrib/1.0/")
+    expect(paper.abstract).to include "The problem of estimating the pth moment F_p"
 
     # Calculated from above
-    paper.submit_date.should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
-    paper.update_date.should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
-    paper.pubdate.should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
-    paper.abs_url.should == "http://arxiv.org/abs/0811.36489"
-    paper.pdf_url.should == "http://arxiv.org/pdf/0811.36489.pdf"
+    expect(paper.submit_date).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
+    expect(paper.update_date).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
+    expect(paper.pubdate).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
+    expect(paper.abs_url).to eq("http://arxiv.org/abs/0811.36489")
+    expect(paper.pdf_url).to eq("http://arxiv.org/pdf/0811.36489.pdf")
     expect(paper.versions_count).to eq 2
 
     # Ensure last_paper_date is updated on all feeds including parents
     paper.feeds.each do |feed|
-      feed.last_paper_date.should_not be_nil
-      feed.parent.last_paper_date.should_not be_nil
+      expect(feed.last_paper_date).not_to be_nil
+      expect(feed.parent.last_paper_date).not_to be_nil
     end
 
     # Now test the search index
     Search.refresh
-    Search::Paper.es_basic("*").raw.hits.total.should == 1000
+    expect(Search::Paper.es_basic("*").raw.hits.total).to eq(1000)
 
     doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
-    doc._id.should == "0811.36489"
-    doc.title.should == "Revisiting Norm Estimation in Data Streams"
-    doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
-    doc.authors_searchterm.should == ["Kane_D", "Nelson_J", "Woodruff_D"]
-    doc.feed_uids.should == ["cs.DS", "cs.CC"]
-    doc.abstract.should include "The problem of estimating the pth moment F_p"
-    Time.parse(doc.submit_date).should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
-    Time.parse(doc.update_date).should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
-    Time.parse(doc.pubdate).should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
+    expect(doc._id).to eq("0811.36489")
+    expect(doc.title).to eq("Revisiting Norm Estimation in Data Streams")
+    expect(doc.authors_fullname).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
+    expect(doc.authors_searchterm).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
+    expect(doc.feed_uids).to eq(["cs.DS", "cs.CC"])
+    expect(doc.abstract).to include "The problem of estimating the pth moment F_p"
+    expect(Time.parse(doc.submit_date)).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
+    expect(Time.parse(doc.update_date)).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
+    expect(Time.parse(doc.pubdate)).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
 
     # And the bulk indexer
     Search.drop
     Search.migrate
     Search.refresh
 
-    Search::Paper.es_basic("*").raw.hits.total.should == 1000
+    expect(Search::Paper.es_basic("*").raw.hits.total).to eq(1000)
 
     doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
-    doc._id.should == "0811.36489"
-    doc.title.should == "Revisiting Norm Estimation in Data Streams"
-    doc.authors_fullname.should == ["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"]
-    doc.authors_searchterm.should == ["Kane_D", "Nelson_J", "Woodruff_D"]
-    doc.feed_uids.should == ["cs.DS", "cs.CC"]
-    doc.abstract.should include "The problem of estimating the pth moment F_p"
-    Time.parse(doc.submit_date).should == Time.parse("Fri, 21 Nov 2008 22:55:07 UTC")
-    Time.parse(doc.update_date).should == Time.parse("Thu, 9 Apr 2009 02:45:30 UTC")
-    Time.parse(doc.pubdate).should == Time.parse("Tue, 25 Nov 2008 01:00 UTC")
+    expect(doc._id).to eq("0811.36489")
+    expect(doc.title).to eq("Revisiting Norm Estimation in Data Streams")
+    expect(doc.authors_fullname).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
+    expect(doc.authors_searchterm).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
+    expect(doc.feed_uids).to eq(["cs.DS", "cs.CC"])
+    expect(doc.abstract).to include "The problem of estimating the pth moment F_p"
+    expect(Time.parse(doc.submit_date)).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
+    expect(Time.parse(doc.update_date)).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
+    expect(Time.parse(doc.pubdate)).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
   end
 end

@@ -14,12 +14,12 @@ describe "password resets" do
       click_button "Reset password"
     end
 
-    it { should have_title "" }
-    it { should have_content("Email sent") }
+    it { is_expected.to have_title "" }
+    it { is_expected.to have_content("Email sent") }
 
     it "should send the email" do
-      last_email.to.should include(user.email)
-      last_email.body.should include(user.password_reset_token)
+      expect(last_email.to).to include(user.email)
+      expect(last_email.body).to include(user.password_reset_token)
     end
   end
 
@@ -34,14 +34,14 @@ describe "password resets" do
     end
 
     it "should stay on the password reset page" do
-      should have_title "Reset password"
+      is_expected.to have_title "Reset password"
     end
 
-    it { should_not have_content("Email sent") }
-    it { should have_content("address not found") }
+    it { is_expected.not_to have_content("Email sent") }
+    it { is_expected.to have_content("address not found") }
 
     it "should not send the email" do
-      last_email.should be_nil
+      expect(last_email).to be_nil
     end
   end
 
@@ -57,7 +57,7 @@ describe "password resets" do
         click_button "Update Password"
       end
 
-      it { should have_content("Password doesn't match confirmation") }
+      it { is_expected.to have_content("Password doesn't match confirmation") }
     end
 
     describe "with valid information" do
@@ -68,7 +68,7 @@ describe "password resets" do
         click_button "Update Password"
       end
 
-      it { should have_content("Password has been changed") }
+      it { is_expected.to have_content("Password has been changed") }
     end
   end
 
@@ -84,7 +84,7 @@ describe "password resets" do
       click_button "Update Password"
     end
 
-    it { should have_content("Password reset has expired") }
+    it { is_expected.to have_content("Password reset has expired") }
   end
 
   describe "when the password token is invalid" do
@@ -92,7 +92,7 @@ describe "password resets" do
       visit reset_password_confirm_path("invalid")
     end
 
-    it { should have_title "" }
-    it { should have_content("Password reset has already been used or is invalid!") }
+    it { is_expected.to have_title "" }
+    it { is_expected.to have_content("Password reset has already been used or is invalid!") }
   end
 end

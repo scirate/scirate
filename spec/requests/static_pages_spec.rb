@@ -5,8 +5,8 @@ describe "Static pages" do
     before { visit about_path }
 
     it "has the right content" do
-      page.should have_heading "About"
-      page.should have_title "About"
+      expect(page).to have_heading "About"
+      expect(page).to have_title "About"
     end
   end
 end

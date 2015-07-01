@@ -1,10 +1,21 @@
 require 'spec_helper'
 
 describe CommentsController do
-  let(:comment) { FactoryGirl.create(:comment) }
+  let(:paper) { FactoryGirl.create(:paper_with_categories) }
+  let(:comment) { FactoryGirl.create(:comment, paper: paper) }
   let(:user)  { comment.user.reload }
   let(:other_user) { FactoryGirl.create(:user) }
-  let(:paper) { comment.paper.reload }
+
+  describe "recent comments index" do
+    before do
+      user.subscriptions.create!(feed_uid: paper.categories[0].feed_uid)
+      get :index
+    end
+
+    it "shows the comments" do
+      expect(assigns(:comments)).to match_array([comment])
+    end
+  end
 
   describe "posting a comment" do
     before do

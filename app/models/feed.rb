@@ -54,28 +54,6 @@ class Feed < ActiveRecord::Base
     end
   end
 
-  def self.find_by_uid(uid)
-    @@uid_map ||= Feed.map_uids
-    @@uid_map[uid]
-  end
-
-  def self.get_or_create(uid)
-    feed = Feed.find_by_uid(uid)
-    return feed unless feed.nil?
-    feed = Feed.new
-    feed.uid = uid
-    feed.fullname = uid.to_s
-    feed.source = 'arxiv'
-    feed.save!
-    feed
-  end
-
-  def self.map_uids
-    mapping = {}
-    Feed.all.each { |feed| mapping[feed.uid] = feed }
-    mapping
-  end
-
   def self.find_related_uids(uids)
     Rails.cache.fetch [:related_uids, uids] do
       uids + Feed.where(parent_uid: uids).pluck(:uid)

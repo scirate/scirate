@@ -80,12 +80,12 @@ describe "Authentication" do
 
         describe "visiting the edit page" do
           before { visit admin_edit_user_path(user) }
-          it { should have_title 'Sign in' }
+          it { is_expected.to have_title 'Sign in' }
         end
 
         describe "submitting to the update action" do
           before { post admin_update_user_path(user) }
-          specify { response.should redirect_to(login_path) }
+          specify { expect(response).to redirect_to(login_path) }
         end
       end
     end
