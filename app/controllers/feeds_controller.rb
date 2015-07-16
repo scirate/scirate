@@ -105,12 +105,24 @@ class FeedsController < ApplicationController
 
   def parse_params
     @date = _parse_date(params)
-    @range = _parse_range(params) || :since_last
+    @range = _parse_range(params)
     @page = params[:page] || 1
 
-    if @range == :since_last && !signed_in?
-      # We don't know when the last value was here
-      @range = 1
+    if signed_in?
+      if @range.nil?
+        @range = current_user.range_preference
+        @range = :since_last if @range <= 0
+      end
+      range_num = @range == :since_last ? 0 : @range
+      if range_num != current_user.range_preference && @date.nil?
+        current_user.range_preference = range_num
+        current_user.save!
+      end
+    else
+      if @range.nil? || @range == :since_last
+        # We don't know when the last value was here
+        @range = 1
+      end
     end
   end
 

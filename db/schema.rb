@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150522132433) do
+ActiveRecord::Schema.define(version: 20150716105506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,8 +219,8 @@ ActiveRecord::Schema.define(version: 20150522132433) do
     t.text     "alert",                default: "",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "arxiv_sync_dt",        default: '2015-04-12 00:00:00', null: false
-    t.datetime "arxiv_author_sync_dt", default: '2015-04-12 00:00:00', null: false
+    t.datetime "arxiv_sync_dt",        default: '2014-12-19 00:00:00', null: false
+    t.datetime "arxiv_author_sync_dt", default: '2014-12-19 00:00:00', null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -251,6 +251,7 @@ ActiveRecord::Schema.define(version: 20150522132433) do
     t.boolean  "email_about_comments_on_authored", default: true
     t.boolean  "email_about_comments_on_scited",   default: false
     t.boolean  "email_about_reported_comments",    default: false
+    t.integer  "range_preference",                 default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
