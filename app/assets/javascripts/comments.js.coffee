@@ -5,6 +5,8 @@
 class Comment
   @setupComments: ->
     @converter = Markdown.getSanitizingConverter()
+    return unless ($('.comments').length || $('.comment').length)
+
     if $('#commentForm').length
       @bindEditor() # Setup the main commenting form
       # Grab the inline editor html
@@ -28,6 +30,16 @@ class Comment
       MathJax.Hub.Typeset($("#wmd-preview#{suffix}")[0])
 
     editor.run()
+
+  @renderMarkup: ($el, markup) ->
+    """Processes markdown and LaTeX in the data-markup attribute for display."""
+    $el.html Comment.converter.makeHtml(markup)
+    MathJax.Hub.Typeset($el[0])
+
+  @renderPreviews: ->
+    $('.abbr-comment').each ->
+      $bq = $(this).find('blockquote')
+      Comment.renderMarkup $bq, $bq.text()
 
   changeScore: (shift) ->
     """Modifies the displayed comment vote score by shift."""
@@ -163,9 +175,7 @@ class Comment
     @$el.on 'click', '.actions .reply', => @toggleReply()
 
   renderMarkup: ->
-    """Processes markdown and LaTeX in the data-markup attribute for display."""
-    @$el.find('.body').html Comment.converter.makeHtml(@$el.attr('data-markup'))
-    MathJax.Hub.Typeset(@$el.find('.body')[0])
+    Comment.renderMarkup(@$el.find('.body'), @$el.attr('data-markup'))
 
   constructor: (@$el) ->
     @cid = @$el.attr('data-id')
@@ -175,10 +185,10 @@ class Comment
 
 $(document).on 'ready', ->
   $('a.has-tooltip').tooltip()
-  return unless ($('.comments').length || $('.comment').length)
   Comment.setupComments()
+  Comment.renderPreviews()
 
 $(document).on 'page:load', ->
   $('a.has-tooltip').tooltip()
-  return unless ($('.comments').length || $('.comment').length)
   Comment.setupComments()
+  Comment.renderPreviews()
