@@ -12,7 +12,7 @@
       = abbr_comment.user_fullname
   =< timeago(abbr_comment.created_at)
   blockquote.tex2jax style="margin-top: 5px;"
-    = strip_tags(abbr_comment.content[0..299])
+    = simple_format(strip_tags(abbr_comment.content[0..299]))
     - if abbr_comment.content.length > 300
       a href="/arxiv/#{abbr_comment.paper_uid}##{abbr_comment.id}"
         |  ...(continued)
