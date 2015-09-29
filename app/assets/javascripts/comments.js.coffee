@@ -38,7 +38,7 @@ class Comment
 
   @renderPreviews: ->
     $('.abbr-comment').each ->
-      $bq = $(this).find('blockquote')
+      $bq = $(this).find('blockquote .body')
       Comment.renderMarkup $bq, $bq.text()
 
   changeScore: (shift) ->
