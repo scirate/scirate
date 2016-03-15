@@ -219,8 +219,8 @@ ActiveRecord::Schema.define(version: 20150716105506) do
     t.text     "alert",                default: "",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "arxiv_sync_dt",        default: '2014-12-19 00:00:00', null: false
-    t.datetime "arxiv_author_sync_dt", default: '2014-12-19 00:00:00', null: false
+    t.datetime "arxiv_sync_dt",        default: '2015-04-12 00:00:00', null: false
+    t.datetime "arxiv_author_sync_dt", default: '2015-04-12 00:00:00', null: false
   end
 
   create_table "users", force: :cascade do |t|

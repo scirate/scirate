@@ -144,9 +144,8 @@ class PapersController < ApplicationController
           ((cached_votes_up + 1.9208) / #{total_votes} - 1.96 * SQRT((cached_votes_up * cached_votes_down) / #{total_votes} + 0.9604) / #{total_votes} ) / (1 + 3.8416 / #{total_votes})
         , 0) AS ci_lower_bound
     })
-    .where("paper_uid = ? AND ancestor_id IS NULL AND deleted = FALSE
-            AND (hidden = FALSE OR user_id = ?)",
-            @paper.uid, current_user.try(:id))
+    .where("paper_uid = ? AND ancestor_id IS NULL",
+            @paper.uid)
     .order("ci_lower_bound DESC, created_at ASC")
     .includes(:last_change)
   end
@@ -155,9 +154,8 @@ class PapersController < ApplicationController
   def find_comments_with_ancestors(ancestors)
     Comment.where(
       %Q{
-        paper_uid = ? AND ancestor_id IN (?) AND deleted = FALSE
-        AND (hidden = FALSE OR user_id = ?)
-      }, @paper.uid, ancestors.map(&:id), current_user.try(:id))
+        paper_uid = ? AND ancestor_id IN (?)
+      }, @paper.uid, ancestors.map(&:id))
     .order("created_at ASC")
     .includes(:last_change)
   end
@@ -167,9 +165,17 @@ class PapersController < ApplicationController
     comment_tree = find_comments_with_ancestors(toplevel_comments).group_by(&:ancestor_id)
 
     comments = []
+    @has_children = {}
     toplevel_comments.each do |ancestor|
       comments << ancestor
-      comments += comment_tree[ancestor.id] || []
+      children = comment_tree[ancestor.id] || []
+
+      p children
+      
+      if !children.empty? && children.any? { |c| !c.deleted && !c.hidden }
+        @has_children[ancestor.id] = true
+        comments += children
+      end
     end
 
     comments

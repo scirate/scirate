@@ -2,11 +2,11 @@
 
 div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) class=('deleted' if comment.deleted || comment.hidden) class=('voted' if @voted) class=('reply' if comment.parent) data-id=(comment.id) data-markup=(comment.content unless comment.deleted || comment.hidden)
   a name=(comment.id)
-  - if comment.deleted
+  - if comment.deleted && @has_children[comment.id]
     | (deleted comment)
-  - elsif comment.hidden
+  - elsif comment.hidden && @has_children[comment.id]
     | (hidden comment)
-  - else
+  - elsif (!comment.deleted && !comment.hidden)
     .votes
       div.upvote class=('active' if @voted == true)
         i.fa.fa-arrow-up
