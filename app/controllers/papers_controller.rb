@@ -137,16 +137,17 @@ class PapersController < ApplicationController
 
   # Less naive statistical comment sorting as per
   # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
+  # Rating sorting is currently disabled
   def find_top_level_comments
-    total_votes = %Q{ NULLIF(cached_votes_up + cached_votes_down, 0) }
-    Comment.select(%Q{
-        comments.*, COALESCE(
-          ((cached_votes_up + 1.9208) / #{total_votes} - 1.96 * SQRT((cached_votes_up * cached_votes_down) / #{total_votes} + 0.9604) / #{total_votes} ) / (1 + 3.8416 / #{total_votes})
-        , 0) AS ci_lower_bound
-    })
-    .where("paper_uid = ? AND ancestor_id IS NULL",
+    #total_votes = %Q{ NULLIF(cached_votes_up + cached_votes_down, 0) }
+    #Comment.select(%Q{
+    #    comments.*, COALESCE(
+    #      ((cached_votes_up + 1.9208) / #{total_votes} - 1.96 * SQRT((cached_votes_up * cached_votes_down) / #{total_votes} + 0.9604) / #{total_votes} ) / (1 + 3.8416 / #{total_votes})
+    #    , 0) AS ci_lower_bound
+    #})
+    Comment.where("paper_uid = ? AND ancestor_id IS NULL",
             @paper.uid)
-    .order("ci_lower_bound DESC, created_at ASC")
+    .order("created_at ASC")
     .includes(:last_change)
   end
 
