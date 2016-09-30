@@ -20,7 +20,7 @@ end
 namespace :arxiv do
   desc "Scrapes category information from arxiv.org homepage into delicious Feeds"
   task feed_import: :environment do
-    doc = Nokogiri::HTML(open("http://arxiv.org"))
+    doc = Nokogiri::HTML(open("https://arxiv.org"))
 
     feeds = []
 

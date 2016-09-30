@@ -278,7 +278,7 @@ class User < ActiveRecord::Base
   # authored by this user and makes corresponding Authorship
   # connections
   def update_authorship!(saving=false)
-    url = "http://#{Settings::ARXIV_HOST}/a/#{author_identifier}.atom2"
+    url = "https://#{Settings::ARXIV_HOST}/a/#{author_identifier}.atom2"
     doc = Nokogiri(open(url))
     doc.css('entry id').each do |el|
       uid = el.text.match(/arxiv.org\/abs\/(.+)/)[1]

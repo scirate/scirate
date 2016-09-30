@@ -106,7 +106,7 @@ class Comment < ActiveRecord::Base
   end
 
   def submit_trackback
-    trackback_url = "http://arxiv.org/trackback/#{paper_uid}"
+    trackback_url = "https://arxiv.org/trackback/#{paper_uid}"
 
     title = "#{user.fullname}: #{self.content[0..99]}"
     title += "..." if self.content.length > 100
