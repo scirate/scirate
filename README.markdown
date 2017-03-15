@@ -5,19 +5,7 @@
 
 [SciRate](https://scirate.com/) is an open source rating and commenting system for [arXiv](http://arxiv.org/) preprints. Papers are upvoted and discussed by the community, and we sometimes play host to more [in depth peer review](https://scirate.com/tqc-2014-program-committee).
 
-MAINTAINER'S NOTE: I (Jaiden Mispy) have been hosting and maintaining this project out-of-pocket on behalf of the quant-ph community for a couple of years. I am happy to continue to do so for as long as it is useful to people. However, I don't have much time for more meaningful development, which is sad since there is a *lot* more cool and useful stuff that could potentially be built here!
-
-If you're interested in funding me to work on it further, taking over the project yourself, or building something related using an optimized searchable database full of arXiv metadata that is updated daily, <a href="mailto:jaiden@mispy.me">let me know</a>! And as always, pull requests are very welcome; I'm happy to help people set this up locally as needed.
-
-## Contributing
-
-We encourage contributions!
-
-* You can submit a bug report [here](https://github.com/scirate/scirate/issues).
-
-* You can contribute to the code by sending a pull request on Github to the [canonical repository](https://github.com/scirate/scirate).
-
-* You can talk about SciRate on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate) and about SciRate development on the [development mailing list](https://groups.google.com/forum/?fromgroups=#!forum/scirate-dev).
+Bug reports and feature requests should be submitted as [GitHub issues](https://github.com/scirate/scirate/issues).
 
 ## Setting up for development
 
