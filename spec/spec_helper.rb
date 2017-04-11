@@ -37,7 +37,7 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 Capybara.configure do |config|
   Capybara.register_driver :webkit do |app|
     driver = Capybara::Webkit::Driver.new(app)
-    driver.allow_url("cdn.mathjax.org")
+    driver.allow_url("cdnjs.cloudflare.com")
     driver.allow_url("www.google-analytics.com")
     driver
   end
