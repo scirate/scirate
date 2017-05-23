@@ -54,7 +54,7 @@ Rails.application.configure do
   }
 
   if Settings::GMAIL_SMTP_USER.empty? || Settings::GMAIL_SMTP_PASSWORD.empty?
-    logger.warn("No SMTP user configured. If you want to receive actual email in development, set GMAIL_SMTP_USER and GMAIL_SMTP_PASSWORD in local_settings.rb.".light_red)
+    # logger.warn("No SMTP user configured. If you want to receive actual email in development, set GMAIL_SMTP_USER and GMAIL_SMTP_PASSWORD in local_settings.rb.".light_red)
   end
 
   WillPaginate.per_page = 100
