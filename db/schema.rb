@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150716105506) do
+ActiveRecord::Schema.define(version: 20170523032959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -150,10 +150,10 @@ ActiveRecord::Schema.define(version: 20150716105506) do
   add_index "feeds", ["uid"], name: "index_feeds_on_uid", unique: true, using: :btree
 
   create_table "papers", force: :cascade do |t|
-    t.text     "uid",                         null: false
+    t.text     "uid",                             null: false
     t.text     "submitter"
-    t.text     "title",                       null: false
-    t.text     "abstract",                    null: false
+    t.text     "title",                           null: false
+    t.text     "abstract",                        null: false
     t.text     "author_comments"
     t.text     "msc_class"
     t.text     "report_no"
@@ -161,17 +161,18 @@ ActiveRecord::Schema.define(version: 20150716105506) do
     t.text     "doi"
     t.text     "proxy"
     t.text     "license"
-    t.datetime "submit_date",                 null: false
-    t.datetime "update_date",                 null: false
-    t.text     "abs_url",                     null: false
-    t.text     "pdf_url",                     null: false
+    t.datetime "submit_date",                     null: false
+    t.datetime "update_date",                     null: false
+    t.text     "abs_url",                         null: false
+    t.text     "pdf_url",                         null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "scites_count",    default: 0, null: false
-    t.integer  "comments_count",  default: 0, null: false
+    t.integer  "scites_count",    default: 0,     null: false
+    t.integer  "comments_count",  default: 0,     null: false
     t.datetime "pubdate"
-    t.text     "author_str",                  null: false
-    t.integer  "versions_count",  default: 1, null: false
+    t.text     "author_str",                      null: false
+    t.integer  "versions_count",  default: 1,     null: false
+    t.boolean  "locked",          default: false, null: false
   end
 
   add_index "papers", ["abs_url"], name: "index_papers_on_abs_url", unique: true, using: :btree

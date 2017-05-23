@@ -113,6 +113,9 @@
 
       .comment-form
         - if signed_in?
-          = render 'comment_form'
+            - if not(@paper.locked)
+                = render 'comment_form'
+            - else
+                = "Comments locked."
         - else
           = link_to "sign in to comment", login_path

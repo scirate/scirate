@@ -49,10 +49,14 @@ class CommentsController < ApplicationController
     comment_params = params.require(:comment).permit(:paper_uid, :content)
 
     @comment = current_user.comments.build(comment_params)
-    @comment.save!
-    @comment.submit_trackback
 
-    flash[:comment] = { status: :success, content: "Comment posted." }
+    if not(@comment.paper.locked)
+        @comment.save!
+        @comment.submit_trackback
+
+        flash[:comment] = { status: :success, content: "Comment posted." }
+    end
+
     redirect_to @comment.paper
   end
 
