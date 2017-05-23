@@ -2,7 +2,7 @@ language: ruby
 cache: bundler
 rvm:
   - 2.2.1
-bundler_args: -j4 --without development production --quiet
+bundler_args: -j4 --without development production
 script:
   - RAILS_ENV=test bundle exec rake db:setup
   - bundle exec rspec spec
