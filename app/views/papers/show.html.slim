@@ -116,6 +116,6 @@
             - if not(@paper.locked)
                 = render 'comment_form'
             - else
-                = "Comments locked."
+                = "Comments on this paper have been locked."
         - else
           = link_to "sign in to comment", login_path
