@@ -21,3 +21,7 @@ notifications:
     - scirate@mispy.me
 services:
   - elasticsearch
+addons:
+  apt:
+    packages:
+      - libqtwebkit-dev
