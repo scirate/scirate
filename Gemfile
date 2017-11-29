@@ -2,7 +2,7 @@ ruby '2.2.1'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', '4.2.1'
+gem 'rails', '4.2.10'
 gem 'bcrypt', '~> 3.1.7'
 
 # Database stuff
