@@ -82,9 +82,6 @@ html lang="en"
               - if Settings::STAGING || Rails.env == 'development'
                 span.staging title="This site is used to test new SciRate features. If you want to use SciRate, please head to https://scirate.com/ instead. Data preservation here is not guaranteed."
                   |  dev
-              - else
-                span.staging
-                  |  beta
         nav.collapse.navbar-collapse role="navigation"
           = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
             = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
