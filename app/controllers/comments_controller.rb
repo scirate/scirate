@@ -50,7 +50,7 @@ class CommentsController < ApplicationController
 
     @comment = current_user.comments.build(comment_params)
 
-    if not(@comment.paper.locked)
+    if not(@comment.paper.locked) and not(current_user.is_spammer?)
         @comment.save!
         @comment.submit_trackback
 
@@ -125,10 +125,12 @@ class CommentsController < ApplicationController
       content: params[:content]
     )
 
-    if @reply.save
-      flash[:comment] = { status: 'success', content: "Comment posted." }
-    else
-      flash[:comment] = { status: 'error', content: "Error posting comment." }
+    if not(@comment.paper.locked) and not(current_user.is_spammer?)
+        if @reply.save
+            flash[:comment] = { status: 'success', content: "Comment posted." }
+        else
+            flash[:comment] = { status: 'error', content: "Error posting comment." }
+        end
     end
 
     redirect_to @reply.paper
