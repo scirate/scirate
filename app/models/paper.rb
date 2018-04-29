@@ -148,6 +148,10 @@ class Paper < ActiveRecord::Base
     @feed_uids ||= categories.map(&:feed_uid)
   end
 
+  def html_url
+    "https://arxiv-vanity.com/papers/" + self.uid
+  end
+
   private
     def update_date_is_after_submit_date
       return unless submit_date and update_date
