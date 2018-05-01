@@ -41,8 +41,6 @@ li.paper.tex2jax
 
         a.paper-download.btn.btn-success title="Download PDF" href=(paper.pdf_url)
           | PDF
-        a.paper-download.btn.btn-info title="View HTML" href=(paper.html_url)
-          | HTML
         - if paper.comments_count > 0
           div
             a href="/arxiv/#{paper.uid}" = pluralize(paper.comments_count, 'comment')
