@@ -46,7 +46,7 @@
                 button#copyButton.btn.btn-default Copy Citation
 
             a.paper-download.btn.btn-success href=(@paper.pdf_url) title="Download PDF" PDF
-
+            a.paper-download.btn.btn-info.html href=(@paper.html_url) title="View HTML on Arxiv-Vanity" HTML
       hr
 
       - cache [:paper_main, @paper] do
@@ -80,6 +80,7 @@
             = link_to @paper.abs_url, @paper.abs_url
             br
               = link_to @paper.pdf_url, @paper.pdf_url
+              = link_to @paper.html_url, @paper.html_url
               - if @paper.scites_count > 0
                 .scites
                   strong
