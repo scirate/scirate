@@ -79,7 +79,8 @@
                 br
             = link_to @paper.abs_url, @paper.abs_url
             br
-              = link_to @paper.pdf_url, @paper.pdf_url
+            = link_to @paper.pdf_url, @paper.pdf_url
+            br
               = link_to @paper.html_url, @paper.html_url
               - if @paper.scites_count > 0
                 .scites
