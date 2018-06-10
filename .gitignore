@@ -33,6 +33,7 @@ doc/
 .DS_Store
 backup/*.dump
 coverage
+.ruby-version
 
 # This is deployment-specific
 public/assets
