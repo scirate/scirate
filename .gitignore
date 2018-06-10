@@ -35,5 +35,4 @@ backup/*.dump
 coverage
 
 # This is deployment-specific
-public/robots.txt
 public/assets
