@@ -119,7 +119,7 @@ class Comment < ActiveRecord::Base
     }
 
     u = URI.parse(trackback_url)
-    res = Net::HTTP.start(u.host, u.port) do |http|
+    res = Net::HTTP.start(u.host, u.port, :use_ssl => u.scheme == 'https') do |http|
       http.post(u.request_uri, URI.encode_www_form(data), { 'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8' })
     end
 
