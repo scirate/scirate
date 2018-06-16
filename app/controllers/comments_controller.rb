@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, only: [:edit, :delete, :restore, :upvote, :downvote, :unvote, :report, :unreport, :reply, :history]
+  before_filter :find_comment, only: [:edit, :delete, :restore, :upvote, :unvote, :report, :unreport, :reply, :history]
 
   before_filter :check_moderation_permission, only: [:edit, :delete, :restore]
 
@@ -90,15 +90,6 @@ class CommentsController < ApplicationController
       render text: 'success'
     else
       render text: "can't upvote own comment"
-    end
-  end
-
-  def downvote
-    unless comment_owner?
-      @comment.downvote_from(current_user)
-      render text: 'success'
-    else
-      render text: "can't downvote own comment"
     end
   end
 

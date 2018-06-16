@@ -10,8 +10,6 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
     .votes
       div.upvote class=('active' if @voted == true)
         i.fa.fa-arrow-up
-      div.downvote class=('active' if @voted == false)
-        i.fa.fa-arrow-down
     .nonvotes
       - if @user
         div= link_to comment.paper.title, comment.paper

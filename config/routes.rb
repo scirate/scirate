@@ -25,7 +25,6 @@ SciRate::Application.routes.draw do
       post :delete
       post :restore
       post :upvote
-      post :downvote
       post :unvote
       post :report
       post :unreport

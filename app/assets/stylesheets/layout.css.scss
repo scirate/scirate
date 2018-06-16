@@ -490,7 +490,7 @@ div.abbr_comment {
     overflow: hidden;
   }
 
-  .upvote, .downvote {
+  .upvote {
     width: 16px;
     height: 16px;
     opacity: 0.5;
@@ -499,10 +499,6 @@ div.abbr_comment {
 
   .upvote.active {
     color: green;
-  }
-
-  .downvote.active {
-    color: red;
   }
 
   .actions a {

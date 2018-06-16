@@ -101,15 +101,6 @@ describe CommentsController do
       end.to change(comment, :cached_votes_up).by(1)
     end
 
-    it "allows a single downvote" do
-      expect do
-        xhr :post, :downvote, id: comment.id
-        expect(response).to be_success
-        xhr :post, :downvote, id: comment.id
-        comment.reload
-      end.to change(comment, :cached_votes_down).by(1)
-    end
-
     it "allows unvoting" do
       expect do
         xhr :post, :upvote, id: comment.id

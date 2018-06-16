@@ -51,37 +51,17 @@ class Comment
     return if @$el.hasClass('mine')
 
     @$el.find('.upvote').addClass('active')
-    if @votestate == 'downvote'
-      @$el.find('.downvote').removeClass('active')
-      @changeScore(+2)
-    else
-      @changeScore(+1)
+    @changeScore(+1)
     @votestate = 'upvote'
 
     $.post "/comments/#{@cid}/upvote"
 
-  downvote: ->
-    """Downvote the comment."""
-    return if @$el.hasClass('mine')
-
-    @$el.find('.downvote').addClass('active')
-    if @votestate == 'upvote'
-      @$el.find('.upvote').removeClass('active')
-      @changeScore(-2)
-    else
-      @changeScore(-1)
-    @votestate = 'downvote'
-
-    $.post "/comments/#{@cid}/downvote"
-
   unvote: ->
-    """Undo an existing downvote or upvote."""
+    """Undo an existing upvote."""
     if @votestate == 'upvote'
       @$el.find('.upvote').removeClass('active')
       @changeScore(-1)
-    else if @votestate == 'downvote'
-      @$el.find('.downvote').removeClass('active')
-      @changeScore(+1)
+
     @votestate = null
     $.post "/comments/#{@cid}/unvote"
 
@@ -103,8 +83,6 @@ class Comment
     # Read the DOM to find out if we've already voted
     if @$el.find('.upvote').hasClass('active')
       @votestate = 'upvote'
-    else if @$el.find('.downvote').hasClass('active')
-      @votestate = 'downvote'
     else
       @votestate = null
 
@@ -112,11 +90,6 @@ class Comment
       return SciRate.login() unless SciRate.current_user
       if @votestate == 'upvote' then @unvote() # Undo upvote
       else @upvote()
-
-    @$el.on 'click', '.downvote', =>
-      return SciRate.login() unless SciRate.current_user
-      if @votestate == 'downvote' then @unvote()
-      else @downvote()
 
   startEditing: ->
     @editing = true
