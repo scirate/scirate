@@ -6,7 +6,7 @@ class FeedsController < ApplicationController
   # No user, and no feed specified: show all papers
   def index_nouser
     if @date.nil?
-      @date = Feed.order("last_paper_date DESC").limit(1).pluck(:last_paper_date).first
+      @date = Feed.order("last_paper_date DESC").where("last_paper_date is not null").limit(1).pluck(:last_paper_date).first
     end
 
     @backdate = _backdate(@date, @range)
