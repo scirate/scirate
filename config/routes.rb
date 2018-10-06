@@ -49,6 +49,7 @@ SciRate::Application.routes.draw do
   get '/signout',  to: redirect('/logout')
 
   get '/about',    to: 'static_pages#about'
+  get '/conduct',  to: 'static_pages#conduct'
   get '/legal',    to: 'static_pages#legal'
   get '/moderation',    to: 'static_pages#moderation'
 
