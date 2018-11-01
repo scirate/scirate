@@ -49,6 +49,10 @@ class ApiController < ApplicationController
     render json: { success: true }
   end
 
+  def download_scites
+    render json: current_user.scited_papers
+  end
+
   # Retrieve or update misc. user account settings
   def settings
     settings = [:expand_abstracts]
