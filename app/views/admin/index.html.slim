@@ -59,7 +59,7 @@
         th Scites
         th Comments
         th Actions
-    - User.order('created_at DESC').each do |user|
+    - User.limit(2000).order('created_at DESC').each do |user|
       tr
         td
           a href="/#{user.username}" = user.fullname
