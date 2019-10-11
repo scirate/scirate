@@ -67,7 +67,7 @@
               - else
                 - cache [:feed_papers, @papers.map { |paper| "#{paper.uid}/#{paper.scites_count}/#{paper.comments_count}" }] do
                   = render partial: "papers/paper", collection: @papers, as: :paper
-                = will_paginate @pagination
+                = will_paginate @pagination, inner_window: 30
 
         .col-md-3.feed-rightbar
           - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
