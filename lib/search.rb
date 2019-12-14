@@ -430,22 +430,26 @@ class Search::Paper::Query
   end
 
   def parse_date_range(term)
+    term = term.gsub('\\', '')
     if term.include?('..')
       first, last = term.split('..').map { |t| parse_date(t) }
-      first ||= 1000.years.ago
-      last ||= Time.now
-      first..last
     else
       # Allow implicit ranges like date:2012
       time = parse_date(term)
       if term.match(/^\d\d\d\d$/)
-        time.beginning_of_year..time.end_of_year
+        first = time.beginning_of_year
+        last = time.end_of_year
       elsif term.match(/^\d\d\d\d-\d\d$/)
-        time.beginning_of_month..time.end_of_month
+        first = time.beginning_of_month
+        last = time.end_of_month
       else
-        time.beginning_of_day..time.end_of_day
+        first = time.beginning_of_day
+        last = time.end_of_day
       end
     end
+    first ||= 1000.years.ago
+    last ||= Time.now
+    first..last
   end
 
   def initialize(basic, advanced)
