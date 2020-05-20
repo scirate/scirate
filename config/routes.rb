@@ -4,7 +4,6 @@ SciRate::Application.routes.draw do
   root 'feeds#index'
 
   get '/search', to: 'papers#search', as: 'papers_search'
-  get '/download_scites', to: 'api#download_scites', as: 'download_scites'
 
   post '/api/scite/:paper_uid', to: 'api#scite',
        as: :scite, paper_uid: /.+/
@@ -83,6 +82,7 @@ SciRate::Application.routes.draw do
   post '/admin/users/:username/update', to: 'admin/users#update', as: 'admin_update_user'
   post '/admin/users/:username/become', to: 'admin/users#become', as: 'admin_become_user'
 
+  get '/:username/download_scites', to: 'users#download_scites', username: /.+/, as: 'user_download_scites'
   get '/:username/scites', to: 'users#scites', username: /.+/, as: 'user_scites'
   get '/:username/comments', to: 'users#comments', username: /.+/, as: 'user_comments'
   get '/:username/papers', to: 'users#papers', username: /.+/, as: 'user_papers'

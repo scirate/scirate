@@ -42,6 +42,10 @@ class UsersController < ApplicationController
     render 'users/profile'
   end
 
+  def download_scites
+    render json: @user.scited_papers
+  end
+
   def comments
     @tab = :comments
 
