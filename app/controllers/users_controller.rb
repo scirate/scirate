@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  before_filter :profile_data, only: [:activity, :papers, :scites, :comments]
+  before_filter :profile_data, only: [:activity, :papers, :scites, :comments, :download_scites]
 
   def profile_data
     @user = User.where("lower(username) = lower(?)", params[:username]).first!
