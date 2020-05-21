@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   before_filter :correct_user, only: [:edit, :update, :destroy]
 
-  before_filter :profile_data, only: [:activity, :papers, :scites, :comments]
+  before_filter :profile_data, only: [:activity, :papers, :scites, :comments, :download_scites]
 
   def profile_data
     @user = User.where("lower(username) = lower(?)", params[:username]).first!
@@ -40,6 +40,10 @@ class UsersController < ApplicationController
     @scited_by_uid = current_user.scited_by_uid(@scited_papers) if current_user
 
     render 'users/profile'
+  end
+
+  def download_scites
+    render json: @user.scited_papers
   end
 
   def comments
