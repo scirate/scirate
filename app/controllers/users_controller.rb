@@ -43,7 +43,11 @@ class UsersController < ApplicationController
   end
 
   def download_scites
-    render json: @user.scited_papers
+    @scited_papers = @user.scited_papers
+      .select("papers.*, scites.created_at as scite_created_at")
+      .order("scites.created_at DESC")
+
+    render json: @scited_papers
   end
 
   def comments
