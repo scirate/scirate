@@ -11,8 +11,6 @@ namespace :arxiv do
         sleep 1
       rescue OpenURI::HTTPError
         $stderr.puts "Invalid author_identifier for #{user.username}: #{user.author_identifier}"
-      rescue Exception => e
-        SciRate.notify_error(e, "Unknown error in update_authorship! for #{user.username}")
       end
 
       $stderr.puts "Synced authorship for #{user.username}"
