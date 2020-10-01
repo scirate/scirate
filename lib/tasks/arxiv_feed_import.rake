@@ -24,7 +24,7 @@ namespace :arxiv do
 
     feeds = []
 
-    doc.css('li').each do |li|
+    doc.css('#content > ul > li').each do |li|
       break if li.text.include?("General information")
       fullname = li.css('a')[0].text
       uid = li.css('a')[1].attr('href').split('/')[2]
