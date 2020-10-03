@@ -19,10 +19,23 @@ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB8
 rvm use 2.2.1 --default
 ```
 
+If you find this does ont work, you may have more luck with the following:
+
+```shell
+sudo apt install gnupg2
+gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+cd /tmp
+curl -sSL https://get.rvm.io -o rvm.sh
+cat /tmp/rvm.sh | bash -s stable --ruby=2.2.1
+source /home/<USERNAME>/.rvm/scripts/rvm
+```
+
+Source: [How To Install Ruby on Rails with RVM on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rvm-on-ubuntu-18-04)
+
 You will also need some native packages:
 
 ```shell
-sudo apt-get install git postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-6-jre libqt5webkit5-dev
+sudo apt-get install git postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-8-jre libqt5webkit5-dev
 ```
 
 Our backend depends on [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/) to sort through all the papers:
@@ -34,6 +47,17 @@ sudo update-rc.d elasticsearch defaults 95 10
 sudo service elasticsearch start
 ```
 
+**Note**: You can run `sudo service elasticsearch status` to confirm elasticsearch is running.
+If you are having issues running elastic search via the service, you can run it manually.
+Find the binary location with `which elasticsearch` and run it from the location that is reported back to you.
+e.g.
+
+```shell
+/usr/share/elasticsearch/bin/elasticsearch
+```
+
+Elasticsearch must be running for `rake es:migrate` and `rails server` commands to work.
+
 Finally, clone the repository and install the Ruby gem dependencies:
 
 ```shell
@@ -42,11 +66,26 @@ cd scirate
 bundle install
 ```
 
+**Note:** If you encounter issues with Capybara installing correctly, i.e. your computer complains `command qmake not available` you can do the following to ensure you have the correct dependencies:
+
+```shell
+sudo apt-get update
+sudo apt-get install g++ qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
+```
+
+**Note:** If the pg gem fails to install with the error message `Can't find the 'libpq-fe.h header` you can try the following (Debian/Ubuntu):
+
+```shell
+sudo apt-get install libpq-dev
+```
+
+Other OS specific solutions avaliable here: [Stack Overflow Link](https://stackoverflow.com/a/6040822/12848423)
+
 SciRate is now set up for development! However, you'll also want a database with papers to fiddle with.
 
 ## Setting up the database
 
-If you've just installed postgres, it'll be easiest to use the default 'peer' authentication method.  Create a postgres role for your user account:
+If you've just installed postgres, it'll be easiest to use the default 'peer' authentication method. Create a postgres role for your user account:
 
 ```shell
 sudo -u postgres createuser --superuser $USER
@@ -68,7 +107,8 @@ rake es:migrate
 rake arxiv:feed_import
 rails server
 ```
-This will initialize the database and Elasticsearch, download the basic feed layout, and start the server.
+
+This will initialize the database and Elasticsearch, download the basic feed layout, and start the server. If es:migrate is not working check that it is running, as per the notes above.
 
 ## Populating the database
 
