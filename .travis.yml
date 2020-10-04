@@ -12,7 +12,7 @@ before_script:
   - sudo apt-get purge elasticsearch
   - wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb
   - sudo dpkg -i /tmp/elasticsearch.deb
-  - sudo service elasticsearch start
+  - sudo /bin/systemctl start elasticsearch.service
   - sleep 20
   - cp config/database.yml.travis config/database.yml
   - psql -c 'create database scirate_test;' -U postgres
