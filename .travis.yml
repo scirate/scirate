@@ -13,14 +13,14 @@ before_script:
   - wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb
   - sudo dpkg -i /tmp/elasticsearch.deb
   - sudo service elasticsearch start
-  - sleep 10
+  - sleep 20
   - cp config/database.yml.travis config/database.yml
   - psql -c 'create database scirate_test;' -U postgres
 notifications:
   email:
     - scirate@mispy.me
 services:
-  - elasticsearch
+  # - elasticsearch
   - postgresql
 addons:
   apt:
