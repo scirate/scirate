@@ -21,6 +21,7 @@ notifications:
     - scirate@mispy.me
 services:
   - elasticsearch
+  - postgresql
 addons:
   apt:
     packages:
