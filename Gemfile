@@ -1,4 +1,4 @@
-ruby '2.2.1'
+ruby '2.4.0'
 source 'http://rubygems.org'
 
 # Rails
@@ -27,9 +27,11 @@ gem 'omniauth-google-oauth2'
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
 # https://github.com/mispy/arxivsync
-gem 'oai', github: 'mispy/ruby-oai' # For Rails 4.1 compatibility
-gem 'arxivsync', github: 'mispy/arxivsync'
+# gem 'oai', github: 'mispy/ruby-oai' # For Rails 4.1 compatibility
+gem 'oai' # , github: 'code4lib/ruby-oai'
+gem 'arxivsync' #, github: 'mispy/arxivsync'
 gem 'nokogiri'
+gem 'elasticsearch'
 
 # Elasticsearch API gem
 gem 'stretcher'
@@ -61,7 +63,7 @@ group :development, :test do
 
   # An improved IRB alternative for rails console
   gem 'pry'
-  gem 'pry-byebug'
+  # gem 'pry-byebug'
   gem 'pry-rails'
 end
 
