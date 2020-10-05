@@ -19,7 +19,7 @@ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB8
 rvm use 2.2.1 --default
 ```
 
-If you find this does ont work, you may have more luck with the following:
+If you find this does not work, you may have more luck with the following:
 
 ```shell
 sudo apt install gnupg2
