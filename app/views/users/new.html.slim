@@ -22,4 +22,10 @@
         .form-group
           = f.label :password
           = f.password_field :password, class: 'form-control'
-        = f.submit "Sign up", class: 'btn btn-default'
+        = f.submit "Sign up", class: 'btn btn-default g-recaptcha', 'data-sitekey': '6Lf7Q9QZAAAAAEHmCmtNAxA6svUoG-YMXSX8sBR0', 'data-action': 'submit', 'data-callback': 'onSubmit'
+
+javascript:
+  function onSubmit(token) {
+     document.getElementById("new_user").submit();
+   }
+

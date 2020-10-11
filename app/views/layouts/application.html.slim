@@ -124,6 +124,8 @@ html lang="en"
 
     script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 
+    script type="text/javascript" src="https://www.google.com/recaptcha/api.js"
+
     javascript:
       SciRate.current_user = #{raw (current_user ? current_user.to_js : false)};
       SciRate.scited_by_uid = #{raw @scited_by_uid.to_json};
