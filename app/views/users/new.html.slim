@@ -22,14 +22,10 @@
         .form-group
           = f.label :password
           = f.password_field :password, class: 'form-control'
-        div.g-recaptcha data-sitekey="6LfagtMZAAAAAOqXnT9v7iCbF1SbHfmxe3x8ttId" data-callback="showButton" data-expired-callback="hideButton"
-        = f.submit "Sign up", class: 'btn btn-default', id: 'submit-button', style: "display: none"
+        = f.submit "Sign up", class: 'btn btn-default g-recaptcha', 'data-sitekey': '6Lf7Q9QZAAAAAEHmCmtNAxA6svUoG-YMXSX8sBR0', 'data-action': 'submit', 'data-callback': 'onSubmit'
 
 javascript:
-  function showButton() {
-    document.getElementById("submit-button").style = "margin-top: 1em";
-  }
+  function onSubmit(token) {
+     document.getElementById("new_user").submit();
+   }
 
-  function hideButton() {
-    document.getElementById("submit-button").style = "display: none";
-  }

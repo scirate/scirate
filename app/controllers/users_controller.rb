@@ -74,13 +74,21 @@ class UsersController < ApplicationController
     if !signed_in?
       default_username = User.default_username(params[:user][:fullname])
       @user = User.new(params.required(:user).permit(:fullname, :email, :password).merge(username: default_username, password_confirmation: params[:user][:password]))
+
+      unless verify_recaptcha?(params["g-recaptcha-response"], 'submit')
+        flash[:error] = "reCaptcha verification failed!"
+        render 'new' and return
+      end
+
       if @user.save
         @user.send_signup_confirmation
         sign_in @user
-        redirect_to root_path
+        redirect_to root_path and return
       else
+        flash[:error] = "Unable to sign up user"
         render 'new'
-      end
+      end   
+     
     else
       flash[:error] = "Sign out to create a new user!"
       redirect_to root_path
