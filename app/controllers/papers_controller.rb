@@ -33,6 +33,8 @@ class PapersController < ApplicationController
   end
 
   def search
+    redirect_to login_path unless signed_in?
+
     basic = params[:q]
     advanced = params[:advanced]
     page = params[:page] ? params[:page].to_i : 1
@@ -172,7 +174,7 @@ class PapersController < ApplicationController
       children = comment_tree[ancestor.id] || []
 
       p children
-      
+
       if !children.empty? && children.any? { |c| !c.deleted && !c.hidden }
         @has_children[ancestor.id] = true
         comments += children
