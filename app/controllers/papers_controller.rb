@@ -33,7 +33,7 @@ class PapersController < ApplicationController
   end
 
   def search
-    redirect_to login_path unless signed_in?
+    redirect_to login_path, notice: "Please sign in." unless signed_in?
 
     basic = params[:q]
     advanced = params[:advanced]
