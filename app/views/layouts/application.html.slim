@@ -87,9 +87,9 @@ html lang="en"
         nav.collapse.navbar-collapse role="navigation"
           ul.nav.navbar-nav.navbar-right
             - cache [:header, current_user] do
+              = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
+                = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
               - if signed_in?
-                = form_tag papers_search_path, method: 'get', class: 'searchbox navbar-form navbar-right' do
-                  = text_field_tag :q, params[:q], placeholder: 'Search', class: 'form-control'
                 li= link_to "Home", root_path
                 - if current_user.can_admin?
                   li

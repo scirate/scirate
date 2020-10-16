@@ -33,42 +33,38 @@ class PapersController < ApplicationController
   end
 
   def search
-    if not signed_in?
-      redirect_to login_path, notice: "Please sign in."
-    else
-      basic = params[:q]
-      advanced = params[:advanced]
-      page = params[:page] ? params[:page].to_i : 1
+    basic = params[:q]
+    advanced = params[:advanced]
+    page = params[:page] ? params[:page].to_i : 1
 
-      @search = Search::Paper::Query.new(basic, advanced)
+    @search = Search::Paper::Query.new(basic, advanced)
 
-      per_page = 70
+    per_page = 70
 
-      if !@search.query.empty?
-        res = @search.run(from: (page-1)*per_page, size: per_page)
+    if !@search.query.empty?
+      res = @search.run(from: (page-1)*per_page, size: per_page)
 
-        papers_by_uid = map_models :uid, Paper.where(uid: res.documents.map(&:_id))
+      papers_by_uid = map_models :uid, Paper.where(uid: res.documents.map(&:_id))
 
-        @papers = res.documents.map do |doc|
-          paper = papers_by_uid[doc[:_id]]
+      @papers = res.documents.map do |doc|
+        paper = papers_by_uid[doc[:_id]]
 
-          paper.authors_fullname = doc.authors_fullname
-          paper.authors_searchterm = doc.authors_searchterm
-          paper.feed_uids = doc.feed_uids
+        paper.authors_fullname = doc.authors_fullname
+        paper.authors_searchterm = doc.authors_searchterm
+        paper.feed_uids = doc.feed_uids
 
-          paper
-        end
-
-        @pagination = WillPaginate::Collection.new(page, per_page, @search.results.raw.hits.total)
-
-        # Determine which folder we should have selected
-        @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
-
-        @scited_by_uid = current_user.scited_by_uid(@papers) if current_user
+        paper
       end
 
-      render :search
+      @pagination = WillPaginate::Collection.new(page, per_page, @search.results.raw.hits.total)
+
+      # Determine which folder we should have selected
+      @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
+
+      @scited_by_uid = current_user.scited_by_uid(@papers) if current_user
     end
+
+    render :search
   end
 
   # Show the users who scited this paper
