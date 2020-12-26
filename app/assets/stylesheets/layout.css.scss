@@ -168,7 +168,7 @@ blockquote {
 }
 
 .form-control:focus {
-  @include box-shadow(none);
+  box-shadow: none;
 }
 
 // Typeahead suggestions

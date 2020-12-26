@@ -1,4 +1,4 @@
-//= link_tree ../flash
-//= link_tree ../images
-//= link_tree ../javascripts
-//= link_tree ../stylesheets
+//= link_directory ../flash
+//= link_directory ../images
+//= link_directory ../javascripts
+//= link_directory ../stylesheets

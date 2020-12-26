@@ -8,6 +8,7 @@ SciRate::Application.configure do
   config.cache_classes = true
 
   # Configure static asset server for tests with Cache-Control for performance
+  config.assets.check_precompiled_asset = false
   config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
 
