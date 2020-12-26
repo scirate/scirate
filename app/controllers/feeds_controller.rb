@@ -1,7 +1,7 @@
 require 'data_helpers'
 
 class FeedsController < ApplicationController
-  before_filter :parse_params
+  before_action :parse_params
 
   # No user, and no feed specified: show all papers
   def index_nouser

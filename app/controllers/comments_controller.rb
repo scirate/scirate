@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
-  before_filter :find_comment, only: [:edit, :delete, :restore, :upvote, :unvote, :report, :unreport, :reply, :history]
+  before_action :find_comment, only: [:edit, :delete, :restore, :upvote, :unvote, :report, :unreport, :reply, :history]
 
-  before_filter :check_moderation_permission, only: [:edit, :delete, :restore]
+  before_action  :check_moderation_permission, only: [:edit, :delete, :restore]
 
   def index
     @page = params.fetch(:page, 1).to_i

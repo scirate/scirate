@@ -1,12 +1,14 @@
-ruby '2.2.1'
+ruby '2.6.6'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', '4.2.10'
+gem 'rails', '6.0.0'
 gem 'bcrypt', '~> 3.1.7'
 
+
 # Database stuff
-gem 'pg' # Postgres support
+# gem 'pg' # Postgres support
+gem 'pg', '~> 0.15'
 gem 'activerecord-import' # For bulk importing papers
 gem 'acts_as_votable' # Comment votes (not scites)
 gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
@@ -36,7 +38,7 @@ gem 'stretcher'
 gem 'faraday', '0.8.9' # 0.9.0 breaks faraday_middleware-multi_json
 
 # Asset preprocessors
-gem 'sass-rails', '4.0.3'
+gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
@@ -79,7 +81,7 @@ group :development do
   gem 'annotate'
 
   # Suppresses annoying asset pipeline logs
-  gem 'quiet_assets'
+  # gem 'quiet_assets'
 
   # Rails application preloader
   # Speeds up rake/rspec startup

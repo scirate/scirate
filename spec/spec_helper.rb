@@ -83,3 +83,10 @@ RSpec.configure do |config|
     load "#{Rails.root}/db/seeds.rb"
   end
 end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end

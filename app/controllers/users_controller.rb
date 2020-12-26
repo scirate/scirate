@@ -2,12 +2,12 @@ require 'open-uri'
 require 'data_helpers'
 
 class UsersController < ApplicationController
-  before_filter :signed_in_user,
+  before_action :signed_in_user,
            only: [:feeds, :edit, :update, :destroy, :settings, :settings_password]
 
-  before_filter :correct_user, only: [:edit, :update, :destroy]
+  before_action :correct_user, only: [:edit, :update, :destroy]
 
-  before_filter :profile_data, only: [:activity, :papers, :scites, :comments, :download_scites]
+  before_action :profile_data, only: [:activity, :papers, :scites, :comments, :download_scites]
 
   def profile_data
     @user = User.where("lower(username) = lower(?)", params[:username]).first!

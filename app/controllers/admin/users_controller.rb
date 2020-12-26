@@ -1,6 +1,6 @@
 module Admin
   class UsersController < BaseController
-    before_filter :load_user
+    before_action :load_user
 
     def edit
     end
