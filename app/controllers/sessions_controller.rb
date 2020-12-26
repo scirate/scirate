@@ -44,7 +44,7 @@ class SessionsController < ApplicationController
   end
 
   def omniauth_callback
-    auth = env['omniauth.auth']
+    auth = request.env['omniauth.auth']
     link = AuthLink.from_omniauth(auth)
 
     if signed_in?
