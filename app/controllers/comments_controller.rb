@@ -53,7 +53,6 @@ class CommentsController < ApplicationController
     if not(@comment.paper.locked) and not(current_user.is_spammer?)
         @comment.save!
         @comment.submit_trackback
-
         flash[:comment] = { status: :success, content: "Comment posted." }
     end
 
@@ -64,7 +63,7 @@ class CommentsController < ApplicationController
     unless @comment.content == params[:content] # Don't record edit if same
       @comment.edit!(params[:content], current_user.id)
     end
-    render text: 'success'
+    render json: 'success'
   end
 
   def delete
@@ -87,25 +86,25 @@ class CommentsController < ApplicationController
   def upvote
     unless comment_owner?
       @comment.upvote_from(current_user)
-      render text: 'success'
+      render json: 'success'
     else
-      render text: "can't upvote own comment"
+      render json: "can't upvote own comment"
     end
   end
 
   def unvote
     @comment.unvote(voter: current_user)
-    render text: 'success'
+    render json: 'success'
   end
 
   def report
     @comment.reports.create(user_id: current_user.id)
-    render text: 'success'
+    render json: 'success'
   end
 
   def unreport
     @comment.reports.where(user_id: current_user.id).destroy_all
-    render text: 'success'
+    render json: 'success'
   end
 
   def reply
