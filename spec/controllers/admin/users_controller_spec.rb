@@ -10,7 +10,7 @@ describe Admin::UsersController do
     before { become user }
 
     describe 'GET edit' do
-      before { get :edit, username: user.username }
+      before { get :edit, params: { username: user.username } }
 
       specify do
         expect(response).to redirect_to(root_path)
@@ -19,7 +19,7 @@ describe Admin::UsersController do
     end
 
     describe 'PATCH update' do
-      before { patch :edit, username: user.username, user: {} }
+      before { patch :edit, params: { username: user.username, user: {} } }
 
       specify do
         expect(response).to redirect_to(root_path)
@@ -32,7 +32,7 @@ describe Admin::UsersController do
     before { become admin }
 
     describe 'GET edit' do
-      before { get :edit, username: user.username }
+      before { get :edit, params: { username: user.username } }
 
       specify do
         expect(response.response_code).to eq 200
@@ -44,12 +44,12 @@ describe Admin::UsersController do
     describe 'PATCH update' do
       context 'when user is successfully updated' do
         before do
-          patch :update, username: user.username, user: {
+          patch :update, params: { username: user.username, user: {
             fullname: 'Lorem',
             username: 'lorem',
             email:    'foo@bar.io',
             account_status: User::STATUS_MODERATOR
-          }
+          } }
         end
 
         specify do
@@ -70,7 +70,7 @@ describe Admin::UsersController do
       context 'when updating with new email' do
         before do
           expect_any_instance_of(User).to receive(:send_email_change_confirmation).once
-          patch :update, username: user.username, user: { email: 'bar@foo.io' }
+          patch :update, params: { username: user.username, user: { email: 'bar@foo.io' } }
         end
 
         specify do
@@ -88,12 +88,12 @@ describe Admin::UsersController do
       context 'when user is failed to be upated' do
         before do
           allow_any_instance_of(User).to receive(:update).and_return(false)
-          patch :update, username: user.username, user: {
+          patch :update, params: { username: user.username, user: {
             fullname: 'Lorem',
             username: 'lorem',
             email:    'foo@bar.io',
             account_status: User::STATUS_MODERATOR
-          }
+          } } 
         end
 
         specify do
