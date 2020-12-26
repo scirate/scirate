@@ -61,6 +61,7 @@ gem 'font-awesome-rails'
 group :development, :test do
   gem 'colorize'
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
 
   # An improved IRB alternative for rails console
   gem 'pry'
