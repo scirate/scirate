@@ -2,13 +2,13 @@ ruby '2.6.6'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', '6.0.0'
+gem 'rails', '6.1.0'
 gem 'bcrypt', '~> 3.1.7'
 
 
 # Database stuff
 # gem 'pg' # Postgres support
-gem 'pg', '~> 0.15'
+gem 'pg', '~> 1.1'
 gem 'activerecord-import' # For bulk importing papers
 gem 'acts_as_votable' # Comment votes (not scites)
 gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms

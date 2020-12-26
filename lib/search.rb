@@ -333,9 +333,9 @@ module Search::Paper
             'sciter_ids' => [],
             'scites_count' => row['scites_count'].to_i,
             'comments_count' => row['comments_count'].to_i,
-            'submit_date' => Time.parse(row['submit_date'] + " UTC"),
-            'update_date' => Time.parse(row['update_date'] + " UTC"),
-            'pubdate' => Time.parse(row['pubdate'] + " UTC"),
+            'submit_date' => row['submit_date'],
+            'update_date' => row['update_date'],
+            'pubdate' => row['pubdate'],
             'pdf_url' => row['pdf_url']
           }
         end
