@@ -9,55 +9,54 @@ describe ApiController do
 
   describe "sciting a paper" do
     before do
-      xhr :post, :scite, paper_uid: paper.uid
+      post :scite, params: { paper_uid: paper.uid }, xhr: true
     end
 
     it "creates a scite" do
       scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
       expect(scite).to_not be_nil
-
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
   describe "unsciting a paper" do
     before do
-      xhr :post, :scite, paper_uid: paper.uid
-      xhr :post, :unscite, paper_uid: paper.uid
+      post :scite, params: { paper_uid: paper.uid }, xhr: true
+      post :unscite, params: { paper_uid: paper.uid }, xhr: true
     end
 
     it "removes the scite" do
       scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
       expect(scite).to be_nil
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
   describe "subscribing to a feed" do
     before do
-      xhr :post, :subscribe, feed_uid: feed.uid
+      post :subscribe, params: { feed_uid: feed.uid }, xhr: true
     end
 
     it "creates a subscription" do
       sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
       expect(sub).to_not be_nil
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
   describe "unsubscribing from a feed" do
     before do
-      xhr :post, :subscribe, feed_uid: feed.uid
-      xhr :post, :unsubscribe, feed_uid: feed.uid
+      post :subscribe, params: { feed_uid: feed.uid }, xhr: true
+      post :unsubscribe, params: { feed_uid: feed.uid }, xhr: true
     end
 
     it "removes the subscription" do
       sub = Subscription.where(user_id: user.id, feed_uid: feed.uid).first
       expect(sub).to be_nil
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -67,11 +66,11 @@ describe ApiController do
 
     context "as a normal user" do
       before do
-        xhr :post, :hide_from_recent, comment_id: comment.id
+        post :hide_from_recent, params: { comment_id: comment.id }, xhr: true
       end
 
       it "throws a 403" do
-        expect(response).to_not be_success
+        expect(response).to_not be_successful
         expect(comment.reload.hidden_from_recent).to be_falsey
       end
     end
@@ -79,11 +78,11 @@ describe ApiController do
     context "as a moderator" do
       before do
         become moderator
-        xhr :post, :hide_from_recent, comment_id: comment.id
+        post :hide_from_recent, params: { comment_id: comment.id }, xhr: true
       end
 
       it "hides the comment" do
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(comment.reload.hidden_from_recent).to be_truthy
       end
     end
