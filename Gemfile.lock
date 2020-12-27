@@ -89,7 +89,12 @@ GEM
     annotate (3.1.1)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
+    autoprefixer-rails (10.1.0.0)
+      execjs
     bcrypt (3.1.16)
+    bootstrap-sass (3.3.6)
+      autoprefixer-rails (>= 5.2.1)
+      sass (>= 3.3.4)
     bourbon (7.0.0)
       thor (~> 1.0)
     builder (3.2.4)
@@ -252,6 +257,9 @@ GEM
       rake (>= 0.8.7)
       thor (~> 1.0)
     rake (13.0.3)
+    rb-fsevent (0.10.4)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
     regexp_parser (1.8.2)
     rspec-core (3.10.0)
       rspec-support (~> 3.10.0)
@@ -271,6 +279,11 @@ GEM
       rspec-support (~> 3.10)
     rspec-support (3.10.0)
     ruby-prof (1.4.2)
+    sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -351,6 +364,7 @@ DEPENDENCIES
   annotate
   arxivsync!
   bcrypt (~> 3.1.7)
+  bootstrap-sass (= 3.3.6)
   bourbon
   capybara
   capybara-webkit
