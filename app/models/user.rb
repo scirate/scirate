@@ -142,6 +142,8 @@ class User < ActiveRecord::Base
   def self.default_username(fullname)
     name = fullname.parameterize
 
+    puts "Name: [", name, "]"
+
     name = if User.where(username: name).exists?
       "#{name}" + "-#{User.count}"
     else
@@ -153,7 +155,9 @@ class User < ActiveRecord::Base
     tmp.username = name
     tmp.validate
 
-    if tmp.errors.messages[:username]
+    errs = tmp.errors.messages[:username]
+
+    if errs.length() > 0
       fallback_name = "user-#{User.count}"
       logger.warn("Invalid username generated from '#{fullname}': #{name}. Falling back to #{fallback_name}.".light_red)
       return fallback_name
