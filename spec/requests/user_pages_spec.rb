@@ -23,11 +23,11 @@ describe "profile page" do
     comment = FactoryGirl.create(:comment, content: "good comment", user: @user)
     comment2 = FactoryGirl.create(:comment, content: "kinda sucky comment", user: @user)
     visit user_path(@user)
-    expect(page).to have_selector('.comment', comment.content)
+    expect(page).to have_selector('.comment', text: comment.content)
     expect(page).to have_content(comment2.content)
     comment2.soft_delete!(@user.id)
     visit user_path(@user)
-    expect(page).to have_selector('.comment', comment.content)
+    expect(page).to have_selector('.comment', text: comment.content)
     expect(page).to_not have_content(comment2.content)
   end
 end
