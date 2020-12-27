@@ -16,7 +16,6 @@ describe "Settings page" do
   it "doesn't allow use of reserved usernames" do
     fill_in "Username", with: "arxiv"
     click_button "Save changes"
-
     expect(page).to have_error_message "Username is already taken"
   end
 

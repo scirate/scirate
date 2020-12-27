@@ -155,7 +155,7 @@ class UsersController < ApplicationController
     user_params[:author_identifier] = aid.downcase
 
     begin
-      if @user.update_attributes(user_params)
+      if @user.assign_attributes(user_params)
         if old_email != @user.email
           @user.send_email_change_confirmation(old_email)
           sign_in @user

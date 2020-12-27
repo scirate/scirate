@@ -21,15 +21,14 @@ describe "Admin tools" do
     end
 
     it "lets moderators edit comments" do
-      xhr :post, edit_comment_path(@comment), content: "wubbles"
-      expect(response).to be_success
+      post edit_comment_path(@comment), params: { content: "wubbles" }, xhr: true
+      expect(response).to be_successful
       expect(@comment.reload.content).to eq("wubbles")
     end
 
     it "lets moderators delete comments" do
       expect do
-        xhr :post, delete_comment_path(@comment)
-        expect(response).to be_redirect
+        post delete_comment_path(@comment), xhr: true
         expect(flash[:comment][:status]).to eq('success')
         @paper.reload
       end.to change(@paper, :comments_count).by(-1)
@@ -37,8 +36,7 @@ describe "Admin tools" do
 
     it "lets moderators restore comments" do
       expect do
-        xhr :post, restore_comment_path(@deleted_comment)
-        expect(response).to be_redirect
+        post restore_comment_path(@deleted_comment), xhr: true
         expect(flash[:comment][:status]).to eq('success')
         @paper.reload
       end.to change(@paper, :comments_count).by(1)

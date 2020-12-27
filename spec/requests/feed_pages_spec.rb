@@ -141,6 +141,7 @@ describe "Feed pages" do
         visit root_path
       end
 
+      # TODO: Revisit after new elastic search.
       it "shows the older paper first" do
         expect(page).to have_selector("li.paper:nth-child(1)", text: old_paper1.title)
         expect(page).to have_selector("li.paper:nth-child(2)", text: new_paper1.title)
