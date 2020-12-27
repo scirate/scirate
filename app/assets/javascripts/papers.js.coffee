@@ -3,6 +3,7 @@ try
   fo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash")
   hasFlash = true if fo
 catch e
+  console.log e
   hasFlash = true if navigator.mimeTypes and navigator.mimeTypes["application/x-shockwave-flash"] != undefined and navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin
 
 setupPaperPage = ->
@@ -37,7 +38,6 @@ setupBibtex = ->
       else
         $bibtex.find('a').removeClass('btn-success')
         $bibtex.find('.card').addClass('hidden')
-
 
     if hasFlash
       $('.bibtex').each ->

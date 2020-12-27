@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'net/http'
+require 'font-awesome-rails'
 
 require File.expand_path('../../lib/exception_notification',  __FILE__)
 

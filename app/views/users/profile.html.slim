@@ -7,7 +7,7 @@
       - if @user == current_user
         a href="https://gravatar.com/emails"
           div.overlay
-            i.fa.fa-pencil
+            i.fa.icon-pencil
             div.darken
           = gravatar_for(@user, size: 230)
       - else
@@ -18,27 +18,27 @@
     ul.user-info
       - if @user.can_admin?
         li.admin
-          i.admin.fa.fa-fw.fa-sun-o
+          i.admin.fa.icon-fw.icon-sun-o
           span Admin
       - elsif @user.can_moderate?
         li.moderator
-          i.moderator.fa.fa-fw.fa-certificate
+          i.moderator.fa.icon-fw.icon-certificate
           span Moderator
 
       - unless @user.organization.empty?
         li
-          i.fa.fa-fw.fa-group
+          i.fa.icon-fw.icon-group
           span= @user.organization
       - unless @user.location.empty?
         li
-          i.fa.fa-fw.fa-map-marker
+          i.fa.icon-fw.icon-map-marker
           span= @user.location
       - unless @user.url.empty?
         li
-          i.fa.fa-fw.fa-link
+          i.fa.icon-fw.icon-link
           = link_to @user.url, @user.url
       li
-        i.fa.fa-fw.fa-clock-o
+        i.fa.icon-fw.icon-clock-o
         span Joined #{@user.created_at.to_date.to_formatted_s(:rfc822)}
     ul.subscriptions
       - @user.subscriptions.order('feed_uid ASC').includes(:feed).each do |sub|
@@ -49,32 +49,32 @@
     ul.nav.nav-tabs
       li class=('active' if @tab == :activity)
         a href=(user_path @user)
-          i.fa.fa-fw.fa-rss>
+          i.fa.icon-fw.icon-rss>
           | Activity
       - unless @user.author_identifier.empty?
         li class=('active' if @tab == :papers)
           a href=(user_papers_path @user)
-            i.fa.fa-fw.fa-file-text-o>
+            i.fa.icon-fw.icon-file-text-o>
             | Papers (#{@user.papers_count})
       li class=('active' if @tab == :comments)
         a href=(user_comments_path @user)
-          i.fa.fa-fw.fa-comments>
+          i.fa.icon-fw.icon-comments>
           | Comments (#{@user.comments_count})
       li class=('active' if @tab == :scites)
         a href=(user_scites_path @user)
-          i.fa.fa-fw.fa-star>
+          i.fa.icon-fw.icon-star>
           | Scites (#{@user.scites_count})
       .pull-right
         - if current_user && current_user.can_admin?
           a.btn.btn-danger href=(admin_edit_user_path(@user))
-            i.fa.fa-fw.fa-gear
+            i.fa.icon-fw.icon-gear
             | Admin
         - if @user == current_user
           a.btn.btn-default href=(settings_path)
-            i.fa.fa-fw.fa-pencil
+            i.fa.icon-fw.icon-pencil
             | Edit profile
           a.btn.btn-default href=(user_download_scites_path @user)
-            i.fa.fa-fw.fa-download
+            i.fa.icon-fw.icon-download
             | Download Scites (JSON)
 
 

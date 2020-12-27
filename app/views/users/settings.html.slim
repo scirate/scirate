@@ -56,12 +56,12 @@
     - if @user.can_moderate?
       .checkbox
         = f.check_box :email_about_reported_comments
-        i.moderator.fa.fa-fw.fa-certificate title="Special moderator function"
+        i.moderator.fa.icon-fw.icon-certificate title="Special moderator function"
         | Email me about reported comments
     = f.submit "Save changes", class: "btn btn-default"
 
   p.google
-    i> class="fa fa-google-plus-square"
+    i> class="fa icon-google-plus-square"
     - if @user.auth_links.empty?
       = link_to "Enable Google login", "/auth/google_oauth2", id: "sign_in"
     - else

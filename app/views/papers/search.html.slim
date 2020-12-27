@@ -19,12 +19,12 @@ script
         = text_field_tag :q, @search.basic, class: 'form-control', autofocus: true
 
         button.btn.btn-primary.btn-right type="submit"
-          i.fa.fa-search.fa-lg
+          i.fa.icon-search.icon-lg
 
 
       - cache :advanced do
         a.js#toggleAdvanced
-          i.fa.fa-chevron-right
+          i.fa.icon-chevron-right
           |  Advanced
         #advancedSearch.hidden
 
@@ -74,7 +74,7 @@ script
                     option value="year" Past Year
                     option value="custom" Custom Range
                   button.btn.btn-default.hidden#editCustomDate
-                    i.fa.fa-edit
+                    i.fa.icon-edit
                 td Search within a given date range
 
               tr
