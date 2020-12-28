@@ -28,6 +28,34 @@ describe "search fields" do
     expect(uids).to include paper1.uid
   end
 
+  it "can scite and unscite a paper" do
+    paper = FactoryGirl.create(:paper)
+
+    Search::Paper.index(paper)
+    Search.refresh
+
+    user = FactoryGirl.create(:user)
+    user.scite!(paper)
+    Search.refresh
+    
+
+    # TODO: One could make this more elegant ...
+    search = Search::Paper::Query.new(paper.uid, "")
+    search.run
+    es_paper = search.results["hits"]["hits"][0]["_source"]
+
+    expect(es_paper["scites_count"]).to eq 1
+
+    user.unscite!(paper)
+    Search.refresh
+
+    search = Search::Paper::Query.new(paper.uid, "")
+    search.run
+    es_paper = search.results["hits"]["hits"][0]["_source"]
+
+    expect(es_paper["scites_count"]).to eq 0
+  end
+
   it "allows searching for papers scited by a user" do
     user = FactoryGirl.create(:user)
     user2 = FactoryGirl.create(:user)

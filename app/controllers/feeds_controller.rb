@@ -207,7 +207,7 @@ class FeedsController < ApplicationController
         }
       }
 
-    filter.merge( { terms: {feed_uids: feed_uids} }) unless feed_uids.nil?
+    filter.merge( { terms: { feed_uids: feed_uids } }) unless feed_uids.nil?
 
     query = {
       size: per_page,
@@ -228,11 +228,11 @@ class FeedsController < ApplicationController
 
     papers = res["hits"]["hits"].map do |p|
       doc = p["_source"]
-      paper = papers_by_uid[doc["uid"]]
 
-      paper.authors_fullname = doc["authors_fullname"]
+      paper = papers_by_uid[doc["uid"]]
+      paper.authors_fullname   = doc["authors_fullname"]
       paper.authors_searchterm = doc["authors_searchterm"]
-      paper.feed_uids = doc["feed_uids"]
+      paper.feed_uids          = doc["feed_uids"]
 
       paper
     end
