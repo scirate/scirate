@@ -197,53 +197,47 @@ class FeedsController < ApplicationController
     page = (page.nil? ? 1 : page.to_i)
     per_page = 50
 
-    filters = [
+    filter = 
       {
         range: {
           pubdate: {
-           from: backdate.beginning_of_day,
-           to: date.end_of_day
+           gte: backdate.beginning_of_day,
+           lte: date.end_of_day
           }
         }
-      },
-    ]
+      }
 
-    filters << {terms: {feed_uids: feed_uids}} unless feed_uids.nil?
+    filter.merge( { terms: {feed_uids: feed_uids} }) unless feed_uids.nil?
 
     query = {
       size: per_page,
       from: (page-1)*per_page,
+      query: filter,
       sort: [
         { scites_count: 'desc' },
         { comments_count: 'desc' },
         { pubdate: 'desc' },
         { submit_date: 'desc' },
         { uid: 'asc' }
-      ],
-      query: {
-        filtered: {
-          filter: {
-            :and => filters
-          }
-        }
-      }
+      ]
     }
 
     res = Search::Paper.es_find(query)
 
-    papers_by_uid = map_models :uid, Paper.where(uid: res.documents.map(&:_id))
+    papers_by_uid = map_models :uid, Paper.where(uid: res["hits"]["hits"].map { |p| p["_source"]["uid"] })
 
-    papers = res.documents.map do |doc|
-      paper = papers_by_uid[doc[:_id]]
+    papers = res["hits"]["hits"].map do |p|
+      doc = p["_source"]
+      paper = papers_by_uid[doc["uid"]]
 
-      paper.authors_fullname = doc.authors_fullname
-      paper.authors_searchterm = doc.authors_searchterm
-      paper.feed_uids = doc.feed_uids
+      paper.authors_fullname = doc["authors_fullname"]
+      paper.authors_searchterm = doc["authors_searchterm"]
+      paper.feed_uids = doc["feed_uids"]
 
       paper
     end
 
-    pagination = WillPaginate::Collection.new(page, per_page, res.raw.hits.total)
+    pagination = WillPaginate::Collection.new(page, per_page, res["hits"]["total"]["value"])
 
     return [papers, pagination]
   end

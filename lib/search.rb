@@ -94,23 +94,21 @@ module Search
   # Changing this will require creating a new index
   def self.mappings
     {
-      paper: {
         properties: {
-          uid: { type: 'string' },
-          title: { type: 'string' },
-          abstract: { type: 'string' },
-          authors_fullname: { type: 'string', index: 'analyzed' }, # array
-          authors_searchterm: { type: 'string', index: 'analyzed' }, # array
-          feed_uids: { type: 'string', search_analyzer: 'whitespace', index_analyzer: 'category_path' }, # array
-          sciter_ids: { type: 'integer', index: 'not_analyzed' }, # array
+          uid: { type: 'keyword' },
+          title: { type: 'text' },
+          abstract: { type: 'text' },
+          authors_fullname: { type: 'text' }, # array
+          authors_searchterm: { type: 'text'}, # array
+          feed_uids: { type: 'text' }, # array
+          sciter_ids: { type: 'integer' }, # array
           scites_count: { type: 'integer' },
           comments_count: { type: 'integer' },
           submit_date: { type: 'date' },
           update_date: { type: 'date' },
           pubdate: { type: 'date' },
-          pdf_url: { type: 'string', index: 'not_analyzed' }
+          pdf_url: { type: 'text', index: false }
         }
-      }
     }
   end
 
@@ -144,7 +142,7 @@ module Search
     index_suffix = index_suffix || Time.now.to_i.to_s
     new_index = "#{index_name}_#{index_suffix}"
     puts "Creating new index #{new_index}"
-    es.index index: new_index, body: { settings: settings, mappings: mappings }
+    es.indices.create index: new_index, body: { settings: settings, mappings: mappings }
     es.indices.refresh index: new_index
 
     # Check to make sure we actually need a new index here
@@ -224,7 +222,7 @@ module Search::Paper
   def self.query_uids(q)
     search = Search::Paper::Query.new(q, "")
     search.run
-    res = search.results["hits"]["hits"].shift()
+    res = search.results["hits"]["hits"]
     res.map { |p| p["_source"]["uid"] }
   end
 
@@ -527,14 +525,16 @@ class Search::Paper::Query
       {}
     end
 
-    params = {
-      sort: @sort,
-      query: {
+    query = {
         query_string: {
           query: @es_query.join(' '),
           default_operator: 'AND'
         }
-      }
+    }.merge(filter)
+
+    params = {
+      sort: @sort,
+      query: query
     }.merge(opts).merge(filter)
 
     @results = Search::Paper.es_find(params)
