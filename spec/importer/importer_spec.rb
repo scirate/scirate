@@ -138,35 +138,42 @@ describe "arxiv importer" do
 
     # Now test the search index
     Search.refresh
-    expect(Search::Paper.es_basic("*").raw.hits.total).to eq(1000)
 
-    doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
-    expect(doc._id).to eq("0811.36489")
-    expect(doc.title).to eq("Revisiting Norm Estimation in Data Streams")
-    expect(doc.authors_fullname).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
-    expect(doc.authors_searchterm).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
-    expect(doc.feed_uids).to eq(["cs.DS", "cs.CC"])
-    expect(doc.abstract).to include "The problem of estimating the pth moment F_p"
-    expect(Time.parse(doc.submit_date)).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
-    expect(Time.parse(doc.update_date)).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
-    expect(Time.parse(doc.pubdate)).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
+    res   = Search::Paper.es_basic("uid:*")
+    total = res["hits"]["total"]["value"]
+
+    expect(total).to eq(1000)
+
+    doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"")["hits"]["hits"][0]["_source"]
+    expect(doc["uid"]).to eq("0811.36489")
+    expect(doc["title"]).to eq("Revisiting Norm Estimation in Data Streams")
+    expect(doc["authors_fullname"]).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
+    expect(doc["authors_searchterm"]).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
+    expect(doc["feed_uids"]).to eq(["cs.DS", "cs.CC"])
+    expect(doc["abstract"]).to include "The problem of estimating the pth moment F_p"
+    expect(Time.parse(doc["submit_date"])).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
+    expect(Time.parse(doc["update_date"])).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
+    expect(Time.parse(doc["pubdate"])).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
 
     # And the bulk indexer
     Search.drop
     Search.migrate
     Search.refresh
 
-    expect(Search::Paper.es_basic("*").raw.hits.total).to eq(1000)
+    res   = Search::Paper.es_basic("uid:*")
+    total = res["hits"]["total"]["value"]
 
-    doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"").docs[0]
-    expect(doc._id).to eq("0811.36489")
-    expect(doc.title).to eq("Revisiting Norm Estimation in Data Streams")
-    expect(doc.authors_fullname).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
-    expect(doc.authors_searchterm).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
-    expect(doc.feed_uids).to eq(["cs.DS", "cs.CC"])
-    expect(doc.abstract).to include "The problem of estimating the pth moment F_p"
-    expect(Time.parse(doc.submit_date)).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
-    expect(Time.parse(doc.update_date)).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
-    expect(Time.parse(doc.pubdate)).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
+    expect(total).to eq(1000)
+
+    doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"")["hits"]["hits"][0]["_source"]
+    expect(doc["uid"]).to eq("0811.36489")
+    expect(doc["title"]).to eq("Revisiting Norm Estimation in Data Streams")
+    expect(doc["authors_fullname"]).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
+    expect(doc["authors_searchterm"]).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
+    expect(doc["feed_uids"]).to eq(["cs.DS", "cs.CC"])
+    expect(doc["abstract"]).to include "The problem of estimating the pth moment F_p"
+    expect(Time.parse(doc["submit_date"])).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
+    expect(Time.parse(doc["update_date"])).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
+    expect(Time.parse(doc["pubdate"])).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
   end
 end

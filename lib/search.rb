@@ -95,7 +95,6 @@ module Search
   def self.mappings
     {
       paper: {
-        _id: { path: 'uid' },
         properties: {
           uid: { type: 'string' },
           title: { type: 'string' },
@@ -196,7 +195,7 @@ module Search
   # Drop the current search index
   # Highly destructive!! Only use in testing
   def self.drop(name=nil)
-    name = name || index_name
+    name = name || Search.true_index_name
     puts "Deleting index #{name}"
     es.indices.delete index: name rescue nil
   end
@@ -225,7 +224,8 @@ module Search::Paper
   def self.query_uids(q)
     search = Search::Paper::Query.new(q, "")
     search.run
-    search.results["hits"]["hits"].map { |p| p["_source"]["uid"] }
+    res = search.results["hits"]["hits"].shift()
+    res.map { |p| p["_source"]["uid"] }
   end
 
   # Convert a Paper object into a JSON-compatible
@@ -255,7 +255,7 @@ module Search::Paper
 
     docs = []
     papers.each do |paper|
-      docs.append( {"index": { "_index": Search.index_name, "_id": paper["uid"] } })
+      docs.append( {"index": { "_index": Search.index_name, "_id": paper.uid } })
       docs.append( make_doc(paper) )
     end
 
@@ -272,10 +272,7 @@ module Search::Paper
 
     puts "Indexing #{papers.count} papers by uid for #{Search.index_name}"
 
-    docs = papers.map { |paper| make_doc(paper) }
-
-    res = Search.index.bulk_index(docs)
-    raise res if res.errors
+    Search::Paper.index(*papers)
   end
 
   # Reindex entire database of papers
@@ -355,7 +352,7 @@ module Search::Paper
 
       docs = []
       papers.values.each do |paper|
-        docs.append( {"index": { "_index": index_name } })
+        docs.append( {"index": { "_index": index_name, "_id": paper["uid"] } })
         docs.append( paper )
       end
 
