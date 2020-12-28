@@ -1,4 +1,5 @@
 require 'data_helpers'
+require 'elasticsearch'
 
 module Search
   class << self
@@ -6,7 +7,8 @@ module Search
   end
 
   def self.es
-    @es ||= Stretcher::Server.new('http://localhost:9200')
+    # @es ||= Stretcher::Server.new('http://localhost:9200')
+    @es ||= Elasticsearch::Client.new url: 'http://localhost:9200', log: true
   end
 
   # http://stackoverflow.com/questions/16205341/symbols-in-query-string-for-elasticsearch
@@ -62,7 +64,7 @@ module Search
   end
 
   def self.index
-    es.index(index_name)
+    es.indices.get index: index_name
   end
 
   # Defines Elasticsearch index settings
@@ -122,8 +124,9 @@ module Search
   # e.g. scirate_test_1394158756
   def self.true_index_name
     begin
-      index.request(:get, "_alias/*").keys[0]
-    rescue Stretcher::RequestError::NotFound
+      al = es.indices.get_alias index: self.index_name 
+      al.keys[0]
+    rescue => e
       nil
     end
   end
@@ -134,6 +137,7 @@ module Search
   # zero downtime mapping changes
   def self.migrate(index_suffix=nil)
     # Find the previous index, if any
+    # TODO: Come back to this
     old_index = Search.true_index_name
 
     # Create the new index, named by time of creation (or an argument)
@@ -141,56 +145,44 @@ module Search
     index_suffix = index_suffix || Time.now.to_i.to_s
     new_index = "#{index_name}_#{index_suffix}"
     puts "Creating new index #{new_index}"
-    es.index(new_index).create(settings: settings, mappings: mappings)
-    es.refresh
+    es.index index: new_index, body: { settings: settings, mappings: mappings }
+    es.indices.refresh index: new_index
 
     # Check to make sure we actually need a new index here
     unless old_index.nil?
-      old_settings = es.index(old_index).get_settings[old_index]['settings']
-      new_settings = es.index(new_index).get_settings[new_index]['settings']
+      old_settings = (es.indices.get_settings index: old_index)[old_index]['settings']
+      new_settings = (es.indices.get_settings index: new_index)[new_index]['settings']
 
       # uuid and creation date always vary
       old_settings['index']['uuid'] = new_settings['index']['uuid']
       old_settings['index']['creation_date'] = new_settings['index']['creation_date']
 
-      old_mappings = es.index(old_index).get_mapping[old_index]['mappings']
-      new_mappings = es.index(new_index).get_mapping[new_index]['mappings']
+      old_mappings = (es.indices.get_mapping index: old_index)[old_index]['mappings']
+      new_mappings = (es.indices.get_mapping index: new_index)[new_index]['mappings']
 
       if old_settings == new_settings && old_mappings == new_mappings
         puts "Search settings/mappings are current, no migration needed"
-        es.index(new_index).delete
+        es.indices.delete index: new_index
         return
       end
     end
 
     # Populate the new index with data
-    Search.full_index(new_index)
+    full_index(new_index)
 
     if old_index.nil?
       actions = []
     else
-      actions = [
-        { remove: {
-          :alias => index_name,
-          :index => old_index
-        }}
-      ]
       puts "Removing alias #{index_name} => #{old_index}"
+      es.indices.delete_alias index: old_index, name: index_name
     end
 
     puts "Adding alias #{index_name} => #{new_index}"
-    actions << [
-      { add: {
-        :alias => index_name,
-        :index => new_index
-      }}
-    ]
-
-    es.request(:post, "_aliases", nil, actions: actions)
+    es.indices.update_aliases body: { actions: [ {add: {index: new_index, alias: index_name, is_write_index: true }} ] }
 
     unless old_index.nil?
       puts "Deleting index #{old_index}"
-      es.index(old_index).delete
+      es.indices.delete index: old_index
     end
   end
 
@@ -198,7 +190,7 @@ module Search
   # In practice this is done automatically, but the tests
   # need to know that the data is definitely available
   def self.refresh
-    @es.refresh
+    es.indices.refresh index: self.index_name
   end
 
   # Drop the current search index
@@ -206,28 +198,23 @@ module Search
   def self.drop(name=nil)
     name = name || index_name
     puts "Deleting index #{name}"
-    es.index(name).delete rescue nil
+    es.indices.delete index: name rescue nil
   end
 end
 
 module Search::Paper
   def self.es_find(params)
-    res = Search.index.type(:paper).search(params)
-    puts "  Elasticsearch (#{res.raw.took}ms) #{params}"
+    res = Search.es.search index: Search.index_name, body: params
+    puts "  Elasticsearch (#{res['took']}ms) #{params}"
     res
   end
 
   def self.es_basic(q)
     params = {
       query: {
-        filtered: {
-          query: {
-            query_string: {
-              query: q,
-              default_operator: 'AND'
-            }
-          },
-          filter: nil
+        query_string: {
+          query: q,
+          default_operator: 'AND'
         }
       }
     }
@@ -238,14 +225,13 @@ module Search::Paper
   def self.query_uids(q)
     search = Search::Paper::Query.new(q, "")
     search.run
-    search.results.documents.map(&:uid)
+    search.results["hits"]["hits"].map { |p| p["_source"]["uid"] }
   end
 
   # Convert a Paper object into a JSON-compatible
   # hash we can place in the search index
   def self.make_doc(paper)
     {
-      '_type' => 'paper',
       'uid' => paper.uid,
       'title' => paper.title,
       'abstract' => paper.abstract,
@@ -266,9 +252,18 @@ module Search::Paper
   # Should be called after papers are modified (e.g. scited)
   def self.index(*papers)
     #puts "Updating search index for #{papers.map(&:title)}"
-    res = Search.index.bulk_index(papers.map { |paper| make_doc(paper) })
-    raise res if res.errors
+
+    docs = []
+    papers.each do |paper|
+      docs.append( {"index": { "_index": Search.index_name, "_id": paper["uid"] } })
+      docs.append( make_doc(paper) )
+    end
+
+    res = Search.es.bulk index: Search.index_name, body: docs
+
+    raise StandardError.new (res) if res["errors"]
   end
+
 
   # Add/update multiple papers
   # Called after an oai_update
@@ -323,7 +318,6 @@ module Search::Paper
           author_ids = {}
           sciter_ids = {}
           paper = {
-            '_type' => 'paper',
             'uid' => row['uid'],
             'title' => row['title'],
             'abstract' => row['abstract'],
@@ -351,14 +345,22 @@ module Search::Paper
           sciter_ids[row['sciter_id']] = true
         end
       end
+
       papers[paper['uid']] = paper
 
       categories.each do |row|
-        papers[row['uid']]['feed_uids'] << row['feed_uid']
+        p = papers[row['uid']]
+        p['feed_uids'] << row['feed_uid']
       end
 
-      result = Search.es.index(index_name).bulk_index(papers.values)
-      raise result if result.errors
+      docs = []
+      papers.values.each do |paper|
+        docs.append( {"index": { "_index": index_name } })
+        docs.append( paper )
+      end
+
+      result = Search.es.bulk index: index_name, body: docs
+      raise result if result["errors"]
 
       total += papers.length
       puts total
@@ -525,23 +527,18 @@ class Search::Paper::Query
         }
       }
     else
-      nil
+      {}
     end
 
     params = {
       sort: @sort,
       query: {
-        filtered: {
-          query: {
-            query_string: {
-              query: @es_query.join(' '),
-              default_operator: 'AND'
-            }
-          },
-          filter: filter
+        query_string: {
+          query: @es_query.join(' '),
+          default_operator: 'AND'
         }
       }
-    }.merge(opts)
+    }.merge(opts).merge(filter)
 
     @results = Search::Paper.es_find(params)
   end
