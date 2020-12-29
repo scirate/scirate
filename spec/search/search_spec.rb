@@ -24,7 +24,19 @@ describe "search fields" do
 
     uids = Search::Paper.query_uids("in:#{feed.uid}")
     expect(uids).to eq [paper1.uid]
+
+    puts "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEED"
+    puts paper1.uid
+    puts paper1.feed_uids
+    puts feed.uid
+    puts feed.uid.split(".")[0]
+
     uids = Search::Paper.query_uids("in:#{feed.uid.split('.')[0]}")
+
+    puts "RESULTTTTTTTTTTTTTT"
+    puts uids
+    puts "--------------------------------------------"
+
     expect(uids).to include paper1.uid
   end
 

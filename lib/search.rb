@@ -100,7 +100,7 @@ module Search
           abstract: { type: 'text' },
           authors_fullname: { type: 'text' }, # array
           authors_searchterm: { type: 'keyword'}, # array
-          feed_uids: { type: 'keyword' }, # array
+          feed_uids: { type: 'text', analyzer: 'category_path', search_analyzer: 'whitespace' }, # array
           sciter_ids: { type: 'integer' }, # array
           scites_count: { type: 'integer' },
           comments_count: { type: 'integer' },

@@ -44,19 +44,20 @@ class PapersController < ApplicationController
     if !@search.query.empty?
       res = @search.run(from: (page-1)*per_page, size: per_page)
 
-      papers_by_uid = map_models :uid, Paper.where(uid: res.documents.map(&:_id))
+      papers_by_uid = map_models :uid, Paper.where(uid: res["hits"]["hits"].map { |p| p["_source"]["uid"] })
 
-      @papers = res.documents.map do |doc|
-        paper = papers_by_uid[doc[:_id]]
+      @papers = res["hits"]["hits"].map do |p|
+        doc = p["_source"]
 
-        paper.authors_fullname = doc.authors_fullname
-        paper.authors_searchterm = doc.authors_searchterm
-        paper.feed_uids = doc.feed_uids
+        paper = papers_by_uid[doc["uid"]]
+        paper.authors_fullname   = doc["authors_fullname"]
+        paper.authors_searchterm = doc["authors_searchterm"]
+        paper.feed_uids          = doc["feed_uids"]
 
         paper
       end
 
-      @pagination = WillPaginate::Collection.new(page, per_page, @search.results.raw.hits.total)
+      @pagination = WillPaginate::Collection.new(page, per_page, res["hits"]["total"]["value"])
 
       # Determine which folder we should have selected
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
