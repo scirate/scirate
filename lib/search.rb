@@ -165,6 +165,8 @@ module Search
       # uuid and creation date always vary
       old_settings['index']['uuid'] = new_settings['index']['uuid']
       old_settings['index']['creation_date'] = new_settings['index']['creation_date']
+      # As does the name, naturally
+      old_settings['index']['provided_name'] = new_settings['index']['provided_name']
 
       old_mappings = (es.indices.get_mapping index: old_index)[old_index]['mappings']
       new_mappings = (es.indices.get_mapping index: new_index)[new_index]['mappings']
