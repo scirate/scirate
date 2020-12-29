@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "Search#migrate" do
   before :each do
     Search.drop
+    Search.drop "scirate_test_old"
   end
 
   context "no current search index" do
@@ -19,11 +20,11 @@ describe "Search#migrate" do
   context "obsolete search mapping" do
     before do
       mappings = Search.mappings.dup
-      mappings[:paper][:properties][:foo] = { type: 'string' }
+      mappings[:properties][:foo] = { type: 'text' }
 
-      Search.es.index(:scirate_test_old)
-            .create(settings: Search.settings, mappings: mappings)
-      Search.es.index(:scirate_test_old).alias(:scirate_test).create
+      Search.create_index name: "scirate_test_old", mappings: mappings
+      Search.add_alias    index: "scirate_test_old", alias_name: "scirate_test"
+
       expect(Search.true_index_name).to eq "scirate_test_old"
     end
 
@@ -39,9 +40,9 @@ describe "Search#migrate" do
       settings = Search.settings.dup
       settings[:index][:analysis][:tokenizer][:category_path][:delimiter] = '/'
 
-      Search.es.index(:scirate_test_old)
-            .create(settings: settings, mappings: Search.mappings)
-      Search.es.index(:scirate_test_old).alias(:scirate_test).create
+      Search.create_index name: "scirate_test_old", settings: settings
+      Search.add_alias    index: "scirate_test_old", alias_name: "scirate_test"
+
       expect(Search.true_index_name).to eq "scirate_test_old"
     end
 

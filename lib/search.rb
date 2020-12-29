@@ -128,13 +128,24 @@ module Search
     end
   end
 
+
+  def self.create_index (name:, settings: nil, mappings: nil)
+    settings ||= Search.settings
+    mappings ||= Search.mappings
+    es.indices.create index: name, body: { settings: settings, mappings: mappings }
+  end
+
+  def self.add_alias (index:, alias_name:)
+    es.indices.update_aliases body: { actions: [ { add: { index: index, alias: alias_name, is_write_index: true } } ] }
+  end
+
+
   # Atomically reindexes the database
   # A new index is created, populated and then aliased to the
   # main index name. The old index is deleted. This permits
   # zero downtime mapping changes
   def self.migrate(index_suffix=nil)
     # Find the previous index, if any
-    # TODO: Come back to this
     old_index = Search.true_index_name
 
     # Create the new index, named by time of creation (or an argument)
@@ -142,7 +153,8 @@ module Search
     index_suffix = index_suffix || Time.now.to_i.to_s
     new_index = "#{index_name}_#{index_suffix}"
     puts "Creating new index #{new_index}"
-    es.indices.create index: new_index, body: { settings: settings, mappings: mappings }
+
+    self.create_index name: new_index
     es.indices.refresh index: new_index
 
     # Check to make sure we actually need a new index here
