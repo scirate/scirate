@@ -99,8 +99,8 @@ module Search
           title: { type: 'text' },
           abstract: { type: 'text' },
           authors_fullname: { type: 'text' }, # array
-          authors_searchterm: { type: 'text'}, # array
-          feed_uids: { type: 'text' }, # array
+          authors_searchterm: { type: 'keyword'}, # array
+          feed_uids: { type: 'keyword' }, # array
           sciter_ids: { type: 'integer' }, # array
           scites_count: { type: 'integer' },
           comments_count: { type: 'integer' },

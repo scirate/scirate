@@ -197,7 +197,7 @@ class FeedsController < ApplicationController
     page = (page.nil? ? 1 : page.to_i)
     per_page = 50
 
-    filter = 
+    filter = [
       {
         range: {
           pubdate: {
@@ -206,13 +206,14 @@ class FeedsController < ApplicationController
           }
         }
       }
+    ]
 
-    filter.merge( { terms: { feed_uids: feed_uids } }) unless feed_uids.nil?
+    filter << { terms: { feed_uids: feed_uids } } unless feed_uids.nil?
 
     query = {
       size: per_page,
       from: (page-1)*per_page,
-      query: filter,
+      query: { bool: { filter: filter } },
       sort: [
         { scites_count: 'desc' },
         { comments_count: 'desc' },
