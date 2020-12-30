@@ -111,16 +111,23 @@ describe "email confirmation" do
     end
 
     it "doesn't activate and sends a new email" do
-      visit activate_user_path(@user.id, @user.confirmation_token)
+      expect {
+        visit activate_user_path(@user.id, @user.confirmation_token)
+      }.to(
+        have_enqueued_job.on_queue('mailers').with(
+          "UserMailer",
+          "signup_confirmation",
+          "deliver_now",
+          @user
+        )
+      )
+
       @user.reload
+
       expect(@user.active).to be(false)
 
       expect(page).to have_content("link has expired")
       expect(page).to have_content("email has been sent")
-
-      @user.reload
-      expect(last_email.to).to include(@user.email)
-      expect(last_email.body).to include(@user.confirmation_token)
     end
   end
 

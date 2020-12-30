@@ -240,7 +240,7 @@ class User < ActiveRecord::Base
   end
 
   def send_email_change_confirmation(address)
-    UserMailer.email_change(self, address).deliver_later
+    UserMailer.email_change(self, address).deliver_now
   end
 
   def email_confirmed?
