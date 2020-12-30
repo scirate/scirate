@@ -7,8 +7,6 @@ script:
   - RAILS_ENV=test bundle exec rake db:setup
   - bundle exec rspec spec
 before_script:
-  # - "export DISPLAY=:99.0"
-  # - "sh -e /etc/init.d/xvfb start"
   - sudo apt-get purge elasticsearch
   - curl https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-amd64.deb -o elasticsearch.deb
   - sudo dpkg -i --force-confnew elasticsearch.deb
@@ -21,7 +19,6 @@ notifications:
   email:
     - noonsilk+scirate@gmail.com
 services:
-  # - elasticsearch
   - postgresql
 addons:
   apt:
