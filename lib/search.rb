@@ -7,7 +7,6 @@ module Search
   end
 
   def self.es
-    # @es ||= Stretcher::Server.new('http://localhost:9200')
     @es ||= Elasticsearch::Client.new url: 'http://localhost:9200', log: true
   end
 

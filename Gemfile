@@ -35,8 +35,6 @@ gem 'nokogiri'
 
 # Elasticsearch API gem
 gem 'elasticsearch'
-gem 'stretcher'
-gem 'faraday', '0.8.9' # 0.9.0 breaks faraday_middleware-multi_json
 
 # Asset preprocessors
 gem 'sass-rails'
