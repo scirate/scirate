@@ -34,7 +34,6 @@ doc/
 backup/*.dump
 backup/*.tar.gz
 coverage
-.ruby-version
 
 # This is deployment-specific
 public/assets
