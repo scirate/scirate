@@ -56,7 +56,7 @@ gem 'daemons'
 
 # Frontend stuff
 gem 'font-awesome-rails'
-gem 'bootstrap-sass', '3.3.6'
+gem 'bootstrap-sass', '3.4.1'
 
 group :development, :test do
   gem 'colorize'
