@@ -32,6 +32,7 @@ doc/
 .project
 .DS_Store
 backup/*.dump
+backup/*.tar.gz
 coverage
 .ruby-version
 
