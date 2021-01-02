@@ -184,7 +184,7 @@ module Search
       actions = []
     else
       puts "Removing alias #{index_name} => #{old_index}"
-      es.indices.delete_alias index: old_index, name: index_name
+      es.indices.delete_alias index: old_index, name: index_name rescue nil
     end
 
     puts "Adding alias #{index_name} => #{new_index}"
