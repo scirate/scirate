@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "Remove this file (bin/yarn) when https://github.com/rails/rails/issues/40795 has a fix"
