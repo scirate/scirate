@@ -92,9 +92,9 @@ GEM
     autoprefixer-rails (10.1.0.0)
       execjs
     bcrypt (3.1.16)
-    bootstrap-sass (3.3.6)
+    bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
-      sass (>= 3.3.4)
+      sassc (>= 2.0.0)
     bourbon (7.0.0)
       thor (~> 1.0)
     builder (3.2.4)
@@ -151,7 +151,6 @@ GEM
     exception_notification (4.4.3)
       actionmailer (>= 4.0, < 7)
       activesupport (>= 4.0, < 7)
-    excon (0.78.1)
     execjs (2.7.0)
     factory_girl (4.9.0)
       activesupport (>= 3.0.0)
@@ -162,9 +161,6 @@ GEM
       multipart-post (~> 1.2.0)
     faraday_middleware (0.9.2)
       faraday (>= 0.7.4, < 0.10)
-    faraday_middleware-multi_json (0.0.6)
-      faraday_middleware
-      multi_json
     ffi (1.14.2)
     font-awesome-rails (3.1.1.0)
       railties (>= 3.1)
@@ -265,9 +261,6 @@ GEM
       rake (>= 0.8.7)
       thor (~> 1.0)
     rake (13.0.3)
-    rb-fsevent (0.10.4)
-    rb-inotify (0.10.1)
-      ffi (~> 1.0)
     regexp_parser (1.8.2)
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
@@ -287,11 +280,6 @@ GEM
       rspec-support (~> 3.10)
     rspec-support (3.10.1)
     ruby-prof (1.4.2)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -326,13 +314,6 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     stackprof (0.2.16)
-    stretcher (1.21.1)
-      excon (>= 0.16)
-      faraday (~> 0.8)
-      faraday_middleware (~> 0.9.0)
-      faraday_middleware-multi_json (~> 0.0.5)
-      hashie (>= 1.2.0)
-      multi_json (>= 1.0)
     sync (0.5.0)
     temple (0.8.2)
     term-ansicolor (1.7.1)
@@ -364,6 +345,7 @@ GEM
     zeitwerk (2.4.2)
 
 PLATFORMS
+  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -372,7 +354,7 @@ DEPENDENCIES
   annotate
   arxivsync!
   bcrypt (~> 3.1.7)
-  bootstrap-sass (= 3.3.6)
+  bootstrap-sass (= 3.4.1)
   bourbon
   capybara
   capybara-webkit
@@ -387,7 +369,6 @@ DEPENDENCIES
   elasticsearch
   exception_notification
   factory_girl_rails
-  faraday (= 0.8.9)
   font-awesome-rails
   jquery-rails
   newrelic_rpm
@@ -411,7 +392,6 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   stackprof
-  stretcher
   thin
   timecop
   turbolinks
