@@ -142,6 +142,8 @@ class User < ActiveRecord::Base
   def self.default_username(fullname)
     name = fullname.parameterize
 
+    puts "Name: [", name, "]"
+
     name = if User.where(username: name).exists?
       "#{name}" + "-#{User.count}"
     else
@@ -153,7 +155,9 @@ class User < ActiveRecord::Base
     tmp.username = name
     tmp.validate
 
-    if tmp.errors.messages[:username]
+    errs = tmp.errors.messages[:username]
+
+    if errs.length() > 0
       fallback_name = "user-#{User.count}"
       logger.warn("Invalid username generated from '#{fullname}': #{name}. Falling back to #{fallback_name}.".light_red)
       return fallback_name
@@ -169,11 +173,15 @@ class User < ActiveRecord::Base
   def scite!(paper)
     unless scites.find_by_paper_uid(paper.uid)
       scites.create!(paper_uid: paper.uid)
+      paper.reload
+      ::Search::Paper.index(paper)
     end
   end
 
   def unscite!(paper)
     scites.where(paper: paper.uid).destroy_all
+    paper.reload
+    ::Search::Paper.index(paper)
   end
 
   def refresh_scites_count!
@@ -232,7 +240,7 @@ class User < ActiveRecord::Base
   end
 
   def send_email_change_confirmation(address)
-    UserMailer.email_change(self, address).deliver_later
+    UserMailer.email_change(self, address).deliver_now
   end
 
   def email_confirmed?

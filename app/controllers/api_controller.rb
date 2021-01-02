@@ -1,6 +1,6 @@
 class ApiController < ApplicationController
-  before_filter :authorize
-  before_filter :needs_moderator, only: [:hide_from_recent]
+  before_action :authorize
+  before_action :needs_moderator, only: [:hide_from_recent]
 
   def scite
     @paper = Paper.find_by_uid!(params[:paper_uid])

@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'net/http'
+require 'font-awesome-rails'
 
 require File.expand_path('../../lib/exception_notification',  __FILE__)
 
@@ -20,6 +21,7 @@ module SciRate
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.action_controller.permit_all_parameters = true
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -29,8 +31,6 @@ module SciRate
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
 
     config.assets.paths << Rails.root.join('app', 'assets', 'flash')
     config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')

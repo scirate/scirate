@@ -2714,38 +2714,38 @@ else
 			}
 
 			group1 = makeGroup(1);
-			buttons.bold = makeButton("wmd-bold-button", "Bold - Ctrl+B", "fa fa-bold", bindCommand("doBold"), group1);
-			buttons.italic = makeButton("wmd-italic-button", "Italic - Ctrl+I", "fa fa-italic", bindCommand("doItalic"), group1);
+			buttons.bold = makeButton("wmd-bold-button", "Bold - Ctrl+B", "fa icon-bold", bindCommand("doBold"), group1);
+			buttons.italic = makeButton("wmd-italic-button", "Italic - Ctrl+I", "fa icon-italic", bindCommand("doItalic"), group1);
 
 			group2 = makeGroup(2);
-			buttons.link = makeButton("wmd-link-button", "Link - Ctrl+L", "fa fa-link", bindCommand(function (chunk, postProcessing) {
+			buttons.link = makeButton("wmd-link-button", "Link - Ctrl+L", "fa icon-link", bindCommand(function (chunk, postProcessing) {
 				return this.doLinkOrImage(chunk, postProcessing, false);
 			}), group2);
-			buttons.quote = makeButton("wmd-quote-button", "Blockquote - Ctrl+Q", "fa fa-quote-left", bindCommand("doBlockquote"), group2);
-			buttons.code = makeButton("wmd-code-button", "Code Sample - Ctrl+K", "fa fa-code", bindCommand("doCode"), group2);
-			buttons.image = makeButton("wmd-image-button", "Image - Ctrl+G", "fa fa-picture-o", bindCommand(function (chunk, postProcessing) {
+			buttons.quote = makeButton("wmd-quote-button", "Blockquote - Ctrl+Q", "fa icon-quote-left", bindCommand("doBlockquote"), group2);
+			buttons.code = makeButton("wmd-code-button", "Code Sample - Ctrl+K", "fa icon-code", bindCommand("doCode"), group2);
+			buttons.image = makeButton("wmd-image-button", "Image - Ctrl+G", "fa icon-picture-o", bindCommand(function (chunk, postProcessing) {
 				return this.doLinkOrImage(chunk, postProcessing, true);
 			}), group2);
 
 			group3 = makeGroup(3);
-			buttons.olist = makeButton("wmd-olist-button", "Numbered List - Ctrl+O", "fa fa-list-ol", bindCommand(function (chunk, postProcessing) {
+			buttons.olist = makeButton("wmd-olist-button", "Numbered List - Ctrl+O", "fa icon-list-ol", bindCommand(function (chunk, postProcessing) {
 				this.doList(chunk, postProcessing, true);
 			}), group3);
-			buttons.ulist = makeButton("wmd-ulist-button", "Bulleted List - Ctrl+U", "fa fa-list-ul", bindCommand(function (chunk, postProcessing) {
+			buttons.ulist = makeButton("wmd-ulist-button", "Bulleted List - Ctrl+U", "fa icon-list-ul", bindCommand(function (chunk, postProcessing) {
 				this.doList(chunk, postProcessing, false);
 			}), group3);
-			buttons.heading = makeButton("wmd-heading-button", "Heading - Ctrl+H", "fa fa-header", bindCommand("doHeading"), group3);
-			buttons.hr = makeButton("wmd-hr-button", "Horizontal Rule - Ctrl+R", "fa fa-ellipsis-h", bindCommand("doHorizontalRule"), group3);
+			buttons.heading = makeButton("wmd-heading-button", "Heading - Ctrl+H", "fa icon-header", bindCommand("doHeading"), group3);
+			buttons.hr = makeButton("wmd-hr-button", "Horizontal Rule - Ctrl+R", "fa icon-ellipsis-h", bindCommand("doHorizontalRule"), group3);
 
 			group4 = makeGroup(4);
-			buttons.undo = makeButton("wmd-undo-button", "Undo - Ctrl+Z", "fa fa-undo", null, group4);
+			buttons.undo = makeButton("wmd-undo-button", "Undo - Ctrl+Z", "fa icon-undo", null, group4);
 			buttons.undo.execute = function (manager) { if (manager) manager.undo(); };
 
 			var redoTitle = /win/.test(nav.platform.toLowerCase()) ?
 				"Redo - Ctrl+Y" :
 				"Redo - Ctrl+Shift+Z"; // mac and other non-Windows platforms
 
-			buttons.redo = makeButton("wmd-redo-button", redoTitle, "fa fa-rotate-right", null, group4);
+			buttons.redo = makeButton("wmd-redo-button", redoTitle, "fa icon-rotate-right", null, group4);
 			buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
 
 			if (helpOptions) {
@@ -2753,7 +2753,7 @@ else
 				group5.className = group5.className + " pull-right";
 				var helpButton = document.createElement("button");
 				var helpButtonImage = document.createElement("i");
-				helpButtonImage.className = "fa fa-question";
+				helpButtonImage.className = "fa icon-question";
 				helpButton.appendChild(helpButtonImage);
 				helpButton.className = "btn";
 				helpButton.id = "wmd-help-button" + postfix;

@@ -11,7 +11,7 @@ describe UsersController do
     end
 
     it "shows authored papers" do
-      get :papers, username: user.username
+      get :papers, params: { username: user.username}
       expect(assigns(:authored_papers)).to match_array(user.authored_papers)
       expect(response).to render_template("users/profile")
     end
@@ -25,7 +25,7 @@ describe UsersController do
     end
 
     it "shows scited papers" do
-      get :scites, username: user.username
+      get :scites, params: { username: user.username }
       expect(assigns(:scited_papers)).to match_array(user.scited_papers)
       expect(response).to render_template("users/profile")
     end
@@ -36,7 +36,7 @@ describe UsersController do
     let(:comment) { FactoryGirl.create(:comment, paper: paper, user: user) }
 
     it "shows comments" do
-      get :comments, username: user.username
+      get :comments, params: { username: user.username }
       expect(assigns(:comments)).to match_array(user.comments)
       expect(response).to render_template("users/profile")
     end

@@ -47,7 +47,7 @@ describe Paper do
   it { is_expected.to respond_to(:comments) }
   it { is_expected.to respond_to(:categories) }
 
-  it { is_expected.to validate_uniqueness_of(:uid) }
+  it { is_expected.to validate_uniqueness_of(:uid).case_insensitive }
   it { is_expected.to be_valid }
 
   describe "#to_bibtex" do

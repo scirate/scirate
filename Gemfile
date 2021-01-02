@@ -1,12 +1,14 @@
-ruby '2.2.1'
+ruby '2.6.6'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', '4.2.10'
+gem 'rails', '6.1.0'
 gem 'bcrypt', '~> 3.1.7'
 
+
 # Database stuff
-gem 'pg' # Postgres support
+# gem 'pg' # Postgres support
+gem 'pg', '~> 1.1'
 gem 'activerecord-import' # For bulk importing papers
 gem 'acts_as_votable' # Comment votes (not scites)
 gem 'unidecoder', '~> 1.1.2' # For making ascii author searchterms
@@ -32,11 +34,10 @@ gem 'arxivsync', github: 'mispy/arxivsync'
 gem 'nokogiri'
 
 # Elasticsearch API gem
-gem 'stretcher'
-gem 'faraday', '0.8.9' # 0.9.0 breaks faraday_middleware-multi_json
+gem 'elasticsearch'
 
 # Asset preprocessors
-gem 'sass-rails', '4.0.3'
+gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
@@ -48,16 +49,19 @@ gem 'dalli'
 # SCSS mixins for CSS3 browser compatibility
 gem 'bourbon'
 
+
 # Delayed job for async tasks (email)
 gem 'delayed_job_active_record'
 gem 'daemons'
 
 # Frontend stuff
 gem 'font-awesome-rails'
+gem 'bootstrap-sass', '3.3.6'
 
 group :development, :test do
   gem 'colorize'
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
 
   # An improved IRB alternative for rails console
   gem 'pry'
@@ -79,7 +83,7 @@ group :development do
   gem 'annotate'
 
   # Suppresses annoying asset pipeline logs
-  gem 'quiet_assets'
+  # gem 'quiet_assets'
 
   # Rails application preloader
   # Speeds up rake/rspec startup

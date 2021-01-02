@@ -9,7 +9,7 @@ div.comment class=('mine' if signed_in? && current_user.id == comment.user_id) c
   - elsif (!comment.deleted && !comment.hidden)
     .votes
       div.upvote class=('active' if @voted == true)
-        i.fa.fa-arrow-up
+        i.fa.icon-arrow-up
     .nonvotes
       - if @user
         div= link_to comment.paper.title, comment.paper

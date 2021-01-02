@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   include SessionsHelper
 
-  before_filter :redirect_https
+  before_action :redirect_https
 
   def not_found
     render file: "#{Rails.root}/public/404", layout: false, status: 404

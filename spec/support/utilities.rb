@@ -75,7 +75,7 @@ def sign_in(user)
   click_button "Sign in"
 
   # For functional tests (TODO: distinguish between these two cases)
-  post "/login", email_or_username: user.email, password: user.password
+  post "/login", params: { email_or_username: user.email, password: user.password }
 end
 
 def sign_in_with_google

@@ -38,13 +38,13 @@ You will also need some native packages:
 sudo apt-get install git postgresql libpq-dev libxml2-dev libxslt-dev nodejs libodbc1 libqt4-dev openjdk-8-jre libqt5webkit5-dev
 ```
 
-Our backend depends on [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/) to sort through all the papers:
+Our backend depends on [Elasticsearch](http://www.elasticsearch.org/) to sort through all the papers:
 
 ```shell
-wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb
-sudo dpkg -i /tmp/elasticsearch.deb
-sudo update-rc.d elasticsearch defaults 95 10
-sudo service elasticsearch start
+curl https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-amd64.deb -o elasticsearch.deb
+sudo dpkg -i --force-confnew elasticsearch.deb
+sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+sudo service elasticsearch restart
 ```
 
 **Note**: You can run `sudo service elasticsearch status` to confirm elasticsearch is running.
@@ -124,6 +124,7 @@ There is a fairly comprehensive series of unit and integration tests in `spec`. 
 
 ## Acknowledgements
 
+- Maintained by [Noon van der Silk](https://github.com/silky)
 - Original website by [Dave Bacon](http://dabacon.org)
 - [Bill Rosgen](http://intractable.ca/bill/)
 - [Aram Harrow](http://www.mit.edu/~aram/)

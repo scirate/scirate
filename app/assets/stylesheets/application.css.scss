@@ -9,9 +9,10 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require bootstrap
- *= require font-awesome
- *= require jquery.pagedown-bootstrap
- *= require nprogress.css
  *= require main
 */
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "font-awesome";
+@import "jquery.pagedown-bootstrap";
+@import "nprogress.css";

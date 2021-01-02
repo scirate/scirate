@@ -47,7 +47,7 @@ class Author < ActiveRecord::Base
       end
     end
 
-    term.mb_chars.normalize(:kd).to_ascii.to_s.gsub('-', '_')
+    term.mb_chars.to_ascii.to_s.gsub('-', '_')
   end
 
   def surname_first

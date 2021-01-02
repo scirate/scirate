@@ -24,8 +24,48 @@ describe "search fields" do
 
     uids = Search::Paper.query_uids("in:#{feed.uid}")
     expect(uids).to eq [paper1.uid]
+
+    puts "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEED"
+    puts paper1.uid
+    puts paper1.feed_uids
+    puts feed.uid
+    puts feed.uid.split(".")[0]
+
     uids = Search::Paper.query_uids("in:#{feed.uid.split('.')[0]}")
+
+    puts "RESULTTTTTTTTTTTTTT"
+    puts uids
+    puts "--------------------------------------------"
+
     expect(uids).to include paper1.uid
+  end
+
+  it "can scite and unscite a paper" do
+    paper = FactoryGirl.create(:paper)
+
+    Search::Paper.index(paper)
+    Search.refresh
+
+    user = FactoryGirl.create(:user)
+    user.scite!(paper)
+    Search.refresh
+    
+
+    # TODO: One could make this more elegant ...
+    search = Search::Paper::Query.new(paper.uid, "")
+    search.run
+    es_paper = search.results["hits"]["hits"][0]["_source"]
+
+    expect(es_paper["scites_count"]).to eq 1
+
+    user.unscite!(paper)
+    Search.refresh
+
+    search = Search::Paper::Query.new(paper.uid, "")
+    search.run
+    es_paper = search.results["hits"]["hits"][0]["_source"]
+
+    expect(es_paper["scites_count"]).to eq 0
   end
 
   it "allows searching for papers scited by a user" do

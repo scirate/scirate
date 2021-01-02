@@ -1,26 +1,24 @@
 language: ruby
 cache: bundler
 rvm:
-  - 2.2.1
+  - 2.6.6
 bundler_args: -j4 --without development production
 script:
   - RAILS_ENV=test bundle exec rake db:setup
   - bundle exec rspec spec
 before_script:
-  # - "export DISPLAY=:99.0"
-  # - "sh -e /etc/init.d/xvfb start"
   - sudo apt-get purge elasticsearch
-  - wget -O /tmp/elasticsearch.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb
-  - sudo dpkg -i /tmp/elasticsearch.deb
-  - sudo /bin/systemctl start elasticsearch.service
+  - curl https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-amd64.deb -o elasticsearch.deb
+  - sudo dpkg -i --force-confnew elasticsearch.deb
+  - sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+  - sudo service elasticsearch restart
   - sleep 20
   - cp config/database.yml.travis config/database.yml
   - psql -c 'create database scirate_test;' -U postgres
 notifications:
   email:
-    - scirate@mispy.me
+    - noonsilk+scirate@gmail.com
 services:
-  # - elasticsearch
   - postgresql
 addons:
   apt:

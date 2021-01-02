@@ -8,6 +8,7 @@ SciRate::Application.configure do
   config.cache_classes = true
 
   # Configure static asset server for tests with Cache-Control for performance
+  config.assets.check_precompiled_asset = false
   config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
 
@@ -25,6 +26,7 @@ SciRate::Application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+  config.active_job.queue_adapter = :inline
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr

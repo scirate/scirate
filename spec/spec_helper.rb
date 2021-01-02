@@ -14,6 +14,9 @@ require 'rspec/rails'
 
 Delayed::Worker.delay_jobs = false
 
+Settings::RECAPTCHA_SITE_KEY   = 'super-secret-site-key'
+Settings::RECAPTCHA_SECRET_KEY = 'super-secret-secret-key'
+
 # http://stackoverflow.com/questions/8774227/why-not-use-shared-activerecord-connections-for-rspec-selenium
 class ActiveRecord::Base
   mattr_accessor :shared_connection
@@ -81,5 +84,12 @@ RSpec.configure do |config|
     Search.migrate
     DatabaseCleaner.clean_with(:truncation)
     load "#{Rails.root}/db/seeds.rb"
+  end
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
   end
 end

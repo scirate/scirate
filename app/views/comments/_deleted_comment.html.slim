@@ -6,7 +6,7 @@
 div.comment data-id=(comment.id) data-markup=(comment.content)
   .votes
     div.upvote class=('active' if @voted == true)
-      i.fa.fa-arrow-up
+      i.fa.icon-arrow-up
   .nonvotes
     - if @user
       div= link_to comment.paper.title, comment.paper
