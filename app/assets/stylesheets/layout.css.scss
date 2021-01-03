@@ -862,13 +862,15 @@ div.feed-rightbar {
   display: inline-block;
 
   .scite, .unscite {
-    @include border-right-radius(0);
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
     float: left;
   }
 
   .scites-count {
     .btn {
-      @include border-left-radius(0);
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
       border-left: 0;
       float: left;
     }
