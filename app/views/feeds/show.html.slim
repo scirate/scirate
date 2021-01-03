@@ -13,7 +13,7 @@
           - if signed_in?
             li.feed-folder.my-feeds
               label.nav-header
-                i.fa.icon-chevron-down
+                i.fa.fa-chevron-down
                 = link_to("My feeds", feeds_path)
               ul.nav.nav-list.tree
                 - if current_user.feeds.count == 0
@@ -30,7 +30,7 @@
             li.feed-folder class=(@feed == parent ? 'active' : '') title=(parent.uid)
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               label.nav-header
-                i class=(expanded ? 'fa icon-chevron-down' : 'fa icon-chevron-right') class=(parent.children.length > 0 ? '' : 'transparent')
+                i class=(expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right') class=(parent.children.length > 0 ? '' : 'transparent')
                 = link_to parent.fullname.gsub("High Energy Physics", "HEP"), feed_path(parent, params.except(:feed, :page, :controller, :action))
               ul.nav.nav-list.tree style=(expanded ? '' : 'display: none;')
                 - parent.children.each do |feed|

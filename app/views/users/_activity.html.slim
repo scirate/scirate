@@ -3,7 +3,7 @@
     - if activity.event == 'scite'
       .row.event class=(activity.event)
         .icon.col-md-1
-          i.fa.icon-star
+          i.fa.fa-star
         .col-md-11
           = timeago(activity.created_at)
           .title
@@ -12,7 +12,7 @@
     - elsif activity.event == 'subscribe'
       .row.event class=(activity.event)
         .col-md-1.icon
-          i.fa.icon-list
+          i.fa.fa-list
         .col-md-11
           = timeago(activity.created_at)
           .title
@@ -21,7 +21,7 @@
     - elsif activity.event == 'comment'
       .row.event class=(activity.event) data-markup=(activity.comment.content)
         .col-md-1.icon
-          i.fa.icon-comment
+          i.fa.fa-comment
         .col-md-11
           = timeago(activity.created_at)
           .title
@@ -33,7 +33,7 @@
     - elsif activity.event == 'authorship'
       .row.event class=(activity.event)
         .col-md-1.icon
-          i.fa.icon-pencil
+          i.fa.fa-pencil
         .col-md-11
           = timeago(activity.created_at)
           .authorship
@@ -45,7 +45,7 @@
     - elsif activity.event == 'signup'
       .row.event class=(activity.event)
         .col-md-1.icon
-          i.fa.icon-user
+          i.fa.fa-user
         .col-md-11
           = timeago(activity.created_at)
           .title
