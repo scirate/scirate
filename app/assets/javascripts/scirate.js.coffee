@@ -225,7 +225,7 @@ $(document).on 'ready', ->
       SciRate.login()
 
   #Turbolinks.enableTransitionCache()
-  NProgress.configure(showSpinner: false, minimum: 0.4, speed: 300)
+  # NProgress.configure(showSpinner: false, minimum: 0.4, speed: 300)
 
   MathJax.Hub.Config({
     jax: ["input/TeX", "output/HTML-CSS"],
@@ -254,16 +254,16 @@ $(document).on 'ready', ->
 
   setupPageLoad()
 
-lastCached = false
+# lastCached = false
 
-$(document).on 'page:load', ->
-  setupPageLoad() unless lastCached
+# $(document).on 'page:load', ->
+#   setupPageLoad() unless lastCached
 
-$(document).on 'page:fetch', ->
-  NProgress.start() unless lastCached
-$(document).on 'page:change', ->
-  lastCached = false
-  NProgress.done()
-$(document).on 'page:restore', ->
-  lastCached = true
-  NProgress.remove()
+# $(document).on 'page:fetch', ->
+#   NProgress.start() unless lastCached
+# $(document).on 'page:change', ->
+#   lastCached = false
+#   NProgress.done()
+# $(document).on 'page:restore', ->
+#   lastCached = true
+#   NProgress.remove()
