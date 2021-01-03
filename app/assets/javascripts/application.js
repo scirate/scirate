@@ -20,5 +20,6 @@
 //= require backbone
 //= require datepicker.js
 //= require ZeroClipboard.js
+//= require nprogress.js
 //= require jquery.timeago.js
 //= require_tree .
