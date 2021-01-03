@@ -63,7 +63,7 @@
   p.google
     i> class="fa fa-google-plus-square"
     - if @user.auth_links.empty?
-      = link_to "Enable Google login", "/auth/google_oauth2", id: "sign_in"
+      = link_to "Enable Google login", "/auth/google_oauth2", id: "sign_in", method: :post
     - else
       | Connected to Google (#{@user.auth_links[0].auth.info.email})
       br

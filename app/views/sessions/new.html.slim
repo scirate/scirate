@@ -5,10 +5,9 @@
 
   .row
     .col-md-6
-      a.btn.btn-google href="/auth/google_oauth2"
-        i
-        span Sign in with Google
-
+      = link_to "/auth/google_oauth2", method: :post, class: "btn btn-google" do
+          i
+          span Sign in with Google
       hr
 
   = form_tag login_path do
