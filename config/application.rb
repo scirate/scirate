@@ -3,6 +3,8 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'net/http'
 require 'font-awesome-rails'
+require "sprockets/railtie"
+
 
 if defined?(Bundler)
   ActiveSupport::Deprecation.silence do
@@ -20,6 +22,9 @@ module SciRate
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
     config.action_controller.permit_all_parameters = true
+    config.log_level = :info
+    config.assets.enabled = true
+
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
