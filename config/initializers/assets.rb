@@ -11,4 +11,4 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 Rails.application.config.assets.precompile += %w( application.css layout.css main.css papers.css subscriptions.css )
-Rails.application.config.assets.precompile += %w( comments.js global.js feeds.js papers.js scirate.js search.js sessions.js static_pages.js stdlib.js )
+Rails.application.config.assets.precompile += %w( comments.js feeds.js papers.js scirate.js search.js sessions.js static_pages.js stdlib.js )
