@@ -24,6 +24,7 @@ gem 'turbolinks' # Speeds up links
 # Authentication
 gem 'omniauth' # For google
 gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
 
 # For interfacing with the arxiv OAI to
 # download new papers in bulk

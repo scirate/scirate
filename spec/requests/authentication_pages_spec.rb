@@ -8,8 +8,7 @@ describe "google signup" do
   end
 
   it "should allow signup via google" do
-    visit login_path
-    click_link "Sign in with Google"
+    find("a.btn-google").click # "Sign in with Google"
     #expect(page).to have_content "about to create a new SciRate account"
     #expect(page).to have_content "Google"
     #expect(page).to have_content mock_auth.info.email
