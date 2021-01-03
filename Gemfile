@@ -31,7 +31,8 @@ gem 'omniauth-google-oauth2'
 # https://github.com/mispy/arxivsync
 gem 'oai', github: 'mispy/ruby-oai' # For Rails 4.1 compatibility
 gem 'arxivsync', github: 'mispy/arxivsync'
-gem 'nokogiri'
+gem "nokogiri", ">= 1.11.0.rc4"
+
 
 # Elasticsearch API gem
 gem 'elasticsearch'

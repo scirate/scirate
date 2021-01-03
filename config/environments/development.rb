@@ -28,7 +28,8 @@ Rails.application.configure do
   config.assets.debug = false
   config.assets.check_precompiled_asset = false
 
-  config.assets.compile = false
+  # Switch to false to debug prod asset issues.
+  config.assets.compile = true
   
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
