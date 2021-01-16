@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
             format: { with: valid_username_regex, message: "may only contain alphanumeric characters and - or _" },
                     uniqueness: { case_sensitive: false }
 
-  valid_aid_regex = /\A[a-z0-9_]+\z/
+  valid_aid_regex = /\A[a-z0-9_\-]+\z/
   validates :author_identifier,
             format: { with: valid_aid_regex, message: "must be a valid arXiv author id" },
             allow_blank: true
