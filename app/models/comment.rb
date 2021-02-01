@@ -124,7 +124,7 @@ class Comment < ActiveRecord::Base
     end
 
     if res.code != '200'
-      SciRate.notify_error("Error from arXiv trackback: #{res.code} #{res.body}")
+      SciRate::Application.notify_error("Error from arXiv trackback: #{res.code} #{res.body}")
     end
   end
 end

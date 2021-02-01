@@ -140,25 +140,25 @@ module Arxiv::Import
     puts "Read #{models.length} items: #{new_uids.length} new, #{updated_uids.length} updated [#{models[0].id} to #{models[-1].id}]"
     result = Paper.import(paper_columns, paper_values, opts)
     unless result.failed_instances.empty?
-      SciRate.notify_error("Error importing papers: #{result.failed_instances.inspect}")
+      SciRate::Application.notify_error("Error importing papers: #{result.failed_instances.inspect}")
     end
 
     puts "Importing #{version_values.length} versions" unless version_values.empty?
     result = Version.import(version_columns, version_values, opts)
     unless result.failed_instances.empty?
-      SciRate.notify_error("Error importing versions #{result.failed_instances.inspect}")
+      SciRate::Application.notify_error("Error importing versions #{result.failed_instances.inspect}")
     end
 
     puts "Importing #{author_values.length} authors" unless author_values.empty?
     result = Author.import(author_columns, author_values, opts)
     unless result.failed_instances.empty?
-      SciRate.notify_error("Error importing authors: #{result.failed_instances.inspect}")
+      SciRate::Application.notify_error("Error importing authors: #{result.failed_instances.inspect}")
     end
 
     puts "Importing #{category_values.length} categories" unless category_values.empty?
     result = Category.import(category_columns, category_values, opts)
     unless result.failed_instances.empty?
-      SciRate.notify_error("Error importing categories: #{result.failed_instances.inspect}")
+      SciRate::Application.notify_error("Error importing categories: #{result.failed_instances.inspect}")
     end
 
     # Ensure counter caches are recreated for updated papers

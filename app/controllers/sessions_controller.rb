@@ -95,7 +95,7 @@ class SessionsController < ApplicationController
     auth = session['omniauth.auth']
     session['omniauth.auth'] = nil
 
-    SciRate.notify_error("Omniauth failed\n\n#{params}\n\n#{auth}")
+    SciRate::Application.notify_error("Omniauth failed\n\n#{params}\n\n#{auth}")
 
     flash[:error] = "Sorry, we were unable to authenticate you. This error has been reported. Please sign in without using Google for now."
 
