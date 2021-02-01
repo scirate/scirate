@@ -8,17 +8,3 @@ class Exception
     end
   end
 end
-
-module SciRate
-  def self.notify_error(exception, message = nil)
-    if exception.is_a?(String)
-      exception = RuntimeError.new(exception)
-    end
-    exception = exception.with_details(message) if message
-    puts exception.inspect
-    puts exception.backtrace.join("\n") if exception.backtrace
-    if Rails.env == 'production'
-      ExceptionNotifier.notify_exception(exception)
-    end
-  end
-end

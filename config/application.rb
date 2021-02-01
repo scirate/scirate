@@ -15,6 +15,19 @@ end
 
 module SciRate
   class Application < Rails::Application
+    # HACK
+    def self.notify_error(exception, message = nil)
+      if exception.is_a?(String)
+        exception = RuntimeError.new(exception)
+      end
+      exception = exception.with_details(message) if message
+      puts exception.inspect
+      puts exception.backtrace.join("\n") if exception.backtrace
+      if Rails.env == 'production'
+        ExceptionNotifier.notify_exception(exception)
+      end
+    end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
