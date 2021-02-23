@@ -134,7 +134,9 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username(username)
-    User.where("lower(username) = ?", username.downcase).first
+    if !username.nil?
+      User.where("lower(username) = ?", username.downcase).first
+    end
   end
 
   # Make an appropriate username from a user's full name
