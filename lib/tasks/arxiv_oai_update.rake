@@ -8,7 +8,7 @@ namespace :arxiv do
     last_paper = Paper.order("submit_date desc").first
 
     if last_paper.nil?
-      fromdate = Time.now-7.days
+      fromdate = Time.now-1.days
     else
       fromdate = last_paper.pubdate
     end
