@@ -495,7 +495,10 @@ class Search::Paper::Query
           ids = User.where(fullname: name).pluck(:id)
         end
 
-        @es_query << 'sciter_ids:' + '(' + ids.join(" OR ") + ')'
+        puts "scited_by:" + ids.join(",")
+        if !ids.empty?
+          @es_query << 'sciter_ids:' + '(' + ids.join(" OR ") + ')'
+        end
       elsif term.start_with?('order:')
         @orders << tstrip(term).to_sym
       elsif term.start_with?('date:')
