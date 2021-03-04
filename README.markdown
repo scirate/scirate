@@ -116,7 +116,7 @@ This will initialize the database and Elasticsearch, download the basic feed lay
 rake arxiv:oai_update
 ```
 
-When run for the first time, this will download and index paper metadata from the last day. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
+When run for the first time, this will download and index paper metadata from the last 7 days. Subsequent calls will download all metadata since the last time. The production server runs this task every day to keep the database in sync.
 
 ## Testing
 
