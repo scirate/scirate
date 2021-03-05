@@ -9,14 +9,14 @@ Bug reports and feature requests should be submitted as [GitHub issues](https://
 
 ## Setting up for development
 
-SciRate runs on [Ubuntu 14.04](http://releases.ubuntu.com/14.04/) in production. Development in other environments is possible, but this guide will assume you are running some variant of Debian.
+SciRate runs on [Ubuntu 16.04](http://releases.ubuntu.com/16.04/) in production. Development in other environments is possible, but this guide will assume you are running some variant of Debian.
 
-We currently use Ruby 2.2.1 and Rails 4.2. To install this version of Ruby and [RVM](https://rvm.io/):
+We currently use Ruby 2.6.6 and Rails 6.1.0. To install this version of Ruby and [RVM](https://rvm.io/):
 
 ```shell
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-\curl -sSL https://get.rvm.io | bash -s stable --ruby=2.2.1
-rvm use 2.2.1 --default
+\curl -sSL https://get.rvm.io | bash -s stable --ruby=2.6.6
+rvm use 2.6.6 --default
 ```
 
 If you find this does not work, you may have more luck with the following:
@@ -26,7 +26,7 @@ sudo apt install gnupg2
 gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 cd /tmp
 curl -sSL https://get.rvm.io -o rvm.sh
-cat /tmp/rvm.sh | bash -s stable --ruby=2.2.1
+cat /tmp/rvm.sh | bash -s stable --ruby=2.6.6
 source /home/<USERNAME>/.rvm/scripts/rvm
 ```
 
