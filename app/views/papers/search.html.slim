@@ -90,8 +90,8 @@ script
   - if @papers
     a name="results"
     h3
-      #{@search.results.raw.hits.total} results for #{@search.query}
-    /= render 'papers/abstract_toggle'
+      div #{@search.results["hits"]["total"]["value"]} results for #{@search.query}
+    = render 'papers/abstract_toggle'
     .paperlist
       ul.papers
         - if @papers.empty?
