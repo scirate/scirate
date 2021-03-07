@@ -495,7 +495,6 @@ class Search::Paper::Query
           ids = User.where(fullname: name).pluck(:id)
         end
 
-        puts "scited_by:" + ids.join(",")
         if !ids.empty?
           @es_query << 'sciter_ids:' + '(' + ids.join(" OR ") + ')'
         end
