@@ -42,7 +42,7 @@ describe "arxiv importer" do
     it 'notifies the errors' do
       allow(Paper).to receive(:import).and_return(double(failed_instances: ['failed']))
       allow(Search::Paper).to receive(:index_by_uids) # stub out indexer
-      expect(SciRate).to receive(:notify_error).once
+      expect(SciRate::Application).to receive(:notify_error).once
 
       Arxiv::Import.papers(@models[0..9])
     end
@@ -51,7 +51,7 @@ describe "arxiv importer" do
   describe 'when importing versions failed' do
     it 'notifies the errors' do
       allow(Version).to receive(:import).and_return(double(failed_instances: ['failed']))
-      expect(SciRate).to receive(:notify_error).once
+      expect(SciRate::Application).to receive(:notify_error).once
 
       Arxiv::Import.papers(@models[0..9])
     end
@@ -60,7 +60,7 @@ describe "arxiv importer" do
   describe 'when importing authors failed' do
     it 'notifies the errors' do
       allow(Author).to receive(:import).and_return(double(failed_instances: ['failed']))
-      expect(SciRate).to receive(:notify_error).once
+      expect(SciRate::Application).to receive(:notify_error).once
 
       Arxiv::Import.papers(@models[0..9])
     end
@@ -69,7 +69,7 @@ describe "arxiv importer" do
   describe 'when importing categories failed' do
     it 'notifies the errors' do
       allow(Category).to receive(:import).and_return(double(failed_instances: ['failed']))
-      expect(SciRate).to receive(:notify_error).once
+      expect(SciRate::Application).to receive(:notify_error).once
 
       Arxiv::Import.papers(@models[0..9])
     end
