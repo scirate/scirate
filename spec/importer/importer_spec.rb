@@ -115,8 +115,8 @@ describe "arxiv importer" do
     expect(paper.versions[1].date).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 GMT"))
     expect(paper.versions[1].size).to eq("71kb")
     expect(paper.title).to eq("Revisiting Norm Estimation in Data Streams")
-    expect(paper.author_str).to eq("Daniel M. Kane, Jelani Nelson, David P. Woodruff")
-    expect(paper.authors.map(&:fullname)).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
+    expect(paper.author_str).to eq("Christopher Hays (for the ATLAS Collaboration)")
+    expect(paper.authors.map(&:fullname)).to eq(["Christopher Hays"])
     expect(paper.feeds.map(&:uid)).to eq(["cs.DS", "cs.CC"])
     expect(paper.author_comments).to eq("added content; modified L_0 algorithm -- ParityLogEstimator in version 1 contained an error, and the new algorithm uses slightly more space")
     expect(paper.license).to eq("http://arxiv.org/licenses/nonexclusive-distrib/1.0/")
@@ -147,8 +147,8 @@ describe "arxiv importer" do
     doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"")["hits"]["hits"][0]["_source"]
     expect(doc["uid"]).to eq("0811.36489")
     expect(doc["title"]).to eq("Revisiting Norm Estimation in Data Streams")
-    expect(doc["authors_fullname"]).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
-    expect(doc["authors_searchterm"]).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
+    expect(doc["authors_fullname"]).to eq(["Christopher Hays"])
+    expect(doc["authors_searchterm"]).to eq(["Hays_C"])
     expect(doc["feed_uids"]).to eq(["cs.DS", "cs.CC"])
     expect(doc["abstract"]).to include "The problem of estimating the pth moment F_p"
     expect(Time.parse(doc["submit_date"])).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
@@ -168,8 +168,8 @@ describe "arxiv importer" do
     doc = Search::Paper.es_basic("title:\"Revisiting Norm Estimation in Data Streams\"")["hits"]["hits"][0]["_source"]
     expect(doc["uid"]).to eq("0811.36489")
     expect(doc["title"]).to eq("Revisiting Norm Estimation in Data Streams")
-    expect(doc["authors_fullname"]).to eq(["Daniel M. Kane", "Jelani Nelson", "David P. Woodruff"])
-    expect(doc["authors_searchterm"]).to eq(["Kane_D", "Nelson_J", "Woodruff_D"])
+    expect(doc["authors_fullname"]).to eq(["Christopher Hays"])
+    expect(doc["authors_searchterm"]).to eq(["Hays_C"])
     expect(doc["feed_uids"]).to eq(["cs.DS", "cs.CC"])
     expect(doc["abstract"]).to include "The problem of estimating the pth moment F_p"
     expect(Time.parse(doc["submit_date"])).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
