@@ -152,6 +152,10 @@ class Paper < ActiveRecord::Base
     "https://arxiv-vanity.com/papers/" + self.uid
   end
 
+  def wiki_url
+    "https://arxiv.wiki/abs/" + self.uid
+  end
+
   private
     def update_date_is_after_submit_date
       return unless submit_date and update_date
