@@ -10,7 +10,7 @@ RUN nix-shell shell.nix \
     && rm Gemfile*
 WORKDIR /sciratetest/scirate
 COPY ./Gemfile ./
-RUN cd .. && nix-shell shell.nix && sc scirate
+RUN cd .. && nix-shell shell.nix && cd scirate
 
 # OPTIONAL [Install packages directly]
 #RUN bundle install && bundix
