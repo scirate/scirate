@@ -123,3 +123,22 @@
                 = "Comments on this paper have been locked."
         - else
           = link_to "sign in to comment", login_path
+
+      - if Settings::JOBS_VISIBLE
+        - if (not current_user) || (current_user && current_user.show_jobs?)
+          hr
+
+          div id="jobs-horizontal"
+            div id="job-sidebar"
+              = javascript_include_tag "jobs-Sidebar.js"
+          javascript:
+            const initData =
+              { "queryString": document.location.href
+              , "jwtToken": "#{@token}"
+              , "graphqlUrl": "#{Settings::GRAPHQL_URL}"
+              };
+            Elm.SciRate.Views.Sidebar.init(
+              { node: document.getElementById("job-sidebar")
+              , flags: initData
+              });
+

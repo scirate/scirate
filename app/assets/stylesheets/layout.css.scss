@@ -1195,3 +1195,323 @@ p.google {
     padding: 3px 6px;
   }
 }
+
+// Jobs
+
+span.beta a {
+  color:          red;
+  font-size:      10px;
+  text-transform: uppercase;
+  margin-left:    3px;
+  position:       relative;
+  top:            -10px;
+}
+
+#jobs-horizontal div.jobs {
+  display:        flex;
+  flex-direction: row;
+  flex-wrap:      wrap;
+  min-width:      230px;
+}
+
+#jobs-horizontal div.job {
+  margin:    10px;
+  max-width: 220px;
+}
+
+#jobs-horizontal div.jobs hr { display: none; }
+
+div.job div.title a {
+  color: black;
+  font-weight: bold;
+}
+
+div.job div.tags {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+div.job span.tag {
+  padding:       3px;
+  border-radius: 5px;
+  background:    honeydew;
+}
+
+div.job hr {
+  margin-top:    10px;
+  margin-bottom: 10px;
+}
+
+div.job div.kind span {
+  text-transform: uppercase;
+  font-size: 9px;
+  color: gray;
+}
+
+div.jobs-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-top: solid 1px black;
+  padding-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+div.jobs-list div.job {
+  margin: 10px;
+  width: 160px;
+}
+
+div.jobs-list div.filters {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+div.filter {
+  margin: 5px;
+}
+
+div.reset {
+  margin: 10px;
+}
+
+div.filter label {
+  padding: 5px;
+  width: 200px;
+}
+
+div.filter input {
+  width: 200px;
+}
+
+div.tag-filter span.tag {
+  padding: 4px;
+  line-height: 30px;
+  border-radius: 5px;
+}
+
+div.tag-filter span.tag.selected {
+  background: mistyrose;
+}
+
+/* Submit Job */
+div.job-form {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  align-items: flex-end;
+}
+
+div.job-form-fields {
+  margin-left: 10px;
+}
+
+div.payment {
+  margin-left: 15px;
+}
+
+div.job-form-fields div.field {
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+  margin-bottom: 10px;
+}
+
+div.job-form label {
+  font-weight: normal;
+}
+
+div.job-form-fields div.field label {
+  width: 200px;
+}
+
+div.job-form-fields div.field input[type="text"] {
+  width: 300px;
+}
+
+div.job-form-fields div.field input[type="radio"] {
+  display: inline;
+  padding: 5px;
+}
+
+div.job-form-fields div.field label.radio {
+  padding: 5px;
+  margin-right: 20px;
+  display: inline;
+}
+
+div.job-form-fields div.field small {
+  padding: 5px;
+}
+
+div.help {
+  margin-top: 5px;
+  background: #eaeaea;
+  font-size: 0.9em;
+  padding: 5px;
+  border-radius: 3px;
+  max-width: 350px;
+}
+
+div.help p {
+  margin: 0;
+  }
+
+div.job-content {
+  display: flex;
+  flex-direction: column;
+}
+
+div.preview {
+  margin-left: 20px;
+  }
+
+div.payment-section p.note {
+  width:  450px;
+  margin: 10px;
+}
+
+p.submit-note {
+  padding: 8px 35px 8px 14px;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #468847;
+  line-height: 35px;
+  margin: 10px 0;
+}
+
+p.submit-error {
+  padding: 8px 35px 8px 14px;
+  background-color: mistyrose;
+  border: solid 1px darkred;
+  color: darkred;
+  line-height: 35px;
+  margin: 10px 0;
+}
+
+
+
+div.job-sidebar div.jobs-footer {
+  border-top:  solid 1px #eaeaea;
+  text-align:  center;
+  margin-top:  10px;
+  padding-top: 10px;
+}
+
+.elm-datepicker--container {
+  position: relative; }
+
+.elm-datepicker--input:focus {
+  outline: 0; }
+
+.elm-datepicker--picker {
+  position: absolute;
+  border: 1px solid #CCC;
+  z-index: 10;
+  background-color: white; }
+
+.elm-datepicker--picker-header,
+.elm-datepicker--weekdays {
+  background: #F2F2F2; }
+
+.elm-datepicker--picker-header {
+  display: flex;
+  align-items: center; }
+
+.elm-datepicker--prev-container,
+.elm-datepicker--next-container {
+  flex: 0 1 auto;
+  cursor: pointer; }
+
+.elm-datepicker--month-container {
+  flex: 1 1 auto;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column; }
+
+.elm-datepicker--month,
+.elm-datepicker--year {
+  flex: 1 1 auto;
+  cursor: default;
+  text-align: center; }
+
+.elm-datepicker--year {
+  font-size: 0.6em;
+  font-weight: 700; }
+
+.elm-datepicker--prev,
+.elm-datepicker--next {
+  border: 6px solid transparent;
+  background-color: inherit;
+  display: block;
+  width: 0;
+  height: 0;
+  padding: 0 0.2em; }
+
+.elm-datepicker--prev {
+  border-right-color: #AAA; }
+  .elm-datepicker--prev:hover {
+    border-right-color: #BBB; }
+
+.elm-datepicker--next {
+  border-left-color: #AAA; }
+  .elm-datepicker--next:hover {
+    border-left-color: #BBB; }
+
+.elm-datepicker--table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  font-size: 0.8em; }
+  .elm-datepicker--table td {
+    width: 2em;
+    height: 2em;
+    text-align: center; }
+
+.elm-datepicker--row {
+  border-top: 1px solid #F2F2F2; }
+
+.elm-datepicker--dow {
+  border-bottom: 1px solid #CCC;
+  cursor: default; }
+
+.elm-datepicker--day {
+  cursor: pointer; }
+  .elm-datepicker--day:hover {
+    background: #F2F2F2; }
+
+.elm-datepicker--disabled {
+  cursor: default;
+  color: #DDD; }
+  .elm-datepicker--disabled:hover {
+    background: inherit; }
+
+.elm-datepicker--picked {
+  color: white;
+  background: darkblue; }
+  .elm-datepicker--picked:hover {
+    background: darkblue; }
+
+.elm-datepicker--today {
+  font-weight: bold; }
+
+.elm-datepicker--other-month {
+  color: #AAA; }
+  .elm-datepicker--other-month.elm-datepicker--disabled {
+    color: #EEE; }
+  .elm-datepicker--other-month.elm-datepicker--picked {
+    color: white; }
+
+table.fee-structure {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+table.fee-structure td, table.fee-structure th {
+  padding: 10px;
+}
+
+table.fee-structure th {
+  border-bottom: solid 1px black;
+}

@@ -1,6 +1,35 @@
+Stripe.api_key = Settings::STRIPE_API_SECRET_KEY
+
+require 'erb'
+
 class ApiController < ApplicationController
   before_action :authorize
   before_action :needs_moderator, only: [:hide_from_recent]
+  skip_before_action :authorize, only: [:create_stripe_checkout]
+
+  def create_stripe_checkout
+      session = Stripe::Checkout::Session.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'SciRate Job Ad',
+            },
+            unit_amount: Settings::SCIRATE_JOB_AD_PRICE_USD,
+          },
+          quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: Settings::STRIPE_SUCCESS_URL + "?jobId=" + params[:jobId],
+        cancel_url: Settings::STRIPE_CANCEL_URL,
+        payment_intent_data: {
+          metadata: { "jobId": params[:jobId] , "contactEmail": params[:e] }
+        }
+      })
+
+      render json: { id: session.id }
+  end
 
   def scite
     @paper = Paper.find_by_uid!(params[:paper_uid])

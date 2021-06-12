@@ -1,0 +1,37 @@
+- provide :title, 'Open Positions'
+
+.container
+
+
+  h1 Open positions <span class="beta"><a href="/jobs/about">beta</a></span>
+
+  - if Settings::JOBS_VISIBLE
+
+      hr
+
+      p Below are all the open positions presently advertised on SciRate. If you'd
+        like to submit a job, please head over to the
+        <a href="/jobs/submit">job posting submission</a> page.
+
+      hr
+
+      div#jobs
+
+        = javascript_include_tag "jobs-FullList.js"
+
+        javascript:
+          const initData =
+            { "queryString": document.location.href
+            , "jwtToken": "#{@token}"
+            , "graphqlUrl": "#{Settings::GRAPHQL_URL}"
+            };
+          var app = Elm.SciRate.Views.FullList.init(
+                      { node: document.getElementById("jobs")
+                      , flags: initData
+                      });
+  - else
+
+    hr
+
+    p <a href="/jobs/about">Coming soon!</a>
+

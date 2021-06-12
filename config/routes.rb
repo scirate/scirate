@@ -18,6 +18,7 @@ SciRate::Application.routes.draw do
   post '/api/settings', to: 'api#settings'
 
   post '/api/resend_confirm', to: 'api#resend_confirm', as: :resend_confirm
+  post '/api/create_stripe_checkout', to: 'api#create_stripe_checkout'
 
   resources :comments do
     member do
@@ -52,6 +53,12 @@ SciRate::Application.routes.draw do
   get '/conduct',  to: 'static_pages#conduct'
   get '/legal',    to: 'static_pages#legal'
   get '/moderation',    to: 'static_pages#moderation'
+
+  get '/jobs/success', to: 'static_pages#job_success'
+  get '/jobs/submit',  to: 'static_pages#submit_job'
+  get '/jobs/about',   to: 'static_pages#about_jobs'
+
+  get '/jobs', to: 'static_pages#list_jobs'
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'

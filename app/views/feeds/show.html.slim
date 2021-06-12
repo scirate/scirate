@@ -72,6 +72,22 @@
         .col-md-3.feed-rightbar
           - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
             = render 'feeds/next_prev_links'
+
+          - if Settings::JOBS_VISIBLE
+            - if (not current_user) || (current_user && current_user.show_jobs?)
+              div id="job-sidebar"
+              = javascript_include_tag "jobs-Sidebar.js"
+              javascript:
+                const initData =
+                  { "queryString": document.location.href
+                  , "jwtToken": "#{@token}"
+                  , "graphqlUrl": "#{Settings::GRAPHQL_URL}"
+                  };
+                Elm.SciRate.Views.Sidebar.init(
+                  { node: document.getElementById("job-sidebar")
+                  , flags: initData
+                  });
+
           - cache [:recent_comments, @recent_comments, current_user && current_user.can_moderate?] do
             - unless @recent_comments.length == 0
               h3
