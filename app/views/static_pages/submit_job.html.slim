@@ -1,0 +1,72 @@
+- provide :title, 'Submit a job posting to SciRate'
+
+script src="https://js.stripe.com/v3/"
+script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"
+
+.container#submit-job
+
+  h1 Submit a job posting to SciRate
+
+  hr
+
+  p Use the form below to submit a job, which will be shown on rotation on our
+    homepage and also on our <a href="/jobs">job listing</a> page.
+
+  p For more information about the jobs system on SciRate, head over to
+    <a href="/jobs/about">about job postings on SciRate</a>.
+
+  hr
+
+  div id="jobs"
+
+= javascript_include_tag "jobs-SubmitOrEdit.js"
+
+javascript:
+  const stripeKey  = "#{Settings::STRIPE_API_PUBLIC_KEY}";
+  const stripe     = Stripe(stripeKey);
+  const csrf_token = "#{form_authenticity_token}";
+
+  const initData =
+    { "queryString": document.location.href
+    , "jwtToken": "#{@token}"
+    , "graphqlUrl": "#{Settings::GRAPHQL_URL}"
+    };
+
+  var app = Elm.SciRate.Views.SubmitOrEdit.init(
+              { node: document.getElementById("jobs")
+              , flags: initData
+              });
+
+  app.ports.academicComplete.subscribe((args) => {
+    const jobId = args[1];
+    window.location.href = '/jobs/success?jobId=' + jobId;
+  });
+
+  app.ports.openPaymentForm.subscribe((args) => {
+    const email = encodeURIComponent(args[0]);
+    const jobId = args[1];
+
+    const data =
+      { headers: { 'Content-Type': 'application/json'
+                 , 'X-CSRF-Token': csrf_token
+                 }
+      , credentials: 'same-origin'
+      , method: 'POST'
+      };
+
+    fetch("/api/create_stripe_checkout?jobId=" + jobId + "&e=" + email, data).
+      then((response) => {
+        return response.json();
+      }).
+      then((session) => {
+        return stripe.redirectToCheckout({ sessionId: session.id });
+      }).
+      then((result) => {
+        if(result.error){
+            console.error("Some protocol error: ", result.error.message);
+        }
+      }).
+      catch((error) => {
+        console.error("Some generic error: ", error);
+      });
+  });

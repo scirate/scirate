@@ -45,6 +45,9 @@
           td= f.text_area :about, class: 'form-control', title: desc, placeholder: desc
 
     .checkbox
+      = f.check_box :show_jobs
+      | Show me jobs
+    .checkbox
       = f.check_box :email_about_replies
       | Email me about replies to my comments
     .checkbox

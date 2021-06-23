@@ -5,8 +5,14 @@ class ApplicationController < ActionController::Base
   RECAPTCHA_MINIMUM_SCORE = 0.5
 
   include SessionsHelper
+  include ApplicationHelper
 
   before_action :redirect_https
+  before_action :set_token
+
+  def set_token
+    @token = mk_jwt_token("public", params[:i])
+  end
 
   def not_found
     render file: "#{Rails.root}/public/404", layout: false, status: 404

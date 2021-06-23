@@ -1,0 +1,74 @@
+- provide :title, 'Submit a job posting to SciRate'
+
+script src="https://js.stripe.com/v3/"
+script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"
+
+.container#submit-job
+
+  h1 About job postings on SciRate
+
+  hr
+
+  p
+    small Posted June-2021
+
+  p The introduction of job postings on SciRate is a new, and presently
+    <em>beta</em> feature. What this means is that we are actively soliciting
+    feedback from the community, and from organisations and institutions interested
+    in posting jobs.
+
+  p We're introducing job ads for two main reasons:
+
+  ul
+    li Support the development of the quantum industry;
+    li Raise money to support further development of SciRate.
+
+  p By posting an ad here you help grow and support our community. ❤️
+
+
+  h3 Why post an ad on SciRate?
+
+  p SciRate is a completely <a
+    href="http://github.com/scirate/">open-source</a> widely-used scientific
+    social network with a large audience from the quantum computing community.
+
+  p If you're looking to get your company in front of a large group of quantum
+    practioners and researchers, then this is the place!
+
+
+  h3 What kinds of jobs can be posted?
+
+  p At this point, we're looking for technical jobs in the quantum computing
+    industry as well as similarly-focused research/academic positions. These can
+    include software-engineering jobs, hardware-focused roles, and pure research
+    roles over the entire quantum computing/information ecosystem.
+
+  h3 Fee structure
+
+  table.fee-structure
+    tr
+      th Job kind
+      th Price (USD)
+    tr
+      td Industry
+      td $#{Settings::SCIRATE_JOB_AD_PRICE_USD / 100}
+    tr
+      td Academic*
+      td <i>Free</i>
+    tr
+      <td colspan="2">
+        small * In order to qualify, the role should be an academic/research/teaching
+          <br /> position at an academic institution.
+      </td>
+
+
+  h3 Feedback
+
+  p We welcome and encourage your feedback as we navigate this new landscape! If you
+    wish to provide feedback, have an idea, require help, or otherwise
+    just want to reach out, you have the following options:
+
+  ul
+    li <a href="https://forms.gle/QK1Hb7WBQstHGZ6F8">SciRate Job Ads feedback form</a>;
+    li Post an issue on <a href="https://github.com/scirate/">SciRate on GitHub</a>;
+    li Email us! You can contact me here: <a href="mailto:noon@braneshop.com.au">noon@braneshop.com.au</a>.

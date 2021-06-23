@@ -5,6 +5,8 @@ source 'http://rubygems.org'
 gem 'rails', '6.1.0'
 gem 'bcrypt', '~> 3.1.7'
 
+gem 'stripe'
+gem 'jwt'
 
 # Database stuff
 # gem 'pg' # Postgres support
@@ -24,7 +26,7 @@ gem 'turbolinks' # Speeds up links
 # Authentication
 gem 'omniauth' # For google
 gem 'omniauth-google-oauth2'
-gem 'omniauth-rails_csrf_protection', '~> 0.1'
+gem 'omniauth-rails_csrf_protection'
 
 # For interfacing with the arxiv OAI to
 # download new papers in bulk
