@@ -14,8 +14,6 @@ query MyQuery {
 }"""
 
     resp  = run_graphql_query(query)
-    puts "GraphQL Response: "
-    puts resp
     jobs = resp["data"]["jobs"]
 
     if jobs.length == 1
