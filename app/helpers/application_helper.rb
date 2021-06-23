@@ -37,7 +37,7 @@ module ApplicationHelper
   def run_graphql_query(query)
     token = mk_jwt_token('ruby', '')
     uri   = URI(Settings::GRAPHQL_URL)
-    http  = Net::HTTP.new(uri.host, uri.port)
+    http  = Net::HTTP.new(uri.host, uri.port, :use_ssl => uri.scheme == 'https')
     req   = Net::HTTP::Post.new(uri.path,
                                 {'Content-Type' => 'application/json',
                                 'Authorization' => "Bearer #{token}"})
