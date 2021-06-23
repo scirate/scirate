@@ -21,6 +21,7 @@ class ApiController < ApplicationController
           quantity: 1,
         }],
         mode: 'payment',
+        allow_promotion_codes: true,
         success_url: Settings::STRIPE_SUCCESS_URL + "?jobId=" + params[:jobId],
         cancel_url: Settings::STRIPE_CANCEL_URL,
         payment_intent_data: {
