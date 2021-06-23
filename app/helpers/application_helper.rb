@@ -47,6 +47,7 @@ module ApplicationHelper
     res = http.request(req)
     JSON.parse(res.body)
   rescue => e
+    logger.error("Error with GraphQL: #{e}")
     {}
   end
 end
