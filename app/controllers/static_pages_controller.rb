@@ -14,7 +14,10 @@ query MyQuery {
 }"""
 
     resp  = run_graphql_query(query)
-    jobs = resp["data"]["jobs"]
+
+    # Ruby is great.
+    data = resp["data"] || {}
+    jobs = data["jobs"] || []
 
     if jobs.length == 1
       job = jobs[0]
