@@ -11,7 +11,8 @@ class ApplicationController < ActionController::Base
   before_action :set_token
 
   def set_token
-    @token = mk_jwt_token("public", params[:i])
+    role = (signed_in? and current_user.can_admin?) ? "job_admin" : "public"
+    @token = mk_jwt_token(role, params[:i])
   end
 
   def not_found
