@@ -1,0 +1,16 @@
+module LocalSettings
+  RECAPTCHA_SITE_KEY       = ''
+  RECAPTCHA_SECRET_KEY     = ''
+  STRIPE_API_SECRET_KEY    = ''
+  STRIPE_API_PUBLIC_KEY    = ''
+  SCIRATE_JOB_AD_PRICE_USD = 0
+  STRIPE_SUCCESS_URL       = 'http://localhost:8000/jobs/success'
+  STRIPE_CANCEL_URL        = 'http://localhost:8000/jobs/submit'
+  GRAPHQL_JWT_ALGORITHM    = 'HS256'
+  GRAPHQL_JWT_SECRET       = '123'
+  GRAPHQL_URL              = 'http://localhost:8080/v1/graphql'
+  JWT_EXPIRY_MINUTES       = 5000000
+  JOBS_VISIBLE             = true
+  SCIRATE_EMAIL_ADMIN      = ''
+  ELASTIC_SEARCH_HOST      = 'search'
+end

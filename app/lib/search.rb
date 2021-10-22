@@ -7,7 +7,8 @@ module Search
   end
 
   def self.es
-    @es ||= Elasticsearch::Client.new url: 'http://localhost:9200', log: true
+    host = Settings::ELASTIC_SEARCH_HOST
+    @es ||= Elasticsearch::Client.new url: "http://#{host}:9200", log: true
   end
 
   # http://stackoverflow.com/questions/16205341/symbols-in-query-string-for-elasticsearch
@@ -120,7 +121,7 @@ module Search
   # e.g. scirate_test_1394158756
   def self.true_index_name
     begin
-      al = es.indices.get_alias index: self.index_name 
+      al = es.indices.get_alias index: self.index_name
       al.keys[0]
     rescue => e
       nil

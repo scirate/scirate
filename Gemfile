@@ -1,4 +1,4 @@
-ruby '2.6.6'
+ruby '2.6.8'
 source 'http://rubygems.org'
 
 # Rails

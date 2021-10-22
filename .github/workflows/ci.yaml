@@ -1,0 +1,37 @@
+name: ci
+on: push
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+
+      - name: Setup
+        run: |
+          cp local_settings.rb.ci local_settings.rb
+          cp config/database.yml.ci config/database.yml
+
+
+      - name: Build
+        run: docker-compose build
+
+
+      - name: Start up
+        run: |
+          docker-compose up -d
+          # Doom-filled way of waiting for elasticsearch to be up.
+          wget \
+            --quiet \
+            --retry-connrefused \
+            --waitretry=1 \
+            --read-timeout=20 \
+            --timeout=15 \
+            --tries 90 \
+            localhost:9200/_cat/health -O /dev/null
+
+
+      - name: Test
+        run: |
+          docker-compose exec -T web rspec
+
