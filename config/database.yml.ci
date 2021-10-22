@@ -2,11 +2,10 @@ development: &dev
   adapter: postgresql
   encoding: unicode
   database: scirate
+  host: db
+  username: scirate
+  password: scirate
   pool: 5
-
-production:
-  <<: *dev
-  database: scirate_prod
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

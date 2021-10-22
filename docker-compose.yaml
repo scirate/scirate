@@ -1,0 +1,34 @@
+version: '3.6'
+services:
+  db:
+    image: postgres:9.5.24
+    environment:
+      - POSTGRES_USER=scirate
+      - POSTGRES_PASSWORD=scirate
+    restart: always
+
+  search:
+    image: elasticsearch:7.10.1
+    environment:
+      - discovery.seed_hosts=127.0.0.1,[::1]
+      - node.name=es01
+      - cluster.initial_master_nodes=es01
+    ports:
+      - 9200:9200
+
+  web:
+    build: .
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+      - search
+
+  # Note: to populate the DB, you need to run (with the docker containers
+  # running.)
+  #
+  #   docker-compose run rake arxiv:feed_import
+  #   docker-compose run rake arxiv:oai_update
