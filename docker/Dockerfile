@@ -19,7 +19,7 @@ copy Gemfile.lock /app/Gemfile.lock
 run gem install bundler
 run bundle install
 
-copy entrypoint.sh /usr/bin/
+copy docker/entrypoint.sh /usr/bin/
 run chmod +x /usr/bin/entrypoint.sh
 entrypoint ["entrypoint.sh"]
 
