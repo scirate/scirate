@@ -13,7 +13,7 @@ issues](https://github.com/scirate/scirate/issues).
 
 ## Setting up for development
 
-Development is best done locally using docker-compose
+Development is best done locally using [docker-compose](https://docs.docker.com/compose/install/):
 
 ```
 docker-compose build
@@ -40,9 +40,8 @@ From there, you can run the tests:
 docker-compose exec web rspec
 ```
 
-
-
-Or, you can sync to arXiv.org and then play around with the system locally:
+After that, you can sync to arXiv.org and then play around with the system
+locally:
 
 ```
 docker-compose run rake arxiv:feed_import
@@ -51,17 +50,12 @@ docker-compose run rake arxiv:oai_update
 
 Then, spin up the rails server:
 
-
 ```
 docker-compose up -d
 ```
 
 and visit <http://localhost:3000> and you will be looking at SciRate!
 
-
-This will initialize the database and Elasticsearch, download the basic feed
-layout, and start the server. If es:migrate is not working check that it is
-running, as per the notes above.
 
 ## Testing
 
