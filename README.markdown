@@ -1,7 +1,6 @@
 # SciRate
 
 [![Build Status](https://github.com/scirate/scirate/actions/workflows/ci.yaml/badge.svg)](https://github.com/scirate/scirate/actions/workflows/ci.yaml)
-[![Coverage Status](https://coveralls.io/repos/scirate/scirate/badge.svg?branch=main)](https://coveralls.io/r/scirate/scirate?branch=main)
 
 [SciRate](https://scirate.com/) is an open source rating and commenting system
 for [arXiv](http://arxiv.org/) preprints. Papers are upvoted and discussed by
