@@ -19,7 +19,7 @@ run [web], <<END
 source ~/.ruby-stuff
 cd ~/scirate
 git fetch -f
-git reset --hard origin/master
+git reset --hard origin/main
 ln -sf ~/database.yml config/database.yml
 ln -sf ~/local_settings.rb local_settings.rb
 bundle install --without="development test"
