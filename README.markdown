@@ -27,12 +27,12 @@ cp local_settings.rb.ci local_settings.rb
 cp config/database.yml.ci config/database.yml
 ```
 
-Then, you can run the pre-reqs like so:
+Then, spin up all the servers,
 
 ```
-rake db:setup
-rake es:migrate
+docker-compose up -d
 ```
+
 
 From there, you can run the tests:
 
@@ -44,14 +44,8 @@ After that, you can sync to arXiv.org and then play around with the system
 locally:
 
 ```
-docker-compose run rake arxiv:feed_import
-docker-compose run rake arxiv:oai_update
-```
-
-Then, spin up the rails server:
-
-```
-docker-compose up -d
+docker-compose exec web rake arxiv:feed_import
+docker-compose exec web rake arxiv:oai_update
 ```
 
 and visit <http://localhost:3000> and you will be looking at SciRate!
