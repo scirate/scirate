@@ -211,8 +211,8 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     newrelic_rpm (7.1.0)
-    nio4r (2.5.7)
-    nokogiri (1.11.7-x86_64-linux)
+    nio4r (2.5.8)
+    nokogiri (1.12.5-x86_64-linux)
       racc (~> 1.4)
     oauth2 (1.4.7)
       faraday (>= 0.8, < 2.0)
@@ -246,9 +246,9 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.6)
-    puma (5.3.2)
+    puma (5.5.2)
       nio4r (~> 2.0)
-    racc (1.5.2)
+    racc (1.6.0)
     rack (2.2.3)
     rack-protection (2.1.0)
       rack
@@ -398,7 +398,7 @@ DEPENDENCIES
   jquery-rails
   jwt
   newrelic_rpm
-  nokogiri (>= 1.11.0.rc4)
+  nokogiri (>= 1.12.5)
   oai!
   omniauth
   omniauth-google-oauth2
@@ -407,7 +407,7 @@ DEPENDENCIES
   pry
   pry-byebug
   pry-rails
-  puma
+  puma (>= 5.5.1)
   rails (= 6.1.0)
   rails-controller-testing
   rspec-rails
