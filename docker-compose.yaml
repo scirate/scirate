@@ -20,7 +20,9 @@ services:
       - 9200:9200
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     restart: always
     volumes:
       - .:/app
