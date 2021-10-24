@@ -34,7 +34,7 @@ docker-compose up -d
 
 From there, you can run the tests (note, you need to make sure elasticsearch
 is fully up; it can take 10 seconds or so, you can verify with
-`docker-compose logs`):
+`docker-compose logs -f search`):
 
 ```
 docker-compose exec web rspec

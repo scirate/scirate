@@ -19,8 +19,8 @@ copy Gemfile.lock /app/Gemfile.lock
 run gem install bundler
 run bundle install
 
-copy entrypoint.sh /usr/bin/
-run chmod +x /usr/bin/entrypoint.sh
-entrypoint ["entrypoint.sh"]
+copy docker/entrypoint.sh /usr/bin/
+run  chmod +x /usr/bin/entrypoint.sh
+cmd  entrypoint.sh
 
 expose 3000
