@@ -2,7 +2,7 @@ ruby '2.6.9'
 source 'http://rubygems.org'
 
 # Rails
-gem 'rails', '6.1.0'
+gem 'rails', '6.1.4.2'
 gem 'bcrypt', '~> 3.1.7'
 
 gem 'stripe'
