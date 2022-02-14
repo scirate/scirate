@@ -54,11 +54,14 @@ SciRate::Application.routes.draw do
   get '/legal',    to: 'static_pages#legal'
   get '/moderation',    to: 'static_pages#moderation'
 
-  get '/jobs/success', to: 'static_pages#job_success'
-  get '/jobs/submit',  to: 'static_pages#submit_job'
-  get '/jobs/about',   to: 'static_pages#about_jobs'
 
-  get '/jobs', to: 'static_pages#list_jobs'
+  if Settings::JOBS_VISIBLE
+    get '/jobs/success', to: 'static_pages#job_success'
+    get '/jobs/submit',  to: 'static_pages#submit_job'
+    get '/jobs/about',   to: 'static_pages#about_jobs'
+
+    get '/jobs', to: 'static_pages#list_jobs'
+  end
 
   get '/reset_password', to: 'password_resets#new', as: :reset_password
   post '/reset_password', to: 'password_resets#create'
