@@ -20,7 +20,7 @@ GIT
       faraday_middleware
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     actioncable (6.1.0)
       actionpack (= 6.1.0)
