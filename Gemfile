@@ -1,5 +1,5 @@
 ruby '2.6.9'
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 # Rails
 gem 'rails', '6.1.0'
