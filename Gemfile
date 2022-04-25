@@ -34,7 +34,7 @@ gem 'omniauth-rails_csrf_protection'
 # https://github.com/scirate/arxivsync
 gem 'oai', github: 'scirate/ruby-oai' # For Rails 4.1 compatibility
 gem 'arxivsync', github: 'scirate/arxivsync'
-gem "nokogiri", ">= 1.12.5"
+gem "nokogiri", ">= 1.13.4"
 
 
 # Elasticsearch API gem
