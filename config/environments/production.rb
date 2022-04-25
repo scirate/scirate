@@ -86,6 +86,6 @@ Rails.application.configure do
     email: {
       email_prefix: "[#{Settings::STAGING ? 'scirate-dev' : 'scirate'} error] ",
       sender_address: "notifier@scirate.com",
-      exception_recipients: %w{noonsilk+scirate-error@gmail.com}
+      exception_recipients: %w{scirate.mod@gmail.com}
     }
 end
