@@ -133,5 +133,5 @@ end
 group :production do
   # Sends us emails when stuff breaks in production
   gem 'exception_notification'
-  gem 'puma', ">= 5.5.1"
+  gem 'puma', ">= 5.6.4"
 end
