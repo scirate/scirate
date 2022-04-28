@@ -20,6 +20,7 @@ source ~/.ruby-stuff
 cd ~/scirate
 git fetch -f
 git reset --hard origin/main
+echo h3 $(git log --oneline -1 | cut -d' ' -f1) > app/views/static_pages/version.html.slim
 ln -sf ~/database.yml config/database.yml
 ln -sf ~/local_settings.rb local_settings.rb
 bundle install --without="development test"

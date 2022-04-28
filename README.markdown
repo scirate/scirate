@@ -61,7 +61,8 @@ system is up, will run them.
 
 ## Acknowledgements
 
-- Maintained by [Noon van der Silk](https://github.com/silky)
+- Maintained by [Kunal Marwaha](https://kunalmarwaha.com/about)
+- Previously maintained by [Noon van der Silk](https://github.com/silky)
 - Original website by [Dave Bacon](http://dabacon.org)
 - [Bill Rosgen](http://intractable.ca/bill/)
 - [Aram Harrow](http://www.mit.edu/~aram/)
