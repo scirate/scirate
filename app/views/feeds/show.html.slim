@@ -36,6 +36,8 @@
                 - parent.children.each do |feed|
                   li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid)
                     = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page, :controller, :action)))
+      div.hidden-md.hidden-lg.hidden-xl.hidden-xxl
+        = render 'feeds/next_prev_links'
 
     .col-md-10.feed-center
       - cache [:feed, @feed, current_user] do
@@ -71,7 +73,8 @@
 
         .col-md-3.feed-rightbar
           - cache [:next_prev, current_user, @feed, @date, @range, @backdate, @since_last]
-            = render 'feeds/next_prev_links'
+            div.hidden-xs.hidden-sm
+              = render 'feeds/next_prev_links'
 
           - if Settings::JOBS_VISIBLE
             - if (not current_user) || (current_user && current_user.show_jobs?)
