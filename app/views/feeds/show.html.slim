@@ -36,7 +36,7 @@
                 - parent.children.each do |feed|
                   li.leaf class=(@feed == feed ? 'active' : '') title=(feed.uid)
                     = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page, :controller, :action)))
-      div.hidden-md.hidden-lg.hidden-xl
+      div.hidden-md.hidden-lg.hidden-xl.hidden-xxl
         = render 'feeds/next_prev_links'
 
     .col-md-10.feed-center
