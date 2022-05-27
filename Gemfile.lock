@@ -257,7 +257,7 @@ GEM
     puma (5.6.4)
       nio4r (~> 2.0)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rack-protection (2.1.0)
       rack
     rack-test (1.1.0)
@@ -406,7 +406,7 @@ DEPENDENCIES
   jquery-rails
   jwt
   newrelic_rpm
-  nokogiri (>= 1.12.5)
+  nokogiri (>= 1.13.4)
   oai!
   omniauth
   omniauth-google-oauth2
@@ -415,7 +415,7 @@ DEPENDENCIES
   pry
   pry-byebug
   pry-rails
-  puma (>= 5.5.1)
+  puma (>= 5.6.4)
   rails (= 6.1.0)
   rails-controller-testing
   rspec-rails
