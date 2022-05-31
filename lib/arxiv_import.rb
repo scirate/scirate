@@ -96,8 +96,8 @@ module Arxiv::Import
         model.versions[-1].date,
         model.versions.length,
         pubdate,
-        "http://arxiv.org/abs/#{model.id}",
-        "http://arxiv.org/pdf/#{model.id}.pdf",
+        "https://arxiv.org/abs/#{model.id}",
+        "https://arxiv.org/pdf/#{model.id}.pdf",
       ]
 
       model.versions.each_with_index do |version, j|

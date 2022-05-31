@@ -30,7 +30,7 @@ def make_papers
       authors = [Faker::Name.name, Faker::Name.name]
       abstract = Faker::Lorem.paragraph(5)
       identifier = "#{1001+n}.#{1001+m}"
-      url = "http://arxiv.org/abs/#{identifier}"
+      url = "https://arxiv.org/abs/#{identifier}"
       pubdate = Date.today - 1.months + n.days
 
       Paper.create!(title:      title,

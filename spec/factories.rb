@@ -46,8 +46,8 @@ FactoryGirl.define do
     submit_date            { Date.today }
     update_date            { Date.today }
     pubdate                { Paper.estimate_pubdate(Date.today) }
-    sequence(:abs_url)     { |n| "http://arxiv.org/abs/#{1000+n}/#{1000+n}.#{10000+n}" }
-    sequence(:pdf_url)     { |n| "http://arxiv.org/pdf/#{1000+n}/#{1000+n}.#{10000+n}" }
+    sequence(:abs_url)     { |n| "https://arxiv.org/abs/#{1000+n}/#{1000+n}.#{10000+n}" }
+    sequence(:pdf_url)     { |n| "https://arxiv.org/pdf/#{1000+n}/#{1000+n}.#{10000+n}" }
     author_str             'Hilbert N. Grande, Lucrezia Mongfish'
 
     trait :with_comments do
