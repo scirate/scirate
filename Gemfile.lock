@@ -220,7 +220,7 @@ GEM
     multipart-post (2.1.1)
     newrelic_rpm (8.2.0)
     nio4r (2.5.8)
-    nokogiri (1.13.4-x86_64-linux)
+    nokogiri (1.13.6-x86_64-linux)
       racc (~> 1.4)
     oauth2 (1.4.7)
       faraday (>= 0.8, < 2.0)
