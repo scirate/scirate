@@ -5,7 +5,7 @@ describe "Paper pages" do
     @paper = FactoryGirl.create(:paper,
       uid: "1404.5997",
       title: "One weird trick for parallelizing convolutional neural networks",
-      pdf_url: "http://arxiv.org/pdf/1404.5997.pdf",
+      pdf_url: "https://arxiv.org/pdf/1404.5997.pdf",
       pubdate: Chronic.parse("25 Apr 2014")
     )
     FactoryGirl.create(:author, paper: @paper,
@@ -31,7 +31,7 @@ describe "Paper pages" do
       expect(find('meta[name="citation_publication_date"]', visible: false)['content'])
         .to eq "2014/04/25"
       expect(find('meta[name="citation_pdf_url"]', visible: false)['content'])
-        .to eq "http://arxiv.org/pdf/1404.5997.pdf"
+        .to eq "https://arxiv.org/pdf/1404.5997.pdf"
       expect(find('meta[name="citation_arxiv_id"]', visible: false)['content'])
         .to eq "1404.5997"
     end

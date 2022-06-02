@@ -126,8 +126,8 @@ describe "arxiv importer" do
     expect(paper.submit_date).to eq(Time.parse("Fri, 21 Nov 2008 22:55:07 UTC"))
     expect(paper.update_date).to eq(Time.parse("Thu, 9 Apr 2009 02:45:30 UTC"))
     expect(paper.pubdate).to eq(Time.parse("Tue, 25 Nov 2008 01:00 UTC"))
-    expect(paper.abs_url).to eq("http://arxiv.org/abs/0811.36489")
-    expect(paper.pdf_url).to eq("http://arxiv.org/pdf/0811.36489.pdf")
+    expect(paper.abs_url).to eq("https://arxiv.org/abs/0811.36489")
+    expect(paper.pdf_url).to eq("https://arxiv.org/pdf/0811.36489.pdf")
     expect(paper.versions_count).to eq 2
 
     # Ensure last_paper_date is updated on all feeds including parents
