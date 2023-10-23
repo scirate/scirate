@@ -64,7 +64,11 @@ Locally, you can run `./deploy.rb`. You will need `ssh` access to the production
 
 ## Moderating
 
-In the database, each user (in `users`) has an `account_status` column. Change this to `admin` or `moderator` for extra powers on the site (for example `https://scirate.com/admin` and hiding inflammatory recent comments). Users can also be set to `spam`.
+In the database, each user (in `users`) has an `account_status` column. Change this to `admin` or `moderator` for extra powers on the site.
+
+* Both admins and moderators can hide inflammatory recent comments.
+* Admins can see a dashboard `https://scirate.com/admin`, set a global alert (i.e. for announcing upcoming site maintenance), and act as other users.
+* A user can also have `account_status` set to `spam`.
 
 
 ## Acknowledgements
