@@ -58,6 +58,9 @@ There is a fairly comprehensive series of unit and integration tests in
 `spec`. Running `docker-compose exec web rspec`, if the entire docker-compose
 system is up, will run them.
 
+## Deploying
+
+Locally, you can run `./deploy.rb`. You will need `ssh` access to the production server for this to run successfully.
 
 ## Acknowledgements
 
