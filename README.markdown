@@ -62,6 +62,11 @@ system is up, will run them.
 
 Locally, you can run `./deploy.rb`. You will need `ssh` access to the production server for this to run successfully.
 
+## Moderating
+
+In the database, each user (in `users`) has an `account_status` column. Change this to `admin` or `moderator` for extra powers on the site (for example `https://scirate.com/admin` and hiding inflammatory recent comments). Users can also be set to `spam`.
+
+
 ## Acknowledgements
 
 - Maintained by [Kunal Marwaha](https://kunalmarwaha.com/about)
