@@ -4,7 +4,7 @@
 
 [SciRate](https://scirate.com/) is an open source rating and commenting system
 for [arXiv](http://arxiv.org/) preprints. Papers are upvoted and discussed by
-the community, and we sometimes play host to more [in depth peer
+the community, and we sometimes play host to more [in-depth peer
 review](https://scirate.com/tqc-2014-program-committee).
 
 Bug reports and feature requests should be submitted as [GitHub
