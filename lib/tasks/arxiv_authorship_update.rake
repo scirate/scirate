@@ -7,6 +7,7 @@ namespace :arxiv do
 
     User.where("author_identifier <> ''").each do |user|
       begin
+        $stderr.puts "Updating username #{user.username}"
         user.update_authorship!
         sleep 1
       rescue OpenURI::HTTPError
