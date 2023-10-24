@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: https://github.com/scirate/ruby-oai.git
-  revision: 8a2fa086814f5c6e5a206a6adce18cf0593951a7
+  revision: 527935ed2dc285fc8ad9ea8ab0cb82504636cb23
   specs:
     oai (0.3.0)
       builder (>= 3.1.0)

@@ -32,7 +32,7 @@ gem 'omniauth-rails_csrf_protection'
 # download new papers in bulk
 # arxivsync is our custom gem and can be found at:
 # https://github.com/scirate/arxivsync
-gem 'oai', github: 'scirate/ruby-oai' # For Rails 4.1 compatibility
+gem 'oai', github: 'scirate/ruby-oai'
 gem 'arxivsync', github: 'scirate/arxivsync'
 gem "nokogiri", ">= 1.13.4"
 
