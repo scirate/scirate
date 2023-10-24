@@ -503,6 +503,7 @@ class Search::Paper::Query
         @orders << tstrip(term).to_sym
       elsif term.start_with?('date:')
         @date_range = parse_date_range(tstrip(term))
+        @es_query << 'pubdate:[' + @date_range.first.to_s[0..9] + ' TO ' + @date_range.last.to_s[0..9] + ']'
       else
         @es_query << Search.partial_sanitize(term)
       end
@@ -528,30 +529,17 @@ class Search::Paper::Query
   end
 
   def run(opts={})
-    filter = if @date_range
-      {
-        range: {
-          pubdate: {
-            from: @date_range.first,
-            to: @date_range.last
-          }
-        }
-      }
-    else
-      {}
-    end
-
     query = {
         query_string: {
           query: @es_query.join(' '),
           default_operator: 'AND'
         }
-    }.merge(filter)
+    }
 
     params = {
       sort: @sort,
       query: query
-    }.merge(opts).merge(filter)
+    }.merge(opts)
 
     @results = Search::Paper.es_find(params)
   end
