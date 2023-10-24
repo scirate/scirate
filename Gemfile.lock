@@ -243,7 +243,7 @@ GEM
     omniauth-rails_csrf_protection (1.0.0)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
-    ox (2.14.6)
+    ox (2.14.14)
     pg (1.2.3)
     pry (0.14.1)
       coderay (~> 1.1)
