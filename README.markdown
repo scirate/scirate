@@ -65,7 +65,7 @@ Locally, you can run `./deploy.rb`. You will need `ssh` access to the production
 ## Automatic updates
 
 The website updates automatically every hour with a `sync.sh` script in a crontab on the server. The crontab uses a file lock via `flock`.
-* It first calls `arxiv_paper_sync.rake`. This checks if it's the right time to update, and if so, downloads new papers via `arxiv_oai_update.rake`.
+* It first calls `arxiv_paper_sync.rake`. This checks if it's the right time to update, and if so, downloads new papers via `arxiv_oai_update.rake`. This uses the custom [arxivsync](https://github.com/scirate/arxivsync) package.
 * Then it calls `arxiv_author_sync.rake`. This checks if it's the right time to update, and if so, links the arXiv author identifiers specified by users with the list of papers on arXiv.org via `arxiv_authorship_update.rake`.
 
 
