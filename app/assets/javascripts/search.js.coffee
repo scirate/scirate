@@ -103,12 +103,12 @@ class View.Search extends Backbone.View
   showAdvanced: ->
     @$('#advancedSearch').removeClass('hidden')
     @$('#advanced').attr('name', 'advanced')
-    @$('#toggleAdvanced i').removeClass('icon-chevron-right').addClass('icon-chevron-down')
+    @$('#toggleAdvanced i').removeClass('fa-chevron-right').addClass('fa-chevron-down')
 
   hideAdvanced: ->
     @$('#advancedSearch').addClass('hidden')
     @$('#advanced').attr('name', '')
-    @$('#toggleAdvanced i').removeClass('icon-chevron-down').addClass('icon-chevron-right')
+    @$('#toggleAdvanced i').removeClass('fa-chevron-down').addClass('fa-chevron-right')
 
   toggleAdvanced: ->
     console.log @$('#advancedSearch')
