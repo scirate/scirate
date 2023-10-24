@@ -10,7 +10,7 @@ namespace :arxiv do
     if last_paper.nil?
       fromdate = Time.now-7.days
     else
-      fromdate = last_paper.pubdate-2.days
+      fromdate = last_paper.pubdate-21.days
     end
 
     # Do this in a single transaction to avoid any database consistency issues
