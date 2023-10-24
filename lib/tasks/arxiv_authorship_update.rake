@@ -12,9 +12,12 @@ namespace :arxiv do
         sleep 1
       rescue OpenURI::HTTPError
         $stderr.puts "Invalid author_identifier for #{user.username}: #{user.author_identifier}"
+      rescue ActiveRecord::RecordInvalid => invalid
+        $stderr.puts "Couldn't add new authorship, probably missing a paper in the database!"
+        $stderr.puts invalid.record.errors
       end
 
-      $stderr.puts "Synced authorship for #{user.username}"
+      $stderr.puts "Finished syncing authorship for #{user.username}"
     end
 
     System.update_all(arxiv_author_sync_dt: time)
