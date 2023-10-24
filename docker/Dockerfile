@@ -1,4 +1,4 @@
-from ruby:2.6.10-buster
+from ruby:2.6.9-buster
 
 # TODO: It's crazy that we need qt5 (and gstreamer?!)
 run   apt-get update -qq && \
