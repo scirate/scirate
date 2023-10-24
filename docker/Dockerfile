@@ -1,4 +1,4 @@
-from ruby:2.6.9-buster
+from ruby:2.6.10-buster
 
 # TODO: It's crazy that we need qt5 (and gstreamer?!)
 run   apt-get update -qq && \
@@ -16,6 +16,7 @@ workdir /app
 copy Gemfile /app/Gemfile
 copy Gemfile.lock /app/Gemfile.lock
 
+run gem update --system
 run gem install bundler
 run bundle install
 
