@@ -62,6 +62,13 @@ system is up, will run them.
 
 Locally, you can run `./deploy.rb`. You will need `ssh` access to the production server for this to run successfully.
 
+## Automatic updates
+
+The website updates automatically every hour with a `sync.sh` script in a crontab on the server. The crontab uses a file lock via `flock`.
+* It first calls `arxiv_paper_sync.rake`. This checks if it's the right time to update, and if so, downloads new papers via `arxiv_oai_update.rake`.
+* Then it calls `arxiv_author_sync.rake`. This checks if it's the right time to update, and if so, links the arXiv author identifiers specified by users with the list of papers on arXiv.org via `arxiv_authorship_update.rake`.
+
+
 ## Moderating
 
 In the database, each user (in `users`) has an `account_status` column. Change this to `admin` or `moderator` for extra powers on the site.
