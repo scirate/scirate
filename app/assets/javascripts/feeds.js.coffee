@@ -1,9 +1,14 @@
 setupFeedPage = ->
   # Feed sidebar tree expansion
-  $('.feed-folder i').click ->
-    $(this).toggleClass('icon-chevron-right')
-    $(this).toggleClass('icon-chevron-down')
+  $('.feed-folder i').not('.transparent').click ->
+    $(this).toggleClass('fa-chevron-right')
+    $(this).toggleClass('fa-chevron-down')
     $(this).closest('li').children('ul.tree').toggle(300)
+
+  $('.arXiv-feed-header i').click ->
+    $(this).toggleClass('fa-chevron-right')
+    $(this).toggleClass('fa-chevron-down')
+    $(".arXiv-feed").toggle(300)
 
   # Moderators: hide from recent comments
   $('.hide-from-recent').click ->
