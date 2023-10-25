@@ -5,9 +5,9 @@ class window.View extends Backbone.View
 # Adds arXiv.org/abs/blah links to arXiv:blah in abstracts
 SciRate._hyperlinker = () ->
   re  = new RegExp("arXiv:([a-z-]+\/[0-9]+|[0-9]+.[0-9]+)", "g")
-  $(".tex2jax").each( (index) ->
+  $(".abstract").each( (index) ->
     curHtml = $(this).html()
-    $(this).html(curHtml.replaceAll(re, '<a href="https://arxiv.org/abs/$1">arXiv:$1</a>'))
+    $(this).html(curHtml.replaceAll(re, '<a href="/arxiv/$1">arXiv:$1</a>'))
   )
 
 # Modal for selecting a custom date range
