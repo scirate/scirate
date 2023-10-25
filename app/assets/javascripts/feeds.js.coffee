@@ -1,6 +1,6 @@
 setupFeedPage = ->
   # Feed sidebar tree expansion
-  $('.feed-folder i').click ->
+  $('.feed-folder i').not('.transparent').click ->
     $(this).toggleClass('fa-chevron-right')
     $(this).toggleClass('fa-chevron-down')
     $(this).closest('li').children('ul.tree').toggle(300)
