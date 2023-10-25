@@ -257,7 +257,7 @@ GEM
     puma (5.6.7)
       nio4r (~> 2.0)
     racc (1.7.1)
-    rack (2.2.3.1)
+    rack (2.2.8)
     rack-protection (2.1.0)
       rack
     rack-test (1.1.0)
@@ -436,7 +436,7 @@ DEPENDENCIES
   will_paginate
 
 RUBY VERSION
-   ruby 2.6.8p205
+   ruby 2.6.9p207
 
 BUNDLED WITH
    2.2.33
