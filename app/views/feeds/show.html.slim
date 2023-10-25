@@ -25,9 +25,11 @@
                       = link_to(feed.fullname, feed_path(feed, params.except(:feed, :page, :controller, :action)))
 
         = cache [:sidebar, params] do
-          li.source-heading arXiv.org
+          li.source-heading.arXiv-feed-header
+            i.fa.fa-chevron-right title="Click to show/hide feeds"
+            span arXiv.org
           - Feed.in_order(Settings::ARXIV_FOLDERS).each do |parent|
-            li.feed-folder class=(@feed == parent ? 'active' : '') title=(parent.uid)
+            li.feed-folder.arXiv-feed class=(@feed == parent ? 'active' : '') title=(parent.uid) style='display: none;'
               - expanded = (@feed == parent || (@feed && @feed.parent == parent))
               label.nav-header
                 i class=(expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right') class=(parent.children.length > 0 ? '' : 'transparent')

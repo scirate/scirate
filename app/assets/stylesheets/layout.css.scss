@@ -526,6 +526,15 @@ div.abbr_comment {
 
 // Feed listing sidebar
 
+.source-heading {
+  i {
+    line-height: 1.5em;
+    float: left;
+    cursor: pointer;
+    padding-right: 6px;
+  }
+}
+
 .feedbar {
   .my-feeds {
     margin-bottom: 10px;
