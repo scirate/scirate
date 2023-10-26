@@ -2,12 +2,19 @@ SciRate.login = -> redirect("/login")
 
 class window.View extends Backbone.View
 
-# Adds arXiv.org/abs/blah links to arXiv:blah in abstracts
 SciRate._hyperlinker = () ->
-  re  = new RegExp("arXiv:([a-z-]+\/[0-9]+|[0-9]+.[0-9]+)", "g")
+  # First, adds arXiv.org/abs/blah links to arXiv:blah in abstracts
+  re = new RegExp("arXiv:([a-z-]+\/[0-9]+|[0-9]+.[0-9]+)", "g")
   $(".abstract").each( (index) ->
     curHtml = $(this).html()
     $(this).html(curHtml.replaceAll(re, '<a href="/arxiv/$1">arXiv:$1</a>'))
+  )
+
+  # Then, makes links for http links in author comments
+  re_comments = new RegExp("(https?:\/\/[^ \n]+)", "g")
+  $(".author_comments").each( (index) ->
+    curHtml = $(this).html()
+    $(this).html(curHtml.replaceAll(re_comments, '<a href="$1">$1</a>'))
   )
 
 # Modal for selecting a custom date range
