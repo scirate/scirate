@@ -14,43 +14,37 @@ issues](https://github.com/scirate/scirate/issues).
 
 Development is best done locally using [docker-compose](https://docs.docker.com/compose/install/):
 
-```sh
+```
 docker-compose build
 ```
 
 In order to run the app, you will need a `local_settings.rb` file, and a
 `config/database.yml` file. You can copy these from the CI versions:
 
-```sh
+```
 cp local_settings.rb.ci local_settings.rb
 cp config/database.yml.ci config/database.yml
 ```
 
 Then, spin up all the servers,
 
-```sh
+```
 docker-compose up -d
 ```
 
-You need to make sure elasticsearch is fully up; it can take 10 seconds or so, you can verify with
-```sh
-while true; do sleep 1; curl localhost:9200/_cat/health; done
+From there, you can run the tests (note, you need to make sure elasticsearch
+is fully up; it can take 10 seconds or so, you can verify with
+`curl localhost:9200/_cat/health`, or `docker-compose logs -f search`
+to see (the quite verbose) logs)):
+
 ```
-
-You can check to make sure something is at <localhost:3000>. You should see SciRate.
-
-> If nothing is there, it's possible something went wrong. One common message is something like  `A server is already running. Check ... tmp/pids/server.pid.` Deleting `./tmp/pids/server.pid` fixes this issue.
-
-From here, you can run the tests.
-
-```sh
 docker-compose exec web rspec
 ```
 
 After that, you can sync to arXiv.org and then play around with the system
 locally:
 
-```sh
+```
 docker-compose exec web rake arxiv:feed_import
 docker-compose exec web rake arxiv:oai_update
 ```
