@@ -31,6 +31,13 @@ class Admin::BaseController < ApplicationController
       end
     end
 
+    @page = params.fetch(:page, 1).to_i
+    @per_page = 20
+    @pagination = WillPaginate::Collection.new(@page, @per_page, User.count)
+    @users = User.order('created_at DESC')
+                .limit(@per_page)
+                .offset((@page-1)*@per_page)
+
     render 'admin/index'
   end
 

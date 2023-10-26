@@ -59,16 +59,5 @@
         th Scites
         th Comments
         th Actions
-    - User.limit(2000).order('created_at DESC').each do |user|
-      tr
-        td
-          a href="/#{user.username}" = user.fullname
-        td= user.username
-        td= user.email
-        td width="20%"
-          = timeago(user.created_at)
-        td= user.scites_count
-        td= user.comments_count
-        td
-          a href="/admin/users/#{user.username}/edit" Edit
-
+    = render partial: "admin/user", collection: @users
+  = will_paginate @pagination
