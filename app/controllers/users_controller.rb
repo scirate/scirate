@@ -43,11 +43,14 @@ class UsersController < ApplicationController
   end
 
   def download_scites
+    @page = [1, params.fetch(:page, 1).to_i].max
+    @per_page = 1000
+
     @scited_papers = @user.scited_papers
       .select("papers.*, scites.created_at as scite_created_at")
       .order("scites.created_at DESC")
 
-    render json: @scited_papers
+    render json: @scited_papers[ [@scited_papers.length, @per_page * (@page - 1)].min, @per_page]
   end
 
   def comments

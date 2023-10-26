@@ -73,7 +73,7 @@
           a.btn.btn-default href=(settings_path)
             i.fa.icon-fw.fa-pencil
             | Edit profile
-          a.btn.btn-default href=(user_download_scites_path @user)
+          a.btn.btn-default href=(user_download_scites_path(@user, {:page => 1})) title="This downloads Scites in pages of 1000. View a different page by changing the query parameter in the URL."
             i.fa.icon-fw.fa-download
             | Download Scites (JSON)
 
