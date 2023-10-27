@@ -16,7 +16,7 @@ describe UserMailer do
     end
 
     it 'has the right body content' do
-      expect(mail.body.encoded).to match("Welcome to SciRate!  To activate your account, click the URL below.")
+      expect(mail.body.encoded).to match("Welcome to SciRate! To activate your account, click the URL below.")
     end
 
     it 'renders the receiver email' do
