@@ -64,7 +64,6 @@ setupBibtex = ->
         $(window).one 'click', remove
 
 $(document).on "ready", ->
-  console.log 'ready'
   setupBibtex()
   setupPaperPage()
 
