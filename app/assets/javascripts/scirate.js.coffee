@@ -201,7 +201,7 @@ setupPageLoad = ->
   # Setup generic dropdowns
   $('.dropdown').each ->
     $(this).mouseenter -> $(this).find('.dropdown-toggle').dropdown('toggle')
-    $(this).mouseleave -> $(this).find('.dropdown-toggle').dropdown('hide')
+    $(this).mouseleave -> $(this).find('.dropdown-toggle').dropdown('toggle')
 
   # Feed subscription toggles
   $('.subscribe-toggle').each ->
