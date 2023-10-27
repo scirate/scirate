@@ -73,10 +73,6 @@ group :development, :test do
   gem 'pry-rails'
 end
 
-group :production, :profile do
-  gem 'newrelic_rpm'
-end
-
 group :development do
   # Development webserver
   gem 'thin'
