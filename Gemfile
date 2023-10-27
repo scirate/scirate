@@ -69,12 +69,8 @@ group :development, :test do
 
   # An improved IRB alternative for rails console
   gem 'pry'
-  gem 'pry-byebug'
+  gem 'pry-byebug', '~> 3.9.0'
   gem 'pry-rails'
-end
-
-group :production, :profile do
-  gem 'newrelic_rpm'
 end
 
 group :development do

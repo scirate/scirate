@@ -218,7 +218,6 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
-    newrelic_rpm (8.2.0)
     nio4r (2.5.9)
     nokogiri (1.13.10-x86_64-linux)
       racc (~> 1.4)
@@ -245,12 +244,12 @@ GEM
       omniauth (~> 2.0)
     ox (2.14.14)
     pg (1.2.3)
-    pry (0.14.1)
+    pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.8.0)
+    pry-byebug (3.9.0)
       byebug (~> 11.0)
-      pry (~> 0.10)
+      pry (~> 0.13.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.6)
@@ -405,7 +404,6 @@ DEPENDENCIES
   font-awesome-rails
   jquery-rails
   jwt
-  newrelic_rpm
   nokogiri (>= 1.13.4)
   oai!
   omniauth
@@ -413,7 +411,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   pg (~> 1.1)
   pry
-  pry-byebug
+  pry-byebug (~> 3.9.0)
   pry-rails
   puma (>= 5.6.4)
   rails (= 6.1.0)

@@ -54,8 +54,8 @@ html lang="en"
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-26606225-5', '#{Settings::HOST}');
-        ga('send', 'pageview');
+        ga('create', 'UA-26606225-5', '#{Settings::HOST}', { 'cookieFlags': 'SameSite=None; Secure' });
+        ga('send', 'pageview', { 'cookieFlags': 'SameSite=None; Secure' });
 
       = favicon_link_tag (asset_url 'favicon.png')
 

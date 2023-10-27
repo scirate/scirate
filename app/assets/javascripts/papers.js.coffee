@@ -3,7 +3,7 @@ try
   fo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash")
   hasFlash = true if fo
 catch e
-  console.log e
+  # console.log e
   hasFlash = true if navigator.mimeTypes and navigator.mimeTypes["application/x-shockwave-flash"] != undefined and navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin
 
 setupPaperPage = ->
@@ -64,7 +64,6 @@ setupBibtex = ->
         $(window).one 'click', remove
 
 $(document).on "ready", ->
-  console.log 'ready'
   setupBibtex()
   setupPaperPage()
 
