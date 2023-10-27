@@ -6,6 +6,7 @@ if Rails.env.production?
     :address => "smtp.sendgrid.net",
     :port => "587",
     :domain => Settings::HOST,
+    :enable_starttls_auto => true,
     :authentication => :plain,
     :user_name => Settings::SENDGRID_USERNAME,
     :password => Settings::SENDGRID_PASSWORD
