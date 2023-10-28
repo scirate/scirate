@@ -217,6 +217,7 @@ setupPageLoad = ->
       $('#resend-confirm-email').popover(
         content: "Sent"
       )
+      $('#resend-confirm-email').popover('show')
 
   # Landing page specific
   $('#landing').each ->

@@ -57,6 +57,7 @@ docker-compose exec web rake arxiv:oai_update
 
 and visit <http://localhost:3000> and you will be looking at SciRate!
 
+It may not be possible to make new users locally. If you get stuck, you can disable the `unless verify_recaptcha` code block in `app/controllers/users_controller.rb` and it should work.
 
 ## Testing
 
@@ -83,6 +84,7 @@ In the database, each user (in `users`) has an `account_status` column. Change t
 * Admins can see a dashboard `https://scirate.com/admin`, set a global alert (i.e. for announcing upcoming site maintenance), and act as other users.
 * A user can also have `account_status` set to `spam`.
 
+There is also a feature to lock comments of a paper. This can be done by changing a flag in the database (there is an open issue to make this accessible in the frontend https://github.com/scirate/scirate/issues/335).
 
 ## Acknowledgements
 
