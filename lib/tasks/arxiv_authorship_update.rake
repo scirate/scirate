@@ -9,7 +9,7 @@ namespace :arxiv do
       begin
         $stderr.puts "Updating username #{user.username}"
         user.update_authorship!
-        sleep 1
+        sleep 2
       rescue OpenURI::HTTPError
         $stderr.puts "Invalid author_identifier for #{user.username}: #{user.author_identifier}"
       rescue ActiveRecord::RecordInvalid => invalid
