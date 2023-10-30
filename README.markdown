@@ -69,6 +69,8 @@ system is up, will run them.
 
 Locally, you can run `./deploy.rb`. You will need `ssh` access to the production server for this to run successfully.
 
+On the server, the logs are in `/home/scirate/scirate/log/`.
+
 ## Automatic updates
 
 The website updates automatically every hour with a `sync.sh` script in a crontab on the server. The crontab uses a file lock via `flock`.
