@@ -15,6 +15,9 @@ namespace :arxiv do
       rescue ActiveRecord::RecordInvalid => invalid
         $stderr.puts "Couldn't add new authorship, probably missing a paper in the database!"
         $stderr.puts invalid.record.errors
+      rescue Errno::ECONNRESET
+        $stderr.puts "Connection error, let's skip this user and wait"
+        sleep 10
       end
 
       $stderr.puts "Finished syncing authorship for #{user.username}"
