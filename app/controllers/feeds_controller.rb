@@ -238,7 +238,7 @@ class FeedsController < ApplicationController
       paper
     end
 
-    max_pages = (res["hits"]["total"]["value"] / (per_page + 0.0)).ceil()
+    max_pages = (res["hits"]["total"]["value"] / (per_page + 0.0)).floor() + 1
     pagination = WillPaginate::Collection.new([page, max_pages].min, per_page, res["hits"]["total"]["value"])
 
     return [papers, pagination]

@@ -33,7 +33,7 @@ class Admin::BaseController < ApplicationController
 
     @page = [1, params.fetch(:page, 1).to_i].max
     @per_page = 20
-    max_pages = (User.count / (@per_page + 0.0)).ceil()
+    max_pages = (User.count / (@per_page + 0.0)).floor() + 1
     @pagination = WillPaginate::Collection.new([@page, max_pages].min, @per_page, User.count)
     @users = User.order('created_at DESC')
                 .limit(@per_page)
