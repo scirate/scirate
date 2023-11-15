@@ -106,7 +106,7 @@ class FeedsController < ApplicationController
   def parse_params
     @date = _parse_date(params)
     @range = _parse_range(params)
-    @page = params[:page] || 1
+    @page = [1, params.fetch(:page, 1).to_i].max
 
     if signed_in?
       if @range.nil?
@@ -238,7 +238,8 @@ class FeedsController < ApplicationController
       paper
     end
 
-    pagination = WillPaginate::Collection.new(page, per_page, res["hits"]["total"]["value"])
+    max_pages = (res["hits"]["total"]["value"] / (per_page + 0.0)).floor() + 1
+    pagination = WillPaginate::Collection.new([page, max_pages].min, per_page, res["hits"]["total"]["value"])
 
     return [papers, pagination]
   end
