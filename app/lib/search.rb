@@ -216,7 +216,8 @@ end
 module Search::Paper
   def self.es_find(params)
     res = Search.es.search index: Search.index_name, body: params
-    puts "  Elasticsearch (#{res['took']}ms) #{params}"
+    puts "  Elasticsearch (#{res['took']}ms) "
+    # puts "Elasticsearch results: #{params}"
     res
   end
 
