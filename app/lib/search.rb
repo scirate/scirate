@@ -8,7 +8,7 @@ module Search
 
   def self.es
     host = Settings::ELASTIC_SEARCH_HOST
-    @es ||= Elasticsearch::Client.new url: "http://#{host}:9200", log: true
+    @es ||= Elasticsearch::Client.new url: "http://#{host}:9200", log: false
   end
 
   # http://stackoverflow.com/questions/16205341/symbols-in-query-string-for-elasticsearch
