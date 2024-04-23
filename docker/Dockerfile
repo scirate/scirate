@@ -16,7 +16,7 @@ workdir /app
 copy Gemfile /app/Gemfile
 copy Gemfile.lock /app/Gemfile.lock
 
-run gem update --system
+run gem update --system 3.4.22
 run gem install bundler
 run bundle install
 
