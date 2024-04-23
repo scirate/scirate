@@ -16,7 +16,7 @@ def run(hosts, commands)
 end
 
 run [web], <<END
-source ~/.ruby-stuff
+source ~/.ruby-stuff || true
 cd ~/scirate
 git fetch -f
 git reset --hard origin/main
@@ -28,13 +28,13 @@ bundle install
 END
 
 run [web], <<END
-source ~/.ruby-stuff
+source ~/.ruby-stuff || true
 cd ~/scirate
 rake db:migrate
 END
 
 run [web], <<END
-source ~/.ruby-stuff
+source ~/.ruby-stuff || true
 cd ~/scirate
 rake assets:precompile
 sudo service scirate restart
