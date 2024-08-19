@@ -141,7 +141,7 @@ class FeedsController < ApplicationController
     range = 0 if range < 0
 
     # 2024-08-19: large ranges are associated with malicious web crawlers
-    range = 0 if range > 200
+    render json: {error: 'forbidden'}, status: 403 if range > 200
 
     return range
   end
