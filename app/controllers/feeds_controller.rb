@@ -140,6 +140,9 @@ class FeedsController < ApplicationController
     # negative date windows are confusing
     range = 0 if range < 0
 
+    # 2024-08-19: large ranges are associated with malicious web crawlers
+    range = 0 if range > 200
+
     return range
   end
 
