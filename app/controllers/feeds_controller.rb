@@ -223,6 +223,11 @@ class FeedsController < ApplicationController
       ]
     }
 
+    # Elasticsearch fails beyond window size 10000; if beyond this just return nothing
+    if (page*per_page > 10000)
+      return [[], WillPaginate::Collection.new(1, per_page, 1)]
+    end
+
     res = Search::Paper.es_find(query)
 
     papers_by_uid = map_models :uid, Paper.where(uid: res["hits"]["hits"].map { |p| p["_source"]["uid"] })
