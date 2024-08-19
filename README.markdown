@@ -12,10 +12,10 @@ issues](https://github.com/scirate/scirate/issues).
 
 ## Setting up for development
 
-Development is best done locally using [docker-compose](https://docs.docker.com/compose/install/):
+Development is best done locally using [docker compose](https://docs.docker.com/compose/install/):
 
 ```sh
-docker-compose build
+docker compose build
 ```
 
 In order to run the app, you will need a `local_settings.rb` file, and a
@@ -29,7 +29,7 @@ cp config/database.yml.ci config/database.yml
 Then, spin up all the servers,
 
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 You need to make sure elasticsearch is fully up; it can take 10 seconds or so, you can verify with
@@ -44,15 +44,15 @@ You can check to make sure something is at <localhost:3000>. You should see SciR
 From here, you can run the tests.
 
 ```sh
-docker-compose exec web rspec
+docker compose exec web rspec
 ```
 
 After that, you can sync to arXiv.org and then play around with the system
 locally:
 
 ```sh
-docker-compose exec web rake arxiv:feed_import
-docker-compose exec web rake arxiv:oai_update
+docker compose exec web rake arxiv:feed_import
+docker compose exec web rake arxiv:oai_update
 ```
 
 and visit <http://localhost:3000> and you will be looking at SciRate!
@@ -62,7 +62,7 @@ It may not be possible to make new users locally. If you get stuck, you can disa
 ## Testing
 
 There is a fairly comprehensive series of unit and integration tests in
-`spec`. Running `docker-compose exec web rspec`, if the entire docker-compose
+`spec`. Running `docker compose exec web rspec`, if the entire docker compose
 system is up, will run them.
 
 ## Deploying

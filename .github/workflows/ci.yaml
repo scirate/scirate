@@ -14,12 +14,12 @@ jobs:
 
 
       - name: Build
-        run: docker-compose build
+        run: docker compose build
 
 
       - name: Start up
         run: |
-          docker-compose up -d
+          docker compose up -d
           # Doom-filled way of waiting for elasticsearch to be up.
           wget \
             --quiet \
@@ -33,5 +33,5 @@ jobs:
 
       - name: Test
         run: |
-          docker-compose exec -T web rspec
+          docker compose exec -T web rspec
 
