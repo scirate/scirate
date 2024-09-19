@@ -42,7 +42,14 @@ class PapersController < ApplicationController
     per_page = 70
 
     if !@search.query.empty?
-      res = @search.run(from: (page-1)*per_page, size: per_page)
+      # handle issue where elastic search can't process too many items
+      if (page-1)*per_page > 10000
+        res = @search.run(from: 0, size: 0)
+      elsif page*per_page > 10000
+        res = @search.run(from: (page-1)*per_page, size: 10000 - (page-1)*per_page)
+      else
+        res = @search.run(from: (page-1)*per_page, size: per_page)
+      end
 
       papers_by_uid = map_models :uid, Paper.where(uid: res["hits"]["hits"].map { |p| p["_source"]["uid"] })
 
