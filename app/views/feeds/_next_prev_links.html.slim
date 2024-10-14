@@ -6,6 +6,13 @@
   - @next_date += 1.day if @next_date.wday == 0
   - @prev_date -= 2.days if @prev_date.wday == 0
   - @prev_date -= 1.day if @prev_date.wday == 6
+  / fix for 2024-10-04 arXiv outage, add saturday 2024-10-05
+  - if @date.strftime("%Y-%m-%d") == "2024-10-04"
+    - @next_date -= 2.days
+  - elsif @date.strftime("%Y-%m-%d") == "2024-10-06"
+      - @prev_date += 1.day
+  - elsif @date.strftime("%Y-%m-%d") == "2024-10-07"
+      - @prev_date += 1.day
 
 nav.timenav
   h3 Date Published
