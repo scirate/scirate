@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include ApplicationHelper
 
+  before_action :block_bad_requests
   before_action :redirect_https
   before_action :set_token
 
@@ -15,7 +16,14 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    render file: "#{Rails.root}/public/404", layout: false, status: 404
+    render json: { error: 'not_found' }, layout: false, status: 404
+  end
+
+  def block_bad_requests
+    # 2025-02-13: This is a hack to prevent weird unknown http methods that error out, emailing us
+    if (request.method == 'PRI')
+      render json: { error: 'method_not_allowed' }, layout: false, status: 405
+    end
   end
 
   def redirect_https
