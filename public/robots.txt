@@ -2,5 +2,6 @@ User-agent: *
 Allow: /about
 Allow: /comments
 Allow: /legal
+Allow: /
 Disallow: /arxiv
 
