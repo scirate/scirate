@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/scirate/arxivsync.git
-  revision: dc8aba386db6c3bcf6f30b5af261f3bcea72f431
+  revision: 6a377fc3f63a8413fbd98ead55d99d638d79a266
   specs:
-    arxivsync (0.2.0)
+    arxivsync (0.3.0)
       colorize
       htmlentities (~> 4.3.1)
       latex-decode (~> 0.1.1)
