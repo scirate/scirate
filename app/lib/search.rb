@@ -488,7 +488,10 @@ class Search::Paper::Query
       elsif term.start_with?('in:')
         @es_query << "feed_uids:" + tstrip(term)
       elsif term.start_with?('scited_by:')
+        # keep hyphens
+        term = term.gsub('-', '___')
         name = full_tstrip(term)
+        name = name.gsub('___', '-')
 
         # Prioritize username over fullname
         ids = User.where(username: name).pluck(:id)
