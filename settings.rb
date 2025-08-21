@@ -51,6 +51,10 @@ module Settings
   SENDGRID_USERNAME = ''
   SENDGRID_PASSWORD = ''
 
+  # 2025-08-21: switched to Mailersend
+  MAILERSEND_USERNAME = ''
+  MAILERSEND_PASSWORD = ''
+
   # Google OAuth tokens as per https://github.com/zquestz/omniauth-google-oauth2
   GOOGLE_CLIENT_ID = ''
   GOOGLE_CLIENT_SECRET = ''
