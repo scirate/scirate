@@ -13,7 +13,7 @@ class FeedsController < ApplicationController
     @recent_comments = _recent_comments
     @papers, @pagination = _range_query(nil, @backdate, @date, @page)
 
-    render 'feeds/show'
+    render 'feeds/show', formats: :html
   end
 
   # Aggregated index feed
@@ -50,7 +50,7 @@ class FeedsController < ApplicationController
 
     @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    render 'feeds/show'
+    render 'feeds/show', formats: :html
   end
 
   # Showing a feed while we aren't signed in
@@ -68,7 +68,7 @@ class FeedsController < ApplicationController
     @recent_comments = _recent_comments(feed_uids)
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
 
-    render 'feeds/show'
+    render 'feeds/show', formats: :html
   end
 
   # Showing a feed
@@ -98,7 +98,7 @@ class FeedsController < ApplicationController
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
     @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    render 'feeds/show'
+    render 'feeds/show', formats: :html
   end
 
   private

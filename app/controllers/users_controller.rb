@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     @tab = :activity
     @activities = @user.activity_feed(25)
 
-    render 'users/profile'
+    render 'users/profile', formats: :html
   end
 
   def papers
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
     @authored_papers = @user.authored_papers.includes(:feeds, :authors).order('pubdate DESC').paginate(page: @page)
     @scited_by_uid = current_user.scited_by_uid(@authored_papers) if current_user
 
-    render 'users/profile'
+    render 'users/profile', formats: :html
   end
 
   def scites
@@ -43,7 +43,7 @@ class UsersController < ApplicationController
 
     @scited_by_uid = current_user.scited_by_uid(@scited_papers) if current_user
 
-    render 'users/profile'
+    render 'users/profile', formats: :html
   end
 
   def download_scites
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
       .includes(:user, :paper)
       .paginate(page: @page, per_page: 20)
 
-    render 'users/profile'
+    render 'users/profile', formats: :html
   end
 
   def new

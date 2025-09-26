@@ -25,7 +25,7 @@ class PapersController < ApplicationController
 
     @comments = find_comments_sorted_by_rating
 
-    render 'papers/show'
+    render 'papers/show', formats: :html
   end
 
   def __quote(val)
@@ -72,7 +72,7 @@ class PapersController < ApplicationController
       @scited_by_uid = current_user.scited_by_uid(@papers) if current_user
     end
 
-    render :search
+    render :search, formats: :html
   end
 
   # Show the users who scited this paper
