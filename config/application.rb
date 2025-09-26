@@ -15,6 +15,8 @@ end
 
 module SciRate
   class Application < Rails::Application
+    config.middleware.insert 0, Rack::UTF8Sanitizer
+
     # HACK
     def self.notify_error(exception, message = nil)
       if exception.is_a?(String)
