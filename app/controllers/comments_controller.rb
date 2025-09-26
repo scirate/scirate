@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
   before_action  :check_moderation_permission, only: [:edit, :delete, :restore]
 
   def index
-    @page = [1, params.fetch(:page, 1).to_i].max
+    @page = [1, params.fetch(:page, 1).to_s.to_i].max
     @per_page = 50
 
     feed_uids = if params[:feed]
