@@ -35,7 +35,7 @@ class PapersController < ApplicationController
   def search
     basic = params[:q]
     advanced = params[:advanced]
-    page = params[:page] ? params[:page].to_i : 1
+    page = [1, params.fetch(:page, 1).to_s.to_i].max
 
     @search = Search::Paper::Query.new(basic, advanced)
 

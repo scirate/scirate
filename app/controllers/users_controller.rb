@@ -43,7 +43,7 @@ class UsersController < ApplicationController
   end
 
   def download_scites
-    @page = [1, params.fetch(:page, 1).to_i].max
+    @page = [1, params.fetch(:page, 1).to_s.to_i].max
     @per_page = 1000
 
     @scited_papers = @user.scited_papers

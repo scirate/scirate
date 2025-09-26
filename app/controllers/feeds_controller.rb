@@ -106,7 +106,7 @@ class FeedsController < ApplicationController
   def parse_params
     @date = _parse_date(params)
     @range = _parse_range(params)
-    @page = [1, params.fetch(:page, 1).to_i].max
+    @page = [1, params.fetch(:page, 1).to_s.to_i].max
 
     if signed_in?
       if @range.nil?
@@ -135,7 +135,7 @@ class FeedsController < ApplicationController
     return nil unless params.has_key?(:range)
     return :since_last if params[:range] == 'since_last'
 
-    range = params[:range].to_i
+    range = params[:range].to_s.to_i
 
     # negative date windows are confusing
     range = 0 if range < 0
