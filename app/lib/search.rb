@@ -215,9 +215,14 @@ end
 
 module Search::Paper
   def self.es_find(params)
-    res = Search.es.search index: Search.index_name, body: params
-    puts "  Elasticsearch (#{res['took']}ms) #{params}"
-    res
+    begin
+      res = Search.es.search index: Search.index_name, body: params
+      puts "  Elasticsearch (#{res['took']}ms) #{params}"
+      res
+    rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
+      # malformed query so just return no results
+      self.es_basic("")
+    end
   end
 
   def self.es_basic(q)
