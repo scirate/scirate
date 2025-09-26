@@ -35,7 +35,7 @@ gem 'omniauth-rails_csrf_protection'
 gem 'oai', github: 'scirate/ruby-oai'
 gem 'arxivsync', github: 'scirate/arxivsync'
 gem "nokogiri", ">= 1.13.4"
-
+gem 'rack-utf8_sanitizer'
 
 # Elasticsearch API gem
 gem 'elasticsearch'
