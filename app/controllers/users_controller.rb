@@ -11,6 +11,8 @@ class UsersController < ApplicationController
 
   def profile_data
     @user = User.where("lower(username) = lower(?)", params[:username]).first!
+    rescue ActiveRecord::RecordNotFound
+      return not_found
   end
 
   def activity

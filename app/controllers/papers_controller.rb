@@ -33,7 +33,7 @@ class PapersController < ApplicationController
   end
 
   def search
-    basic = params[:q]
+    basic = params[:q].to_s
     advanced = params[:advanced]
     page = [1, params.fetch(:page, 1).to_s.to_i].max
 
