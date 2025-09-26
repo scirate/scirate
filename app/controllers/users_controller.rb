@@ -22,8 +22,9 @@ class UsersController < ApplicationController
 
   def papers
     @tab = :papers
+    @page = [1, params.fetch(:page, 1).to_s.to_i].max
 
-    @authored_papers = @user.authored_papers.includes(:feeds, :authors).order('pubdate DESC').paginate(page: params[:page])
+    @authored_papers = @user.authored_papers.includes(:feeds, :authors).order('pubdate DESC').paginate(page: @page)
     @scited_by_uid = current_user.scited_by_uid(@authored_papers) if current_user
 
     render 'users/profile'
@@ -31,11 +32,12 @@ class UsersController < ApplicationController
 
   def scites
     @tab = :scites
+    @page = [1, params.fetch(:page, 1).to_s.to_i].max
 
     @scited_papers = @user.scited_papers
       .order("scites.created_at DESC")
       .includes(:feeds, :authors)
-      .paginate(page: params[:page], per_page: 10)
+      .paginate(page: @page, per_page: 10)
 
     @scited_by_uid = current_user.scited_by_uid(@scited_papers) if current_user
 
@@ -55,11 +57,12 @@ class UsersController < ApplicationController
 
   def comments
     @tab = :comments
+    @page = [1, params.fetch(:page, 1).to_s.to_i].max
 
     @comments = @user.comments
       .where(hidden: false, deleted: false)
       .includes(:user, :paper)
-      .paginate(page: params[:page], per_page: 20)
+      .paginate(page: @page, per_page: 20)
 
     render 'users/profile'
   end
