@@ -16,7 +16,7 @@ namespace :db do
         end
       end
 
-      no_parens.split(/,|:|;|\sand\s|\s?the\s/i)
+      no_parens.split(/,|:|;|\sand\s/i)
         .map { |s| s.gsub(/\s+/, ' ').strip }
         .reject { |s| s.empty? }
     end
