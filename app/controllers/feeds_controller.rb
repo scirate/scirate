@@ -1,6 +1,7 @@
 require 'data_helpers'
 
 class FeedsController < ApplicationController
+  include PapersHelper
   before_action :parse_params
 
   # No user, and no feed specified: show all papers
@@ -13,7 +14,16 @@ class FeedsController < ApplicationController
     @recent_comments = _recent_comments
     @papers, @pagination = _range_query(nil, @backdate, @date, @page)
 
-    render 'feeds/show', formats: :html
+    respond_to do |format|
+      format.html { render 'feeds/show' }
+      format.json {
+        render json: {
+          date: @date,
+          total_papers: @pagination&.total_entries || 0,
+          papers: @papers.map { |p| format_paper_json(p) }
+        }
+      }
+    end
   end
 
   # Aggregated index feed
@@ -50,7 +60,16 @@ class FeedsController < ApplicationController
 
     @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    render 'feeds/show', formats: :html
+    respond_to do |format|
+      format.html { render 'feeds/show' }
+      format.json { 
+        render json: {
+          date: @date,
+          papers: @papers.map { |p| format_paper_json(p) }
+        }
+      }
+    end
+
   end
 
   # Showing a feed while we aren't signed in
@@ -68,7 +87,16 @@ class FeedsController < ApplicationController
     @recent_comments = _recent_comments(feed_uids)
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
 
-    render 'feeds/show', formats: :html
+    respond_to do |format|
+      format.html { render 'feeds/show' }
+      format.json { 
+        render json: {
+          feed: @feed.uid,
+          date: @date,
+          papers: @papers.map { |p| format_paper_json(p) }
+        }
+      }
+    end
   end
 
   # Showing a feed
@@ -98,7 +126,16 @@ class FeedsController < ApplicationController
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
     @scited_by_uid = current_user.scited_by_uid(@papers)
 
-    render 'feeds/show', formats: :html
+    respond_to do |format|
+      format.html { render 'feeds/show' }
+      format.json { 
+        render json: {
+          feed: @feed.uid,
+          date: @date,
+          papers: @papers.map { |p| format_paper_json(p) } 
+        }
+      }
+    end
   end
 
   private
@@ -256,4 +293,5 @@ class FeedsController < ApplicationController
 
     return [papers, pagination]
   end
+
 end
