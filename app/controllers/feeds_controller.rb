@@ -134,7 +134,7 @@ class FeedsController < ApplicationController
         flash[:error] = "reCaptcha verification failed!"
         render json: {error: 'forbidden'}, status: 403
       end
-      render json: {error: 'forbidden'}, status: 403 if date < Chronic.parse("2020-01-01")
+      render json: {error: 'forbidden'}, status: 403 if date < Chronic.parse("2025-01-01")
     end
     return date
   end
