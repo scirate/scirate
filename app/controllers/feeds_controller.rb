@@ -129,7 +129,9 @@ class FeedsController < ApplicationController
   def _parse_date(params)
     date = params[:date] ? Chronic.parse(params[:date]) : nil
     # 2026-02-16: The bots never stop
-    render json: {error: 'forbidden'}, status: 403 if date < Chronic.parse("2020-01-01")
+    if date
+      render json: {error: 'forbidden'}, status: 403 if date < Chronic.parse("2020-01-01")
+    end
     return date
   end
 
