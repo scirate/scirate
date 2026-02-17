@@ -130,10 +130,6 @@ class FeedsController < ApplicationController
     date = params[:date] ? Chronic.parse(params[:date]) : nil
     # 2026-02-16: The bots never stop
     if date
-      unless verify_recaptcha?(params["g-recaptcha-response"], 'submit')
-        flash[:error] = "reCaptcha verification failed!"
-        render json: {error: 'forbidden'}, status: 403
-      end
       render json: {error: 'forbidden'}, status: 403 if date < Chronic.parse("2025-01-01")
     end
     return date
