@@ -131,6 +131,7 @@ class FeedsController < ApplicationController
     # 2026-02-16: The bots never stop
     if date
       render json: {error: 'forbidden'}, status: 403 if date < Chronic.parse("2025-01-01")
+      return
     end
     return date
   end
