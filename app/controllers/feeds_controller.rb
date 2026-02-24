@@ -105,6 +105,10 @@ class FeedsController < ApplicationController
 
   def parse_params
     @date = _parse_date(params)
+    # 2026-02-16: The bots never stop
+    if @date
+      render json: {error: 'forbidden'}, status: 403 and return if @date < Chronic.parse("2025-01-01")
+    end
     @range = _parse_range(params)
     @page = [1, params.fetch(:page, 1).to_s.to_i].max
 
@@ -128,11 +132,6 @@ class FeedsController < ApplicationController
 
   def _parse_date(params)
     date = params[:date] ? Chronic.parse(params[:date]) : nil
-    # 2026-02-16: The bots never stop
-    if date
-      render json: {error: 'forbidden'}, status: 403 if date < Chronic.parse("2025-01-01")
-      return
-    end
     return date
   end
 
