@@ -88,5 +88,5 @@ Rails.application.configure do
       sender_address: "notifier@scirate.com",
       exception_recipients: %w{scirate.mod@gmail.com}
     },
-    error_grouping: true,
+    error_grouping: true
 end
