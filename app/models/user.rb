@@ -139,6 +139,13 @@ class User < ActiveRecord::Base
     end
   end
 
+  # make email search case insensitive
+  def self.find_by_email(email)
+    if !email.nil?
+      User.where("lower(email) = ?", email.downcase).first
+    end
+  end
+
   # Make an appropriate username from a user's full name
   # if this is at all possible
   def self.default_username(fullname)

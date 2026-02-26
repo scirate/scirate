@@ -1,5 +1,6 @@
 class PasswordResetsController < ApplicationController
   def create
+    # this should be case insensitive
     user = User.find_by_email(params[:email])
 
     if user
