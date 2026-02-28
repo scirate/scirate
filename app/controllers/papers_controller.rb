@@ -25,7 +25,18 @@ class PapersController < ApplicationController
 
     @comments = find_comments_sorted_by_rating
 
-    render 'papers/show', formats: :html
+    respond_to do |format|
+      format.html { render 'papers/show' }
+      format.json {
+        # format_paper_json(p) gives the count and the metadata
+        # .merge then adds the actual array of comments
+        render json: format_paper_json(@paper).merge({
+          comments: @comments.map { |c| 
+            { author: c.user.fullname, body: c.body, created_at: c.created_at } 
+          }
+        })
+      }
+    end
   end
 
   def __quote(val)
@@ -72,7 +83,15 @@ class PapersController < ApplicationController
       @scited_by_uid = current_user.scited_by_uid(@papers) if current_user
     end
 
-    render :search, formats: :html
+    respond_to do |format|
+      format.html { render :search }
+      format.json {
+        render json: {
+          total_count: @pagination&.total_entries || 0,
+          papers: (@papers || []).map { |p| format_paper_json(p) }
+        }
+      }
+    end
   end
 
   # Show the users who scited this paper
@@ -156,7 +175,7 @@ class PapersController < ApplicationController
     Comment.where("paper_uid = ? AND ancestor_id IS NULL",
             @paper.uid)
     .order("created_at ASC")
-    .includes(:last_change)
+    .includes(:user, :last_change)
   end
 
   # We don't use voting information to order reply chains
