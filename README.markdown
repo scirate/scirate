@@ -69,6 +69,8 @@ system is up, will run them.
 
 Locally, you can run `./deploy.rb`. You will need `ssh` access to the production server for this to run successfully.
 
+You might need to change the deploy.rb script to point to the public IP address, not web.scirate.com .
+
 On the server, the logs are in `/home/scirate/scirate/log/`.
 
 ## Automatic updates
