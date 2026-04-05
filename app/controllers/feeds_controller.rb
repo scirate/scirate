@@ -146,7 +146,8 @@ class FeedsController < ApplicationController
 
     # 2024-08-19: large ranges are associated with malicious web crawlers
     # 2025-02-19: most crawlers are now using 183..
-    render json: {error: 'forbidden'}, status: 403 if range > 182
+    # 2026-04-05: many complaints that the range is too short, so I'll go up to 3 years
+    render json: {error: 'forbidden'}, status: 403 if range > 1100
 
     return range
   end
