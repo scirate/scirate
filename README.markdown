@@ -59,6 +59,16 @@ and visit <http://localhost:3000> and you will be looking at SciRate!
 
 It may not be possible to make new users locally. If you get stuck, you can disable the `unless verify_recaptcha` code block in `app/controllers/users_controller.rb` and it should work.
 
+## API Access
+
+SciRate supports JSON responses for several key areas. You can test these locally using curl or by appending .json to the URLs:
+
+Individual Papers: GET /arxiv/:paper_uid.json returns paper metadata, abstracts, and comments.
+
+Feeds & Categories: GET /search.json or GET /arxiv/:category.json returns lists of papers with their scite counts and author details.
+
+This data structure includes is_scited boolean flags, which respect the current user's session if a cookie is provided.
+
 ## Testing
 
 There is a fairly comprehensive series of unit and integration tests in
