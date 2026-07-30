@@ -28,6 +28,7 @@ class UsersController < ApplicationController
 
     @authored_papers = @user.authored_papers.includes(:feeds, :authors).order('pubdate DESC').paginate(page: @page)
     @scited_by_uid = current_user.scited_by_uid(@authored_papers) if current_user
+    @own_paper_uid = current_user.authored_by_uid(@authored_papers) if current_user
 
     render 'users/profile', formats: :html
   end
@@ -42,6 +43,7 @@ class UsersController < ApplicationController
       .paginate(page: @page, per_page: 10)
 
     @scited_by_uid = current_user.scited_by_uid(@scited_papers) if current_user
+    @own_paper_uid = current_user.authored_by_uid(@scited_papers) if current_user
 
     render 'users/profile', formats: :html
   end

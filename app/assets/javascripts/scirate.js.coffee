@@ -65,7 +65,12 @@ class View.SciteToggle extends View
   initialize: ->
     @$el.addClass('active') if SciRate.scited_by_uid && SciRate.scited_by_uid[@$el.attr('data-paper-uid')]
 
+    if SciRate.own_paper_uid && SciRate.own_paper_uid[@$el.attr('data-paper-uid')]
+      @$el.addClass('own-paper')
+      @$el.find('.scite').attr('title', "Authors cannot scite their own paper.")
+
   scite: ->
+    return false if @$el.hasClass('own-paper')
     return SciRate.login() unless SciRate.current_user
 
     paper_uid = @$el.attr('data-paper-uid')
