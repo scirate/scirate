@@ -19,6 +19,19 @@ describe ApiController do
     end
   end
 
+  describe "sciting your own paper" do
+    before do
+      FactoryGirl.create(:authorship, user: user, paper: paper)
+      post :scite, params: { paper_uid: paper.uid }, xhr: true
+    end
+
+    it "does not create a scite" do
+      scite = Scite.where(user_id: user.id, paper_uid: paper.uid).first
+      expect(scite).to be_nil
+      expect(response).to be_successful
+    end
+  end
+
   describe "unsciting a paper" do
     before do
       post :scite, params: { paper_uid: paper.uid }, xhr: true

@@ -49,6 +49,7 @@ class FeedsController < ApplicationController
     end
 
     @scited_by_uid = current_user.scited_by_uid(@papers)
+    @own_paper_uid = current_user.authored_by_uid(@papers)
 
     render 'feeds/show', formats: :html
   end
@@ -97,6 +98,7 @@ class FeedsController < ApplicationController
 
     @papers, @pagination = _range_query(feed_uids, @backdate, @date, @page)
     @scited_by_uid = current_user.scited_by_uid(@papers)
+    @own_paper_uid = current_user.authored_by_uid(@papers)
 
     render 'feeds/show', formats: :html
   end

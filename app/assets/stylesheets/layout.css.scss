@@ -872,6 +872,25 @@ div.feed-rightbar, div.feedbar {
   }
 }
 
+.scite-toggle.own-paper {
+  .scite {
+    cursor: not-allowed;
+    opacity: .65;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: linear-gradient(to top right, transparent calc(50% - 1px), rgba(0, 0, 0, .25) 50%, transparent calc(50% + 1px)),
+                         linear-gradient(to bottom right, transparent calc(50% - 1px), rgba(0, 0, 0, .25) 50%, transparent calc(50% + 1px));
+    }
+  }
+}
+
 .scite-toggle {
   white-space: nowrap;
   display: inline-block;
