@@ -180,6 +180,8 @@ class User < ActiveRecord::Base
   end
 
   def scite!(paper)
+    return if authorships.exists?(paper_uid: paper.uid)
+
     unless scites.find_by_paper_uid(paper.uid)
       scites.create!(paper_uid: paper.uid)
       paper.reload
@@ -206,6 +208,11 @@ class User < ActiveRecord::Base
   # Given a collection of papers, map uids to scite status
   def scited_by_uid(papers)
     map_exists :paper_uid, scites.where(paper_uid: papers.map(&:uid))
+  end
+
+  # Given a collection of papers, map uids to authorship status
+  def authored_by_uid(papers)
+    map_exists :paper_uid, authorships.where(paper_uid: papers.map(&:uid))
   end
 
   def subscribe!(feed)

@@ -23,6 +23,8 @@ class PapersController < ApplicationController
       {}
     end
 
+    @own_paper_uid = current_user ? current_user.authored_by_uid([@paper]) : {}
+
     @comments = find_comments_sorted_by_rating
 
     render 'papers/show', formats: :html
@@ -70,6 +72,7 @@ class PapersController < ApplicationController
       @folder_uid = @search.feed && (@search.feed.parent_uid || @search.feed.uid)
 
       @scited_by_uid = current_user.scited_by_uid(@papers) if current_user
+      @own_paper_uid = current_user.authored_by_uid(@papers) if current_user
     end
 
     render :search, formats: :html
