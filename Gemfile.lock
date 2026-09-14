@@ -1,6 +1,7 @@
 GIT
-  remote: https://github.com/scirate/arxivsync.git
-  revision: 2b3d6cbc931823d7427e44812d9314dc868f4667
+  remote: https://github.com/Qubit-Fernand/arxivsync.git
+  revision: 253b65dfb35494972f3773bb6632688196b3aa5c
+  branch: fix-display-math-delimiters
   specs:
     arxivsync (0.3.2)
       colorize

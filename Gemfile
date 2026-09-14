@@ -33,7 +33,7 @@ gem 'omniauth-rails_csrf_protection'
 # arxivsync is our custom gem and can be found at:
 # https://github.com/scirate/arxivsync
 gem 'oai', github: 'scirate/ruby-oai'
-gem 'arxivsync', github: 'scirate/arxivsync'
+gem 'arxivsync', github: 'Qubit-Fernand/arxivsync', branch: 'fix-display-math-delimiters'
 gem "nokogiri", ">= 1.13.4"
 gem 'rack-utf8_sanitizer'
 
