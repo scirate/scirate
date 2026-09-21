@@ -80,13 +80,13 @@ class UsersController < ApplicationController
 
   def create
     if !signed_in?
-      default_username = User.default_username(params[:user][:fullname])
-      @user = User.new(params.required(:user).permit(:fullname, :email, :password).merge(username: default_username, password_confirmation: params[:user][:password]))
-
       unless verify_recaptcha?(params["g-recaptcha-response"], 'submit')
         flash[:error] = "reCaptcha verification failed!"
         render 'new' and return
       end
+
+      default_username = User.default_username(params[:user][:fullname])
+      @user = User.new(params.required(:user).permit(:fullname, :email, :password).merge(username: default_username, password_confirmation: params[:user][:password]))
 
       if @user.save
         @user.send_signup_confirmation
